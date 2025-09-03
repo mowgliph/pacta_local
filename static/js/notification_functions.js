@@ -67,6 +67,9 @@ class NotificationManager {
                 this.notifications = data.notifications;
                 this.updateNotificationCount();
                 this.renderNotifications();
+            } else if (response.status === 401 && data.redirect) {
+                // Usuario no autenticado, redirigir al login
+                window.location.href = data.redirect;
             }
         } catch (error) {
             console.error('Error al cargar notificaciones:', error);
@@ -81,6 +84,9 @@ class NotificationManager {
             if (data.success) {
                 this.notificationCount = data.count;
                 this.updateBadge();
+            } else if (response.status === 401 && data.redirect) {
+                // Usuario no autenticado, redirigir al login
+                window.location.href = data.redirect;
             }
         } catch (error) {
             console.error('Error al actualizar contador:', error);
@@ -88,7 +94,7 @@ class NotificationManager {
     }
 
     updateBadge() {
-        const badge = document.getElementById('notification-count');
+        const badge = document.querySelector('.notification-badge');
         if (badge) {
             if (this.notificationCount > 0) {
                 badge.textContent = this.notificationCount > 99 ? '99+' : this.notificationCount;
@@ -220,6 +226,9 @@ class NotificationManager {
                 }
                 // Recargar notificaciones y actualizar contador
                 this.loadNotifications();
+            } else if (response.status === 401 && data.redirect) {
+                // Usuario no autenticado, redirigir al login
+                window.location.href = data.redirect;
             }
         } catch (error) {
             console.error('Error al marcar notificación como leída:', error);
@@ -243,6 +252,9 @@ class NotificationManager {
                 });
                 // Recargar notificaciones y actualizar contador
                 this.loadNotifications();
+            } else if (response.status === 401 && data.redirect) {
+                // Usuario no autenticado, redirigir al login
+                window.location.href = data.redirect;
             }
         } catch (error) {
             console.error('Error al marcar todas las notificaciones como leídas:', error);

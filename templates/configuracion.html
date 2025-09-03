@@ -22,11 +22,12 @@
                     <p class="page-subtitle">Configuración del sistema y preferencias</p>
                 </div>
                 <div class="header-actions">
-                    <button class="btn-icon" title="Documentación">
-                        <i class="fas fa-book"></i>
-                    </button>
                     <button class="btn-icon" title="Guardar Cambios">
                         <i class="fas fa-save"></i>
+                    </button>
+                    <button class="btn-icon" id="notifications-bell" title="Notificaciones" onclick="openNotificationsModal()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
                     </button>
                     <div class="user-menu">
                         <div class="user-avatar-small avatar-generated">{{ (usuario.nombre or 'Usuario').split()[0][0] }}{{ (usuario.nombre or 'Usuario').split()[1][0] if (usuario.nombre or 'Usuario').split()|length > 1 else (usuario.nombre or 'Usuario').split()[0][1] if (usuario.nombre or 'Usuario').split()[0]|length > 1 else '' }}</div>
@@ -326,7 +327,11 @@
             }
         });
     </script>
-      
-
+    
+    <!-- Funciones de notificaciones -->
+    <script src="{{ url_for('static', filename='js/notification_functions.js') }}"></script>
+    
+    <!-- Include Notifications Modal Component -->
+    {% include 'components/modals/notifications_modal.html' %}
 </body>
 </html>

@@ -22,6 +22,19 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+# Decorador para rutas API que requieren login
+def api_login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return jsonify({
+                'success': False, 
+                'message': 'No autenticado',
+                'redirect': url_for('login')
+            }), 401
+        return f(*args, **kwargs)
+    return decorated_function
+
 # Decorador para requerir admin
 def admin_required(f):
     @wraps(f)
@@ -780,7 +793,7 @@ def notifications_modal():
 
 # API Routes para Notificaciones
 @app.route('/api/notifications')
-@login_required
+@api_login_required
 def get_notifications():
     """Obtiene las notificaciones del usuario actual"""
     try:
@@ -795,7 +808,7 @@ def get_notifications():
         return jsonify({'success': False, 'message': f'Error al obtener notificaciones: {str(e)}'})
 
 @app.route('/api/notifications/count')
-@login_required
+@api_login_required
 def get_notifications_count():
     """Obtiene el conteo de notificaciones no leídas"""
     try:
@@ -810,7 +823,7 @@ def get_notifications_count():
         return jsonify({'success': False, 'message': f'Error al contar notificaciones: {str(e)}'})
 
 @app.route('/api/notifications/<int:notification_id>/read', methods=['POST'])
-@login_required
+@api_login_required
 def mark_notification_read(notification_id):
     """Marca una notificación como leída"""
     try:
@@ -825,7 +838,7 @@ def mark_notification_read(notification_id):
         return jsonify({'success': False, 'message': f'Error al marcar notificación: {str(e)}'})
 
 @app.route('/api/notifications/mark-all-read', methods=['POST'])
-@login_required
+@api_login_required
 def mark_all_notifications_read():
     """Marca todas las notificaciones del usuario como leídas"""
     try:

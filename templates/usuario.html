@@ -22,15 +22,12 @@
                     <p class="page-subtitle">Gestiona tu información personal y preferencias</p>
                 </div>
                 <div class="header-actions">
-                    <button class="btn-icon" title="Ayuda">
-                        <i class="fas fa-question-circle"></i>
-                    </button>
-                    <button class="btn-icon notification-bell" title="Notificaciones" onclick="openNotificationsModal()">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
-                    </button>
                     <button class="btn-icon" title="Editar Perfil" onclick="toggleEditMode()">
                         <i class="fas fa-edit" id="editIcon"></i>
+                    </button>
+                    <button class="btn-icon notification-bell" id="notifications-bell" title="Notificaciones" onclick="openNotificationsModal()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" style="display: none;">0</span>
                     </button>
                     <div class="user-menu">
                         <div class="user-avatar-small avatar-generated">{{ (usuario.nombre or 'Usuario').split()[0][0] }}{{ (usuario.nombre or 'Usuario').split()[1][0] if (usuario.nombre or 'Usuario').split()|length > 1 else (usuario.nombre or 'Usuario').split()[0][1] if (usuario.nombre or 'Usuario').split()[0]|length > 1 else '' }}</div>
@@ -397,87 +394,6 @@
             toggleEditMode();
         }
         
-        // Cargar funciones de usuario desde archivo modular
-        // Las funciones openNewUserModal() y createNewUser() están ahora en /static/js/user_functions.js
-        
-        function openNotificationsModal() {
-            // Crear modal de notificaciones dinámicamente
-            const modalHTML = `
-                <div class="modal fade" id="notificationsModal" tabindex="-1" aria-labelledby="notificationsModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="notificationsModalLabel">
-                                    <i class="fas fa-bell me-2"></i>Notificaciones
-                                </h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div id="notificationsList">
-                                    <div class="d-flex justify-content-center">
-                                        <div class="spinner-border" role="status">
-                                            <span class="visually-hidden">Cargando...</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                <button type="button" class="btn btn-primary" onclick="markAllAsRead()">Marcar todas como leídas</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Agregar modal al DOM si no existe
-            if (!document.getElementById('notificationsModal')) {
-                document.body.insertAdjacentHTML('beforeend', modalHTML);
-            }
-            
-            // Mostrar modal y cargar notificaciones
-            const modal = new bootstrap.Modal(document.getElementById('notificationsModal'));
-            modal.show();
-            loadNotifications();
-        }
-        
-        function loadNotifications() {
-            // Simular carga de notificaciones
-            setTimeout(() => {
-                const notificationsList = document.getElementById('notificationsList');
-                notificationsList.innerHTML = `
-                    <div class="list-group">
-                        <div class="list-group-item d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold">Nuevo contrato pendiente</div>
-                                <small class="text-muted">Contrato #2024-001 requiere revisión</small>
-                            </div>
-                            <small class="text-muted">Hace 2 horas</small>
-                        </div>
-                        <div class="list-group-item d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold">Reporte generado</div>
-                                <small class="text-muted">Reporte mensual de contratos disponible</small>
-                            </div>
-                            <small class="text-muted">Ayer</small>
-                        </div>
-                        <div class="list-group-item d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold">Sistema actualizado</div>
-                                <small class="text-muted">Nueva versión del sistema PACTA disponible</small>
-                            </div>
-                            <small class="text-muted">Hace 3 días</small>
-                        </div>
-                    </div>
-                `;
-            }, 1000);
-        }
-        
-        function markAllAsRead() {
-            alert('Todas las notificaciones han sido marcadas como leídas');
-            bootstrap.Modal.getInstance(document.getElementById('notificationsModal')).hide();
-        }
-        
         // Add some CSS for the action cells
         const style = document.createElement('style');
         style.textContent = `
@@ -496,5 +412,8 @@
     
     <!-- Include User Modal Component -->
     {% include 'components/modals/user_modal.html' %}
+    
+    <!-- Include Notifications Modal Component -->
+    {% include 'components/modals/notifications_modal.html' %}
 </body>
 </html>

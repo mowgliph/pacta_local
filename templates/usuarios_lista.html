@@ -22,8 +22,9 @@
                     <p class="page-subtitle">Gestión y administración de usuarios del sistema</p>
                 </div>
                 <div class="header-actions">
-                    <button class="btn-icon" title="Ayuda">
-                        <i class="fas fa-question-circle"></i>
+                    <button class="btn-icon" id="notifications-bell" onclick="openNotificationsModal()" title="Notificaciones">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
                     </button>
                     <button class="btn-account" onclick="openNewUserModal()" style="background: #3b82f6; color: white; padding: 8px 16px;">
                         <i class="fas fa-user-plus"></i>
@@ -269,5 +270,11 @@
     
     <!-- Include User Modal Component -->
     {% include 'components/modals/user_modal.html' %}
+    
+    <!-- Include Notifications Modal Component -->
+    {% include 'components/modals/notifications_modal.html' %}
+    
+    <!-- Include Notification Functions -->
+    <script src="{{ url_for('static', filename='js/notification_functions.js') }}"></script>
 </body>
 </html>
