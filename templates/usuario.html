@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario - PACTA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Include Sidebar Component -->
+        {% include 'sidebar.html' %}
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Include Header Component with custom content -->
+            <div class="content-header">
+                <div>
+                    <h1 class="page-title">Perfil de Usuario</h1>
+                    <p class="page-subtitle">Gestiona tu información personal y preferencias</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" title="Ayuda">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                    <button class="btn-icon" title="Editar Perfil" onclick="toggleEditMode()">
+                        <i class="fas fa-edit" id="editIcon"></i>
+                    </button>
+                    <div class="user-menu">
+                        <img src="https://via.placeholder.com/32x32/667eea/ffffff?text=AM" alt="Usuario" class="user-avatar-small">
+                        <span class="user-name-small">{{ usuario.nombre or 'Ana Martínez' }}</span>
+                        <div class="user-dropdown">
+                            <a href="{{ url_for('usuario') }}" class="dropdown-item">
+                                <i class="fas fa-user"></i>
+                                <span>Perfil</span>
+                            </a>
+                            <a href="{{ url_for('configuracion') }}" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Configuración</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User Profile Card -->
+            <div class="user-profile-card" style="background: white; border-radius: 16px; padding: 32px; margin-bottom: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                <div style="display: flex; align-items: center; gap: 24px; margin-bottom: 32px;">
+                    <div class="user-avatar-large" style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 48px; font-weight: bold;">
+                        {{ (usuario.nombre or 'Ana Martínez').split()[0][0] }}{{ (usuario.nombre or 'Ana Martínez').split()[1][0] if (usuario.nombre or 'Ana Martínez').split()|length > 1 else '' }}
+                    </div>
+                    <div style="flex: 1;">
+                        <h2 style="color: #1f2937; margin-bottom: 8px; font-size: 28px;">{{ usuario.nombre or 'Ana Martínez' }}</h2>
+                        <p style="color: #6b7280; margin-bottom: 16px; font-size: 16px;">{{ usuario.cargo or 'Gerente de Operaciones' }}</p>
+                        <div style="display: flex; gap: 16px; align-items: center;">
+                            <span style="display: flex; align-items: center; gap: 8px; color: #374151;">
+                                <i class="fas fa-envelope" style="color: #6b7280;"></i>
+                                <span id="userEmail">{{ usuario.email or 'ana.martinez@pacta.com' }}</span>
+                            </span>
+                            <span style="display: flex; align-items: center; gap: 8px; color: #374151;">
+                                <i class="fas fa-phone" style="color: #6b7280;"></i>
+                                <span id="userPhone">{{ usuario.telefono or '+57 300 123 4567' }}</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="text-align: center; padding: 16px; background: #f0f9ff; border-radius: 12px; border: 1px solid #0ea5e9;">
+                            <div style="font-size: 24px; font-weight: bold; color: #0ea5e9;">{{ usuario.dias_activo or 245 }}</div>
+                            <div style="font-size: 12px; color: #0369a1; font-weight: 500;">Días Activo</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #f0fdf4; border-radius: 12px; border: 1px solid #10b981;">
+                            <div style="font-size: 24px; font-weight: bold; color: #10b981;">{{ usuario.nivel_acceso or 'Admin' }}</div>
+                            <div style="font-size: 12px; color: #047857; font-weight: 500;">Nivel de Acceso</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Edit Form (Hidden by default) -->
+                <div id="editForm" style="display: none; border-top: 1px solid #e5e7eb; padding-top: 24px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Nombre Completo</label>
+                            <input type="text" id="editNombre" value="{{ usuario.nombre or 'Ana Martínez' }}" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Cargo</label>
+                            <input type="text" id="editCargo" value="{{ usuario.cargo or 'Gerente de Operaciones' }}" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Email</label>
+                            <input type="email" id="editEmail" value="{{ usuario.email or 'ana.martinez@pacta.com' }}" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Teléfono</label>
+                            <input type="tel" id="editTelefono" value="{{ usuario.telefono or '+57 300 123 4567' }}" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+                        <button onclick="cancelEdit()" class="btn-account" style="padding: 12px 24px; background: #6b7280; color: white;">
+                            <i class="fas fa-times" style="margin-right: 8px;"></i>
+                            Cancelar
+                        </button>
+                        <button onclick="saveChanges()" class="btn-account" style="padding: 12px 24px; background: #10b981; color: white;">
+                            <i class="fas fa-save" style="margin-right: 8px;"></i>
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tarjetas de Métricas -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Contratos Activos</span>
+                        <i class="fas fa-file-contract metric-icon" style="color: #3b82f6;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.contratos_activos or 156 }}</div>
+                    <div class="metric-change positive">+12 este mes</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Valor Total</span>
+                        <i class="fas fa-dollar-sign metric-icon" style="color: #10b981;"></i>
+                    </div>
+                    <div class="metric-value">${{ estadisticas.valor_total or '2.4M' }}</div>
+                    <div class="metric-change positive">+8.2% vs mes anterior</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Próximos a Vencer</span>
+                        <i class="fas fa-clock metric-icon" style="color: #f59e0b;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.proximos_vencer or 23 }}</div>
+                    <div class="metric-change negative">Requieren atención</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Reportes Generados</span>
+                        <i class="fas fa-chart-bar metric-icon" style="color: #8b5cf6;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.reportes_generados or 89 }}</div>
+                    <div class="metric-change positive">+15 esta semana</div>
+                </div>
+            </div>
+            
+            <!-- Vertical Blocks Layout -->
+            <div class="vertical-blocks">
+                <!-- Quick Actions Block -->
+                <div class="block-section actions-block">
+                    <div class="block-header">
+                        <h3 class="block-title">Acciones Rápidas</h3>
+                        <p class="block-subtitle">Herramientas y funciones principales</p>
+                    </div>
+                    <div class="block-content">
+                        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #3b82f6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-file-plus"></i>
+                                Crear Nuevo Contrato
+                            </button>
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #10b981; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-chart-bar"></i>
+                                Generar Reporte
+                            </button>
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #f59e0b; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-bell"></i>
+                                Ver Notificaciones
+                            </button>
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #8b5cf6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-cog"></i>
+                                Configuración
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Performance Charts Block -->
+                <div class="block-section charts-block">
+                    <div class="block-header">
+                        <h3 class="block-title">Gráficos de Rendimiento</h3>
+                        <p class="block-subtitle">Análisis visual de contratos y reportes</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="charts-grid">
+                            <div class="donut-chart">
+                                <canvas id="contractsChart" width="120" height="120"></canvas>
+                                <div class="donut-value">78%</div>
+                                <div class="donut-label">Contratos Activos</div>
+                            </div>
+                            <div class="donut-chart">
+                                <canvas id="reportsChart" width="120" height="120"></canvas>
+                                <div class="donut-value">92%</div>
+                                <div class="donut-label">Reportes Completados</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity Block -->
+                <div class="block-section activity-block">
+                    <div class="block-header">
+                        <h3 class="block-title">Actividad Reciente</h3>
+                        <p class="block-subtitle">Últimas acciones realizadas en el sistema</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="table-responsive">
+                            <div>
+                                <button class="btn-icon" title="Actualizar">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <button class="btn-icon" title="Ver Todo">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Acción</th>
+                                        <th>Descripción</th>
+                                        <th>Fecha</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="action-cell">
+                                                <i class="fas fa-file-plus" style="color: #10b981;"></i>
+                                                <span>Contrato Creado</span>
+                                            </div>
+                                        </td>
+                                        <td>Nuevo contrato con Empresa ABC</td>
+                                        <td>2024-02-15</td>
+                                        <td><span class="status-badge status-success">Completado</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="action-cell">
+                                                <i class="fas fa-chart-line" style="color: #3b82f6;"></i>
+                                                <span>Reporte Generado</span>
+                                            </div>
+                                        </td>
+                                        <td>Reporte mensual de contratos</td>
+                                        <td>2024-02-14</td>
+                                        <td><span class="status-badge status-success">Completado</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="action-cell">
+                                                <i class="fas fa-edit" style="color: #f59e0b;"></i>
+                                                <span>Contrato Modificado</span>
+                                            </div>
+                                        </td>
+                                        <td>Actualización de términos - Contrato #1234</td>
+                                        <td>2024-02-13</td>
+                                        <td><span class="status-badge status-warning">En Revisión</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="action-cell">
+                                                <i class="fas fa-cog" style="color: #8b5cf6;"></i>
+                                                <span>Configuración</span>
+                                            </div>
+                                        </td>
+                                        <td>Actualización de preferencias</td>
+                                        <td>2024-02-12</td>
+                                        <td><span class="status-badge status-success">Completado</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="action-cell">
+                                                <i class="fas fa-sign-in-alt" style="color: #6b7280;"></i>
+                                                <span>Inicio de Sesión</span>
+                                            </div>
+                                        </td>
+                                        <td>Acceso desde IP: 192.168.1.100</td>
+                                        <td>2024-02-12</td>
+                                        <td><span class="status-badge status-info">Registrado</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <!-- Personal Statistics Block -->
+                <div class="block-section activity-block">
+                    <div class="block-header">
+                        <h3 class="block-title">Estadísticas Personales</h3>
+                        <p class="block-subtitle">Métricas de desempeño individual</p>
+                    </div>
+                    <div class="block-content">
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border-radius: 8px;">
+                                <span style="font-weight: 500; color: #374151;">Contratos Creados</span>
+                                <span style="color: #3b82f6; font-weight: 600;">{{ usuario.contratos_creados or 45 }}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border-radius: 8px;">
+                                <span style="font-weight: 500; color: #374151;">Reportes Generados</span>
+                                <span style="color: #10b981; font-weight: 600;">{{ usuario.reportes_generados or 23 }}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border-radius: 8px;">
+                                <span style="font-weight: 500; color: #374151;">Último Acceso</span>
+                                <span style="color: #64748b; font-weight: 600;">{{ usuario.ultimo_acceso or 'Hoy 09:30' }}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border-radius: 8px;">
+                                <span style="font-weight: 500; color: #374151;">Sesiones Este Mes</span>
+                                <span style="color: #8b5cf6; font-weight: 600;">{{ usuario.sesiones_mes or 28 }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include Footer Component -->
+    {% include 'footer.html' %}
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Contracts Chart
+        const contractsCtx = document.getElementById('contractsChart').getContext('2d');
+        new Chart(contractsCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [78, 22],
+                    backgroundColor: ['#3b82f6', '#e5e7eb'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: false,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                cutout: '70%'
+            }
+        });
+        
+        // Reports Chart
+        const reportsCtx = document.getElementById('reportsChart').getContext('2d');
+        new Chart(reportsCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [92, 8],
+                    backgroundColor: ['#10b981', '#e5e7eb'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: false,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                cutout: '70%'
+            }
+        });
+        
+        // Edit Mode Functions
+        let isEditMode = false;
+        
+        function toggleEditMode() {
+            const editForm = document.getElementById('editForm');
+            const editIcon = document.getElementById('editIcon');
+            
+            if (isEditMode) {
+                editForm.style.display = 'none';
+                editIcon.className = 'fas fa-edit';
+                isEditMode = false;
+            } else {
+                editForm.style.display = 'block';
+                editIcon.className = 'fas fa-times';
+                isEditMode = true;
+            }
+        }
+        
+        function cancelEdit() {
+            toggleEditMode();
+            // Reset form values to original
+            document.getElementById('editNombre').value = '{{ usuario.nombre or "Ana Martínez" }}';
+            document.getElementById('editCargo').value = '{{ usuario.cargo or "Gerente de Operaciones" }}';
+            document.getElementById('editEmail').value = '{{ usuario.email or "ana.martinez@pacta.com" }}';
+            document.getElementById('editTelefono').value = '{{ usuario.telefono or "+57 300 123 4567" }}';
+        }
+        
+        function saveChanges() {
+            // Get form values
+            const nombre = document.getElementById('editNombre').value;
+            const cargo = document.getElementById('editCargo').value;
+            const email = document.getElementById('editEmail').value;
+            const telefono = document.getElementById('editTelefono').value;
+            
+            // Update display values
+            document.querySelector('h2').textContent = nombre;
+            document.querySelector('p').textContent = cargo;
+            document.getElementById('userEmail').textContent = email;
+            document.getElementById('userPhone').textContent = telefono;
+            document.querySelector('.user-name-small').textContent = nombre;
+            
+            // Update avatar initials
+            const nameParts = nombre.split(' ');
+            const initials = nameParts[0][0] + (nameParts[1] ? nameParts[1][0] : '');
+            document.querySelector('.user-avatar-large').textContent = initials;
+            
+            // Here you would typically send the data to the server
+            // For now, we'll just show a success message
+            alert('Perfil actualizado exitosamente');
+            
+            toggleEditMode();
+        }
+        
+        // Add some CSS for the action cells
+        const style = document.createElement('style');
+        style.textContent = `
+            .action-cell {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .action-cell i {
+                width: 16px;
+                text-align: center;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

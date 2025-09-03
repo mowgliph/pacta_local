@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración - PACTA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Include Sidebar Component -->
+        {% include 'sidebar.html' %}
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Include Header Component with custom content -->
+            <div class="content-header">
+                <div>
+                    <h1 class="page-title">Configuración</h1>
+                    <p class="page-subtitle">Configuración del sistema y preferencias</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" title="Documentación">
+                        <i class="fas fa-book"></i>
+                    </button>
+                    <button class="btn-icon" title="Guardar Cambios">
+                        <i class="fas fa-save"></i>
+                    </button>
+                    <div class="user-menu">
+                        <img src="https://via.placeholder.com/32x32/667eea/ffffff?text=U" alt="Usuario" class="user-avatar-small">
+                        <span class="user-name-small">Ana Martínez</span>
+                        <div class="user-dropdown">
+                            <a href="{{ url_for('usuario') }}" class="dropdown-item">
+                                <i class="fas fa-user"></i>
+                                <span>Perfil</span>
+                            </a>
+                            <a href="{{ url_for('configuracion') }}" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Configuración</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Metrics Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Usuarios Activos</span>
+                        <i class="fas fa-users metric-icon" style="color: #3b82f6;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.usuarios_activos or 24 }}</div>
+                    <div class="metric-change positive">+3 este mes</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Configuraciones</span>
+                        <i class="fas fa-cog metric-icon" style="color: #10b981;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.configuraciones or 12 }}</div>
+                    <div class="metric-change neutral">Sin cambios</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Último Backup</span>
+                        <i class="fas fa-database metric-icon" style="color: #f59e0b;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.ultimo_backup or 'Ayer' }}</div>
+                    <div class="metric-change positive">Automático</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Espacio Usado</span>
+                        <i class="fas fa-hdd metric-icon" style="color: #8b5cf6;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.espacio_usado or '68%' }}</div>
+                    <div class="metric-change neutral">De 500GB</div>
+                </div>
+            </div>
+            
+            <!-- Vertical Blocks Layout -->
+            <div class="vertical-blocks">
+                <!-- System Tools Block -->
+                <div class="block-section">
+                    <div class="block-header">
+                        <h3 class="block-title">Herramientas del Sistema</h3>
+                        <p class="block-subtitle">Utilidades de mantenimiento y administración</p>
+                    </div>
+                    <div class="block-content">
+                        <div style="padding: 24px;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #3b82f6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-database"></i>
+                                Crear Backup
+                            </button>
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #10b981; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-users-cog"></i>
+                                Gestionar Usuarios
+                            </button>
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #f59e0b; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-shield-alt"></i>
+                                Configurar Seguridad
+                            </button>
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #ef4444; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-broom"></i>
+                                Limpiar Sistema
+                            </button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- System Status Block -->
+                <div class="block-section charts-block">
+                    <div class="block-header">
+                        <h3 class="block-title">Estado del Sistema</h3>
+                        <p class="block-subtitle">Monitoreo de recursos y rendimiento</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="charts-grid">
+                            <div class="donut-chart">
+                                <canvas id="storageChart" width="120" height="120"></canvas>
+                                <div class="donut-value">68%</div>
+                                <div class="donut-label">Almacenamiento</div>
+                            </div>
+                            <div class="donut-chart">
+                                <canvas id="performanceChart" width="120" height="120"></canvas>
+                                <div class="donut-value">92%</div>
+                                <div class="donut-label">Rendimiento</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- General Configuration Block -->
+                <div class="block-section">
+                    <div class="block-header">
+                        <h3 class="block-title">Configuración General</h3>
+                        <p class="block-subtitle">Ajustes principales del sistema</p>
+                    </div>
+                    <div class="block-content">
+                        <div style="padding: 24px;">
+                            <!-- Company Settings -->
+                            <div style="margin-bottom: 32px;">
+                                <h4 style="color: #1f2937; margin-bottom: 16px; font-size: 16px;">Información de la Empresa</h4>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                    <div>
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Nombre de la Empresa</label>
+                                        <input type="text" value="PACTA Solutions" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">NIT/RUT</label>
+                                        <input type="text" value="900123456-7" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Teléfono</label>
+                                        <input type="text" value="+57 1 234 5678" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Email</label>
+                                        <input type="email" value="info@pacta.com" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- System Settings -->
+                            <div style="margin-bottom: 32px;">
+                                <h4 style="color: #1f2937; margin-bottom: 16px; font-size: 16px;">Configuración del Sistema</h4>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                    <div>
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Zona Horaria</label>
+                                        <select style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                            <option>America/Bogota</option>
+                                            <option>America/Mexico_City</option>
+                                            <option>America/Lima</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Idioma</label>
+                                        <select style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                            <option>Español</option>
+                                            <option>English</option>
+                                            <option>Português</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Moneda</label>
+                                        <select style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                            <option>COP - Peso Colombiano</option>
+                                            <option>USD - Dólar Americano</option>
+                                            <option>EUR - Euro</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Formato de Fecha</label>
+                                        <select style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                            <option>DD/MM/YYYY</option>
+                                            <option>MM/DD/YYYY</option>
+                                            <option>YYYY-MM-DD</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Notification Settings -->
+                            <div>
+                                <h4 style="color: #1f2937; margin-bottom: 16px; font-size: 16px;">Notificaciones</h4>
+                                <div style="display: flex; flex-direction: column; gap: 12px;">
+                                    <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                        <input type="checkbox" checked style="width: 18px; height: 18px;">
+                                        <span style="font-weight: 500; color: #374151;">Notificaciones por email</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                        <input type="checkbox" checked style="width: 18px; height: 18px;">
+                                        <span style="font-weight: 500; color: #374151;">Alertas de contratos próximos a vencer</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                        <input type="checkbox" style="width: 18px; height: 18px;">
+                                        <span style="font-weight: 500; color: #374151;">Reportes automáticos semanales</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                        <input type="checkbox" checked style="width: 18px; height: 18px;">
+                                        <span style="font-weight: 500; color: #374151;">Notificaciones de sistema</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <!-- System Information Block -->
+                <div class="block-section activity-block">
+                    <div class="block-header">
+                        <h3 class="block-title">Información del Sistema</h3>
+                        <p class="block-subtitle">Detalles técnicos y estado general</p>
+                    </div>
+                    <div class="block-content">
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border-radius: 8px;">
+                                <span style="font-weight: 500; color: #374151;">Versión PACTA</span>
+                                <span style="color: #10b981; font-weight: 600;">v2.1.0</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border-radius: 8px;">
+                                <span style="font-weight: 500; color: #374151;">Base de Datos</span>
+                                <span style="color: #10b981; font-weight: 600;">PostgreSQL 14</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border-radius: 8px;">
+                                <span style="font-weight: 500; color: #374151;">Último Backup</span>
+                                <span style="color: #64748b; font-weight: 600;">Ayer 02:00</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border-radius: 8px;">
+                                <span style="font-weight: 500; color: #374151;">Uptime</span>
+                                <span style="color: #10b981; font-weight: 600;">15 días</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Save Button -->
+            <div style="display: flex; justify-content: flex-end; margin-top: 24px; gap: 12px;">
+                <button class="btn-account" style="padding: 12px 24px; background: #6b7280; color: white;">
+                    <i class="fas fa-times" style="margin-right: 8px;"></i>
+                    Cancelar
+                </button>
+                <button class="btn-account" style="padding: 12px 24px; background: #10b981; color: white;">
+                    <i class="fas fa-save" style="margin-right: 8px;"></i>
+                    Guardar Cambios
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include Footer Component -->
+    {% include 'footer.html' %}
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Storage Chart
+        const storageCtx = document.getElementById('storageChart').getContext('2d');
+        new Chart(storageCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [68, 32],
+                    backgroundColor: ['#f59e0b', '#e5e7eb'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: false,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                cutout: '70%'
+            }
+        });
+        
+        // Performance Chart
+        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+        new Chart(performanceCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [92, 8],
+                    backgroundColor: ['#10b981', '#e5e7eb'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: false,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                cutout: '70%'
+            }
+        });
+    </script>
+</body>
+</html>

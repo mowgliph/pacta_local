@@ -1,319 +1,364 @@
-{% extends "base.html" %}
-
-{% block content %}
-<div class="dashboard-container">
-    <!-- Include Sidebar Component -->
-    {% include 'sidebar.html' %}
-    
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Include Header Component -->
-        {% include 'header.html' %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PACTA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Include Sidebar Component -->
+        {% include 'sidebar.html' %}
         
-        <!-- Metrics Cards -->
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-header">
-                    <span class="metric-label">Orders</span>
-                    <div class="metric-icon orders-icon">📋</div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Include Header Component with custom content -->
+            <div class="content-header">
+                <div>
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Resumen general del sistema PACTA</p>
                 </div>
-                <div class="metric-value">201</div>
-                <div class="metric-change positive">+8.2% vs last week</div>
-            </div>
-            
-            <div class="metric-card">
-                <div class="metric-header">
-                    <span class="metric-label">Approved</span>
-                    <div class="metric-icon approved-icon">✅</div>
-                </div>
-                <div class="metric-value">36</div>
-                <div class="metric-change positive">+2.1% vs last week</div>
-            </div>
-            
-            <div class="metric-card">
-                <div class="metric-header">
-                    <span class="metric-label">Users</span>
-                </div>
-                <div class="metric-value">4.890</div>
-            </div>
-            
-            <div class="metric-card">
-                <div class="metric-header">
-                    <span class="metric-label">Subscriptions</span>
-                </div>
-                <div class="metric-value">1.201</div>
-            </div>
-            
-            <div class="metric-card">
-                <div class="metric-header">
-                    <span class="metric-label">Month total</span>
-                    <div class="metric-icon money-icon">💰</div>
-                </div>
-                <div class="metric-value">$ 25410</div>
-                <div class="metric-change negative">-2.1% vs last month</div>
-            </div>
-            
-            <div class="metric-card">
-                <div class="metric-header">
-                    <span class="metric-label">Revenue</span>
-                    <div class="metric-icon revenue-icon">📊</div>
-                </div>
-                <div class="metric-value">$ 1352</div>
-                <div class="metric-change positive">+4.1% vs last week</div>
-            </div>
-        </div>
-        
-        <!-- Charts and Tables Row -->
-        <div class="content-row">
-            <!-- Left Column -->
-            <div class="content-left">
-                <!-- Sales Dynamics Chart -->
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3>Sales dynamics</h3>
-                        <select class="year-select">
-                            <option>2021</option>
-                            <option>2022</option>
-                        </select>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="salesChart"></canvas>
-                    </div>
-                </div>
-                
-                <!-- Overall User Activity Chart -->
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3>Overall User Activity</h3>
-                        <select class="year-select">
-                            <option>2021</option>
-                            <option>2022</option>
-                        </select>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="userActivityChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Right Column -->
-            <div class="content-right">
-                <!-- Donut Charts -->
-                <div class="donut-charts">
-                    <div class="donut-chart">
-                        <canvas id="donutChart1"></canvas>
-                        <div class="donut-info">
-                            <div class="donut-value">$30256.23</div>
-                            <div class="donut-label">Month Revenue</div>
-                        </div>
-                    </div>
-                    
-                    <div class="donut-chart">
-                        <canvas id="donutChart2"></canvas>
-                        <div class="donut-info">
-                            <div class="donut-value">$150256.23</div>
-                            <div class="donut-label">Future Revenue</div>
+                <div class="header-actions">
+                    <button class="btn-icon" title="Actualizar">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="btn-icon" title="Configuración">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <div class="user-menu">
+                        <img src="https://via.placeholder.com/32x32/667eea/ffffff?text=U" alt="Usuario" class="user-avatar-small">
+                        <span class="user-name-small">Ana Martínez</span>
+                        <div class="user-dropdown">
+                            <a href="{{ url_for('usuario') }}" class="dropdown-item">
+                                <i class="fas fa-user"></i>
+                                <span>Perfil</span>
+                            </a>
+                            <a href="{{ url_for('configuracion') }}" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Configuración</span>
+                            </a>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Customer Orders Table -->
-                <div class="table-card">
-                    <div class="table-header">
-                        <h3>Customer order</h3>
-                        <button class="btn-icon"><i class="fas fa-external-link-alt"></i></button>
+            </div>
+            
+            <!-- Main Metrics Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Total Contratos</span>
+                        <i class="fas fa-file-contract metric-icon" style="color: #3b82f6;"></i>
                     </div>
-                    <div class="table-container">
-                        <table class="orders-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Address</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="customer-info">
-                                            <img src="https://via.placeholder.com/32x32" alt="Customer" class="customer-avatar">
-                                            <span>PETER</span>
-                                        </div>
-                                    </td>
-                                    <td>London</td>
-                                    <td>21.09.2021</td>
-                                    <td><span class="status-badge delivered">Delivered</span></td>
-                                    <td>$100</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="customer-info">
-                                            <img src="https://via.placeholder.com/32x32" alt="Customer" class="customer-avatar">
-                                            <span>MARIA</span>
-                                        </div>
-                                    </td>
-                                    <td>New York</td>
-                                    <td>24.09.2021</td>
-                                    <td><span class="status-badge processing">Processing</span></td>
-                                    <td>$412</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="customer-info">
-                                            <img src="https://via.placeholder.com/32x32" alt="Customer" class="customer-avatar">
-                                            <span>JACK</span>
-                                        </div>
-                                    </td>
-                                    <td>Paris</td>
-                                    <td>11.10.2021</td>
-                                    <td><span class="status-badge cancelled">Cancelled</span></td>
-                                    <td>$1200</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="customer-info">
-                                            <img src="https://via.placeholder.com/32x32" alt="Customer" class="customer-avatar">
-                                            <span>ROBERT</span>
-                                        </div>
-                                    </td>
-                                    <td>New York</td>
-                                    <td>01.09.2021</td>
-                                    <td><span class="status-badge delivered">Delivered</span></td>
-                                    <td>$321</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="metric-value">{{ estadisticas.total_contratos }}</div>
+                    <div class="metric-change positive">{{ estadisticas.contratos_activos }} activos</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Reportes Generados</span>
+                        <i class="fas fa-chart-bar metric-icon" style="color: #10b981;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.total_reportes }}</div>
+                    <div class="metric-change positive">{{ estadisticas.reportes_mes }} este mes</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Usuarios Activos</span>
+                        <i class="fas fa-users metric-icon" style="color: #f59e0b;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.usuarios_activos }}</div>
+                    <div class="metric-change positive">{{ estadisticas.sesiones_mes }} sesiones/mes</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Valor Total</span>
+                        <i class="fas fa-dollar-sign metric-icon" style="color: #8b5cf6;"></i>
+                    </div>
+                    <div class="metric-value">${{ estadisticas.valor_total }}</div>
+                    <div class="metric-change positive">En contratos activos</div>
+                </div>
+            </div>
+            
+            <!-- Secondary Metrics Cards -->
+            <div class="metrics-grid" style="margin-top: 20px;">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Uptime del Sistema</span>
+                        <i class="fas fa-server metric-icon" style="color: #10b981;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.uptime }}%</div>
+                    <div class="metric-change positive">Disponibilidad</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Tiempo de Respuesta</span>
+                        <i class="fas fa-tachometer-alt metric-icon" style="color: #3b82f6;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.tiempo_respuesta }}ms</div>
+                    <div class="metric-change positive">Promedio</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Próximos a Vencer</span>
+                        <i class="fas fa-clock metric-icon" style="color: #f59e0b;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.contratos_por_vencer }}</div>
+                    <div class="metric-change negative">Requieren atención</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Reportes Pendientes</span>
+                        <i class="fas fa-exclamation-triangle metric-icon" style="color: #ef4444;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.reportes_pendientes }}</div>
+                    <div class="metric-change negative">Por procesar</div>
+                </div>
+            </div>
+            
+            <!-- Vertical Blocks Layout -->
+            <div class="vertical-blocks">
+                <!-- Quick Actions Block -->
+                <div class="block-section actions-block">
+                    <div class="block-header">
+                        <h3 class="block-title">Acciones Rápidas</h3>
+                        <p class="block-subtitle">Herramientas principales del sistema</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="contract-actions" style="display: flex; flex-wrap: nowrap; gap: 12px;">
+                            <button class="btn-account" style="flex: 1; min-width: 150px; padding: 12px; background: #3b82f6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-file-contract"></i>
+                                Gestionar Contratos
+                            </button>
+                            <button class="btn-account" style="flex: 1; min-width: 150px; padding: 12px; background: #10b981; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-chart-bar"></i>
+                                Ver Reportes
+                            </button>
+                            <button class="btn-account" style="flex: 1; min-width: 150px; padding: 12px; background: #f59e0b; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-user"></i>
+                                Perfil de Usuario
+                            </button>
+                            <button class="btn-account" style="flex: 1; min-width: 150px; padding: 12px; background: #8b5cf6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-cog"></i>
+                                Configuración
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- System Overview Charts Block -->
+                <div class="block-section charts-block">
+                    <div class="block-header">
+                        <h3 class="block-title">Resumen del Sistema</h3>
+                        <p class="block-subtitle">Distribución y estado general</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="charts-grid">
+                            <div class="donut-chart">
+                                <canvas id="contractsOverviewChart" width="120" height="120"></canvas>
+                                <div class="donut-value">{{ estadisticas.contratos_activos }}</div>
+                                <div class="donut-label">Contratos Activos</div>
+                            </div>
+                            <div class="donut-chart">
+                                <canvas id="reportsOverviewChart" width="120" height="120"></canvas>
+                                <div class="donut-value">{{ estadisticas.total_reportes }}</div>
+                                <div class="donut-label">Total Reportes</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Contracts Block -->
+                <div class="block-section table-block">
+                    <div class="block-header">
+                        <h3 class="block-title">Contratos Recientes</h3>
+                        <p class="block-subtitle">Últimos contratos registrados en el sistema</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="table-card">
+                            <div class="table-container">
+                                <table class="orders-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Contrato</th>
+                                            <th>Proveedor</th>
+                                            <th>Fecha Vencimiento</th>
+                                            <th>Valor</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for contrato in contratos %}
+                                        <tr>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <i class="fas fa-file-contract" style="color: #3b82f6; margin-right: 8px;"></i>
+                                                    <div>
+                                                        <div style="font-weight: 500;">{{ contrato.id }}</div>
+                                                        <div style="font-size: 12px; color: #64748b;">{{ contrato.tipo }}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <img src="https://via.placeholder.com/32x32/3b82f6/ffffff?text={{ contrato.proveedor[0] }}" alt="Proveedor" class="customer-avatar">
+                                                    <div>
+                                                        <div style="font-weight: 500;">{{ contrato.proveedor }}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{ contrato.fecha_vencimiento }}</td>
+                                            <td style="font-weight: 600;">${{ "{:,}".format(contrato.valor) }}</td>
+                                            <td>
+                                                {% if contrato.estado == 'Activo' %}
+                                                    <span class="status-badge delivered">{{ contrato.estado }}</span>
+                                                {% elif contrato.estado == 'Por Vencer' %}
+                                                    <span class="status-badge processing">{{ contrato.estado }}</span>
+                                                {% else %}
+                                                    <span class="status-badge cancelled">{{ contrato.estado }}</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-footer">
+                                <a href="/contratos" class="btn-account" style="background: #3b82f6; text-decoration: none; color: white;">
+                                    Ver Todos los Contratos
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- System Activity Block -->
+                <div class="block-section activity-block">
+                    <div class="block-header">
+                        <h3 class="block-title">Actividad del Sistema</h3>
+                        <p class="block-subtitle">Últimas acciones y eventos importantes</p>
+                    </div>
+                    <div class="block-content">
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div class="activity-item">
+                                <div class="activity-dot" style="background: #10b981;"></div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Sistema actualizado</div>
+                                    <div class="activity-subtitle">Versión 2.1.0 instalada correctamente</div>
+                                    <div class="activity-time">Hace 1 hora</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot" style="background: #3b82f6;"></div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Nuevo reporte generado</div>
+                                    <div class="activity-subtitle">Reporte mensual de contratos completado</div>
+                                    <div class="activity-time">Hace 3 horas</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot" style="background: #f59e0b;"></div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Backup programado</div>
+                                    <div class="activity-subtitle">Copia de seguridad completada exitosamente</div>
+                                    <div class="activity-time">Hace 6 horas</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot" style="background: #8b5cf6;"></div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Usuario conectado</div>
+                                    <div class="activity-subtitle">Ana Martínez inició sesión</div>
+                                    <div class="activity-time">Hace 8 horas</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<!-- Scripts para gráficos -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-// Sales Dynamics Chart
-const salesCtx = document.getElementById('salesChart').getContext('2d');
-new Chart(salesCtx, {
-    type: 'bar',
-    data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [{
-            data: [30, 45, 35, 50, 49, 60, 70, 91, 125, 85, 95, 110],
-            backgroundColor: '#4F46E5',
-            borderRadius: 4,
-            barThickness: 20
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: false
+    
+    <!-- Include Footer Component -->
+    {% include 'footer.html' %}
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Responsive chart configuration
+        function getChartSize() {
+            return window.innerWidth <= 480 ? 100 : 120;
+        }
+        
+        function updateChartSize() {
+            const size = getChartSize();
+            const contractsCanvas = document.getElementById('contractsOverviewChart');
+            const reportsCanvas = document.getElementById('reportsOverviewChart');
+            
+            if (contractsCanvas && reportsCanvas) {
+                contractsCanvas.width = size;
+                contractsCanvas.height = size;
+                reportsCanvas.width = size;
+                reportsCanvas.height = size;
             }
-        },
-        scales: {
-            x: {
-                grid: {
-                    display: false
-                }
+        }
+        
+        // Contracts Overview Chart
+        const contractsCtx = document.getElementById('contractsOverviewChart').getContext('2d');
+        const contractsChart = new Chart(contractsCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [{{ estadisticas.contratos_activos }}, {{ estadisticas.contratos_por_vencer }}, {{ estadisticas.total_contratos - estadisticas.contratos_activos - estadisticas.contratos_por_vencer }}],
+                    backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                    borderWidth: 0
+                }]
             },
-            y: {
-                beginAtZero: true,
-                grid: {
-                    color: '#f3f4f6'
-                }
+            options: {
+                responsive: false,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                cutout: '70%'
             }
-        }
-    }
-});
-
-// User Activity Chart
-const userActivityCtx = document.getElementById('userActivityChart').getContext('2d');
-new Chart(userActivityCtx, {
-    type: 'line',
-    data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [{
-            data: [20, 35, 45, 35, 55, 65, 85, 95, 75, 85, 95, 105],
-            borderColor: '#8B5CF6',
-            backgroundColor: 'rgba(139, 92, 246, 0.1)',
-            fill: true,
-            tension: 0.4,
-            borderWidth: 3
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: false
-            }
-        },
-        scales: {
-            x: {
-                grid: {
-                    display: false
-                }
+        });
+        
+        // Reports Overview Chart
+        const reportsCtx = document.getElementById('reportsOverviewChart').getContext('2d');
+        const reportsChart = new Chart(reportsCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [{{ estadisticas.reportes_mes }}, {{ estadisticas.total_reportes - estadisticas.reportes_mes }}],
+                    backgroundColor: ['#3b82f6', '#e5e7eb'],
+                    borderWidth: 0
+                }]
             },
-            y: {
-                beginAtZero: true,
-                grid: {
-                    color: '#f3f4f6'
-                }
+            options: {
+                responsive: false,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                cutout: '70%'
             }
-        }
-    }
-});
-
-// Donut Charts
-const donutCtx1 = document.getElementById('donutChart1').getContext('2d');
-new Chart(donutCtx1, {
-    type: 'doughnut',
-    data: {
-        datasets: [{
-            data: [70, 30],
-            backgroundColor: ['#F59E0B', '#FEF3C7'],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '70%',
-        plugins: {
-            legend: {
-                display: false
-            }
-        }
-    }
-});
-
-const donutCtx2 = document.getElementById('donutChart2').getContext('2d');
-new Chart(donutCtx2, {
-    type: 'doughnut',
-    data: {
-        datasets: [{
-            data: [80, 20],
-            backgroundColor: ['#3B82F6', '#DBEAFE'],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '70%',
-        plugins: {
-            legend: {
-                display: false
-            }
-        }
-    }
-});
-</script>
-{% endblock %}
+        });
+        
+        // Update chart sizes on window resize
+        window.addEventListener('resize', updateChartSize);
+        updateChartSize();
+    </script>
+</body>
+</html>
