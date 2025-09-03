@@ -3,7 +3,8 @@ from datetime import datetime, timedelta
 import random
 from functools import wraps
 from database import db_manager
-from database.models import Usuario, Cliente, Contrato, Suplemento, ActividadSistema
+from database.models import Usuario, Cliente, Contrato, Suplemento, ActividadSistema, Notificacion
+from services.contract_reminders import ContractReminderSystem
 
 # Crear la aplicación Flask
 app = Flask(__name__)
@@ -286,7 +287,13 @@ def dashboard():
         'tiempo_respuesta': tiempo_respuesta
     }
     
-    return render_template('dashboard.html', estadisticas=estadisticas_completas, contratos=contratos_recientes)
+    # Obtener usuario actual de la sesión
+    usuario_actual = Usuario.get_by_id(session['user_id'])
+    
+    return render_template('dashboard.html', 
+                         estadisticas=estadisticas_completas, 
+                         contratos=contratos_recientes,
+                         usuario=usuario_actual)
 
 @app.route('/contratos')
 @login_required
@@ -337,9 +344,13 @@ def contratos():
     estadisticas = obtener_estadisticas_contratos()
     estadisticas['valor_total'] = f'{estadisticas["valor_total"]/1000000:.1f}M'
     
+    # Obtener usuario actual de la sesión
+    usuario_actual = Usuario.get_by_id(session['user_id'])
+    
     return render_template('contratos.html', 
                          contratos=contratos_data, 
-                         estadisticas=estadisticas)
+                         estadisticas=estadisticas,
+                         usuario=usuario_actual)
 
 def obtener_todos_suplementos():
     """Obtiene todos los suplementos con información enriquecida"""
@@ -403,9 +414,13 @@ def suplementos():
     # Obtener estadísticas
     estadisticas = obtener_estadisticas_suplementos()
     
+    # Obtener usuario actual de la sesión
+    usuario_actual = Usuario.get_by_id(session['user_id'])
+    
     return render_template('suplementos.html', 
                          suplementos=suplementos, 
-                         estadisticas=estadisticas)
+                         estadisticas=estadisticas,
+                         usuario=usuario_actual)
 
 @app.route('/reportes')
 @login_required
@@ -449,9 +464,13 @@ def reportes():
         'descargas': 267
     }
     
+    # Obtener usuario actual de la sesión
+    usuario_actual = Usuario.get_by_id(session['user_id'])
+    
     return render_template('reportes.html', 
                          reportes=reportes_data, 
-                         estadisticas=estadisticas)
+                         estadisticas=estadisticas,
+                         usuario=usuario_actual)
 
 @app.route('/configuracion')
 @admin_required
@@ -464,7 +483,12 @@ def configuracion():
         'espacio_usado': '68%'
     }
     
-    return render_template('configuracion.html', estadisticas=estadisticas)
+    # Obtener usuario actual de la sesión
+    usuario_actual = Usuario.get_by_id(session['user_id'])
+    
+    return render_template('configuracion.html', 
+                         estadisticas=estadisticas,
+                         usuario=usuario_actual)
 
 @app.route('/usuario')
 @login_required
@@ -694,6 +718,33 @@ def crear_usuario():
     except Exception as e:
         return jsonify({'success': False, 'message': f'Error al crear usuario: {str(e)}'})
 
+@app.route('/usuarios_lista')
+@admin_required
+def usuarios_lista():
+    try:
+        # Obtener usuario actual
+        usuario_actual = Usuario.get_by_id(session['user_id'])
+        
+        # Obtener todos los usuarios
+        usuarios = Usuario.get_all()
+        
+        # Estadísticas básicas
+        estadisticas = {
+            'total_usuarios': len(usuarios),
+            'usuarios_activos': len([u for u in usuarios if hasattr(u, 'activo') and u.activo]),
+            'administradores': len([u for u in usuarios if u.es_admin]),
+            'usuarios_regulares': len([u for u in usuarios if not u.es_admin])
+        }
+        
+        return render_template('usuarios_lista.html', 
+                             usuario=usuario_actual,
+                             usuarios=usuarios,
+                             estadisticas=estadisticas)
+    
+    except Exception as e:
+        flash('Error al cargar la lista de usuarios', 'error')
+        return redirect(url_for('dashboard'))
+
 @app.route('/api/estadisticas')
 def api_estadisticas():
     contratos = Contrato.get_all()
@@ -714,6 +765,148 @@ def api_estadisticas():
         'tipos_contrato': tipos_count,
         'estados_contrato': estados_count
     })
+
+@app.route('/components/modals/user_modal')
+@login_required
+def user_modal():
+    """Sirve el modal de usuario como componente"""
+    return render_template('components/modals/user_modal.html')
+
+@app.route('/components/modals/notifications_modal')
+@login_required
+def notifications_modal():
+    """Sirve el modal de notificaciones como componente"""
+    return render_template('components/modals/notifications_modal.html')
+
+# API Routes para Notificaciones
+@app.route('/api/notifications')
+@login_required
+def get_notifications():
+    """Obtiene las notificaciones del usuario actual"""
+    try:
+        usuario_id = session['user_id']
+        notificaciones = Notificacion.get_by_user(usuario_id)
+        
+        return jsonify({
+            'success': True,
+            'notifications': [notif.to_dict() for notif in notificaciones]
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error al obtener notificaciones: {str(e)}'})
+
+@app.route('/api/notifications/count')
+@login_required
+def get_notifications_count():
+    """Obtiene el conteo de notificaciones no leídas"""
+    try:
+        usuario_id = session['user_id']
+        count = Notificacion.count_unread(usuario_id)
+        
+        return jsonify({
+            'success': True,
+            'count': count
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error al contar notificaciones: {str(e)}'})
+
+@app.route('/api/notifications/<int:notification_id>/read', methods=['POST'])
+@login_required
+def mark_notification_read(notification_id):
+    """Marca una notificación como leída"""
+    try:
+        usuario_id = session['user_id']
+        success = Notificacion.mark_as_read(notification_id, usuario_id)
+        
+        if success:
+            return jsonify({'success': True, 'message': 'Notificación marcada como leída'})
+        else:
+            return jsonify({'success': False, 'message': 'No se pudo marcar la notificación'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error al marcar notificación: {str(e)}'})
+
+@app.route('/api/notifications/mark-all-read', methods=['POST'])
+@login_required
+def mark_all_notifications_read():
+    """Marca todas las notificaciones del usuario como leídas"""
+    try:
+        usuario_id = session['user_id']
+        success = Notificacion.mark_all_as_read(usuario_id)
+        
+        if success:
+            return jsonify({'success': True, 'message': 'Todas las notificaciones marcadas como leídas'})
+        else:
+            return jsonify({'success': False, 'message': 'No se pudieron marcar las notificaciones'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error al marcar notificaciones: {str(e)}'})
+
+@app.route('/api/notifications/create-system', methods=['POST'])
+@admin_required
+def create_system_notification():
+    """Crea una notificación del sistema (solo administradores)"""
+    try:
+        data = request.get_json()
+        title = data.get('title')
+        message = data.get('message')
+        user_ids = data.get('user_ids', [])  # Lista de IDs de usuarios, vacía = todos
+        
+        if not title or not message:
+            return jsonify({'success': False, 'message': 'Título y mensaje son requeridos'})
+        
+        # Si no se especifican usuarios, enviar a todos
+        if not user_ids:
+            usuarios = Usuario.get_all()
+            user_ids = [u.id for u in usuarios]
+        
+        # Crear notificaciones para cada usuario
+        for user_id in user_ids:
+            Notificacion.create_system_notification(user_id, title, message)
+        
+        return jsonify({
+            'success': True, 
+            'message': f'Notificación enviada a {len(user_ids)} usuarios'
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error al crear notificación: {str(e)}'})
+
+@app.route('/api/notifications/check-contracts', methods=['POST'])
+@admin_required
+def check_contract_reminders():
+    """Ejecuta manualmente el sistema de recordatorios de contratos (solo administradores)"""
+    try:
+        reminder_system = ContractReminderSystem()
+        
+        # Verificar contratos individuales
+        individual_notifications = reminder_system.check_expiring_contracts()
+        
+        # Crear recordatorios del sistema
+        system_notifications = reminder_system.create_system_reminders()
+        
+        total_notifications = individual_notifications + system_notifications
+        
+        return jsonify({
+            'success': True,
+            'message': f'Verificación completada. {total_notifications} notificaciones creadas.',
+            'details': {
+                'individual_notifications': individual_notifications,
+                'system_notifications': system_notifications,
+                'total': total_notifications
+            }
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error al verificar contratos: {str(e)}'})
+
+def run_automatic_reminders():
+    """Ejecuta automáticamente el sistema de recordatorios"""
+    try:
+        reminder_system = ContractReminderSystem()
+        total_notifications = reminder_system.check_expiring_contracts()
+        total_notifications += reminder_system.create_system_reminders()
+        
+        print(f"Recordatorios automáticos ejecutados: {total_notifications} notificaciones creadas")
+        return total_notifications
+    except Exception as e:
+        print(f"Error en recordatorios automáticos: {str(e)}")
+        return 0
 
 if __name__ == '__main__':
     # Ejecutar la aplicación en modo desarrollo

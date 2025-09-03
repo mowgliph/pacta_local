@@ -113,12 +113,31 @@ class DatabaseManager:
                 )
             ''')
             
+            # Crear tabla de notificaciones
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS notificaciones (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    usuario_id INTEGER NOT NULL,
+                    title VARCHAR(200) NOT NULL,
+                    message TEXT NOT NULL,
+                    type VARCHAR(50) CHECK(type IN ('system', 'contract_expiring', 'contract_expired', 'user', 'report')) DEFAULT 'system',
+                    is_read BOOLEAN DEFAULT 0,
+                    contract_id INTEGER,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (usuario_id) REFERENCES usuarios (id),
+                    FOREIGN KEY (contract_id) REFERENCES contratos (id)
+                )
+            ''')
+            
             # Crear índices para mejorar el rendimiento
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_contratos_cliente ON contratos(cliente_id)')
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_contratos_usuario ON contratos(usuario_responsable_id)')
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_suplementos_contrato ON suplementos(contrato_id)')
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_actividad_usuario ON actividad_sistema(usuario_id)')
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_actividad_fecha ON actividad_sistema(fecha_actividad)')
+            cursor.execute('CREATE INDEX IF NOT EXISTS idx_notificaciones_usuario ON notificaciones(usuario_id)')
+            cursor.execute('CREATE INDEX IF NOT EXISTS idx_notificaciones_fecha ON notificaciones(created_at)')
+            cursor.execute('CREATE INDEX IF NOT EXISTS idx_notificaciones_leidas ON notificaciones(usuario_id, is_read)')
             
             conn.commit()
             print("Base de datos inicializada correctamente")

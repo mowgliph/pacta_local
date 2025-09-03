@@ -8,9 +8,13 @@
         <button class="btn-icon" title="Documentación">
             <i class="fas fa-book"></i>
         </button>
+        <button class="btn-icon notification-bell" title="Notificaciones" onclick="openNotificationsModal()">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+        </button>
         <div class="user-menu">
-            <img src="https://via.placeholder.com/32x32/667eea/ffffff?text=U" alt="Usuario" class="user-avatar-small">
-            <span class="user-name-small">Ana Martínez</span>
+            <div class="user-avatar-small avatar-generated">{{ (usuario.nombre or 'Usuario').split()[0][0] }}{{ (usuario.nombre or 'Usuario').split()[1][0] if (usuario.nombre or 'Usuario').split()|length > 1 else (usuario.nombre or 'Usuario').split()[0][1] if (usuario.nombre or 'Usuario').split()[0]|length > 1 else '' }}</div>
+            <span class="user-name-small">{{ usuario.nombre }}</span>
             <div class="user-dropdown">
                 <a href="{{ url_for('usuario') }}" class="dropdown-item">
                     <i class="fas fa-user"></i>

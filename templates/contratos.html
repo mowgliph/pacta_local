@@ -11,7 +11,7 @@
 <body>
     <div class="dashboard-container">
         <!-- Include Sidebar Component -->
-        {% include 'sidebar.html' %}
+        {% include 'components/partials/sidebar.html' %}
         
         <!-- Main Content -->
         <div class="main-content">
@@ -29,8 +29,8 @@
                         <i class="fas fa-plus"></i>
                     </button>
                     <div class="user-menu">
-                        <img src="https://via.placeholder.com/32x32/667eea/ffffff?text=U" alt="Usuario" class="user-avatar-small">
-                        <span class="user-name-small">Ana Martínez</span>
+                        <div class="user-avatar-small avatar-generated">{{ (usuario.nombre or 'Usuario').split()[0][0] }}{{ (usuario.nombre or 'Usuario').split()[1][0] if (usuario.nombre or 'Usuario').split()|length > 1 else (usuario.nombre or 'Usuario').split()[0][1] if (usuario.nombre or 'Usuario').split()[0]|length > 1 else '' }}</div>
+                        <span class="user-name-small">{{ usuario.nombre }}</span>
                         <div class="user-dropdown">
                             <a href="{{ url_for('usuario') }}" class="dropdown-item">
                                 <i class="fas fa-user"></i>
@@ -344,88 +344,12 @@
     </div>
     
     <!-- Include Footer Component -->
-    {% include 'footer.html' %}
+    {% include 'components/partials/footer.html' %}
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Responsive chart configuration
-        function getChartSize() {
-            return window.innerWidth <= 480 ? 100 : 120;
-        }
-        
-        function updateChartSize() {
-            const size = getChartSize();
-            const statusCanvas = document.getElementById('statusChart');
-            const typeCanvas = document.getElementById('typeChart');
-            
-            if (statusCanvas && typeCanvas) {
-                statusCanvas.width = size;
-                statusCanvas.height = size;
-                typeCanvas.width = size;
-                typeCanvas.height = size;
-            }
-        }
-        
-        // Status Chart
-        const statusCtx = document.getElementById('statusChart').getContext('2d');
-        const statusChart = new Chart(statusCtx, {
-            type: 'doughnut',
-            data: {
-                datasets: [{
-                    data: [89, 11],
-                    backgroundColor: ['#10b981', '#e5e7eb'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { display: false }
-                },
-                cutout: '70%',
-                animation: {
-                    animateRotate: true,
-                    duration: 1000
-                }
-            }
-        });
-        
-        // Type Chart
-        const typeCtx = document.getElementById('typeChart').getContext('2d');
-        const typeChart = new Chart(typeCtx, {
-            type: 'doughnut',
-            data: {
-                datasets: [{
-                    data: [65, 35],
-                    backgroundColor: ['#3b82f6', '#e5e7eb'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { display: false }
-                },
-                cutout: '70%',
-                animation: {
-                    animateRotate: true,
-                    duration: 1000
-                }
-            }
-        });
-        
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            updateChartSize();
-            statusChart.resize();
-            typeChart.resize();
-        });
-        
-        // Initial size update
-        updateChartSize();
-    </script>
+    
+    <!-- Funciones modulares de contratos -->
+    <script src="{{ url_for('static', filename='js/contract_functions.js') }}"></script>
 </body>
 </html>

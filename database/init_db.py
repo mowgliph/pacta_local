@@ -30,6 +30,17 @@ def crear_usuarios_ejemplo():
     print("Creando usuarios de ejemplo...")
     
     usuarios = [
+        # Usuario administrador por defecto
+        Usuario(
+            nombre='Administrador del Sistema',
+            email='admin@empresa.com',
+            username='admin',
+            password='admin123',
+            telefono='555-0100',
+            cargo='Administrador del Sistema',
+            departamento='TI',
+            es_admin=True
+        ),
         Usuario(
             nombre='Juan Pérez Martínez',
             email='juan.perez@empresa.com',

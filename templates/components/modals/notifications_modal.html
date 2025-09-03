@@ -1,0 +1,37 @@
+<!-- Modal de Notificaciones -->
+<div id="notifications-modal" class="notifications-modal" style="display: none;">
+    <div class="notifications-modal-content">
+        <div class="notifications-header">
+            <h3 class="notifications-title">
+                <i class="fas fa-bell"></i>
+                Notificaciones
+            </h3>
+            <div class="notifications-actions">
+                <button class="mark-all-read-btn" title="Marcar todas como leídas">
+                    <i class="fas fa-check-double"></i>
+                    Marcar todas como leídas
+                </button>
+                <button class="close-modal-btn" onclick="window.notificationManager?.closeNotificationsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="notifications-body">
+            <div id="notifications-list" class="notifications-list">
+                <!-- Las notificaciones se cargarán aquí dinámicamente -->
+                <div class="notification-loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Cargando notificaciones...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="notifications-footer">
+            <small class="text-muted">
+                <i class="fas fa-sync-alt"></i>
+                Se actualiza automáticamente cada 30 segundos
+            </small>
+        </div>
+    </div>
+</div>

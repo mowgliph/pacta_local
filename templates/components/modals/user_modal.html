@@ -1,0 +1,52 @@
+<!-- Modal para crear nuevo usuario -->
+<div class="modal fade" id="newUserModal" tabindex="-1" aria-labelledby="newUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newUserModalLabel">
+                    <i class="fas fa-user-plus me-2"></i>Crear Nuevo Usuario
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newUserForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="newUserNombre" class="form-label">Nombre Completo *</label>
+                            <input type="text" class="form-control" id="newUserNombre" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="newUserEmail" class="form-label">Email *</label>
+                            <input type="email" class="form-control" id="newUserEmail" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="newUserCargo" class="form-label">Cargo</label>
+                            <input type="text" class="form-control" id="newUserCargo">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="newUserTelefono" class="form-label">Teléfono</label>
+                            <input type="tel" class="form-control" id="newUserTelefono">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="newUserPassword" class="form-label">Contraseña Temporal *</label>
+                            <input type="password" class="form-control" id="newUserPassword" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="newUserRole" class="form-label">Rol *</label>
+                            <select class="form-control" id="newUserRole" required>
+                                <option value="">Seleccionar rol...</option>
+                                <option value="admin">Administrador</option>
+                                <option value="user">Usuario</option>
+                                <option value="viewer">Solo Lectura</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="createNewUser()">Crear Usuario</button>
+            </div>
+        </div>
+    </div>
+</div>

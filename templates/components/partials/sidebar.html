@@ -61,7 +61,7 @@
     <!-- Sidebar Footer -->
     <div class="sidebar-footer">
         <div class="user-profile">
-            <img src="https://via.placeholder.com/40x40/667eea/ffffff?text=U" alt="Usuario" class="user-avatar">
+            <div class="user-avatar avatar-generated">{{ (usuario.nombre or 'Usuario').split()[0][0] }}{{ (usuario.nombre or 'Usuario').split()[1][0] if (usuario.nombre or 'Usuario').split()|length > 1 else (usuario.nombre or 'Usuario').split()[0][1] if (usuario.nombre or 'Usuario').split()[0]|length > 1 else '' }}</div>
             <div class="user-info">
                 <div class="user-name">Usuario</div>
                 <div class="user-title">Administrador</div>
@@ -71,50 +71,5 @@
     </div>
 </div>
 
-<script>
-// Función para manejar la navegación activa en el sidebar
-document.addEventListener('DOMContentLoaded', function() {
-    const navItems = document.querySelectorAll('.nav-item');
-    const currentPath = window.location.pathname;
-    
-    // Remover clase active de todos los elementos
-    navItems.forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    // Añadir clase active al elemento correspondiente basado en la URL actual
-    navItems.forEach(item => {
-        const link = item.querySelector('.nav-link');
-        if (link) {
-            const href = link.getAttribute('href');
-            
-            // Verificar si la URL actual coincide con el href del enlace
-            if (currentPath === href || 
-                (currentPath === '/' && href.includes('dashboard')) ||
-                (currentPath.includes('contratos') && href.includes('contratos')) ||
-                (currentPath.includes('suplementos') && href.includes('suplementos')) ||
-                (currentPath.includes('reportes') && href.includes('reportes')) ||
-                (currentPath.includes('usuario') && href.includes('usuario')) ||
-                (currentPath.includes('configuracion') && href.includes('configuracion'))) {
-                item.classList.add('active');
-            }
-        }
-    });
-    
-    // Añadir event listeners para clicks en los enlaces
-    navItems.forEach(item => {
-        const link = item.querySelector('.nav-link');
-        if (link) {
-            link.addEventListener('click', function(e) {
-                // Remover active de todos los elementos
-                navItems.forEach(navItem => {
-                    navItem.classList.remove('active');
-                });
-                
-                // Añadir active al elemento clickeado
-                item.classList.add('active');
-            });
-        }
-    });
-});
-</script>
+<!-- Las funciones del sidebar se cargan desde sidebar_functions.js -->
+<script src="{{ url_for('static', filename='js/sidebar_functions.js') }}"></script>

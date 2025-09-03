@@ -171,6 +171,17 @@ body {
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    color: white;
+    text-transform: uppercase;
+}
+
+.user-avatar.avatar-generated {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .user-info {
@@ -273,6 +284,17 @@ body {
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 12px;
+    color: white;
+    text-transform: uppercase;
+}
+
+.user-avatar-small.avatar-generated {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .user-name-small {
@@ -717,6 +739,37 @@ body {
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 12px;
+    color: white;
+    text-transform: uppercase;
+}
+
+.customer-avatar.avatar-generated {
+    background: #3b82f6;
+}
+
+.customer-avatar.avatar-generated.color-green {
+    background: #10b981;
+}
+
+.customer-avatar.avatar-generated.color-yellow {
+    background: #f59e0b;
+}
+
+.customer-avatar.avatar-generated.color-red {
+    background: #ef4444;
+}
+
+.customer-avatar.avatar-generated.color-purple {
+    background: #8b5cf6;
+}
+
+.customer-avatar.avatar-generated.color-pink {
+    background: #ec4899;
 }
 
 .status-badge {
@@ -1586,4 +1639,150 @@ img, video, iframe {
     .page-title {
         color: black !important;
     }
+}
+
+/* Notification Bell Styles */
+.notification-bell {
+    position: relative;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ef4444;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    animation: pulse 2s infinite;
+}
+
+.notification-badge.hidden {
+    display: none !important;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.notification-bell:hover .notification-badge {
+    animation: none;
+}
+
+/* Notification Modal Styles */
+.notification-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e2e8f0;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.notification-item:hover {
+    background-color: #f8fafc;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item.unread {
+    background-color: #f0f9ff;
+    border-left: 3px solid #3b82f6;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+}
+
+.notification-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1e293b;
+    margin: 0;
+}
+
+.notification-time {
+    font-size: 12px;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+.notification-message {
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.notification-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.notification-icon.system {
+    color: #3b82f6;
+}
+
+.notification-icon.contract {
+    color: #f59e0b;
+}
+
+.notification-icon.warning {
+    color: #ef4444;
+}
+
+.notification-icon.success {
+    color: #10b981;
+}
+
+.notification-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #64748b;
+}
+
+.notification-empty i {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.notification-loading {
+    text-align: center;
+    padding: 20px;
+}
+
+.notification-actions {
+    padding: 16px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.notification-actions .btn {
+    flex: 1;
+    font-size: 13px;
+    padding: 8px 16px;
 }
