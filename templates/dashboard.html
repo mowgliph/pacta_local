@@ -1,0 +1,319 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Include Sidebar Component -->
+    {% include 'sidebar.html' %}
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Include Header Component -->
+        {% include 'header.html' %}
+        
+        <!-- Metrics Cards -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-label">Orders</span>
+                    <div class="metric-icon orders-icon">📋</div>
+                </div>
+                <div class="metric-value">201</div>
+                <div class="metric-change positive">+8.2% vs last week</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-label">Approved</span>
+                    <div class="metric-icon approved-icon">✅</div>
+                </div>
+                <div class="metric-value">36</div>
+                <div class="metric-change positive">+2.1% vs last week</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-label">Users</span>
+                </div>
+                <div class="metric-value">4.890</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-label">Subscriptions</span>
+                </div>
+                <div class="metric-value">1.201</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-label">Month total</span>
+                    <div class="metric-icon money-icon">💰</div>
+                </div>
+                <div class="metric-value">$ 25410</div>
+                <div class="metric-change negative">-2.1% vs last month</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-label">Revenue</span>
+                    <div class="metric-icon revenue-icon">📊</div>
+                </div>
+                <div class="metric-value">$ 1352</div>
+                <div class="metric-change positive">+4.1% vs last week</div>
+            </div>
+        </div>
+        
+        <!-- Charts and Tables Row -->
+        <div class="content-row">
+            <!-- Left Column -->
+            <div class="content-left">
+                <!-- Sales Dynamics Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Sales dynamics</h3>
+                        <select class="year-select">
+                            <option>2021</option>
+                            <option>2022</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Overall User Activity Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Overall User Activity</h3>
+                        <select class="year-select">
+                            <option>2021</option>
+                            <option>2022</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="userActivityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column -->
+            <div class="content-right">
+                <!-- Donut Charts -->
+                <div class="donut-charts">
+                    <div class="donut-chart">
+                        <canvas id="donutChart1"></canvas>
+                        <div class="donut-info">
+                            <div class="donut-value">$30256.23</div>
+                            <div class="donut-label">Month Revenue</div>
+                        </div>
+                    </div>
+                    
+                    <div class="donut-chart">
+                        <canvas id="donutChart2"></canvas>
+                        <div class="donut-info">
+                            <div class="donut-value">$150256.23</div>
+                            <div class="donut-label">Future Revenue</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Customer Orders Table -->
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Customer order</h3>
+                        <button class="btn-icon"><i class="fas fa-external-link-alt"></i></button>
+                    </div>
+                    <div class="table-container">
+                        <table class="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Address</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="customer-info">
+                                            <img src="https://via.placeholder.com/32x32" alt="Customer" class="customer-avatar">
+                                            <span>PETER</span>
+                                        </div>
+                                    </td>
+                                    <td>London</td>
+                                    <td>21.09.2021</td>
+                                    <td><span class="status-badge delivered">Delivered</span></td>
+                                    <td>$100</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="customer-info">
+                                            <img src="https://via.placeholder.com/32x32" alt="Customer" class="customer-avatar">
+                                            <span>MARIA</span>
+                                        </div>
+                                    </td>
+                                    <td>New York</td>
+                                    <td>24.09.2021</td>
+                                    <td><span class="status-badge processing">Processing</span></td>
+                                    <td>$412</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="customer-info">
+                                            <img src="https://via.placeholder.com/32x32" alt="Customer" class="customer-avatar">
+                                            <span>JACK</span>
+                                        </div>
+                                    </td>
+                                    <td>Paris</td>
+                                    <td>11.10.2021</td>
+                                    <td><span class="status-badge cancelled">Cancelled</span></td>
+                                    <td>$1200</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="customer-info">
+                                            <img src="https://via.placeholder.com/32x32" alt="Customer" class="customer-avatar">
+                                            <span>ROBERT</span>
+                                        </div>
+                                    </td>
+                                    <td>New York</td>
+                                    <td>01.09.2021</td>
+                                    <td><span class="status-badge delivered">Delivered</span></td>
+                                    <td>$321</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts para gráficos -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Sales Dynamics Chart
+const salesCtx = document.getElementById('salesChart').getContext('2d');
+new Chart(salesCtx, {
+    type: 'bar',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+            data: [30, 45, 35, 50, 49, 60, 70, 91, 125, 85, 95, 110],
+            backgroundColor: '#4F46E5',
+            borderRadius: 4,
+            barThickness: 20
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            x: {
+                grid: {
+                    display: false
+                }
+            },
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: '#f3f4f6'
+                }
+            }
+        }
+    }
+});
+
+// User Activity Chart
+const userActivityCtx = document.getElementById('userActivityChart').getContext('2d');
+new Chart(userActivityCtx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+            data: [20, 35, 45, 35, 55, 65, 85, 95, 75, 85, 95, 105],
+            borderColor: '#8B5CF6',
+            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 3
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            x: {
+                grid: {
+                    display: false
+                }
+            },
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: '#f3f4f6'
+                }
+            }
+        }
+    }
+});
+
+// Donut Charts
+const donutCtx1 = document.getElementById('donutChart1').getContext('2d');
+new Chart(donutCtx1, {
+    type: 'doughnut',
+    data: {
+        datasets: [{
+            data: [70, 30],
+            backgroundColor: ['#F59E0B', '#FEF3C7'],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '70%',
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
+});
+
+const donutCtx2 = document.getElementById('donutChart2').getContext('2d');
+new Chart(donutCtx2, {
+    type: 'doughnut',
+    data: {
+        datasets: [{
+            data: [80, 20],
+            backgroundColor: ['#3B82F6', '#DBEAFE'],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '70%',
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

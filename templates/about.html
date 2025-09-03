@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h1>Acerca de esta aplicación</h1>
+        <p class="lead">Esta es una aplicación web desarrollada con Flask, un framework web ligero para Python.</p>
+        
+        <h3>Características</h3>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">✅ Estructura de proyecto organizada</li>
+            <li class="list-group-item">✅ Templates HTML con Bootstrap</li>
+            <li class="list-group-item">✅ Rutas básicas configuradas</li>
+            <li class="list-group-item">✅ API REST de ejemplo</li>
+            <li class="list-group-item">✅ Configuración para desarrollo local</li>
+        </ul>
+
+        <h3 class="mt-4">Tecnologías utilizadas</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Backend</h5>
+                <ul>
+                    <li>Python 3.x</li>
+                    <li>Flask 2.3.3</li>
+                    <li>Jinja2 (Templates)</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h5>Frontend</h5>
+                <ul>
+                    <li>HTML5</li>
+                    <li>Bootstrap 5</li>
+                    <li>CSS3</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="alert alert-info mt-4" role="alert">
+            <h5>¿Cómo empezar?</h5>
+            <p class="mb-0">Revisa el archivo README.md para obtener instrucciones detalladas sobre cómo ejecutar y desarrollar esta aplicación.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
