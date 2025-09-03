@@ -1,6 +1,9 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash, session
 from datetime import datetime, timedelta
 import random
+from functools import wraps
+from database import db_manager
+from database.models import Usuario, Cliente, Contrato, Suplemento, ActividadSistema
 
 # Crear la aplicación Flask
 app = Flask(__name__)
@@ -9,75 +12,271 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'tu-clave-secreta-aqui'
 
-# Datos simulados para contratos
-def generar_contratos_simulados():
-    contratos = []
-    tipos_contrato = ['Servicios', 'Suministro', 'Mantenimiento', 'Consultoría', 'Arrendamiento']
-    estados = ['Activo', 'Por Vencer', 'Vencido', 'En Renovación']
+# Decorador para requerir login
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+# Decorador para requerir admin
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect(url_for('login'))
+        usuario = Usuario.get_by_id(session['user_id'])
+        if not usuario or not usuario.es_admin:
+            flash('Acceso denegado. Se requieren permisos de administrador.', 'error')
+            return redirect(url_for('dashboard'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def init_db():
+    """Inicializa la base de datos y crea datos de ejemplo si no existen"""
+    db_manager.init_database()
     
-    for i in range(1, 51):  # 50 contratos simulados
+    # Verificar si ya existen usuarios
+    usuarios = Usuario.get_all()
+    if not usuarios:
+        crear_datos_ejemplo()
+
+# Inicializar la base de datos al arrancar la aplicación
+with app.app_context():
+    init_db()
+
+def crear_datos_ejemplo():
+    """Crea datos de ejemplo en la base de datos"""
+    # Crear usuario administrador por defecto
+    admin = Usuario(
+        nombre='Administrador',
+        email='admin@empresa.com',
+        username='admin',
+        password='admin123',
+        cargo='Administrador del Sistema',
+        departamento='TI',
+        es_admin=True
+    )
+    admin.save()
+    
+    # Crear usuarios de ejemplo
+    usuarios_ejemplo = [
+        Usuario(nombre='Juan Pérez', email='juan.perez@empresa.com', username='juan.perez', password='123456', cargo='Gerente de Contratos', departamento='Legal'),
+        Usuario(nombre='María García', email='maria.garcia@empresa.com', username='maria.garcia', password='123456', cargo='Analista de Contratos', departamento='Compras'),
+        Usuario(nombre='Carlos López', email='carlos.lopez@empresa.com', username='carlos.lopez', password='123456', cargo='Director de Operaciones', departamento='Operaciones')
+    ]
+    
+    for usuario in usuarios_ejemplo:
+        usuario.save()
+    
+    # Crear clientes y proveedores de ejemplo
+    clientes_ejemplo = [
+        Cliente(nombre='Empresa ABC S.A.', tipo_cliente='cliente', rfc='ABC123456789', direccion='Av. Principal 123', telefono='555-0001', email='contacto@abc.com', contacto_principal='Ana Martínez'),
+        Cliente(nombre='Corporativo XYZ', tipo_cliente='cliente', rfc='XYZ987654321', direccion='Calle Secundaria 456', telefono='555-0002', email='info@xyz.com', contacto_principal='Roberto Silva'),
+        Cliente(nombre='Proveedor Tech Solutions', tipo_cliente='proveedor', rfc='TEC456789123', direccion='Zona Industrial 789', telefono='555-0003', email='ventas@techsol.com', contacto_principal='Laura Rodríguez'),
+        Cliente(nombre='Servicios Integrales SA', tipo_cliente='proveedor', rfc='SIN789123456', direccion='Centro Comercial 321', telefono='555-0004', email='servicios@integrales.com', contacto_principal='Miguel Torres')
+    ]
+    
+    for cliente in clientes_ejemplo:
+        cliente.save()
+    
+    # Crear contratos de ejemplo
+    tipos_contrato = ['Servicios', 'Suministro', 'Mantenimiento', 'Consultoría', 'Arrendamiento']
+    estados = ['activo', 'borrador', 'suspendido', 'terminado']
+    
+    for i in range(1, 21):  # 20 contratos de ejemplo
         fecha_inicio = datetime.now() - timedelta(days=random.randint(30, 365))
         duracion = random.randint(90, 730)  # Entre 3 meses y 2 años
-        fecha_vencimiento = fecha_inicio + timedelta(days=duracion)
+        fecha_fin = fecha_inicio + timedelta(days=duracion)
         
-        # Determinar estado basado en fecha de vencimiento
-        dias_para_vencer = (fecha_vencimiento - datetime.now()).days
-        if dias_para_vencer < 0:
-            estado = 'Vencido'
-        elif dias_para_vencer <= 30:
-            estado = 'Por Vencer'
-        else:
-            estado = 'Activo'
-            
-        contrato = {
-            'id': f'CONT-{i:03d}',
-            'nombre': f'Contrato {tipos_contrato[random.randint(0, len(tipos_contrato)-1)]} {i}',
-            'tipo': tipos_contrato[random.randint(0, len(tipos_contrato)-1)],
-            'proveedor': f'Proveedor {chr(65 + (i % 26))}',
-            'fecha_inicio': fecha_inicio.strftime('%Y-%m-%d'),
-            'fecha_vencimiento': fecha_vencimiento.strftime('%Y-%m-%d'),
-            'valor': random.randint(10000, 500000),
-            'estado': estado,
-            'dias_para_vencer': dias_para_vencer
-        }
-        contratos.append(contrato)
+        contrato = Contrato(
+            numero_contrato=f'CONT-{i:03d}',
+            cliente_id=random.randint(1, 4),  # IDs de los clientes creados
+            usuario_responsable_id=random.randint(1, 3),  # IDs de los usuarios creados
+            titulo=f'Contrato de {tipos_contrato[random.randint(0, len(tipos_contrato)-1)]} {i}',
+            descripcion=f'Descripción detallada del contrato número {i}',
+            monto_original=random.randint(50000, 1000000),
+            monto_actual=random.randint(50000, 1000000),
+            fecha_inicio=fecha_inicio.date(),
+            fecha_fin=fecha_fin.date(),
+            estado=estados[random.randint(0, len(estados)-1)],
+            tipo_contrato=tipos_contrato[random.randint(0, len(tipos_contrato)-1)]
+        )
+        contrato.save()
+        
+        # Crear algunos suplementos para algunos contratos
+        if random.random() < 0.3:  # 30% de probabilidad de tener suplementos
+            suplemento = Suplemento(
+                contrato_id=contrato.id,
+                numero_suplemento=f'SUP-{contrato.id}-001',
+                tipo_modificacion='Ampliación de monto',
+                descripcion=f'Suplemento para ampliación del contrato {contrato.numero_contrato}',
+                monto_modificacion=random.randint(10000, 100000),
+                fecha_modificacion=datetime.now().date(),
+                usuario_autoriza_id=random.randint(1, 3),
+                estado='aprobado'
+            )
+            suplemento.save()
     
-    return contratos
+    # Registrar actividad inicial
+    actividad = ActividadSistema(
+        usuario_id=1,
+        accion='Inicialización del sistema',
+        tabla_afectada='sistema',
+        detalles='Creación de datos de ejemplo iniciales'
+    )
+    actividad.save()
+
+def obtener_estadisticas_contratos():
+    """Obtiene estadísticas de contratos desde la base de datos"""
+    contratos = Contrato.get_all()
+    
+    total_contratos = len(contratos)
+    contratos_activos = len([c for c in contratos if c.estado == 'activo'])
+    
+    # Calcular valor total
+    valor_total = sum([c.monto_actual for c in contratos if c.estado == 'activo'])
+    
+    # Contratos próximos a vencer (30 días)
+    fecha_limite = datetime.now().date() + timedelta(days=30)
+    proximos_vencer = 0
+    
+    for c in contratos:
+        if c.estado == 'activo' and c.fecha_fin:
+            # Convertir fecha_fin de string a date si es necesario
+            if isinstance(c.fecha_fin, str):
+                try:
+                    fecha_fin = datetime.strptime(c.fecha_fin, '%Y-%m-%d').date()
+                except ValueError:
+                    continue
+            else:
+                fecha_fin = c.fecha_fin
+            
+            if fecha_fin <= fecha_limite:
+                proximos_vencer += 1
+    
+    return {
+        'total_contratos': total_contratos,
+        'contratos_activos': contratos_activos,
+        'valor_total': valor_total,
+        'proximos_vencer': proximos_vencer
+    }
+
+# Rutas de autenticación
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        if not username or not password:
+            flash('Por favor ingresa usuario y contraseña', 'error')
+            return render_template('login.html')
+        
+        # Buscar usuario en la base de datos
+        usuario = Usuario.get_by_username(username)
+        
+        if usuario and usuario.verificar_password(password):
+            # Login exitoso
+            session['user_id'] = usuario.id
+            session['username'] = usuario.username
+            session['nombre'] = usuario.nombre
+            session['es_admin'] = usuario.es_admin
+            
+            # Registrar actividad
+            actividad = ActividadSistema(
+                usuario_id=usuario.id,
+                accion='Inicio de Sesión',
+                tabla_afectada='usuarios',
+                registro_id=usuario.id,
+                detalles=f'Usuario {usuario.username} inició sesión'
+            )
+            actividad.save()
+            
+            flash(f'Bienvenido, {usuario.nombre}!', 'success')
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Usuario o contraseña incorrectos', 'error')
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    if 'user_id' in session:
+        # Registrar actividad de logout
+        actividad = ActividadSistema(
+            usuario_id=session['user_id'],
+            accion='Cierre de Sesión',
+            tabla_afectada='usuarios',
+            registro_id=session['user_id'],
+            detalles=f'Usuario {session.get("username", "")} cerró sesión'
+        )
+        actividad.save()
+    
+    session.clear()
+    flash('Has cerrado sesión exitosamente', 'info')
+    return redirect(url_for('login'))
 
 # Ruta principal - Redirigir a dashboard
 @app.route('/')
 def index():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
     return redirect(url_for('dashboard'))
 
 # Ruta del Dashboard Principal
 @app.route('/dashboard')
+@login_required
 def dashboard():
-    contratos = generar_contratos_simulados()
+    # Obtener estadísticas reales de la base de datos
+    estadisticas = obtener_estadisticas_contratos()
     
-    # Calcular métricas generales del sistema
-    total_contratos = len(contratos)
-    contratos_activos = len([c for c in contratos if c['estado'] == 'Activo'])
-    contratos_por_vencer = len([c for c in contratos if c['estado'] == 'Por Vencer'])
-    valor_total = sum([c['valor'] for c in contratos])
+    # Obtener contratos recientes (últimos 5)
+    contratos = Contrato.get_all()
+    contratos_recientes = []
+    for contrato in contratos[:5]:
+        cliente = Cliente.get_by_id(contrato.cliente_id)
+        usuario = Usuario.get_by_id(contrato.usuario_responsable_id)
+        contratos_recientes.append({
+            'id': contrato.numero_contrato,
+            'nombre': contrato.titulo,
+            'tipo': contrato.tipo_contrato,
+            'proveedor': cliente.nombre if cliente else 'N/A',
+            'fecha_inicio': contrato.fecha_inicio,
+            'fecha_vencimiento': contrato.fecha_fin,
+            'valor': contrato.monto_actual,
+            'estado': contrato.estado.title(),
+            'responsable': usuario.nombre if usuario else 'N/A'
+        })
     
-    # Métricas de reportes simuladas
+    # Obtener actividad reciente
+    actividades = ActividadSistema.get_recent(5)
+    actividad_reciente = []
+    for actividad in actividades:
+        usuario = Usuario.get_by_id(actividad.usuario_id) if actividad.usuario_id else None
+        actividad_reciente.append({
+            'usuario': usuario.nombre if usuario else 'Sistema',
+            'accion': actividad.accion,
+            'tiempo': actividad.fecha_actividad,
+            'detalles': actividad.detalles
+        })
+    
+    # Métricas adicionales simuladas
     total_reportes = 89
     reportes_mes = 23
     reportes_pendientes = 5
-    
-    # Métricas de usuarios simuladas
     usuarios_activos = 12
     sesiones_mes = 156
-    
-    # Métricas de rendimiento simuladas
     uptime = 99.8
     tiempo_respuesta = 245  # ms
     
-    estadisticas = {
-        'total_contratos': total_contratos,
-        'contratos_activos': contratos_activos,
-        'contratos_por_vencer': contratos_por_vencer,
-        'valor_total': f'{valor_total/1000000:.1f}M',
+    estadisticas_completas = {
+        'total_contratos': estadisticas['total_contratos'],
+        'contratos_activos': estadisticas['contratos_activos'],
+        'contratos_por_vencer': estadisticas['proximos_vencer'],
+        'valor_total': f'{estadisticas["valor_total"]/1000000:.1f}M',
         'total_reportes': total_reportes,
         'reportes_mes': reportes_mes,
         'reportes_pendientes': reportes_pendientes,
@@ -87,30 +286,129 @@ def dashboard():
         'tiempo_respuesta': tiempo_respuesta
     }
     
-    return render_template('dashboard.html', estadisticas=estadisticas, contratos=contratos[:5])
+    return render_template('dashboard.html', estadisticas=estadisticas_completas, contratos=contratos_recientes)
 
 @app.route('/contratos')
+@login_required
 def contratos():
-    contratos_data = generar_contratos_simulados()
+    # Obtener contratos reales de la base de datos
+    contratos_db = Contrato.get_all()
+    contratos_data = []
     
-    # Calcular estadísticas para la página de contratos
-    total_contratos = len(contratos_data)
-    contratos_activos = len([c for c in contratos_data if c['estado'] == 'Activo'])
-    proximos_vencer = len([c for c in contratos_data if c['estado'] == 'Por Vencer'])
-    valor_total = sum([c['valor'] for c in contratos_data])
+    for contrato in contratos_db:
+        cliente = Cliente.get_by_id(contrato.cliente_id)
+        usuario = Usuario.get_by_id(contrato.usuario_responsable_id)
+        
+        # Convertir fechas de string a date si es necesario
+        if isinstance(contrato.fecha_inicio, str):
+            try:
+                fecha_inicio = datetime.strptime(contrato.fecha_inicio, '%Y-%m-%d').date()
+            except ValueError:
+                fecha_inicio = datetime.now().date()
+        else:
+            fecha_inicio = contrato.fecha_inicio
+            
+        if isinstance(contrato.fecha_fin, str):
+            try:
+                fecha_fin = datetime.strptime(contrato.fecha_fin, '%Y-%m-%d').date()
+            except ValueError:
+                fecha_fin = datetime.now().date()
+        else:
+            fecha_fin = contrato.fecha_fin
+        
+        # Calcular días para vencer
+        dias_para_vencer = (fecha_fin - datetime.now().date()).days
+        
+        contratos_data.append({
+            'id': contrato.numero_contrato,
+            'nombre': contrato.titulo,
+            'tipo': contrato.tipo_contrato,
+            'proveedor': cliente.nombre if cliente else 'N/A',
+            'fecha_inicio': fecha_inicio.strftime('%Y-%m-%d'),
+            'fecha_vencimiento': fecha_fin.strftime('%Y-%m-%d'),
+            'valor': contrato.monto_actual,
+            'estado': contrato.estado.title(),
+            'dias_para_vencer': dias_para_vencer,
+            'responsable': usuario.nombre if usuario else 'N/A',
+            'descripcion': contrato.descripcion
+        })
     
-    estadisticas = {
-        'total_contratos': total_contratos,
-        'contratos_activos': contratos_activos,
-        'proximos_vencer': proximos_vencer,
-        'valor_total': f'{valor_total/1000000:.1f}M'
-    }
+    # Estadísticas para la página de contratos
+    estadisticas = obtener_estadisticas_contratos()
+    estadisticas['valor_total'] = f'{estadisticas["valor_total"]/1000000:.1f}M'
     
     return render_template('contratos.html', 
                          contratos=contratos_data, 
                          estadisticas=estadisticas)
 
+def obtener_todos_suplementos():
+    """Obtiene todos los suplementos con información enriquecida"""
+    suplementos = Suplemento.get_all()
+    
+    for suplemento in suplementos:
+        # Enriquecer con información del contrato
+        contrato = Contrato.get_by_id(suplemento.contrato_id)
+        suplemento.contrato_numero = contrato.numero_contrato if contrato else 'N/A'
+        suplemento.contrato_titulo = contrato.titulo if contrato else 'N/A'
+        
+        # Enriquecer con información del usuario
+        usuario = Usuario.get_by_id(suplemento.usuario_autoriza_id)
+        suplemento.usuario_autoriza_nombre = usuario.nombre if usuario else 'N/A'
+    
+    return suplementos
+
+def obtener_estadisticas_suplementos():
+    """Obtiene estadísticas de suplementos"""
+    suplementos = Suplemento.get_all()
+    
+    total_suplementos = len(suplementos)
+    suplementos_aprobados = len([s for s in suplementos if s.estado == 'aprobado'])
+    suplementos_pendientes = len([s for s in suplementos if s.estado == 'pendiente'])
+    suplementos_rechazados = len([s for s in suplementos if s.estado == 'rechazado'])
+    
+    # Calcular porcentajes
+    porcentaje_aprobados = round((suplementos_aprobados / total_suplementos * 100) if total_suplementos > 0 else 0, 1)
+    porcentaje_pendientes = round((suplementos_pendientes / total_suplementos * 100) if total_suplementos > 0 else 0, 1)
+    
+    # Calcular valor total de modificaciones
+    valor_total_modificaciones = sum([s.monto_modificacion for s in suplementos if s.estado == 'aprobado'])
+    
+    # Estadísticas por tipo de modificación
+    ampliacion_monto = len([s for s in suplementos if 'monto' in s.tipo_modificacion.lower()])
+    extension_plazo = len([s for s in suplementos if 'plazo' in s.tipo_modificacion.lower()])
+    modificacion_alcance = len([s for s in suplementos if 'alcance' in s.tipo_modificacion.lower()])
+    otros_tipos = total_suplementos - ampliacion_monto - extension_plazo - modificacion_alcance
+    
+    return {
+        'total_suplementos': total_suplementos,
+        'suplementos_aprobados': suplementos_aprobados,
+        'suplementos_pendientes': suplementos_pendientes,
+        'suplementos_rechazados': suplementos_rechazados,
+        'porcentaje_aprobados': porcentaje_aprobados,
+        'porcentaje_pendientes': porcentaje_pendientes,
+        'valor_total_modificaciones': valor_total_modificaciones,
+        'ampliacion_monto': ampliacion_monto,
+        'extension_plazo': extension_plazo,
+        'modificacion_alcance': modificacion_alcance,
+        'otros_tipos': otros_tipos
+    }
+
+@app.route('/suplementos')
+@login_required
+def suplementos():
+    """Página de gestión de suplementos"""
+    # Obtener todos los suplementos
+    suplementos = obtener_todos_suplementos()
+    
+    # Obtener estadísticas
+    estadisticas = obtener_estadisticas_suplementos()
+    
+    return render_template('suplementos.html', 
+                         suplementos=suplementos, 
+                         estadisticas=estadisticas)
+
 @app.route('/reportes')
+@login_required
 def reportes():
     # Datos simulados para reportes
     reportes_data = [
@@ -156,6 +454,7 @@ def reportes():
                          estadisticas=estadisticas)
 
 @app.route('/configuracion')
+@admin_required
 def configuracion():
     # Generar estadísticas para la página de configuración
     estadisticas = {
@@ -168,52 +467,247 @@ def configuracion():
     return render_template('configuracion.html', estadisticas=estadisticas)
 
 @app.route('/usuario')
+@login_required
 def usuario():
-    # Datos del usuario (normalmente vendrían de la base de datos)
+    # Obtener usuario actual de la sesión
+    usuario_actual = Usuario.get_by_id(session['user_id'])
+    
+    # Obtener estadísticas de contratos
+    estadisticas_contratos = obtener_estadisticas_contratos()
+    
+    # Calcular estadísticas del usuario
+    contratos = Contrato.get_all()
+    contratos_usuario = [c for c in contratos if usuario_actual and c.usuario_responsable_id == usuario_actual.id]
+    
+    # Obtener reportes del mes actual
+    reportes_mes = random.randint(15, 35)  # Simulado por ahora
+    
+    # Obtener actividades recientes del usuario
+    actividades_db = ActividadSistema.get_recent(10)
+    actividades_usuario = []
+    
+    for actividad in actividades_db:
+        if actividad.usuario_id == usuario_actual.id if usuario_actual else False:
+            # Determinar el icono y color basado en la acción
+            if 'contrato' in actividad.accion.lower():
+                if 'creó' in actividad.accion.lower() or 'nuevo' in actividad.accion.lower():
+                    icono = 'fas fa-file-plus'
+                    color = '#10b981'
+                elif 'actualizó' in actividad.accion.lower() or 'modificó' in actividad.accion.lower():
+                    icono = 'fas fa-edit'
+                    color = '#f59e0b'
+                elif 'renovó' in actividad.accion.lower():
+                    icono = 'fas fa-redo'
+                    color = '#3b82f6'
+                else:
+                    icono = 'fas fa-file-contract'
+                    color = '#6b7280'
+            elif 'reporte' in actividad.accion.lower():
+                icono = 'fas fa-chart-line'
+                color = '#3b82f6'
+            elif 'suplemento' in actividad.accion.lower():
+                icono = 'fas fa-plus-circle'
+                color = '#8b5cf6'
+            elif 'configuración' in actividad.accion.lower() or 'sistema' in actividad.accion.lower():
+                icono = 'fas fa-cog'
+                color = '#8b5cf6'
+            else:
+                icono = 'fas fa-info-circle'
+                color = '#6b7280'
+            
+            # Determinar el estado basado en la acción
+            if 'completado' in actividad.detalles.lower() or 'creó' in actividad.accion.lower() or 'generó' in actividad.accion.lower():
+                estado = 'Completado'
+                estado_clase = 'status-success'
+            elif 'revisión' in actividad.detalles.lower() or 'actualizó' in actividad.accion.lower():
+                estado = 'En Revisión'
+                estado_clase = 'status-warning'
+            elif 'procesando' in actividad.detalles.lower():
+                estado = 'Procesando'
+                estado_clase = 'status-processing'
+            else:
+                estado = 'Registrado'
+                estado_clase = 'status-info'
+            
+            actividades_usuario.append({
+                'accion': actividad.accion,
+                'descripcion': actividad.detalles or f'Actividad: {actividad.accion}',
+                'fecha': actividad.fecha_actividad,
+                'estado': estado,
+                'estado_clase': estado_clase,
+                'icono': icono,
+                'color': color
+            })
+    
+    # Si no hay suficientes actividades del usuario, agregar algunas de ejemplo
+    if len(actividades_usuario) < 5:
+        actividades_ejemplo = [
+            {
+                'accion': 'Perfil Actualizado',
+                'descripcion': 'Información de perfil actualizada',
+                'fecha': '2024-02-15 10:30:00',
+                'estado': 'Completado',
+                'estado_clase': 'status-success',
+                'icono': 'fas fa-user-edit',
+                'color': '#10b981'
+            },
+            {
+                'accion': 'Inicio de Sesión',
+                'descripcion': 'Acceso desde navegador web',
+                'fecha': '2024-02-15 09:00:00',
+                'estado': 'Registrado',
+                'estado_clase': 'status-info',
+                'icono': 'fas fa-sign-in-alt',
+                'color': '#6b7280'
+            }
+        ]
+        actividades_usuario.extend(actividades_ejemplo[:5-len(actividades_usuario)])
+    
+    # Datos del usuario con información dinámica
     usuario_data = {
-        'nombre': 'Ana Martínez',
-        'cargo': 'Gerente de Operaciones',
-        'email': 'ana.martinez@pacta.com',
-        'telefono': '+57 300 123 4567',
-        'dias_activo': 245,
-        'nivel_acceso': 'Admin',
-        'contratos_creados': 45,
-        'reportes_generados': 23,
-        'ultimo_acceso': 'Hoy 09:30',
-        'sesiones_mes': 28
+        'nombre': usuario_actual.nombre if usuario_actual else 'Usuario Demo',
+        'cargo': usuario_actual.cargo if usuario_actual else 'Cargo Demo',
+        'email': usuario_actual.email if usuario_actual else 'demo@pacta.com',
+        'telefono': '+57 300 123 4567',  # Campo fijo por ahora
+        'dias_activo': 245,  # Campo calculado por ahora
+        'nivel_acceso': 'Admin',  # Campo fijo por ahora
+        'contratos_creados': len(contratos_usuario),
+        'reportes_generados': reportes_mes,
+        'ultimo_acceso': 'Hoy 09:30',  # Campo calculado por ahora
+        'sesiones_mes': 28  # Campo calculado por ahora
     }
     
-    # Estadísticas generales (reutilizadas)
+    # Estadísticas generales dinámicas
     estadisticas = {
-        'contratos_activos': 156,
-        'valor_total': '2.4M',
-        'proximos_vencer': 23,
-        'reportes_generados': 89
+        'contratos_activos': estadisticas_contratos['contratos_activos'],
+        'valor_total': f"{estadisticas_contratos['valor_total']:,.0f}",
+        'proximos_vencer': estadisticas_contratos['proximos_vencer'],
+        'reportes_generados': reportes_mes
     }
     
-    return render_template('usuario.html', usuario=usuario_data, estadisticas=estadisticas)
+    return render_template('usuario.html', usuario=usuario_data, estadisticas=estadisticas, actividades=actividades_usuario)
 
 # API para obtener datos de contratos
 @app.route('/api/contratos')
 def api_contratos():
-    contratos = generar_contratos_simulados()
-    return jsonify(contratos)
+    # Obtener contratos reales de la base de datos
+    contratos_db = Contrato.get_all()
+    contratos_data = []
+    
+    for contrato in contratos_db:
+        cliente = Cliente.get_by_id(contrato.cliente_id)
+        usuario = Usuario.get_by_id(contrato.usuario_responsable_id)
+        
+        # Convertir fechas de string a date si es necesario
+        if isinstance(contrato.fecha_inicio, str):
+            try:
+                fecha_inicio = datetime.strptime(contrato.fecha_inicio, '%Y-%m-%d').date()
+            except ValueError:
+                fecha_inicio = datetime.now().date()
+        else:
+            fecha_inicio = contrato.fecha_inicio
+            
+        if isinstance(contrato.fecha_fin, str):
+            try:
+                fecha_fin = datetime.strptime(contrato.fecha_fin, '%Y-%m-%d').date()
+            except ValueError:
+                fecha_fin = datetime.now().date()
+        else:
+            fecha_fin = contrato.fecha_fin
+        
+        contratos_data.append({
+            'id': contrato.numero_contrato,
+            'nombre': contrato.titulo,
+            'tipo': contrato.tipo_contrato,
+            'proveedor': cliente.nombre if cliente else 'N/A',
+            'fecha_inicio': fecha_inicio.strftime('%Y-%m-%d'),
+            'fecha_vencimiento': fecha_fin.strftime('%Y-%m-%d'),
+            'valor': contrato.monto_actual,
+            'estado': contrato.estado.title(),
+            'responsable': usuario.nombre if usuario else 'N/A'
+        })
+    
+    return jsonify(contratos_data)
 
 # API para estadísticas generales
+# Ruta para crear usuarios (solo admin)
+@app.route('/crear_usuario', methods=['POST'])
+@admin_required
+def crear_usuario():
+    try:
+        nombre = request.form.get('nombre')
+        email = request.form.get('email')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        telefono = request.form.get('telefono', '')
+        cargo = request.form.get('cargo', '')
+        departamento = request.form.get('departamento', '')
+        es_admin = request.form.get('es_admin') == 'on'
+        
+        # Validaciones
+        if not all([nombre, email, username, password]):
+            return jsonify({'success': False, 'message': 'Todos los campos obligatorios deben ser completados'})
+        
+        # Verificar si el username ya existe
+        usuario_existente = Usuario.get_by_username(username)
+        if usuario_existente:
+            return jsonify({'success': False, 'message': 'El nombre de usuario ya existe'})
+        
+        # Crear nuevo usuario
+        nuevo_usuario = Usuario(
+            nombre=nombre,
+            email=email,
+            username=username,
+            password=Usuario.hash_password(password),
+            telefono=telefono,
+            cargo=cargo,
+            departamento=departamento,
+            es_admin=es_admin
+        )
+        
+        nuevo_usuario.save()
+        
+        # Registrar actividad
+        actividad = ActividadSistema(
+            usuario_id=session['user_id'],
+            accion='Usuario Creado',
+            tabla_afectada='usuarios',
+            registro_id=nuevo_usuario.id,
+            detalles=f'Nuevo usuario creado: {username} ({nombre})'
+        )
+        actividad.save()
+        
+        return jsonify({
+            'success': True, 
+            'message': f'Usuario {username} creado exitosamente',
+            'usuario': {
+                'id': nuevo_usuario.id,
+                'nombre': nuevo_usuario.nombre,
+                'username': nuevo_usuario.username,
+                'email': nuevo_usuario.email,
+                'cargo': nuevo_usuario.cargo,
+                'departamento': nuevo_usuario.departamento,
+                'es_admin': nuevo_usuario.es_admin
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error al crear usuario: {str(e)}'})
+
 @app.route('/api/estadisticas')
 def api_estadisticas():
-    contratos = generar_contratos_simulados()
+    contratos = Contrato.get_all()
     
     # Agrupar por tipo de contrato
     tipos_count = {}
     for contrato in contratos:
-        tipo = contrato['tipo']
+        tipo = contrato.tipo_contrato
         tipos_count[tipo] = tipos_count.get(tipo, 0) + 1
     
     # Agrupar por estado
     estados_count = {}
     for contrato in contratos:
-        estado = contrato['estado']
+        estado = contrato.estado.title()
         estados_count[estado] = estados_count.get(estado, 0) + 1
     
     return jsonify({

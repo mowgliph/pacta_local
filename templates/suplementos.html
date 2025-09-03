@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suplementos - PACTA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Include Sidebar Component -->
+        {% include 'sidebar.html' %}
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Include Header Component with custom content -->
+            <div class="content-header">
+                <div>
+                    <h1 class="page-title">Suplementos</h1>
+                    <p class="page-subtitle">Gestión y administración de suplementos contractuales</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" title="Documentación">
+                        <i class="fas fa-book"></i>
+                    </button>
+                    <button class="btn-icon" title="Nuevo Suplemento">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <div class="user-menu">
+                        <button class="user-avatar" title="Menú de usuario">
+                            <img src="https://via.placeholder.com/40x40/3b82f6/ffffff?text=AM" alt="Usuario">
+                        </button>
+                        <div class="user-dropdown">
+                            <div class="user-info">
+                                <div class="user-name">Ana Martínez</div>
+                                <div class="user-role">Gerente de Operaciones</div>
+                            </div>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-user"></i>
+                                Mi Perfil
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                Configuración
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-danger">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Metrics Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Total Suplementos</span>
+                        <i class="fas fa-file-plus metric-icon" style="color: #3b82f6;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.total_suplementos or 24 }}</div>
+                    <div class="metric-change positive">+5% vs mes anterior</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Suplementos Aprobados</span>
+                        <i class="fas fa-check-circle metric-icon" style="color: #10b981;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.suplementos_aprobados or 18 }}</div>
+                    <div class="metric-change positive">+3% vs mes anterior</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Pendientes Aprobación</span>
+                        <i class="fas fa-clock metric-icon" style="color: #f59e0b;"></i>
+                    </div>
+                    <div class="metric-value">{{ estadisticas.suplementos_pendientes or 4 }}</div>
+                    <div class="metric-change negative">+1 esta semana</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Valor Total Modificaciones</span>
+                        <i class="fas fa-dollar-sign metric-icon" style="color: #8b5cf6;"></i>
+                    </div>
+                    <div class="metric-value">${{ estadisticas.valor_total_modificaciones or '485K' }}</div>
+                    <div class="metric-change positive">+22% vs mes anterior</div>
+                </div>
+            </div>
+            
+            <!-- Vertical Blocks Layout -->
+            <div class="vertical-blocks">
+                <!-- Quick Actions Block -->
+                <div class="block-section actions-block">
+                    <div class="block-header">
+                        <h3 class="block-title">Acciones Rápidas</h3>
+                        <p class="block-subtitle">Herramientas para gestión eficiente de suplementos</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="contract-actions" style="display: flex; flex-wrap: wrap; gap: 12px;">
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #3b82f6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-plus"></i>
+                                Nuevo Suplemento
+                            </button>
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #10b981; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-search"></i>
+                                Buscar Suplementos
+                            </button>
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #f59e0b; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-clock"></i>
+                                Revisar Pendientes
+                            </button>
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #8b5cf6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-file-export"></i>
+                                Exportar Reporte
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Supplement Status Distribution Block -->
+                <div class="block-section charts-block">
+                    <div class="block-header">
+                        <h3 class="block-title">Distribución de Suplementos</h3>
+                        <p class="block-subtitle">Análisis visual del estado y tipo de modificaciones</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="charts-grid">
+                            <div class="donut-chart">
+                                <canvas id="statusChart" width="120" height="120"></canvas>
+                                <div class="donut-value">75%</div>
+                                <div class="donut-label">Suplementos Aprobados</div>
+                            </div>
+                            <div class="donut-chart">
+                                <canvas id="typeChart" width="120" height="120"></canvas>
+                                <div class="donut-value">$485K</div>
+                                <div class="donut-label">Valor Total</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Supplements Table Block -->
+                <div class="block-section table-block">
+                    <div class="block-header">
+                        <h3 class="block-title">Lista de Suplementos</h3>
+                        <p class="block-subtitle">Gestión completa de todos los suplementos contractuales</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="table-card">
+                            <div class="table-header">
+                                <h3>Lista de Suplementos</h3>
+                                <div>
+                                    <button class="btn-icon" title="Filtrar">
+                                        <i class="fas fa-filter"></i>
+                                    </button>
+                                    <button class="btn-icon" title="Exportar">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-container">
+                                <table class="orders-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Suplemento</th>
+                                            <th>Contrato</th>
+                                            <th>Tipo Modificación</th>
+                                            <th>Monto</th>
+                                            <th>Fecha</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for suplemento in suplementos %}
+                                        <tr>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <i class="fas fa-file-plus" style="color: #3b82f6; margin-right: 8px;"></i>
+                                                    <div>
+                                                        <div style="font-weight: 500;">{{ suplemento.numero_suplemento }}</div>
+                                                        <div style="font-size: 12px; color: #64748b;">{{ suplemento.descripcion[:30] }}...</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <i class="fas fa-file-contract" style="color: #10b981; margin-right: 8px;"></i>
+                                                    <div>
+                                                        <div style="font-weight: 500;">{{ suplemento.contrato_numero or 'N/A' }}</div>
+                                                        <div style="font-size: 12px; color: #64748b;">{{ suplemento.cliente_nombre or 'N/A' }}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{ suplemento.tipo_modificacion }}</td>
+                                            <td class="{% if suplemento.monto_modificacion >= 0 %}text-success{% else %}text-danger{% endif %}" style="font-weight: 600;">
+                                                ${{ "{:,.0f}".format(suplemento.monto_modificacion) }}
+                                            </td>
+                                            <td>{{ suplemento.fecha_modificacion if suplemento.fecha_modificacion else 'N/A' }}</td>
+                                            <td><span class="status-badge {% if suplemento.estado == 'aprobado' %}delivered{% elif suplemento.estado == 'pendiente' %}processing{% else %}cancelled{% endif %}">{{ suplemento.estado.title() }}</span></td>
+                                            <td>
+                                                <button class="btn-icon" style="width: 32px; height: 32px;" title="Ver">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn-icon" style="width: 32px; height: 32px;" title="Editar">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                {% if suplemento.estado == 'pendiente' %}
+                                                <button class="btn-icon" style="width: 32px; height: 32px;" title="Aprobar">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted">
+                                                No hay suplementos registrados
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity Block -->
+                <div class="block-section activity-block">
+                    <div class="block-header">
+                        <h3 class="block-title">Actividad Reciente</h3>
+                        <p class="block-subtitle">Últimas acciones y cambios en suplementos</p>
+                    </div>
+                    <div class="block-content">
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div class="activity-item">
+                                <div class="activity-dot" style="background: #10b981;"></div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Suplemento aprobado</div>
+                                    <div class="activity-subtitle">SUP-2025-003 - Ampliación de monto</div>
+                                    <div class="activity-time">Hace 1 hora</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot" style="background: #3b82f6;"></div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Nuevo suplemento creado</div>
+                                    <div class="activity-subtitle">SUP-2025-004 - Extensión de plazo</div>
+                                    <div class="activity-time">Hace 3 horas</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot" style="background: #f59e0b;"></div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Suplemento en revisión</div>
+                                    <div class="activity-subtitle">SUP-2025-002 - Modificación de alcance</div>
+                                    <div class="activity-time">Hace 5 horas</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot" style="background: #8b5cf6;"></div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Documentos actualizados</div>
+                                    <div class="activity-subtitle">SUP-2025-001 - Anexos técnicos</div>
+                                    <div class="activity-time">Hace 1 día</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Responsive chart configuration
+        function getChartSize() {
+            return window.innerWidth <= 480 ? 100 : 120;
+        }
+        
+        function updateChartSize() {
+            const size = getChartSize();
+            const statusCanvas = document.getElementById('statusChart');
+            const typeCanvas = document.getElementById('typeChart');
+            
+            if (statusCanvas && typeCanvas) {
+                statusCanvas.width = size;
+                statusCanvas.height = size;
+                typeCanvas.width = size;
+                typeCanvas.height = size;
+            }
+        }
+        
+        // Status Chart
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        const statusChart = new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [75, 25],
+                    backgroundColor: ['#10b981', '#e5e7eb'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                cutout: '70%',
+                animation: {
+                    animateRotate: true,
+                    duration: 1000
+                }
+            }
+        });
+        
+        // Type Chart
+        const typeCtx = document.getElementById('typeChart').getContext('2d');
+        const typeChart = new Chart(typeCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [60, 40],
+                    backgroundColor: ['#8b5cf6', '#e5e7eb'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                cutout: '70%',
+                animation: {
+                    animateRotate: true,
+                    duration: 1000
+                }
+            }
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            updateChartSize();
+            statusChart.resize();
+            typeChart.resize();
+        });
+        
+        // Initial size update
+        updateChartSize();
+    </script>
+</body>
+</html>

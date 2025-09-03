@@ -28,6 +28,13 @@
             </li>
 
             <li class="nav-item">
+                <a href="{{ url_for('suplementos') }}" class="nav-link">
+                    <i class="fas fa-file-signature"></i>
+                    <span>Suplementos</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a href="{{ url_for('reportes') }}" class="nav-link">
                     <i class="fas fa-chart-bar"></i>
                     <span>Reportes</span>
@@ -63,3 +70,51 @@
         </div>
     </div>
 </div>
+
+<script>
+// Función para manejar la navegación activa en el sidebar
+document.addEventListener('DOMContentLoaded', function() {
+    const navItems = document.querySelectorAll('.nav-item');
+    const currentPath = window.location.pathname;
+    
+    // Remover clase active de todos los elementos
+    navItems.forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // Añadir clase active al elemento correspondiente basado en la URL actual
+    navItems.forEach(item => {
+        const link = item.querySelector('.nav-link');
+        if (link) {
+            const href = link.getAttribute('href');
+            
+            // Verificar si la URL actual coincide con el href del enlace
+            if (currentPath === href || 
+                (currentPath === '/' && href.includes('dashboard')) ||
+                (currentPath.includes('contratos') && href.includes('contratos')) ||
+                (currentPath.includes('suplementos') && href.includes('suplementos')) ||
+                (currentPath.includes('reportes') && href.includes('reportes')) ||
+                (currentPath.includes('usuario') && href.includes('usuario')) ||
+                (currentPath.includes('configuracion') && href.includes('configuracion'))) {
+                item.classList.add('active');
+            }
+        }
+    });
+    
+    // Añadir event listeners para clicks en los enlaces
+    navItems.forEach(item => {
+        const link = item.querySelector('.nav-link');
+        if (link) {
+            link.addEventListener('click', function(e) {
+                // Remover active de todos los elementos
+                navItems.forEach(navItem => {
+                    navItem.classList.remove('active');
+                });
+                
+                // Añadir active al elemento clickeado
+                item.classList.add('active');
+            });
+        }
+    });
+});
+</script>
