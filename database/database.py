@@ -66,6 +66,7 @@ class DatabaseManager:
                     numero_contrato VARCHAR(50) UNIQUE NOT NULL,
                     cliente_id INTEGER NOT NULL,
                     usuario_responsable_id INTEGER NOT NULL,
+                    persona_responsable_id INTEGER,
                     titulo VARCHAR(200) NOT NULL,
                     descripcion TEXT,
                     monto_original DECIMAL(15,2) NOT NULL,
@@ -77,7 +78,8 @@ class DatabaseManager:
                     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
                     fecha_modificacion DATETIME DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (cliente_id) REFERENCES clientes (id),
-                    FOREIGN KEY (usuario_responsable_id) REFERENCES usuarios (id)
+                    FOREIGN KEY (usuario_responsable_id) REFERENCES usuarios (id),
+                    FOREIGN KEY (persona_responsable_id) REFERENCES personas_responsables (id)
                 )
             ''')
             
@@ -96,6 +98,38 @@ class DatabaseManager:
                     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (contrato_id) REFERENCES contratos (id),
                     FOREIGN KEY (usuario_autoriza_id) REFERENCES usuarios (id)
+                )
+            ''')
+            
+            # Crear tabla de personas responsables
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS personas_responsables (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    cliente_id INTEGER NOT NULL,
+                    nombre VARCHAR(100) NOT NULL,
+                    cargo VARCHAR(100),
+                    telefono VARCHAR(20),
+                    email VARCHAR(100),
+                    es_principal BOOLEAN DEFAULT 0,
+                    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    activo BOOLEAN DEFAULT 1,
+                    FOREIGN KEY (cliente_id) REFERENCES clientes (id)
+                )
+            ''')
+            
+            # Crear tabla de documentos de contratos
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS documentos_contratos (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    contrato_id INTEGER NOT NULL,
+                    nombre_archivo VARCHAR(255) NOT NULL,
+                    ruta_archivo VARCHAR(500) NOT NULL,
+                    tipo_documento VARCHAR(50) DEFAULT 'PDF',
+                    tamaño_archivo INTEGER,
+                    fecha_subida DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    usuario_subida_id INTEGER NOT NULL,
+                    FOREIGN KEY (contrato_id) REFERENCES contratos (id),
+                    FOREIGN KEY (usuario_subida_id) REFERENCES usuarios (id)
                 )
             ''')
             
@@ -138,6 +172,10 @@ class DatabaseManager:
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_notificaciones_usuario ON notificaciones(usuario_id)')
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_notificaciones_fecha ON notificaciones(created_at)')
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_notificaciones_leidas ON notificaciones(usuario_id, is_read)')
+            cursor.execute('CREATE INDEX IF NOT EXISTS idx_personas_cliente ON personas_responsables(cliente_id)')
+            cursor.execute('CREATE INDEX IF NOT EXISTS idx_personas_principal ON personas_responsables(cliente_id, es_principal)')
+            cursor.execute('CREATE INDEX IF NOT EXISTS idx_documentos_contrato ON documentos_contratos(contrato_id)')
+            cursor.execute('CREATE INDEX IF NOT EXISTS idx_documentos_fecha ON documentos_contratos(fecha_subida)')
             
             conn.commit()
             print("Base de datos inicializada correctamente")

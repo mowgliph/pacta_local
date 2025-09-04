@@ -34,11 +34,11 @@
                         <div class="user-avatar-small avatar-generated">{{ (usuario.nombre or 'Usuario').split()[0][0] }}{{ (usuario.nombre or 'Usuario').split()[1][0] if (usuario.nombre or 'Usuario').split()|length > 1 else (usuario.nombre or 'Usuario').split()[0][1] if (usuario.nombre or 'Usuario').split()[0]|length > 1 else '' }}</div>
                         <span class="user-name-small">{{ usuario.nombre }}</span>
                         <div class="user-dropdown">
-                            <a href="{{ url_for('usuario') }}" class="dropdown-item">
-                                <i class="fas fa-user"></i>
-                                <span>Perfil</span>
-                            </a>
-                            <a href="{{ url_for('configuracion') }}" class="dropdown-item">
+                            <a href="{{ url_for('users.usuario') }}" class="dropdown-item">
+                <i class="fas fa-user"></i>
+                <span>Perfil</span>
+            </a>
+            <a href="{{ url_for('main.configuracion') }}" class="dropdown-item">
                                 <i class="fas fa-cog"></i>
                                 <span>Configuración</span>
                             </a>
@@ -248,8 +248,207 @@
         
         // Funciones de administración de usuarios
         function editUser(userId) {
-            // Implementar edición de usuario
-            alert('Función de edición en desarrollo para usuario ID: ' + userId);
+            // Obtener datos completos del usuario desde el servidor
+            fetch(`/api/usuario/${userId}`)
+            .then(response => response.json())
+            .then(userData => {
+                if (!userData.success) {
+                    alert('Error al obtener datos del usuario: ' + userData.message);
+                    return;
+                }
+                
+                const user = userData.usuario;
+            
+            // Crear modal de edición dinámicamente
+            const modalHtml = `
+                 <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+                     <div class="modal-dialog modal-lg">
+                         <div class="modal-content">
+                             <div class="modal-header">
+                                 <h5 class="modal-title" id="editUserModalLabel">
+                                     <i class="fas fa-user-edit" style="margin-right: 8px; color: #3b82f6;"></i>
+                                     Editar Usuario
+                                 </h5>
+                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                             </div>
+                             <div class="modal-body">
+                                 <form id="editUserForm">
+                                     <input type="hidden" id="editUserId" value="${user.id}">
+                                     <div class="row">
+                                         <div class="col-md-6">
+                                             <div class="mb-3">
+                                                 <label for="editUserNombre" class="form-label">Nombre Completo *</label>
+                                                 <input type="text" class="form-control" id="editUserNombre" value="${user.nombre || ''}" required>
+                                             </div>
+                                         </div>
+                                         <div class="col-md-6">
+                                             <div class="mb-3">
+                                                 <label for="editUserEmail" class="form-label">Email *</label>
+                                                 <input type="email" class="form-control" id="editUserEmail" value="${user.email || ''}" required>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="row">
+                                         <div class="col-md-6">
+                                             <div class="mb-3">
+                                                 <label for="editUserCargo" class="form-label">Cargo</label>
+                                                 <input type="text" class="form-control" id="editUserCargo" value="${user.cargo || ''}">
+                                             </div>
+                                         </div>
+                                         <div class="col-md-6">
+                                             <div class="mb-3">
+                                                 <label for="editUserTelefono" class="form-label">Teléfono</label>
+                                                 <input type="tel" class="form-control" id="editUserTelefono" value="${user.telefono || ''}" placeholder="+1234567890">
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="row">
+                                         <div class="col-md-6">
+                                             <div class="mb-3">
+                                                 <label for="editUserDepartamento" class="form-label">Departamento</label>
+                                                 <input type="text" class="form-control" id="editUserDepartamento" value="${user.departamento || ''}" placeholder="Ej: Recursos Humanos">
+                                             </div>
+                                         </div>
+                                         <div class="col-md-6">
+                                             <div class="mb-3">
+                                                 <label for="editUserRole" class="form-label">Rol del Usuario</label>
+                                                 <select class="form-control" id="editUserRole">
+                                                     <option value="user" ${!user.es_admin ? 'selected' : ''}>Usuario Regular</option>
+                                                     <option value="admin" ${user.es_admin ? 'selected' : ''}>Administrador</option>
+                                                 </select>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="row">
+                                         <div class="col-md-6">
+                                             <div class="mb-3">
+                                                 <div class="form-check">
+                                                     <input class="form-check-input" type="checkbox" id="editUserActivo" ${user.activo ? 'checked' : ''}>
+                                                     <label class="form-check-label" for="editUserActivo">
+                                                         Usuario Activo
+                                                     </label>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Cambiar Contraseña (Opcional)</label>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input type="password" class="form-control" id="editUserPassword" placeholder="Nueva contraseña">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="password" class="form-control" id="editUserPasswordConfirm" placeholder="Confirmar contraseña">
+                                            </div>
+                                        </div>
+                                        <small class="form-text text-muted">Deje en blanco si no desea cambiar la contraseña</small>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fas fa-times" style="margin-right: 8px;"></i>Cancelar
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="updateUser()">
+                                    <i class="fas fa-save" style="margin-right: 8px;"></i>Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remover modal existente si existe
+            const existingModal = document.getElementById('editUserModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Añadir modal al DOM
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            // Mostrar modal
+             const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+             modal.show();
+             })
+             .catch(error => {
+                 console.error('Error:', error);
+                 alert('Error al obtener datos del usuario');
+             });
+         }
+        
+        // Función para actualizar usuario
+        function updateUser() {
+            const userId = document.getElementById('editUserId').value;
+            const password = document.getElementById('editUserPassword').value;
+            const passwordConfirm = document.getElementById('editUserPasswordConfirm').value;
+            
+            const userData = {
+                 nombre: document.getElementById('editUserNombre').value.trim(),
+                 email: document.getElementById('editUserEmail').value.trim(),
+                 cargo: document.getElementById('editUserCargo').value.trim(),
+                 telefono: document.getElementById('editUserTelefono').value.trim(),
+                 departamento: document.getElementById('editUserDepartamento').value.trim(),
+                 es_admin: document.getElementById('editUserRole').value === 'admin' ? 'true' : 'false',
+                 activo: document.getElementById('editUserActivo').checked ? 'true' : 'false'
+             };
+            
+            // Validar campos requeridos
+            if (!userData.nombre || !userData.email) {
+                alert('Por favor complete todos los campos requeridos (Nombre y Email)');
+                return;
+            }
+            
+            // Validar formato de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(userData.email)) {
+                alert('Por favor ingrese un email válido');
+                return;
+            }
+            
+            // Validar contraseñas si se están cambiando
+            if (password || passwordConfirm) {
+                if (password !== passwordConfirm) {
+                    alert('Las contraseñas no coinciden');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    alert('La contraseña debe tener al menos 6 caracteres');
+                    return;
+                }
+                
+                userData.nueva_password = password;
+            }
+            
+            // Crear FormData para enviar
+            const formData = new FormData();
+            Object.keys(userData).forEach(key => {
+                if (userData[key] !== '') {
+                    formData.append(key, userData[key]);
+                }
+            });
+            
+            // Enviar datos al servidor
+            fetch(`/editar_usuario/${userId}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Usuario actualizado exitosamente');
+                    bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
+                    // Recargar la página para mostrar los cambios
+                    window.location.reload();
+                } else {
+                    alert('Error al actualizar usuario: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al actualizar usuario');
+            });
         }
         
         function toggleUserStatus(userId, activate) {
@@ -260,12 +459,6 @@
             }
         }
         
-        function deleteUser(userId) {
-            if (confirm('¿Está seguro de que desea eliminar este usuario? Esta acción no se puede deshacer.')) {
-                // Implementar eliminación de usuario
-                alert('Función de eliminación en desarrollo para usuario ID: ' + userId);
-            }
-        }
     </script>
     
     <!-- Include User Modal Component -->
@@ -276,5 +469,19 @@
     
     <!-- Include Notification Functions -->
     <script src="{{ url_for('static', filename='js/notification_functions.js') }}"></script>
+    
+    <!-- Include User Functions -->
+    <script src="{{ url_for('static', filename='js/user_functions.js') }}"></script>
+    
+    <script>
+        // Asegurar que la función openNotificationsModal esté disponible globalmente
+        window.openNotificationsModal = function() {
+            if (window.notificationManager) {
+                window.notificationManager.openNotificationsModal();
+            } else {
+                console.error('NotificationManager no está inicializado');
+            }
+        };
+    </script>
 </body>
 </html>

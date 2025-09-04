@@ -33,11 +33,11 @@
                         <div class="user-avatar-small avatar-generated">{{ (usuario.nombre or 'Usuario').split()[0][0] }}{{ (usuario.nombre or 'Usuario').split()[1][0] if (usuario.nombre or 'Usuario').split()|length > 1 else (usuario.nombre or 'Usuario').split()[0][1] if (usuario.nombre or 'Usuario').split()[0]|length > 1 else '' }}</div>
                         <span class="user-name-small">{{ usuario.nombre }}</span>
                         <div class="user-dropdown">
-                            <a href="{{ url_for('usuario') }}" class="dropdown-item">
-                                <i class="fas fa-user"></i>
-                                <span>Perfil</span>
-                            </a>
-                            <a href="{{ url_for('configuracion') }}" class="dropdown-item">
+                            <a href="{{ url_for('users.usuario') }}" class="dropdown-item">
+                <i class="fas fa-user"></i>
+                <span>Mi Perfil</span>
+            </a>
+            <a href="{{ url_for('main.configuracion') }}" class="dropdown-item">
                                 <i class="fas fa-cog"></i>
                                 <span>Configuración</span>
                             </a>
@@ -55,24 +55,28 @@
                     <div style="flex: 1;">
                         <h2 style="color: #1f2937; margin-bottom: 8px; font-size: 28px;">{{ usuario.nombre or 'Ana Martínez' }}</h2>
                         <p style="color: #6b7280; margin-bottom: 16px; font-size: 16px;">{{ usuario.cargo or 'Gerente de Operaciones' }}</p>
-                        <div style="display: flex; gap: 16px; align-items: center;">
+                        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+                            <span style="display: flex; align-items: center; gap: 8px; color: #374151;">
+                                <i class="fas fa-user" style="color: #6b7280;"></i>
+                                <span id="userUsername">{{ usuario.username or 'N/A' }}</span>
+                            </span>
                             <span style="display: flex; align-items: center; gap: 8px; color: #374151;">
                                 <i class="fas fa-envelope" style="color: #6b7280;"></i>
-                                <span id="userEmail">{{ usuario.email or 'ana.martinez@pacta.com' }}</span>
+                                <span id="userEmail">{{ usuario.email or 'N/A' }}</span>
                             </span>
                             <span style="display: flex; align-items: center; gap: 8px; color: #374151;">
                                 <i class="fas fa-phone" style="color: #6b7280;"></i>
-                                <span id="userPhone">{{ usuario.telefono or '+57 300 123 4567' }}</span>
+                                <span id="userPhone">{{ usuario.telefono or 'No especificado' }}</span>
                             </span>
                         </div>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 12px;">
                         <div style="text-align: center; padding: 16px; background: #f0f9ff; border-radius: 12px; border: 1px solid #0ea5e9;">
-                            <div style="font-size: 24px; font-weight: bold; color: #0ea5e9;">{{ usuario.dias_activo or 245 }}</div>
+                            <div style="font-size: 24px; font-weight: bold; color: #0ea5e9;">{{ usuario.dias_activo or 0 }}</div>
                             <div style="font-size: 12px; color: #0369a1; font-weight: 500;">Días Activo</div>
                         </div>
                         <div style="text-align: center; padding: 16px; background: #f0fdf4; border-radius: 12px; border: 1px solid #10b981;">
-                            <div style="font-size: 24px; font-weight: bold; color: #10b981;">{{ usuario.nivel_acceso or 'Admin' }}</div>
+                            <div style="font-size: 24px; font-weight: bold; color: #10b981;">{{ usuario.nivel_acceso or 'Usuario' }}</div>
                             <div style="font-size: 12px; color: #047857; font-weight: 500;">Nivel de Acceso</div>
                         </div>
                     </div>
@@ -80,24 +84,53 @@
                 
                 <!-- Edit Form (Hidden by default) -->
                 <div id="editForm" style="display: none; border-top: 1px solid #e5e7eb; padding-top: 24px;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Nombre Completo</label>
-                            <input type="text" id="editNombre" value="{{ usuario.nombre or 'Ana Martínez' }}" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                    <form id="profileForm">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Nombre Completo *</label>
+                                <input type="text" id="editNombre" name="nombre" value="{{ usuario.nombre or '' }}" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Cargo</label>
+                                <input type="text" id="editCargo" name="cargo" value="{{ usuario.cargo or '' }}" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Email *</label>
+                                <input type="email" id="editEmail" name="email" value="{{ usuario.email or '' }}" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Teléfono</label>
+                                <input type="tel" id="editTelefono" name="telefono" value="{{ usuario.telefono or '' }}" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            </div>
+                            <div style="grid-column: 1 / -1;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Departamento</label>
+                                <input type="text" id="editDepartamento" name="departamento" value="{{ usuario.departamento or '' }}" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            </div>
                         </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Cargo</label>
-                            <input type="text" id="editCargo" value="{{ usuario.cargo or 'Gerente de Operaciones' }}" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                        
+                        <!-- Sección de cambio de contraseña -->
+                        <div style="border-top: 1px solid #e5e7eb; padding-top: 24px; margin-bottom: 24px;">
+                            <h4 style="color: #374151; margin-bottom: 16px; font-size: 16px;">Cambiar Contraseña (Opcional)</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Contraseña Actual</label>
+                                    <input type="password" id="passwordActual" name="password_actual" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Nueva Contraseña</label>
+                                    <input type="password" id="nuevaPassword" name="nueva_password" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Confirmar Contraseña</label>
+                                    <input type="password" id="confirmarPassword" name="confirmar_password" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                </div>
+                            </div>
+                            <div style="margin-top: 8px; font-size: 12px; color: #6b7280;">
+                                <i class="fas fa-info-circle" style="margin-right: 4px;"></i>
+                                Deja estos campos vacíos si no deseas cambiar tu contraseña
+                            </div>
                         </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Email</label>
-                            <input type="email" id="editEmail" value="{{ usuario.email or 'ana.martinez@pacta.com' }}" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #374151;">Teléfono</label>
-                            <input type="tel" id="editTelefono" value="{{ usuario.telefono or '+57 300 123 4567' }}" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
-                        </div>
-                    </div>
+                    </form>
                     <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
                         <button onclick="cancelEdit()" class="btn-account" style="padding: 12px 24px; background: #6b7280; color: white;">
                             <i class="fas fa-times" style="margin-right: 8px;"></i>
@@ -164,7 +197,7 @@
                                 <i class="fas fa-user-plus"></i>
                                 Nuevo Usuario
                             </button>
-                            <button class="btn-account" onclick="window.location.href='{{ url_for('usuarios_lista') }}'" style="flex: 1; min-width: 200px; padding: 12px; background: #10b981; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn-account" onclick="window.location.href='{{ url_for('users.usuarios_lista') }}'" style="flex: 1; min-width: 200px; padding: 12px; background: #10b981; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
                                 <i class="fas fa-users"></i>
                                 Ver Lista de Usuarios
                             </button>
@@ -172,7 +205,7 @@
                                 <i class="fas fa-bell"></i>
                                 Ver Notificaciones
                             </button>
-                            <button class="btn-account" onclick="window.location.href='{{ url_for('configuracion') }}'" style="flex: 1; min-width: 200px; padding: 12px; background: #8b5cf6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn-account" onclick="window.location.href='{{ url_for('main.configuracion') }}'" style="flex: 1; min-width: 200px; padding: 12px; background: #8b5cf6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
                                 <i class="fas fa-cog"></i>
                                 Configuraciones
                             </button>
@@ -180,28 +213,7 @@
                     </div>
                 </div>
                 
-                <!-- Performance Charts Block -->
-                <div class="block-section charts-block">
-                    <div class="block-header">
-                        <h3 class="block-title">Gráficos de Rendimiento</h3>
-                        <p class="block-subtitle">Análisis visual de contratos y reportes</p>
-                    </div>
-                    <div class="block-content">
-                        <div class="charts-grid">
-                            <div class="donut-chart">
-                                <canvas id="contractsChart" width="120" height="120"></canvas>
-                                <div class="donut-value">78%</div>
-                                <div class="donut-label">Contratos Activos</div>
-                            </div>
-                            <div class="donut-chart">
-                                <canvas id="reportsChart" width="120" height="120"></canvas>
-                                <div class="donut-value">92%</div>
-                                <div class="donut-label">Reportes Completados</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
+
                 <!-- Recent Activity Block -->
                 <div class="block-section activity-block">
                     <div class="block-header">
@@ -252,19 +264,19 @@
                         <div style="display: flex; flex-direction: column; gap: 16px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border-radius: 8px;">
                                 <span style="font-weight: 500; color: #374151;">Contratos Creados</span>
-                                <span style="color: #3b82f6; font-weight: 600;">{{ usuario.contratos_creados or 45 }}</span>
+                                <span style="color: #3b82f6; font-weight: 600;">{{ estadisticas_personales.contratos_creados }}</span>
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border-radius: 8px;">
                                 <span style="font-weight: 500; color: #374151;">Reportes Generados</span>
-                                <span style="color: #10b981; font-weight: 600;">{{ usuario.reportes_generados or 23 }}</span>
+                                <span style="color: #10b981; font-weight: 600;">{{ estadisticas_personales.reportes_generados }}</span>
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border-radius: 8px;">
                                 <span style="font-weight: 500; color: #374151;">Último Acceso</span>
-                                <span style="color: #64748b; font-weight: 600;">{{ usuario.ultimo_acceso or 'Hoy 09:30' }}</span>
+                                <span style="color: #64748b; font-weight: 600;">{{ estadisticas_personales.ultimo_acceso }}</span>
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8fafc; border-radius: 8px;">
                                 <span style="font-weight: 500; color: #374151;">Sesiones Este Mes</span>
-                                <span style="color: #8b5cf6; font-weight: 600;">{{ usuario.sesiones_mes or 28 }}</span>
+                                <span style="color: #8b5cf6; font-weight: 600;">{{ estadisticas_personales.sesiones_mes }}</span>
                             </div>
                         </div>
                     </div>
@@ -284,66 +296,9 @@
     <script src="{{ url_for('static', filename='js/user_functions.js') }}"></script>
     <script src="{{ url_for('static', filename='js/notification_functions.js') }}"></script>
     <script>
-        // Inicialización de gráficos con datos dinámicos
-        document.addEventListener('DOMContentLoaded', function() {
-            // Contracts Chart - Datos dinámicos
-            const contractsActivos = {{ estadisticas.contratos_activos or 0 }};
-            const totalContratos = contractsActivos + {{ estadisticas.proximos_vencer or 0 }} + 10; // Estimación de contratos inactivos
-            const porcentajeContratos = totalContratos > 0 ? Math.round((contractsActivos / totalContratos) * 100) : 0;
-            
-            const contractsCtx = document.getElementById('contractsChart').getContext('2d');
-            new Chart(contractsCtx, {
-                type: 'doughnut',
-                data: {
-                    datasets: [{
-                        data: [contractsActivos, totalContratos - contractsActivos],
-                        backgroundColor: ['#3b82f6', '#e5e7eb'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: false,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    cutout: '70%'
-                }
-            });
-            
-            // Reports Chart - Datos dinámicos
-            const reportesGenerados = {{ estadisticas.reportes_generados or 0 }};
-            const totalReportes = reportesGenerados + 5; // Estimación de reportes pendientes
-            const porcentajeReportes = totalReportes > 0 ? Math.round((reportesGenerados / totalReportes) * 100) : 0;
-            
-            const reportsCtx = document.getElementById('reportsChart').getContext('2d');
-            new Chart(reportsCtx, {
-                type: 'doughnut',
-                data: {
-                    datasets: [{
-                        data: [reportesGenerados, totalReportes - reportesGenerados],
-                        backgroundColor: ['#10b981', '#e5e7eb'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: false,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    cutout: '70%'
-                }
-            });
-            
-            // Actualizar valores mostrados en los gráficos
-            document.querySelector('.donut-chart:first-child .donut-value').textContent = porcentajeContratos + '%';
-            document.querySelector('.donut-chart:last-child .donut-value').textContent = porcentajeReportes + '%';
-        });
+
         
         // Edit Mode Functions
-        let isEditMode = false;
-        
         function toggleEditMode() {
             const editForm = document.getElementById('editForm');
             const editIcon = document.getElementById('editIcon');

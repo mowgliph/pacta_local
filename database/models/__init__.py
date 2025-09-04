@@ -1,4 +1,21 @@
-# Modelos de datos para PACTA Local
-from .models import Usuario, Cliente, Contrato, Suplemento, ActividadSistema, Notificacion
+# Importar todas las clases de modelos desde sus archivos separados
+from .usuario import Usuario
+from .cliente import Cliente
+from .contrato import Contrato
+from .suplemento import Suplemento
+from .persona_responsable import PersonaResponsable
+from .documento_contrato import DocumentoContrato
+from .notificacion import Notificacion
+from .actividad_sistema import ActividadSistema
 
-__all__ = ['Usuario', 'Cliente', 'Contrato', 'Suplemento', 'ActividadSistema', 'Notificacion']
+# Exportar todas las clases para facilitar la importación
+__all__ = [
+    'Usuario',
+    'Cliente', 
+    'Contrato',
+    'Suplemento',
+    'PersonaResponsable',
+    'DocumentoContrato',
+    'Notificacion',
+    'ActividadSistema'
+]

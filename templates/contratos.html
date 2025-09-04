@@ -33,11 +33,11 @@
                         <div class="user-avatar-small avatar-generated">{{ (usuario.nombre or 'Usuario').split()[0][0] }}{{ (usuario.nombre or 'Usuario').split()[1][0] if (usuario.nombre or 'Usuario').split()|length > 1 else (usuario.nombre or 'Usuario').split()[0][1] if (usuario.nombre or 'Usuario').split()[0]|length > 1 else '' }}</div>
                         <span class="user-name-small">{{ usuario.nombre }}</span>
                         <div class="user-dropdown">
-                            <a href="{{ url_for('usuario') }}" class="dropdown-item">
-                                <i class="fas fa-user"></i>
-                                <span>Perfil</span>
-                            </a>
-                            <a href="{{ url_for('configuracion') }}" class="dropdown-item">
+                            <a href="{{ url_for('users.usuario') }}" class="dropdown-item">
+                <i class="fas fa-user"></i>
+                <span>Perfil</span>
+            </a>
+            <a href="{{ url_for('main.configuracion') }}" class="dropdown-item">
                                 <i class="fas fa-cog"></i>
                                 <span>Configuración</span>
                             </a>

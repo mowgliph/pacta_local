@@ -356,6 +356,64 @@ body {
     font-weight: 500;
 }
 
+.dropdown-divider {
+    height: 1px;
+    background-color: #e2e8f0;
+    margin: 8px 0;
+}
+
+.logout-item {
+    color: #ef4444 !important;
+}
+
+.logout-item:hover {
+    background-color: #fef2f2 !important;
+    color: #dc2626 !important;
+}
+
+.logout-btn:hover {
+    background-color: #fef2f2 !important;
+    color: #dc2626 !important;
+    border-color: #dc2626 !important;
+}
+
+/* Sidebar Footer Button Styles */
+.sidebar-footer .btn-account {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.sidebar-footer .btn-account:hover {
+    background: #e2e8f0;
+    color: #475569;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+.sidebar-footer .logout-btn {
+    background: #fef2f2;
+    color: #ef4444;
+    border: 1px solid #fecaca;
+}
+
+.sidebar-footer .logout-btn:hover {
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #fca5a5;
+    transform: translateY(-1px);
+}
+
 /* Metrics Grid */
 .metrics-grid {
     display: grid;

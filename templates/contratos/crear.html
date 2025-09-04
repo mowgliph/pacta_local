@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+
+{% block title %}Crear Contrato{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-plus-circle me-2"></i>Crear Nuevo Contrato</h2>
+        <a href="{{ url_for('contratos.listar') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Volver a Lista
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Formulario principal -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-file-contract me-2"></i>Información del Contrato</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data" id="formContrato">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="numero_contrato" class="form-label">Número de Contrato <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="numero_contrato" name="numero_contrato" required>
+                                    <div class="form-text">Identificador único del contrato</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="cliente_id" class="form-label">Cliente/Proveedor <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="cliente_id" name="cliente_id" required>
+                                        <option value="">Seleccionar...</option>
+                                        {% for cliente in clientes %}
+                                            <option value="{{ cliente.id }}">
+                                                {{ cliente.nombre }} ({{ cliente.tipo_cliente|title }})
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="persona_responsable_id" class="form-label">Persona Responsable</label>
+                                    <select class="form-select" id="persona_responsable_id" name="persona_responsable_id">
+                                        <option value="">Seleccionar cliente primero...</option>
+                                    </select>
+                                    <div class="form-text">Contacto principal del cliente para este contrato</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="tipo_contrato" class="form-label">Tipo de Contrato</label>
+                                    <select class="form-select" id="tipo_contrato" name="tipo_contrato">
+                                        <option value="">Seleccionar...</option>
+                                        {% for tipo in tipos_contrato %}
+                                            <option value="{{ tipo }}">{{ tipo }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="titulo" class="form-label">Título del Contrato <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="titulo" name="titulo" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" 
+                                      placeholder="Descripción detallada del contrato..."></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="monto_original" class="form-label">Monto Original <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="monto_original" name="monto_original" 
+                                               step="0.01" min="0" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="fecha_inicio" class="form-label">Fecha de Inicio <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="fecha_fin" class="form-label">Fecha de Fin <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="estado" class="form-label">Estado Inicial</label>
+                                    <select class="form-select" id="estado" name="estado">
+                                        {% for estado_opt in estados %}
+                                            <option value="{{ estado_opt }}" 
+                                                    {% if estado_opt == 'borrador' %}selected{% endif %}>
+                                                {{ estado_opt|title }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="archivo_contrato" class="form-label">Documento del Contrato</label>
+                                    <input type="file" class="form-control" id="archivo_contrato" name="archivo_contrato" 
+                                           accept=".pdf,.doc,.docx">
+                                    <div class="form-text">Formatos permitidos: PDF, DOC, DOCX</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ url_for('contratos.listar') }}" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>Crear Contrato
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Panel de ayuda -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Información de Ayuda</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6>Campos Obligatorios</h6>
+                        <ul class="list-unstyled small">
+                            <li><i class="fas fa-check text-success me-1"></i>Número de contrato</li>
+                            <li><i class="fas fa-check text-success me-1"></i>Cliente/Proveedor</li>
+                            <li><i class="fas fa-check text-success me-1"></i>Título</li>
+                            <li><i class="fas fa-check text-success me-1"></i>Monto original</li>
+                            <li><i class="fas fa-check text-success me-1"></i>Fechas de inicio y fin</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6>Estados de Contrato</h6>
+                        <ul class="list-unstyled small">
+                            <li><span class="badge bg-secondary me-1">Borrador</span> En preparación</li>
+                            <li><span class="badge bg-success me-1">Activo</span> En ejecución</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="alert alert-info small">
+                        <i class="fas fa-lightbulb me-1"></i>
+                        <strong>Consejo:</strong> Selecciona primero el cliente para poder asignar una persona responsable.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información del cliente seleccionado -->
+            <div class="card mt-3" id="infoCliente" style="display: none;">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-building me-2"></i>Información del Cliente</h6>
+                </div>
+                <div class="card-body" id="datosCliente">
+                    <!-- Se llena dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Cargar personas responsables cuando se selecciona un cliente
+document.getElementById('cliente_id').addEventListener('change', function() {
+    const clienteId = this.value;
+    const personaSelect = document.getElementById('persona_responsable_id');
+    const infoCliente = document.getElementById('infoCliente');
+    
+    // Limpiar opciones
+    personaSelect.innerHTML = '<option value="">Cargando...</option>';
+    
+    if (clienteId) {
+        // Cargar personas responsables
+        fetch(`/contratos/api/personas-por-cliente/${clienteId}`)
+            .then(response => response.json())
+            .then(personas => {
+                personaSelect.innerHTML = '<option value="">Sin asignar</option>';
+                personas.forEach(persona => {
+                    const option = document.createElement('option');
+                    option.value = persona.id;
+                    option.textContent = `${persona.nombre}${persona.cargo ? ' - ' + persona.cargo : ''}${persona.es_principal ? ' (Principal)' : ''}`;
+                    if (persona.es_principal) {
+                        option.selected = true;
+                    }
+                    personaSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                personaSelect.innerHTML = '<option value="">Error al cargar</option>';
+            });
+        
+        // Mostrar información del cliente
+        const clienteOption = this.options[this.selectedIndex];
+        const clienteNombre = clienteOption.textContent;
+        document.getElementById('datosCliente').innerHTML = `
+            <p class="mb-1"><strong>Cliente:</strong> ${clienteNombre}</p>
+            <p class="mb-0 text-muted small">Personas responsables cargadas</p>
+        `;
+        infoCliente.style.display = 'block';
+    } else {
+        personaSelect.innerHTML = '<option value="">Seleccionar cliente primero...</option>';
+        infoCliente.style.display = 'none';
+    }
+});
+
+// Validación de fechas
+document.getElementById('fecha_inicio').addEventListener('change', function() {
+    const fechaInicio = new Date(this.value);
+    const fechaFinInput = document.getElementById('fecha_fin');
+    
+    // Establecer fecha mínima para fecha fin
+    fechaFinInput.min = this.value;
+    
+    // Si la fecha fin es anterior a la fecha inicio, limpiarla
+    if (fechaFinInput.value && new Date(fechaFinInput.value) < fechaInicio) {
+        fechaFinInput.value = '';
+    }
+});
+
+// Validación del formulario
+document.getElementById('formContrato').addEventListener('submit', function(e) {
+    const fechaInicio = new Date(document.getElementById('fecha_inicio').value);
+    const fechaFin = new Date(document.getElementById('fecha_fin').value);
+    
+    if (fechaFin <= fechaInicio) {
+        e.preventDefault();
+        alert('La fecha de fin debe ser posterior a la fecha de inicio.');
+        return false;
+    }
+    
+    // Validar monto
+    const monto = parseFloat(document.getElementById('monto_original').value);
+    if (monto <= 0) {
+        e.preventDefault();
+        alert('El monto debe ser mayor a cero.');
+        return false;
+    }
+});
+
+// Establecer fecha mínima como hoy
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('fecha_inicio').min = today;
+</script>
+{% endblock %}

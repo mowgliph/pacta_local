@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}Gestión de Personas Responsables - PACTA{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">Personas Responsables</h1>
+            <p class="mb-0 text-muted">Gestión de contactos de clientes y proveedores</p>
+        </div>
+        <a href="{{ url_for('personas.crear_persona') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nueva Persona
+        </a>
+    </div>
+
+    <!-- Filtros de búsqueda -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Filtros de Búsqueda</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="buscar_nombre">Buscar por nombre:</label>
+                        <input type="text" class="form-control" id="buscar_nombre" placeholder="Nombre de la persona...">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="filtro_cliente">Filtrar por cliente:</label>
+                        <select class="form-control" id="filtro_cliente">
+                            <option value="">Todos los clientes</option>
+                            {% for cliente_id, cliente in clientes.items() %}
+                            <option value="{{ cliente_id }}">{{ cliente['nombre'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="filtro_principal">Tipo de contacto:</label>
+                        <select class="form-control" id="filtro_principal">
+                            <option value="">Todos</option>
+                            <option value="1">Solo principales</option>
+                            <option value="0">Solo secundarios</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <button type="button" class="btn btn-primary" onclick="aplicarFiltros()">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                    <button type="button" class="btn btn-secondary ml-2" onclick="limpiarFiltros()">
+                        <i class="fas fa-times"></i> Limpiar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de personas -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Lista de Personas Responsables</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="tablaPersonas" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Cliente</th>
+                            <th>Cargo</th>
+                            <th>Teléfono</th>
+                            <th>Email</th>
+                            <th>Tipo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTablaPersonas">
+                        {% for persona in personas %}
+                        <tr data-cliente-id="{{ persona.cliente_id }}" data-principal="{{ persona.es_principal }}">
+                            <td>
+                                <strong>{{ persona.nombre }}</strong>
+                                {% if persona.es_principal %}
+                                <span class="badge badge-primary ml-2">Principal</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if clientes[persona.cliente_id] %}
+                                {{ clientes[persona.cliente_id]['nombre'] }}
+                                <small class="text-muted d-block">{{ clientes[persona.cliente_id]['tipo'] }}</small>
+                                {% endif %}
+                            </td>
+                            <td>{{ persona.cargo or '-' }}</td>
+                            <td>
+                                {% if persona.telefono %}
+                                <a href="tel:{{ persona.telefono }}">{{ persona.telefono }}</a>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if persona.email %}
+                                <a href="mailto:{{ persona.email }}">{{ persona.email }}</a>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if persona.es_principal %}
+                                <span class="badge badge-primary">Principal</span>
+                                {% else %}
+                                <span class="badge badge-secondary">Secundario</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if persona.activo %}
+                                <span class="badge badge-success">Activo</span>
+                                {% else %}
+                                <span class="badge badge-danger">Inactivo</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ url_for('personas.editar_persona', persona_id=persona.id) }}" 
+                                       class="btn btn-sm btn-outline-primary" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    {% if persona.activo %}
+                                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                                            onclick="confirmarEliminacion({{ persona.id }}, '{{ persona.nombre }}')"
+                                            title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación de eliminación -->
+<div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro que desea eliminar a <strong id="nombrePersonaEliminar"></strong>?</p>
+                <p class="text-muted">Esta acción marcará a la persona como inactiva.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <form id="formEliminar" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Función para aplicar filtros
+function aplicarFiltros() {
+    const nombre = document.getElementById('buscar_nombre').value.toLowerCase();
+    const clienteId = document.getElementById('filtro_cliente').value;
+    const esPrincipal = document.getElementById('filtro_principal').value;
+    
+    const filas = document.querySelectorAll('#cuerpoTablaPersonas tr');
+    
+    filas.forEach(fila => {
+        let mostrar = true;
+        
+        // Filtro por nombre
+        if (nombre) {
+            const nombrePersona = fila.querySelector('td:first-child strong').textContent.toLowerCase();
+            if (!nombrePersona.includes(nombre)) {
+                mostrar = false;
+            }
+        }
+        
+        // Filtro por cliente
+        if (clienteId && fila.dataset.clienteId !== clienteId) {
+            mostrar = false;
+        }
+        
+        // Filtro por tipo principal
+        if (esPrincipal !== '' && fila.dataset.principal !== esPrincipal) {
+            mostrar = false;
+        }
+        
+        fila.style.display = mostrar ? '' : 'none';
+    });
+}
+
+// Función para limpiar filtros
+function limpiarFiltros() {
+    document.getElementById('buscar_nombre').value = '';
+    document.getElementById('filtro_cliente').value = '';
+    document.getElementById('filtro_principal').value = '';
+    
+    // Mostrar todas las filas
+    const filas = document.querySelectorAll('#cuerpoTablaPersonas tr');
+    filas.forEach(fila => {
+        fila.style.display = '';
+    });
+}
+
+// Función para confirmar eliminación
+function confirmarEliminacion(personaId, nombrePersona) {
+    document.getElementById('nombrePersonaEliminar').textContent = nombrePersona;
+    document.getElementById('formEliminar').action = `/personas/eliminar/${personaId}`;
+    $('#modalEliminar').modal('show');
+}
+
+// Aplicar filtros en tiempo real para el nombre
+document.getElementById('buscar_nombre').addEventListener('input', aplicarFiltros);
+document.getElementById('filtro_cliente').addEventListener('change', aplicarFiltros);
+document.getElementById('filtro_principal').addEventListener('change', aplicarFiltros);
+</script>
+{% endblock %}

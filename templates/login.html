@@ -96,7 +96,7 @@
             {% endif %}
         {% endwith %}
         
-        <form method="POST" action="{{ url_for('login') }}">
+        <form method="POST" action="{{ url_for('auth.login') }}">
             <div class="form-floating">
                 <input type="text" class="form-control" id="username" name="username" placeholder="Usuario" required>
                 <label for="username"><i class="fas fa-user me-2"></i>Usuario</label>
