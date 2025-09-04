@@ -1,3 +1,4 @@
+# Flask y componentes principales
 Flask==2.3.3
 Werkzeug==2.3.7
 Jinja2==3.1.2
@@ -5,4 +6,18 @@ MarkupSafe==2.1.3
 Itsdangerous==2.1.2
 click==8.1.7
 blinker==1.6.3
+
+# Utilidades del sistema y monitoreo
 psutil==5.9.6
+
+# Programación de tareas
+APScheduler==3.10.4
+
+# Manejo de archivos y utilidades
+requests==2.31.0
+
+# Tipos y anotaciones (para typing)
+typing-extensions==4.8.0
+
+# Utilidades adicionales de Python
+pathlib2==2.3.7.post1

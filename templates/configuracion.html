@@ -25,9 +25,6 @@
                     <button class="btn-icon" onclick="openConfigModal()" title="Configuración General">
                         <i class="fas fa-cogs"></i>
                     </button>
-                    <button class="btn-icon" title="Guardar Cambios">
-                        <i class="fas fa-save"></i>
-                    </button>
                     <button class="btn-icon" id="notifications-bell" title="Notificaciones" onclick="openNotificationsModal()">
                         <i class="fas fa-bell"></i>
                         <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
@@ -60,22 +57,15 @@
                     <div class="metric-change positive">+3 este mes</div>
                 </div>
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Configuraciones</span>
-                        <i class="fas fa-cog metric-icon" style="color: #10b981;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.configuraciones or 12 }}</div>
-                    <div class="metric-change neutral">Sin cambios</div>
-                </div>
+
                 
                 <div class="metric-card">
                     <div class="metric-header">
                         <span class="metric-label">Último Backup</span>
                         <i class="fas fa-database metric-icon" style="color: #f59e0b;"></i>
                     </div>
-                    <div class="metric-value">{{ estadisticas.ultimo_backup or 'Ayer' }}</div>
-                    <div class="metric-change positive">Automático</div>
+                    <div class="metric-value">{{ estadisticas.ultimo_backup or 'Sin backups' }}</div>
+                    <div class="metric-change positive">{{ estadisticas.ultimo_backup_tipo or 'N/A' }}</div>
                 </div>
                 
                 <div class="metric-card">
@@ -84,7 +74,7 @@
                         <i class="fas fa-hdd metric-icon" style="color: #8b5cf6;"></i>
                     </div>
                     <div class="metric-value">{{ estadisticas.espacio_usado or '68%' }}</div>
-                    <div class="metric-change neutral">De 500GB</div>
+                    <div class="metric-change neutral">De {{ estadisticas.espacio_total or '500GB' }}</div>
                 </div>
             </div>
             
@@ -103,9 +93,9 @@
                                 <i class="fas fa-cogs"></i>
                                 Configuración General
                             </button>
-                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #3b82f6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #3b82f6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;" onclick="window.location.href='{{ url_for('main.backup') }}'">
                                 <i class="fas fa-database"></i>
-                                Crear Backup
+                                Gestionar Backups
                             </button>
                             <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #10b981; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;" onclick="window.location.href='{{ url_for('users.usuarios_lista') }}'">
                                 <i class="fas fa-users-cog"></i>
@@ -260,48 +250,30 @@
                                     <div>Estado: <span id="system-health" style="color: #38a169; font-weight: 600;">Saludable</span></div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Technical Details Section -->
-                        <div style="background: #f8fafc; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0;">
-                            <h5 style="color: #2d3748; margin-bottom: 16px; font-size: 16px; font-weight: 600; display: flex; align-items: center;">
-                                <i class="fas fa-cogs" style="margin-right: 8px; color: #4a5568;"></i>
-                                Detalles Técnicos
-                            </h5>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">
-                                    <span style="font-weight: 500; color: #4a5568;">Versión Plataforma</span>
-                                    <span style="color: #2d3748; font-weight: 600; font-size: 14px;" id="platform-version">{{ metricas_servidor.system.platform_version[:20] + '...' if metricas_servidor.system.platform_version and metricas_servidor.system.platform_version|length > 20 else metricas_servidor.system.platform_version or 'N/A' }}</span>
+                            <!-- Version History Card -->
+                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 20px; color: white; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;" onclick="window.location.href='{{ url_for('changelog.changelog') }}'" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'">
+                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                    <i class="fas fa-code-branch" style="font-size: 24px; margin-right: 12px; opacity: 0.9;"></i>
+                                    <h4 style="margin: 0; font-size: 16px; font-weight: 600;">Historial de Versiones</h4>
                                 </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">
-                                    <span style="font-weight: 500; color: #4a5568;">Usuarios Activos</span>
-                                    <span style="color: #10b981; font-weight: 600; font-size: 14px;" id="active-users">{{ estadisticas.usuarios_activos or 0 }}</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">
-                                    <span style="font-weight: 500; color: #4a5568;">Configuraciones</span>
-                                    <span style="color: #3b82f6; font-weight: 600; font-size: 14px;" id="config-count">{{ estadisticas.configuraciones or 0 }}</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">
-                                    <span style="font-weight: 500; color: #4a5568;">Espacio Usado</span>
-                                    <span style="color: #f59e0b; font-weight: 600; font-size: 14px;" id="storage-used">{{ estadisticas.espacio_usado or 'N/A' }}</span>
+                                <div style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">v2.1.0</div>
+                                <div style="font-size: 14px; opacity: 0.9;">
+                                    <div>Commits: <span>Ver changelog completo</span></div>
+                                    <div style="margin-top: 8px; display: flex; align-items: center; gap: 4px;">
+                                        <i class="fas fa-external-link-alt" style="font-size: 12px;"></i>
+                                        <span>Hacer clic para ver detalles</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
                 </div>
             </div>
             
-            <!-- Save Button -->
-            <div style="display: flex; justify-content: flex-end; margin-top: 24px; gap: 12px;">
-                <button class="btn-account" style="padding: 12px 24px; background: #6b7280; color: white;">
-                    <i class="fas fa-times" style="margin-right: 8px;"></i>
-                    Cancelar
-                </button>
-                <button class="btn-account" style="padding: 12px 24px; background: #10b981; color: white;">
-                    <i class="fas fa-save" style="margin-right: 8px;"></i>
-                    Guardar Cambios
-                </button>
-            </div>
+
         </div>
     </div>
     
@@ -331,7 +303,6 @@
                 .then(data => {
                     if (data.success) {
                         updateSystemCards(data.metrics);
-                        updateTechnicalDetails(data.metrics);
                         updateSystemHealth(data.metrics);
                     }
                 })
@@ -376,14 +347,7 @@
             }
         }
 
-        function updateTechnicalDetails(metrics) {
-            // Update Platform Version
-            const platformVersion = document.getElementById('platform-version');
-            if (platformVersion && metrics.system) {
-                const version = metrics.system.platform_version || 'N/A';
-                platformVersion.textContent = version.length > 20 ? version.substring(0, 20) + '...' : version;
-            }
-        }
+
 
         function updateSystemHealth(metrics) {
             const systemHealth = document.getElementById('system-health');

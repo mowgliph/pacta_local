@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import random
 from database.models import Usuario, Cliente, Contrato, Suplemento, ActividadSistema
 from services.system_metrics import get_system_metrics
+from services.config_metrics import get_config_metrics
 
 main_bp = Blueprint('main', __name__)
 
@@ -319,13 +320,8 @@ def reportes():
 @main_bp.route('/configuracion')
 @admin_required
 def configuracion():
-    # Generar estadísticas para la página de configuración
-    estadisticas = {
-        'usuarios_activos': 24,
-        'configuraciones': 12,
-        'ultimo_backup': 'Ayer',
-        'espacio_usado': '68%'
-    }
+    # Obtener métricas dinámicas para la página de configuración
+    estadisticas = get_config_metrics()
     
     # Obtener métricas del servidor
     metricas_servidor = get_system_metrics()
@@ -337,6 +333,14 @@ def configuracion():
                          estadisticas=estadisticas,
                          metricas_servidor=metricas_servidor,
                          usuario=usuario_actual)
+
+@main_bp.route('/backup')
+@login_required
+def backup():
+    usuario = Usuario.get_by_id(session['user_id'])
+    return render_template('backup_management.html', usuario=usuario)
+
+
 
 @main_bp.route('/api/system-metrics')
 def get_system_metrics_api():

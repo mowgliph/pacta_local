@@ -418,7 +418,10 @@ function showNotificationToast(message) {
         `;
         document.body.insertAdjacentHTML('beforeend', toastHTML);
     } else {
-        document.getElementById('toastMessage').textContent = message;
+        const toastMessageElement = document.getElementById('toastMessage');
+        if (toastMessageElement) {
+            toastMessageElement.textContent = message;
+        }
     }
     
     const toast = new bootstrap.Toast(document.getElementById('notificationToast'));

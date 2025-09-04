@@ -187,3 +187,10 @@ flask_session/
 
 # Database
 *.db
+
+# Backup files
+backups/
+
+# Upload files
+uploads/
+

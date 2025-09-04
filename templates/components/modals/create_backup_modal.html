@@ -1,0 +1,40 @@
+<!-- Create Backup Modal -->
+<div class="modal fade" id="createBackupModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus me-2"></i>
+                    Crear Nuevo Backup
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createBackupForm">
+                    <div class="mb-3">
+                        <label for="backupName" class="form-label">Nombre del Backup</label>
+                        <input type="text" class="form-control" id="backupName" 
+                               placeholder="Ej: Backup_Manual_2024" maxlength="50" required>
+                        <div class="form-text">El nombre debe ser único y descriptivo (máximo 50 caracteres)</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="backupDescription" class="form-label">Descripción (Opcional)</label>
+                        <textarea class="form-control" id="backupDescription" rows="3" 
+                                  placeholder="Describe el propósito de este backup..." maxlength="200"></textarea>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Información:</strong> Este backup incluirá todos los datos del sistema: contratos, usuarios, documentos y configuraciones.
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="createBackupWithName()" id="confirmCreateBtn">
+                    <i class="fas fa-save me-1"></i>
+                    Crear Backup
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

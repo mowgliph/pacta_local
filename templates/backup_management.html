@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% block title %}Gestión de Backups - PACTA{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/backup.css') }}">
+    <div class="dashboard-container">
+        <!-- Include Sidebar Component -->
+        {% include 'components/partials/sidebar.html' %}
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Include Header Component with custom content -->
+            <div class="content-header">
+                <div>
+                    <h1 class="page-title">Gestión de Backups</h1>
+                    <p class="page-subtitle">Administra los respaldos de tu sistema PACTA</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="showCreateBackupModal()" id="createBackupBtn">
+                        <i class="fas fa-plus"></i>
+                        Crear Backup
+                    </button>
+                    <button class="btn btn-outline-secondary" onclick="refreshBackupList()" id="refreshBtn">
+                        <i class="fas fa-sync-alt"></i>
+                        Actualizar
+                    </button>
+                    <button class="btn btn-outline-primary" onclick="showAutoBackupConfigModal()" id="configBackupBtn" title="Configurar Backups Automáticos">
+                        <i class="fas fa-cog"></i>
+                        Configurar
+                    </button>
+
+                    <button class="btn-icon" id="notifications-bell" title="Notificaciones" onclick="openNotificationsModal()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar-small avatar-generated" id="userAvatar"></div>
+                        <span class="user-name-small">{{ usuario.nombre }}</span>
+                        <div class="user-dropdown">
+                            <a href="{{ url_for('users.usuario') }}" class="dropdown-item">
+                                <i class="fas fa-user"></i>
+                                <span>Perfil</span>
+                            </a>
+                            <a href="{{ url_for('main.configuracion') }}" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Configuración</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backup Status Cards -->
+            <div class="metrics-grid" style="margin-bottom: 24px;">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Total de Backups</span>
+                        <i class="fas fa-archive metric-icon" style="color: #3b82f6;"></i>
+                    </div>
+                    <div class="metric-value" id="totalBackups">-</div>
+                    <div class="metric-change neutral" id="backupStorage">Calculando...</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Último Backup</span>
+                        <i class="fas fa-clock metric-icon" style="color: #10b981;"></i>
+                    </div>
+                    <div class="metric-value" id="lastBackupTime">-</div>
+                    <div class="metric-change positive" id="lastBackupType">-</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Estado del Sistema</span>
+                        <i class="fas fa-heartbeat metric-icon" style="color: #f59e0b;"></i>
+                    </div>
+                    <div class="metric-value" id="systemStatus">Verificando...</div>
+                    <div class="metric-change neutral" id="nextScheduled">-</div>
+                </div>
+            </div>
+
+            <!-- Herramientas de Backup -->
+            <div class="block-section" style="margin-bottom: 24px;">
+                <div class="block-header">
+                    <h3 class="block-title">Herramientas de Backup</h3>
+                    <p class="block-subtitle">Acciones rápidas para gestionar tus respaldos</p>
+                </div>
+                <div class="block-content">
+                    <div style="padding: 24px;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                            <button class="btn-account" onclick="createBackup()" style="flex: 1; min-width: 200px; padding: 12px; background: #10b981; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-plus-circle"></i>
+                                Crear Backup
+                            </button>
+                            <button class="btn-account" onclick="showRestoreOptions()" style="flex: 1; min-width: 200px; padding: 12px; background: #f59e0b; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-undo-alt"></i>
+                                Restaurar Sistema
+                            </button>
+                            <button class="btn-account" onclick="showDownloadOptions()" style="flex: 1; min-width: 200px; padding: 12px; background: #3b82f6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-download"></i>
+                                Descargar Backup
+                            </button>
+                            <button class="btn-account" onclick="cleanupOldBackups()" id="cleanupToolBtn" style="flex: 1; min-width: 200px; padding: 12px; background: #ef4444; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                                <i class="fas fa-broom"></i>
+                                Limpiar Backups
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backup List -->
+            <div class="block-section">
+                <div class="block-header">
+                    <h3 class="block-title">Backups Disponibles</h3>
+                    <p class="block-subtitle">Lista de todos los respaldos del sistema</p>
+                </div>
+                <div class="block-content">
+                    <!-- Loading Spinner -->
+                    <div class="loading-spinner" id="loadingSpinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2">Cargando backups...</p>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="empty-state" id="emptyState" style="display: none;">
+                        <i class="fas fa-archive" style="font-size: 48px; color: #ddd; margin-bottom: 16px;"></i>
+                        <h4>No hay backups disponibles</h4>
+                        <p>Crea tu primer backup para comenzar a proteger tus datos.</p>
+                        <button class="btn btn-primary" onclick="createBackup()">
+                            <i class="fas fa-plus"></i>
+                            Crear Primer Backup
+                        </button>
+                    </div>
+
+                    <!-- Backup List Table -->
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del Backup</th>
+                                    <th>Tipo</th>
+                                    <th>Tamaño</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="backupList">
+                                <!-- Backups will be loaded here dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Restore Confirmation Modal -->
+    <div class="modal fade" id="restoreModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Restauración</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>¡Atención!</strong> Esta acción reemplazará todos los datos actuales con los del backup seleccionado.
+                    </div>
+                    <p>¿Estás seguro de que deseas restaurar el backup:</p>
+                    <div class="backup-info" id="restoreBackupInfo">
+                        <!-- Backup info will be populated here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmRestore()" id="confirmRestoreBtn">
+                        <i class="fas fa-undo"></i>
+                        Restaurar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Modal -->
+    <div class="modal fade" id="progressModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="progressTitle">Procesando...</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="progress mb-3">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                             role="progressbar" style="width: 0%" id="progressBar"></div>
+                    </div>
+                    <p class="text-center" id="progressMessage">Iniciando proceso...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Backup Modals -->
+    {% include 'components/modals/create_backup_modal.html' %}
+    {% include 'components/modals/auto_backup_config_modal.html' %}
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Funciones de backup -->
+    <script src="{{ url_for('static', filename='js/backup_functions.js') }}"></script>
+
+    <!-- Funciones de notificaciones -->
+    <script src="{{ url_for('static', filename='js/notification_functions.js') }}"></script>
+    
+    <!-- Generar avatar del usuario -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userName = '{{ usuario.nombre or "Usuario" }}';
+            const userAvatar = document.getElementById('userAvatar');
+            if (userAvatar && userName) {
+                const words = userName.split(' ');
+                let initials = '';
+                if (words.length >= 2) {
+                    initials = words[0].charAt(0) + words[1].charAt(0);
+                } else if (words[0].length >= 2) {
+                    initials = words[0].charAt(0) + words[0].charAt(1);
+                } else {
+                    initials = words[0].charAt(0);
+                }
+                userAvatar.textContent = initials.toUpperCase();
+            }
+        });
+    </script>
+    
+    <!-- Include Notifications Modal Component -->
+    {% include 'components/modals/notifications_modal.html' %}
+{% endblock %}

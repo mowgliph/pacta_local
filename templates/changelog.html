@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Versiones - PACTA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/changelog.css') }}">
+</head>
+<body style="background: #f8fafc;">
+    <div class="container-fluid" style="max-width: 1200px; margin: 0 auto; padding: 40px 20px;">
+        <!-- Header Section -->
+        <div class="changelog-header" style="text-align: center; margin-bottom: 40px;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 16px;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
+                    <i class="fas fa-code-branch"></i>
+                </div>
+                <h1 style="color: #1f2937; font-size: 48px; font-weight: 700; margin: 0;">Historial de Versiones</h1>
+            </div>
+            <p style="color: #6b7280; font-size: 18px; margin-bottom: 32px;">Registro completo de cambios y mejoras del proyecto PACTA</p>
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn" style="background: #6b7280; color: white; padding: 12px 24px; border: none; border-radius: 8px; display: flex; align-items: center; gap: 8px; text-decoration: none; cursor: pointer;" onclick="window.location.href='{{ url_for('main.configuracion') }}'">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver a Configuración
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-body">
+                <!-- Project Info Card -->
+                <div class="info-card gradient-primary mb-4">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap">
+                        <div>
+                            <h2 class="text-white mb-2">PACTA Local</h2>
+                            <p class="text-white-50 mb-0">Sistema de Gestión de Contratos y Documentos</p>
+                        </div>
+                        <div class="text-end">
+                            <div class="text-white-75 small mb-1">Versión Actual</div>
+                            <div class="text-white h4 mb-0">v{{ version or '2.1.0' }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spanish Summary Section -->
+                {% if spanish_summary %}
+                <div class="block-section mb-4">
+                    <div class="block-header">
+                        <h3 class="block-title">
+                            <i class="fas fa-language me-2"></i>
+                            Resumen de Cambios
+                        </h3>
+                        <p class="block-subtitle">Resumen en español de las últimas actualizaciones</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="changelog-summary">
+                            <div class="summary-content">
+                                {% for line in spanish_summary.split('\n') %}
+                                    {% if line.strip() %}
+                                        {% if line.startswith('**') and line.endswith(':**') %}
+                                            <h6 class="summary-section-title mt-3 mb-2">{{ line[2:-3] }}</h6>
+                                        {% elif line.startswith('•') %}
+                                            <div class="summary-item">{{ line }}</div>
+                                        {% else %}
+                                            <div class="summary-text">{{ line }}</div>
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="summary-spacer"></div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Changelog Timeline -->
+                <div class="block-section">
+                    <div class="block-header">
+                        <h3 class="block-title">
+                            <i class="fas fa-history me-2"></i>
+                            Registro de Cambios
+                        </h3>
+                        <p class="block-subtitle">Historial cronológico de commits y mejoras</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="p-4">
+                            {% if commits and commits|length > 0 %}
+                                <div class="changelog-timeline">
+                                    {% for commit in commits %}
+                                    <div class="timeline-item">
+                                        <!-- Timeline dot -->
+                                        <div class="timeline-dot"></div>
+                                        
+                                        <!-- Commit card -->
+                                        <div class="commit-card">
+                                            <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap">
+                                                <div class="flex-grow-1 me-3">
+                                                    <h5 class="commit-title">{{ commit.message or 'Sin mensaje de commit' }}</h5>
+                                                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                                                        <span class="text-muted small d-flex align-items-center">
+                                                            <i class="fas fa-user me-1"></i>
+                                                            {{ commit.author or 'Autor desconocido' }}
+                                                        </span>
+                                                        <span class="text-muted small d-flex align-items-center">
+                                                            <i class="fas fa-calendar me-1"></i>
+                                                            {{ commit.date or 'Fecha desconocida' }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    {% if commit.sha %}
+                                                    <code class="commit-hash">{{ commit.sha[:7] }}</code>
+                                                    {% endif %}
+                                                    {% if commit.url %}
+                                                    <a href="{{ commit.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-external-link-alt me-1"></i>
+                                                        GitHub
+                                                    </a>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            
+                                            {% if commit.description %}
+                                            <div class="commit-description">
+                                                <p class="mb-0">{{ commit.description }}</p>
+                                            </div>
+                                            {% endif %}
+                                            
+                                            {% if commit.files_changed %}
+                                            <div class="commit-stats mt-3">
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-plus"></i>
+                                                    +{{ commit.additions or 0 }}
+                                                </span>
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-minus"></i>
+                                                    -{{ commit.deletions or 0 }}
+                                                </span>
+                                                <span class="badge bg-secondary">
+                                                    <i class="fas fa-file"></i>
+                                                    {{ commit.files_changed }} archivo{{ 's' if commit.files_changed != 1 else '' }}
+                                                </span>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <!-- Empty state -->
+                                <div class="text-center py-5">
+                                    <i class="fas fa-code-branch text-muted" style="font-size: 3rem; opacity: 0.5;"></i>
+                                    <h4 class="mt-3 mb-2">No hay commits disponibles</h4>
+                                    <p class="text-muted mb-3">Los commits se cargarán automáticamente desde el repositorio de GitHub.</p>
+                                    <button onclick="window.location.reload()" class="btn btn-primary">
+                                        <i class="fas fa-sync-alt me-2"></i>
+                                        Recargar
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Card -->
+                <div class="block-section">
+                    <div class="block-header">
+                        <h3 class="block-title">
+                            <i class="fas fa-chart-bar me-2"></i>
+                            Estadísticas del Proyecto
+                        </h3>
+                        <p class="block-subtitle">Métricas de desarrollo y actividad</p>
+                    </div>
+                    <div class="block-content">
+                        <div class="row g-3 p-3">
+                            <div class="col-md-3 col-sm-6">
+                                <div class="stat-card gradient-primary">
+                                    <i class="fas fa-code-branch"></i>
+                                    <div class="stat-number">{{ commits|length if commits else 0 }}</div>
+                                    <div class="stat-label">Total Commits</div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3 col-sm-6">
+                                <div class="stat-card gradient-success">
+                                    <i class="fas fa-calendar"></i>
+                                    <div class="stat-number small">{{ last_update or 'N/A' }}</div>
+                                    <div class="stat-label">Última Actualización</div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3 col-sm-6">
+                                <div class="stat-card gradient-warning">
+                                    <i class="fas fa-users"></i>
+                                    <div class="stat-number">{{ contributors|length if contributors else 1 }}</div>
+                                    <div class="stat-label">Contribuidores</div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3 col-sm-6">
+                                <div class="stat-card gradient-info">
+                                    <i class="fas fa-rocket"></i>
+                                    <div class="stat-number">v{{ version or '2.1.0' }}</div>
+                                    <div class="stat-label">Versión Actual</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
