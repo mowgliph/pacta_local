@@ -1,0 +1,472 @@
+{% extends "base.html" %}
+
+{% block title %}Gestión de Clientes - PACTA{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container">
+        <!-- Include Sidebar Component -->
+        {% include 'components/partials/sidebar.html' %}
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Content Header -->
+            <div class="content-header">
+                <div>
+                    <h1 class="page-title">
+                        <i class="fas fa-handshake" style="color: #10b981; margin-right: 12px;"></i>
+                        Gestión de Clientes
+                    </h1>
+                    <p class="page-subtitle">Administra todos los clientes del sistema</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-primary" onclick="openAddClientModal()" style="display: flex; align-items: center; gap: 8px; background: #10b981;">
+                        <i class="fas fa-plus"></i>
+                        Añadir Cliente
+                    </button>
+                    <button class="btn-icon" title="Actualizar" onclick="location.reload()">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="btn-icon" title="Exportar" onclick="exportClients()">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Search and Filter Section -->
+            <div class="search-filter-section" style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+                    <div class="search-box" style="flex: 1; min-width: 300px;">
+                        <div style="position: relative;">
+                            <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #6b7280;"></i>
+                            <input type="text" id="searchClients" placeholder="Buscar clientes por nombre, industria o contacto..." style="width: 100%; padding: 12px 12px 12px 40px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                        </div>
+                    </div>
+                    <select id="industryFilter" style="padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; min-width: 180px;">
+                        <option value="">Todas las industrias</option>
+                        <option value="manufactura">Manufactura Industrial</option>
+                        <option value="servicios">Servicios Urbanos</option>
+                        <option value="financiero">Servicios Financieros</option>
+                        <option value="retail">Retail y Comercio</option>
+                        <option value="salud">Salud y Medicina</option>
+                        <option value="educacion">Educación</option>
+                    </select>
+                    <select id="statusFilter" style="padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; min-width: 120px;">
+                        <option value="">Todos los estados</option>
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                        <option value="prospecto">Prospecto</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Clients Statistics Cards -->
+            <div class="metrics-grid" style="margin-bottom: 24px;">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Total Clientes</span>
+                        <i class="fas fa-handshake metric-icon" style="color: #10b981;"></i>
+                    </div>
+                    <div class="metric-value">18</div>
+                    <div class="metric-change positive">+2 este mes</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Clientes Activos</span>
+                        <i class="fas fa-check-circle metric-icon" style="color: #3b82f6;"></i>
+                    </div>
+                    <div class="metric-value">16</div>
+                    <div class="metric-change positive">88.9% del total</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Contratos Totales</span>
+                        <i class="fas fa-file-contract metric-icon" style="color: #f59e0b;"></i>
+                    </div>
+                    <div class="metric-value">142</div>
+                    <div class="metric-change positive">Con clientes</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Valor Promedio</span>
+                        <i class="fas fa-dollar-sign metric-icon" style="color: #8b5cf6;"></i>
+                    </div>
+                    <div class="metric-value">$68,500</div>
+                    <div class="metric-change positive">Por contrato</div>
+                </div>
+            </div>
+            
+            <!-- Clients Table -->
+            <div class="clients-table-section" style="background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden;">
+                <div class="table-header" style="padding: 20px; border-bottom: 1px solid #f3f4f6; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: #374151;">Lista de Clientes</h3>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-icon" title="Vista de tabla" onclick="toggleView('table')" id="tableViewBtn">
+                            <i class="fas fa-table"></i>
+                        </button>
+                        <button class="btn-icon" title="Vista de tarjetas" onclick="toggleView('cards')" id="cardsViewBtn">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Table View -->
+                <div id="tableView" class="table-responsive">
+                    <table class="table" style="margin: 0;">
+                        <thead style="background: #f8fafc;">
+                            <tr>
+                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Cliente</th>
+                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Industria</th>
+                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Contratos</th>
+                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Valor Total</th>
+                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Estado</th>
+                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Contacto</th>
+                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clientsTableBody">
+                            <tr style="border-bottom: 1px solid #f3f4f6;">
+                                <td style="padding: 16px; border: none;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div class="client-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #10b981, #047857); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px;">
+                                            GI
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 600; color: #374151;">Global Industries</div>
+                                            <div style="font-size: 12px; color: #6b7280;">ID: CLI-001</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <span class="badge" style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Manufactura Industrial</span>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="font-weight: 600; color: #374151;">7</div>
+                                    <div style="font-size: 12px; color: #6b7280;">5 activos</div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="font-weight: 600; color: #10b981;">$850,000</div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <span class="status-badge active" style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">Activo</span>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="font-size: 13px; color: #374151;">contact@globalind.com</div>
+                                    <div style="font-size: 12px; color: #6b7280;">+1 555-123-4567</div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="display: flex; gap: 4px;">
+                                        <button class="btn-icon-small" title="Ver detalles" onclick="viewClient('CLI-001')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-icon-small" title="Editar" onclick="editClient('CLI-001')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon-small" title="Eliminar" onclick="deleteClient('CLI-001')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr style="border-bottom: 1px solid #f3f4f6;">
+                                <td style="padding: 16px; border: none;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div class="client-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px;">
+                                            MS
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 600; color: #374151;">Metro Solutions</div>
+                                            <div style="font-size: 12px; color: #6b7280;">ID: CLI-002</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <span class="badge" style="background: #dbeafe; color: #1d4ed8; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Servicios Urbanos</span>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="font-weight: 600; color: #374151;">4</div>
+                                    <div style="font-size: 12px; color: #6b7280;">3 activos</div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="font-weight: 600; color: #10b981;">$620,000</div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <span class="status-badge active" style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">Activo</span>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="font-size: 13px; color: #374151;">info@metrosol.com</div>
+                                    <div style="font-size: 12px; color: #6b7280;">+1 555-234-5678</div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="display: flex; gap: 4px;">
+                                        <button class="btn-icon-small" title="Ver detalles" onclick="viewClient('CLI-002')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-icon-small" title="Editar" onclick="editClient('CLI-002')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon-small" title="Eliminar" onclick="deleteClient('CLI-002')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr style="border-bottom: 1px solid #f3f4f6;">
+                                <td style="padding: 16px; border: none;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div class="client-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px;">
+                                            FG
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 600; color: #374151;">Financial Group</div>
+                                            <div style="font-size: 12px; color: #6b7280;">ID: CLI-003</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <span class="badge" style="background: #ede9fe; color: #7c3aed; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Servicios Financieros</span>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="font-weight: 600; color: #374151;">3</div>
+                                    <div style="font-size: 12px; color: #6b7280;">3 activos</div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="font-weight: 600; color: #10b981;">$480,000</div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <span class="status-badge active" style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">Activo</span>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="font-size: 13px; color: #374151;">admin@fingroup.com</div>
+                                    <div style="font-size: 12px; color: #6b7280;">+1 555-345-6789</div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="display: flex; gap: 4px;">
+                                        <button class="btn-icon-small" title="Ver detalles" onclick="viewClient('CLI-003')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-icon-small" title="Editar" onclick="editClient('CLI-003')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon-small" title="Eliminar" onclick="deleteClient('CLI-003')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr style="border-bottom: 1px solid #f3f4f6;">
+                                <td style="padding: 16px; border: none;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div class="client-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #ef4444, #dc2626); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px;">
+                                            RC
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 600; color: #374151;">Retail Chain</div>
+                                            <div style="font-size: 12px; color: #6b7280;">ID: CLI-004</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <span class="badge" style="background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Retail y Comercio</span>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="font-weight: 600; color: #374151;">2</div>
+                                    <div style="font-size: 12px; color: #6b7280;">1 activo</div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="font-weight: 600; color: #10b981;">$280,000</div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <span class="status-badge prospecto" style="background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">Prospecto</span>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="font-size: 13px; color: #374151;">sales@retailchain.com</div>
+                                    <div style="font-size: 12px; color: #6b7280;">+1 555-456-7890</div>
+                                </td>
+                                <td style="padding: 16px; border: none;">
+                                    <div style="display: flex; gap: 4px;">
+                                        <button class="btn-icon-small" title="Ver detalles" onclick="viewClient('CLI-004')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-icon-small" title="Editar" onclick="editClient('CLI-004')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon-small" title="Eliminar" onclick="deleteClient('CLI-004')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Client Modal -->
+    <div class="modal fade" id="addClientModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-plus" style="color: #10b981; margin-right: 8px;"></i>
+                        Añadir Nuevo Cliente
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addClientForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nombre de la Empresa *</label>
+                                <input type="text" class="form-control" id="clientName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Industria *</label>
+                                <select class="form-control" id="clientIndustry" required>
+                                    <option value="">Seleccionar industria</option>
+                                    <option value="manufactura">Manufactura Industrial</option>
+                                    <option value="servicios">Servicios Urbanos</option>
+                                    <option value="financiero">Servicios Financieros</option>
+                                    <option value="retail">Retail y Comercio</option>
+                                    <option value="salud">Salud y Medicina</option>
+                                    <option value="educacion">Educación</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email de Contacto *</label>
+                                <input type="email" class="form-control" id="clientEmail" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="clientPhone">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Dirección</label>
+                                <textarea class="form-control" id="clientAddress" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Persona de Contacto</label>
+                                <input type="text" class="form-control" id="clientContact">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Estado</label>
+                                <select class="form-control" id="clientStatus">
+                                    <option value="activo">Activo</option>
+                                    <option value="inactivo">Inactivo</option>
+                                    <option value="prospecto">Prospecto</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tamaño de Empresa</label>
+                                <select class="form-control" id="clientSize">
+                                    <option value="">Seleccionar tamaño</option>
+                                    <option value="pequena">Pequeña (1-50 empleados)</option>
+                                    <option value="mediana">Mediana (51-250 empleados)</option>
+                                    <option value="grande">Grande (251-1000 empleados)</option>
+                                    <option value="corporativo">Corporativo (1000+ empleados)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Potencial de Negocio</label>
+                                <select class="form-control" id="clientPotential">
+                                    <option value="">Seleccionar potencial</option>
+                                    <option value="bajo">Bajo</option>
+                                    <option value="medio">Medio</option>
+                                    <option value="alto">Alto</option>
+                                    <option value="premium">Premium</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notas Adicionales</label>
+                            <textarea class="form-control" id="clientNotes" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveClient()" style="background: #10b981; border-color: #10b981;">Guardar Cliente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Client management functions
+        function openAddClientModal() {
+            const modal = new bootstrap.Modal(document.getElementById('addClientModal'));
+            modal.show();
+        }
+        
+        function saveClient() {
+            // Here you would implement the save functionality
+            alert('Funcionalidad de guardar cliente - Implementar con backend');
+            bootstrap.Modal.getInstance(document.getElementById('addClientModal')).hide();
+        }
+        
+        function viewClient(id) {
+            alert('Ver detalles del cliente: ' + id);
+        }
+        
+        function editClient(id) {
+            alert('Editar cliente: ' + id);
+        }
+        
+        function deleteClient(id) {
+            if (confirm('¿Está seguro de que desea eliminar este cliente?')) {
+                alert('Eliminar cliente: ' + id);
+            }
+        }
+        
+        function exportClients() {
+            alert('Exportar lista de clientes - Implementar funcionalidad');
+        }
+        
+        function toggleView(view) {
+            // Toggle between table and cards view
+            const tableView = document.getElementById('tableView');
+            const tableBtn = document.getElementById('tableViewBtn');
+            const cardsBtn = document.getElementById('cardsViewBtn');
+            
+            if (view === 'table') {
+                tableView.style.display = 'block';
+                tableBtn.classList.add('active');
+                cardsBtn.classList.remove('active');
+            } else {
+                // Cards view implementation would go here
+                alert('Vista de tarjetas - Implementar si es necesario');
+            }
+        }
+        
+        // Search and filter functionality
+        document.getElementById('searchClients').addEventListener('input', function() {
+            // Implement search functionality
+            console.log('Searching:', this.value);
+        });
+        
+        document.getElementById('industryFilter').addEventListener('change', function() {
+            // Implement industry filter
+            console.log('Filter by industry:', this.value);
+        });
+        
+        document.getElementById('statusFilter').addEventListener('change', function() {
+            // Implement status filter
+            console.log('Filter by status:', this.value);
+        });
+    </script>
+{% endblock %}

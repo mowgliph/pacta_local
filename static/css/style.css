@@ -1,19 +1,378 @@
-/* Modern PACTA Styles - Template Match */
+/* ===================================================================
+   PACTA - Archivo Principal de Estilos
+   Archivo: style.css
+   Descripción: Punto de entrada único que importa todos los módulos CSS
+   Versión: 2.0.0
+   Fecha: 2025
+=================================================================== */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ===== IMPORTACIONES EN ORDEN DE ESPECIFICIDAD ===== */
+
+/* 1. Variables globales - Deben cargarse primero */
+@import url('./base/_variables.css');
+
+/* 2. Reset y normalización - Base para todos los elementos */
+@import url('./base/_reset.css');
+
+/* 3. Tipografía base - Estilos de texto fundamentales */
+@import url('./base/_typography.css');
+
+/* 4. Sistema de layout responsive - Grid y contenedores */
+@import url('./layout/_responsive.css');
+
+/* 5. Utilidades base - Clases de ayuda generales */
+@import url('./base/_utilities.css');
+
+/* 6. Componentes reutilizables - En orden de complejidad */
+@import url('./components/_buttons.css');
+@import url('./components/_forms.css');
+@import url('./components/_cards.css');
+@import url('./components/_tables.css');
+
+/* 7. Estilos específicos por página - Más específicos */
+@import url('./pages/dashboard.css');
+@import url('./pages/contracts.css');
+@import url('./pages/backup.css');
+@import url('./pages/changelog.css');
+
+/* ===== ESTILOS GLOBALES ADICIONALES ===== */
+
+/* Configuración global del documento */
+html {
+  /* Mejora la renderización de fuentes */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Mejora el scroll en dispositivos táctiles */
+  -webkit-overflow-scrolling: touch;
+  
+  /* Establece el comportamiento de scroll suave */
+  scroll-behavior: smooth;
+  
+  /* Previene el zoom en inputs en iOS */
+  -webkit-text-size-adjust: 100%;
 }
 
+/* Configuración del body */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: #f8fafc;
-    color: #1e293b;
-    line-height: 1.5;
-    overflow-x: hidden;
-    font-size: clamp(14px, 2.5vw, 16px);
+  /* Asegura que el body ocupe toda la altura */
+  min-height: 100vh;
+  
+  /* Mejora la renderización */
+  text-rendering: optimizeLegibility;
+  
+  /* Establece el color de fondo por defecto */
+  background-color: var(--bg-primary);
+  
+  /* Establece el color de texto por defecto */
+  color: var(--text-primary);
+  
+  /* Establece la fuente por defecto */
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-normal);
 }
+
+/* Configuración para elementos de enfoque */
+:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Mejoras de accesibilidad para usuarios que prefieren menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mejoras para modo de alto contraste */
+@media (prefers-contrast: high) {
+  :root {
+    --border-light: #000000;
+    --border-medium: #000000;
+    --border-dark: #000000;
+  }
+}
+
+/* Mejoras para tema oscuro del sistema */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: var(--color-gray-900);
+    --bg-secondary: var(--color-gray-800);
+    --bg-tertiary: var(--color-gray-700);
+    --text-primary: var(--color-gray-100);
+    --text-secondary: var(--color-gray-300);
+    --text-muted: var(--color-gray-400);
+    --border-light: var(--color-gray-600);
+    --border-medium: var(--color-gray-500);
+    --border-dark: var(--color-gray-400);
+  }
+}
+
+/* Configuración de selección de texto */
+::selection {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-darker);
+}
+
+::-moz-selection {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-darker);
+}
+
+/* Estilos para elementos de carga */
+.loading {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.loading * {
+  cursor: wait !important;
+}
+
+/* Estilos para elementos deshabilitados */
+.disabled,
+[disabled] {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Contenedor principal de la aplicación */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilos para elementos ocultos pero accesibles para lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Estilos para elementos que solo son visibles en lectores de pantalla cuando tienen foco */
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Estilos para elementos de skip navigation */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--color-primary);
+  color: var(--color-white);
+  padding: 8px;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  z-index: var(--z-tooltip);
+  transition: var(--transition-all);
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Estilos para mensajes de error globales */
+.error-boundary {
+  padding: var(--spacing-6);
+  text-align: center;
+  background-color: var(--color-error-light);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-lg);
+  margin: var(--spacing-4);
+}
+
+.error-boundary h2 {
+  color: var(--color-error-darker);
+  margin-bottom: var(--spacing-3);
+}
+
+.error-boundary p {
+  color: var(--color-error-dark);
+  margin-bottom: var(--spacing-4);
+}
+
+/* Estilos para elementos de depuración (solo en desarrollo) */
+.debug {
+  border: 2px dashed #ff0000;
+  background-color: rgba(255, 0, 0, 0.1);
+}
+
+.debug::before {
+  content: 'DEBUG';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  background: #ff0000;
+  color: white;
+  font-size: 10px;
+  padding: 2px 4px;
+  font-weight: bold;
+}
+
+/* Ocultar elementos de depuración en producción */
+.production .debug {
+  display: none;
+}
+
+/* ===== MEJORAS DE RENDIMIENTO ===== */
+
+/* Optimización para elementos que cambian frecuentemente */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.will-change-scroll {
+  will-change: scroll-position;
+}
+
+/* Optimización para elementos con animaciones */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* ===== ESTILOS PARA IMPRESIÓN ===== */
+
+@media print {
+  /* Ocultar elementos no necesarios para impresión */
+  .no-print,
+  .btn,
+  .form-control,
+  nav,
+  .sidebar,
+  .modal,
+  .tooltip,
+  .dropdown {
+    display: none !important;
+  }
+  
+  /* Optimizar colores para impresión */
+  * {
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  /* Optimizar enlaces para impresión */
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+  
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+  
+  /* Optimizar imágenes para impresión */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Optimizar tablas para impresión */
+  table {
+    border-collapse: collapse !important;
+  }
+  
+  th,
+  td {
+    border: 1px solid #000 !important;
+  }
+  
+  /* Evitar saltos de página en elementos importantes */
+  .card,
+  .table,
+  .form-group {
+    page-break-inside: avoid;
+  }
+  
+  /* Configurar márgenes de página */
+  @page {
+    margin: 2cm;
+  }
+}
+
+/* ===== COMENTARIOS DE DOCUMENTACIÓN ===== */
+
+/*
+  GUÍA DE USO DE LA ARQUITECTURA CSS:
+  
+  1. ORDEN DE IMPORTACIÓN:
+     - Variables primero (colores, espaciado, tipografía)
+     - Reset y normalización
+     - Tipografía base
+     - Sistema de layout
+     - Utilidades
+     - Componentes (de simple a complejo)
+     - Páginas específicas
+  
+  2. NOMENCLATURA:
+     - Se utiliza metodología BEM modificada
+     - Clases utilitarias con prefijos descriptivos
+     - Variables CSS con nomenclatura semántica
+  
+  3. RESPONSIVE DESIGN:
+     - Mobile-first approach
+     - Breakpoints estandarizados
+     - Utilidades responsive disponibles
+  
+  4. ACCESIBILIDAD:
+     - Soporte para prefers-reduced-motion
+     - Soporte para prefers-contrast
+     - Soporte para prefers-color-scheme
+     - Elementos de skip navigation
+     - Clases sr-only para lectores de pantalla
+  
+  5. RENDIMIENTO:
+     - Importaciones optimizadas
+     - Clases de optimización GPU
+     - Estilos de impresión separados
+  
+  6. MANTENIMIENTO:
+     - Cada módulo es independiente
+     - Variables centralizadas
+     - Comentarios descriptivos en cada archivo
+     - Estructura modular y escalable
+*/
 
 /* Dashboard Container */
 .dashboard-container {
@@ -893,7 +1252,8 @@ body {
 /* Large Screens - Desktop (1024px - 1439px) */
 @media (min-width: 1024px) and (max-width: 1439px) {
     .content-row {
-        grid-template-columns: 1fr 1fr;
+        display: flex;
+        flex-direction: column;
         gap: 24px;
     }
     
@@ -1929,4 +2289,339 @@ img, video, iframe {
     flex: 1;
     font-size: 13px;
     padding: 8px 16px;
+}
+
+/* Contract Page Specific Styles */
+.contract-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.contract-actions .btn {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.providers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.provider-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.provider-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.provider-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.provider-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.provider-avatar-blue {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.provider-avatar-green {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.provider-info h4.provider-name {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.provider-info p.provider-category {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.provider-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 12px;
+    background: #f3f4f6;
+    border-radius: 8px;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.stat-value-blue {
+    color: #3b82f6;
+}
+
+.stat-value-green {
+    color: #10b981;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.provider-contact {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 8px;
+}
+
+.contact-item:last-child {
+    margin-bottom: 0;
+}
+
+.responsible-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+}
+
+.responsible-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.responsible-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.responsible-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.responsible-avatar-purple {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.responsible-avatar-orange {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.responsible-info {
+    flex: 1;
+}
+
+.responsible-name {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.responsible-role {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.responsible-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    font-size: 14px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #6b7280;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.info-card {
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.2s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-2px);
+}
+
+.info-card-blue {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.info-card-blue:hover {
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+.info-card-green {
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.info-card-green:hover {
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+}
+
+.info-card-orange {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.info-card-orange:hover {
+    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+}
+
+.info-card-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.info-card-purple:hover {
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+}
+
+.info-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.info-icon {
+    font-size: 24px;
+    opacity: 0.9;
+}
+
+.info-text .info-label {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.info-text .info-value {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.info-description {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.full-width-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Responsive Design for Contract Page */
+@media (max-width: 1024px) {
+    .contract-actions {
+        flex-direction: column;
+    }
+    
+    .contract-actions .btn {
+        min-width: auto;
+    }
+    
+    .info-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .providers-grid,
+    .responsible-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .responsible-details {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
 }

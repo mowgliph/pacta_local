@@ -59,6 +59,22 @@ class DatabaseManager:
                 )
             ''')
             
+            # Crear tabla de proveedores
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS proveedores (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    nombre VARCHAR(100) NOT NULL,
+                    tipo_proveedor VARCHAR(20) NOT NULL,
+                    rfc VARCHAR(13),
+                    direccion TEXT,
+                    telefono VARCHAR(20),
+                    email VARCHAR(100),
+                    contacto_principal VARCHAR(100),
+                    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    activo BOOLEAN DEFAULT 1
+                )
+            ''')
+            
             # Crear tabla de contratos
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS contratos (

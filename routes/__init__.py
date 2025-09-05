@@ -8,6 +8,7 @@ from .contratos import contratos_bp
 from .changelog import changelog_bp
 from .backup_routes import backup_bp
 from .document_routes import document_bp
+from .providers_clients import providers_clients_bp
 
 def register_blueprints(app):
     """Registra todos los blueprints de la aplicación"""
@@ -20,3 +21,4 @@ def register_blueprints(app):
     app.register_blueprint(changelog_bp)
     app.register_blueprint(backup_bp)
     app.register_blueprint(document_bp)
+    app.register_blueprint(providers_clients_bp)

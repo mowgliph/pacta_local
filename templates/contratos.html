@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contratos - PACTA</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Contratos - PACTA{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contratos.css') }}">
+{% endblock %}
+
+{% block content %}
     <div class="dashboard-container">
         <!-- Include Sidebar Component -->
         {% include 'components/partials/sidebar.html' %}
@@ -22,7 +20,7 @@
                     <p class="page-subtitle">Gestión y administración de contratos</p>
                 </div>
                 <div class="header-actions">
-                    <button class="btn-icon" title="Nuevo Contrato">
+                    <button class="btn-icon" title="Nuevo Contrato" data-bs-toggle="modal" data-bs-target="#crearContratoModal">
                         <i class="fas fa-plus"></i>
                     </button>
                     <button class="btn-icon" id="notifications-bell" title="Notificaciones" onclick="openNotificationsModal()">
@@ -87,23 +85,23 @@
             
             <!-- Vertical Blocks Layout -->
             <div class="vertical-blocks">
-                <!-- Quick Actions Block -->
+                <!-- Contract Tools Block -->
                 <div class="block-section actions-block">
                     <div class="block-header">
-                        <h3 class="block-title">Acciones Rápidas</h3>
+                        <h3 class="block-title">Herramientas de los Contratos</h3>
                         <p class="block-subtitle">Herramientas para gestión eficiente de contratos</p>
                     </div>
                     <div class="block-content">
                         <div class="contract-actions" style="display: flex; flex-wrap: wrap; gap: 12px;">
-                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #3b82f6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #3b82f6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;" data-bs-toggle="modal" data-bs-target="#crearContratoModal">
                                 <i class="fas fa-plus"></i>
                                 Nuevo Contrato
                             </button>
-                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #10b981; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
-                                <i class="fas fa-search"></i>
-                                Buscar Contratos
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #10b981; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;" onclick="window.location.href='/suplementos'">
+                                <i class="fas fa-file-contract"></i>
+                                Gestionar Suplementos
                             </button>
-                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #f59e0b; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #f59e0b; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;" onclick="window.location.href='/contratos-vencidos'">
                                 <i class="fas fa-clock"></i>
                                 Revisar Vencimientos
                             </button>
@@ -115,28 +113,237 @@
                     </div>
                 </div>
                 
-                <!-- Contract Status Distribution Block -->
-                <div class="block-section charts-block">
+                <!-- Advanced Search Block -->
+                <div class="block-section search-block">
                     <div class="block-header">
-                        <h3 class="block-title">Distribución de Contratos</h3>
-                        <p class="block-subtitle">Análisis visual del estado y valor de contratos</p>
+                        <h3 class="block-title">
+                            <i class="fas fa-search" style="color: #10b981; margin-right: 8px;"></i>
+                            Búsqueda Avanzada de Contratos
+                        </h3>
+                        <p class="block-subtitle">Filtrar y encontrar contratos específicos por criterios avanzados</p>
                     </div>
                     <div class="block-content">
-                        <div class="charts-grid">
-                            <div class="donut-chart">
-                                <canvas id="statusChart" width="120" height="120"></canvas>
-                                <div class="donut-value">89%</div>
-                                <div class="donut-label">Contratos Activos</div>
+                        <div class="search-container" style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                            <!-- Search Input -->
+                            <div class="search-input-group" style="margin-bottom: 16px;">
+                                <div style="position: relative;">
+                                    <input type="text" id="contractSearchInput" placeholder="Buscar por nombre, número de contrato, descripción..." 
+                                           style="width: 100%; padding: 12px 16px 12px 44px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; background: white;">
+                                    <i class="fas fa-search" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #6b7280;"></i>
+                                </div>
                             </div>
-                            <div class="donut-chart">
-                                <canvas id="typeChart" width="120" height="120"></canvas>
-                                <div class="donut-value">$2.4M</div>
-                                <div class="donut-label">Valor Total</div>
+                            
+                            <!-- Filter Options -->
+                            <div class="filter-options" style="display: flex; gap: 16px; align-items: center; margin-bottom: 16px;">
+                                <label style="font-size: 14px; font-weight: 500; color: #374151;">Filtrar por tipo:</label>
+                                <div class="filter-buttons" style="display: flex; gap: 8px;">
+                                    <button id="filterAll" class="filter-btn active" data-filter="all" 
+                                            style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 6px; background: #3b82f6; color: white; font-size: 13px; cursor: pointer; transition: all 0.2s;">
+                                        <i class="fas fa-list" style="margin-right: 4px;"></i>
+                                        Todos
+                                    </button>
+                                    <button id="filterCliente" class="filter-btn" data-filter="cliente" 
+                                            style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 6px; background: white; color: #374151; font-size: 13px; cursor: pointer; transition: all 0.2s;">
+                                        <i class="fas fa-user" style="margin-right: 4px;"></i>
+                                        Cliente
+                                    </button>
+                                    <button id="filterProveedor" class="filter-btn" data-filter="proveedor" 
+                                            style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 6px; background: white; color: #374151; font-size: 13px; cursor: pointer; transition: all 0.2s;">
+                                        <i class="fas fa-building" style="margin-right: 4px;"></i>
+                                        Proveedor
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Search Actions -->
+                            <div class="search-actions" style="display: flex; gap: 12px; justify-content: flex-end;">
+                                <button id="clearSearch" class="btn-secondary" 
+                                        style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 6px; background: white; color: #6b7280; font-size: 13px; cursor: pointer;">
+                                    <i class="fas fa-times" style="margin-right: 4px;"></i>
+                                    Limpiar
+                                </button>
+                                <button id="applySearch" class="btn-primary" 
+                                        style="padding: 8px 16px; border: none; border-radius: 6px; background: #10b981; color: white; font-size: 13px; cursor: pointer;">
+                                    <i class="fas fa-search" style="margin-right: 4px;"></i>
+                                    Buscar
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
                 
+
+                    <!-- Providers and Clients Management Section -->
+                    <div class="block-section providers-clients-block">
+                        <div class="block-header">
+                            <div class="block-title-section">
+                                <h3 class="block-title">
+                                    <i class="fas fa-users" style="color: #3b82f6; margin-right: 8px;"></i>
+                                    Gestión de Proveedores y Clientes
+                                </h3>
+                                <p class="block-subtitle">Información de proveedores y clientes con mayor actividad contractual</p>
+                            </div>
+                        </div>
+                        <div class="block-content">
+                            <!-- Two Column Layout -->
+                            <div class="providers-clients-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                                
+                                <!-- Providers Column -->
+                                <div class="providers-column" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                    <div class="column-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f3f4f6;">
+                                        <div>
+                                            <h4 style="font-size: 18px; font-weight: 600; color: #374151; margin: 0; display: flex; align-items: center;">
+                                                <i class="fas fa-building" style="color: #3b82f6; margin-right: 8px;"></i>
+                                                Proveedores Principales
+                                            </h4>
+                                            <p style="font-size: 14px; color: #6b7280; margin: 4px 0 0 0;">Top proveedores por número de contratos</p>
+                                        </div>
+                                        <button class="btn-account" style="padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-size: 14px; display: flex; align-items: center; gap: 6px; cursor: pointer;" onclick="window.location.href='/proveedores'">
+                                            <i class="fas fa-cog"></i>
+                                            Gestionar Proveedor
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="providers-list" style="display: flex; flex-direction: column; gap: 16px;">
+                                        <div class="provider-item" style="display: flex; align-items: center; padding: 16px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                                            <div class="provider-avatar" style="width: 48px; height: 48px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; margin-right: 12px;">
+                                                TC
+                                            </div>
+                                            <div class="provider-details" style="flex: 1;">
+                                                <h5 style="font-size: 16px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">TechCorp S.A.</h5>
+                                                <p style="font-size: 13px; color: #6b7280; margin: 0 0 8px 0;">Servicios de Tecnología</p>
+                                                <div style="display: flex; gap: 16px; font-size: 12px;">
+                                                    <span style="color: #3b82f6; font-weight: 600;">5 Contratos</span>
+                                                    <span style="color: #10b981; font-weight: 600;">$425,000</span>
+                                                </div>
+                                            </div>
+                                            <div class="provider-actions" style="display: flex; flex-direction: column; gap: 4px;">
+                                                <button class="btn-icon" style="width: 32px; height: 32px; background: #f3f4f6; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Ver detalles">
+                                                    <i class="fas fa-eye" style="color: #6b7280; font-size: 14px;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="provider-item" style="display: flex; align-items: center; padding: 16px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #10b981;">
+                                            <div class="provider-avatar" style="width: 48px; height: 48px; background: linear-gradient(135deg, #10b981, #047857); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; margin-right: 12px;">
+                                                LS
+                                            </div>
+                                            <div class="provider-details" style="flex: 1;">
+                                                <h5 style="font-size: 16px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">Legal Solutions</h5>
+                                                <p style="font-size: 13px; color: #6b7280; margin: 0 0 8px 0;">Consultoría Legal</p>
+                                                <div style="display: flex; gap: 16px; font-size: 12px;">
+                                                    <span style="color: #3b82f6; font-weight: 600;">3 Contratos</span>
+                                                    <span style="color: #10b981; font-weight: 600;">$150,000</span>
+                                                </div>
+                                            </div>
+                                            <div class="provider-actions" style="display: flex; flex-direction: column; gap: 4px;">
+                                                <button class="btn-icon" style="width: 32px; height: 32px; background: #f3f4f6; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Ver detalles">
+                                                    <i class="fas fa-eye" style="color: #6b7280; font-size: 14px;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="provider-item" style="display: flex; align-items: center; padding: 16px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                                            <div class="provider-avatar" style="width: 48px; height: 48px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; margin-right: 12px;">
+                                                CS
+                                            </div>
+                                            <div class="provider-details" style="flex: 1;">
+                                                <h5 style="font-size: 16px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">Construction Services</h5>
+                                                <p style="font-size: 13px; color: #6b7280; margin: 0 0 8px 0;">Construcción y Obras</p>
+                                                <div style="display: flex; gap: 16px; font-size: 12px;">
+                                                    <span style="color: #3b82f6; font-weight: 600;">2 Contratos</span>
+                                                    <span style="color: #10b981; font-weight: 600;">$320,000</span>
+                                                </div>
+                                            </div>
+                                            <div class="provider-actions" style="display: flex; flex-direction: column; gap: 4px;">
+                                                <button class="btn-icon" style="width: 32px; height: 32px; background: #f3f4f6; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Ver detalles">
+                                                    <i class="fas fa-eye" style="color: #6b7280; font-size: 14px;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Clients Column -->
+                                <div class="clients-column" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                    <div class="column-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f3f4f6;">
+                                        <div>
+                                            <h4 style="font-size: 18px; font-weight: 600; color: #374151; margin: 0; display: flex; align-items: center;">
+                                                <i class="fas fa-handshake" style="color: #10b981; margin-right: 8px;"></i>
+                                                Clientes Principales
+                                            </h4>
+                                            <p style="font-size: 14px; color: #6b7280; margin: 4px 0 0 0;">Top clientes por número de contratos</p>
+                                        </div>
+                                        <button class="btn-account" style="padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 6px; font-size: 14px; display: flex; align-items: center; gap: 6px; cursor: pointer;" onclick="window.location.href='/clientes'">
+                                            <i class="fas fa-cog"></i>
+                                            Gestionar Cliente
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="clients-list" style="display: flex; flex-direction: column; gap: 16px;">
+                                        <div class="client-item" style="display: flex; align-items: center; padding: 16px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #10b981;">
+                                            <div class="client-avatar" style="width: 48px; height: 48px; background: linear-gradient(135deg, #10b981, #047857); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; margin-right: 12px;">
+                                                GI
+                                            </div>
+                                            <div class="client-details" style="flex: 1;">
+                                                <h5 style="font-size: 16px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">Global Industries</h5>
+                                                <p style="font-size: 13px; color: #6b7280; margin: 0 0 8px 0;">Manufactura Industrial</p>
+                                                <div style="display: flex; gap: 16px; font-size: 12px;">
+                                                    <span style="color: #3b82f6; font-weight: 600;">7 Contratos</span>
+                                                    <span style="color: #10b981; font-weight: 600;">$850,000</span>
+                                                </div>
+                                            </div>
+                                            <div class="client-actions" style="display: flex; flex-direction: column; gap: 4px;">
+                                                <button class="btn-icon" style="width: 32px; height: 32px; background: #f3f4f6; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Ver detalles">
+                                                    <i class="fas fa-eye" style="color: #6b7280; font-size: 14px;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="client-item" style="display: flex; align-items: center; padding: 16px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                                            <div class="client-avatar" style="width: 48px; height: 48px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; margin-right: 12px;">
+                                                MS
+                                            </div>
+                                            <div class="client-details" style="flex: 1;">
+                                                <h5 style="font-size: 16px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">Metro Solutions</h5>
+                                                <p style="font-size: 13px; color: #6b7280; margin: 0 0 8px 0;">Servicios Urbanos</p>
+                                                <div style="display: flex; gap: 16px; font-size: 12px;">
+                                                    <span style="color: #3b82f6; font-weight: 600;">4 Contratos</span>
+                                                    <span style="color: #10b981; font-weight: 600;">$620,000</span>
+                                                </div>
+                                            </div>
+                                            <div class="client-actions" style="display: flex; flex-direction: column; gap: 4px;">
+                                                <button class="btn-icon" style="width: 32px; height: 32px; background: #f3f4f6; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Ver detalles">
+                                                    <i class="fas fa-eye" style="color: #6b7280; font-size: 14px;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="client-item" style="display: flex; align-items: center; padding: 16px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #8b5cf6;">
+                                            <div class="client-avatar" style="width: 48px; height: 48px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; margin-right: 12px;">
+                                                FG
+                                            </div>
+                                            <div class="client-details" style="flex: 1;">
+                                                <h5 style="font-size: 16px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">Financial Group</h5>
+                                                <p style="font-size: 13px; color: #6b7280; margin: 0 0 8px 0;">Servicios Financieros</p>
+                                                <div style="display: flex; gap: 16px; font-size: 12px;">
+                                                    <span style="color: #3b82f6; font-weight: 600;">3 Contratos</span>
+                                                    <span style="color: #10b981; font-weight: 600;">$480,000</span>
+                                                </div>
+                                            </div>
+                                            <div class="client-actions" style="display: flex; flex-direction: column; gap: 4px;">
+                                                <button class="btn-icon" style="width: 32px; height: 32px; background: #f3f4f6; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Ver detalles">
+                                                    <i class="fas fa-eye" style="color: #6b7280; font-size: 14px;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Contracts Table Block -->
                 <div class="block-section table-block">
                     <div class="block-header">
@@ -144,167 +351,135 @@
                         <p class="block-subtitle">Gestión completa de todos los contratos activos</p>
                     </div>
                     <div class="block-content">
-                    <div class="table-card">
-                        <div class="table-header">
-                            <h3>Lista de Contratos</h3>
-                            <div>
-                                <button class="btn-icon" title="Filtrar">
-                                    <i class="fas fa-filter"></i>
-                                </button>
-                                <button class="btn-icon" title="Exportar">
-                                    <i class="fas fa-download"></i>
-                                </button>
+                        <div class="table-card">
+                            <div class="table-header">
+                                <h3>Contratos Recientes</h3>
+                                <div>
+                                    <button class="btn-icon" title="Filtrar">
+                                        <i class="fas fa-filter"></i>
+                                    </button>
+                                    <button class="btn-icon" title="Exportar">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-container">
+                                <table class="orders-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Contrato</th>
+                                            <th>Cliente</th>
+                                            <th>Fecha Inicio</th>
+                                            <th>Valor</th>
+                                            <th>Estado</th>
+                                            <th>Vencimiento</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <i class="fas fa-file-contract" style="color: #3b82f6; margin-right: 8px;"></i>
+                                                    <div>
+                                                        <div style="font-weight: 500;">CONT-2025-003</div>
+                                                        <div style="font-size: 12px; color: #64748b;">Servicios de Consultoría</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <i class="fas fa-building" style="color: #10b981; margin-right: 8px;"></i>
+                                                    <div>
+                                                        <div style="font-weight: 500;">TechCorp S.A.</div>
+                                                        <div style="font-size: 12px; color: #64748b;">Tecnología</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>15 Ene 2025</td>
+                                            <td class="text-success" style="font-weight: 600;">$125,000</td>
+                                            <td><span class="status-badge delivered">Activo</span></td>
+                                            <td>15 Ene 2026</td>
+                                            <td>
+                                                <button class="btn-icon" style="width: 32px; height: 32px;" title="Ver">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn-icon" style="width: 32px; height: 32px;" title="Editar">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <i class="fas fa-file-contract" style="color: #3b82f6; margin-right: 8px;"></i>
+                                                    <div>
+                                                        <div style="font-weight: 500;">CONT-2025-002</div>
+                                                        <div style="font-size: 12px; color: #64748b;">Desarrollo de Software</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <i class="fas fa-building" style="color: #10b981; margin-right: 8px;"></i>
+                                                    <div>
+                                                        <div style="font-weight: 500;">InnovaSoft Ltd.</div>
+                                                        <div style="font-size: 12px; color: #64748b;">Software</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>10 Ene 2025</td>
+                                            <td class="text-success" style="font-weight: 600;">$85,000</td>
+                                            <td><span class="status-badge processing">En Proceso</span></td>
+                                            <td>10 Jul 2025</td>
+                                            <td>
+                                                <button class="btn-icon" style="width: 32px; height: 32px;" title="Ver">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn-icon" style="width: 32px; height: 32px;" title="Editar">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <i class="fas fa-file-contract" style="color: #3b82f6; margin-right: 8px;"></i>
+                                                    <div>
+                                                        <div style="font-weight: 500;">CONT-2025-001</div>
+                                                        <div style="font-size: 12px; color: #64748b;">Mantenimiento de Sistemas</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <i class="fas fa-building" style="color: #10b981; margin-right: 8px;"></i>
+                                                    <div>
+                                                        <div style="font-weight: 500;">GlobalTech Inc.</div>
+                                                        <div style="font-size: 12px; color: #64748b;">Tecnología</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>05 Ene 2025</td>
+                                            <td class="text-success" style="font-weight: 600;">$65,000</td>
+                                            <td><span class="status-badge delivered">Activo</span></td>
+                                            <td>05 Dic 2025</td>
+                                            <td>
+                                                <button class="btn-icon" style="width: 32px; height: 32px;" title="Ver">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn-icon" style="width: 32px; height: 32px;" title="Editar">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                        <div class="table-container">
-                            <table class="orders-table">
-                                <thead>
-                                    <tr>
-                                        <th>Contrato</th>
-                                        <th>Cliente</th>
-                                        <th>Fecha Inicio</th>
-                                        <th>Fecha Vencimiento</th>
-                                        <th>Valor</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="customer-info">
-                                                <i class="fas fa-file-contract" style="color: #3b82f6; margin-right: 8px;"></i>
-                                                <div>
-                                                    <div style="font-weight: 500;">CONT-2025-001</div>
-                                                    <div style="font-size: 12px; color: #64748b;">Servicios IT</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="customer-info">
-                                                <img src="https://via.placeholder.com/32x32/3b82f6/ffffff?text=TC" alt="Cliente" class="customer-avatar">
-                                                <div>
-                                                    <div style="font-weight: 500;">TechCorp S.A.</div>
-                                                    <div style="font-size: 12px; color: #64748b;">tech@corp.com</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>15/01/2025</td>
-                                        <td>15/01/2026</td>
-                                        <td style="font-weight: 600;">$125,000</td>
-                                        <td><span class="status-badge delivered">Activo</span></td>
-                                        <td>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Ver">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="customer-info">
-                                                <i class="fas fa-file-contract" style="color: #10b981; margin-right: 8px;"></i>
-                                                <div>
-                                                    <div style="font-weight: 500;">CONT-2025-002</div>
-                                                    <div style="font-size: 12px; color: #64748b;">Consultoría Legal</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="customer-info">
-                                                <img src="https://via.placeholder.com/32x32/10b981/ffffff?text=LS" alt="Cliente" class="customer-avatar">
-                                                <div>
-                                                    <div style="font-weight: 500;">Legal Solutions</div>
-                                                    <div style="font-size: 12px; color: #64748b;">info@legalsol.com</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>20/01/2025</td>
-                                        <td>20/06/2025</td>
-                                        <td style="font-weight: 600;">$75,000</td>
-                                        <td><span class="status-badge delivered">Activo</span></td>
-                                        <td>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Ver">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="customer-info">
-                                                <i class="fas fa-file-contract" style="color: #f59e0b; margin-right: 8px;"></i>
-                                                <div>
-                                                    <div style="font-weight: 500;">CONT-2024-089</div>
-                                                    <div style="font-size: 12px; color: #64748b;">Mantenimiento</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="customer-info">
-                                                <img src="https://via.placeholder.com/32x32/f59e0b/ffffff?text=MS" alt="Cliente" class="customer-avatar">
-                                                <div>
-                                                    <div style="font-weight: 500;">MaintenanceServ</div>
-                                                    <div style="font-size: 12px; color: #64748b;">contact@mserv.com</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>10/12/2024</td>
-                                        <td>10/02/2025</td>
-                                        <td style="font-weight: 600;">$45,000</td>
-                                        <td><span class="status-badge processing">Próximo a Vencer</span></td>
-                                        <td>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Ver">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="customer-info">
-                                                <i class="fas fa-file-contract" style="color: #ef4444; margin-right: 8px;"></i>
-                                                <div>
-                                                    <div style="font-weight: 500;">CONT-2024-067</div>
-                                                    <div style="font-size: 12px; color: #64748b;">Desarrollo Web</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="customer-info">
-                                                <img src="https://via.placeholder.com/32x32/ef4444/ffffff?text=WD" alt="Cliente" class="customer-avatar">
-                                                <div>
-                                                    <div style="font-weight: 500;">WebDev Inc.</div>
-                                                    <div style="font-size: 12px; color: #64748b;">hello@webdev.com</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>05/08/2024</td>
-                                        <td>05/01/2025</td>
-                                        <td style="font-weight: 600;">$95,000</td>
-                                        <td><span class="status-badge cancelled">Vencido</span></td>
-                                        <td>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Ver">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Renovar">
-                                                <i class="fas fa-redo"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                     </div>
                 </div>
-                
+
                 <!-- Recent Activity Block -->
                 <div class="block-section activity-block">
                     <div class="block-header">
@@ -316,8 +491,8 @@
                             <div class="activity-item">
                                 <div class="activity-dot" style="background: #10b981;"></div>
                                 <div class="activity-content">
-                                    <div class="activity-title">Contrato renovado</div>
-                                    <div class="activity-subtitle">CONT-2025-001 - TechCorp S.A.</div>
+                                    <div class="activity-title">Contrato firmado</div>
+                                    <div class="activity-subtitle">CONT-2025-003 - Servicios de Consultoría</div>
                                     <div class="activity-time">Hace 2 horas</div>
                                 </div>
                             </div>
@@ -325,16 +500,24 @@
                                 <div class="activity-dot" style="background: #3b82f6;"></div>
                                 <div class="activity-content">
                                     <div class="activity-title">Nuevo contrato creado</div>
-                                    <div class="activity-subtitle">CONT-2025-002 - Legal Solutions</div>
-                                    <div class="activity-time">Hace 1 día</div>
+                                    <div class="activity-subtitle">CONT-2025-004 - Desarrollo de Aplicación</div>
+                                    <div class="activity-time">Hace 4 horas</div>
                                 </div>
                             </div>
                             <div class="activity-item">
                                 <div class="activity-dot" style="background: #f59e0b;"></div>
                                 <div class="activity-content">
-                                    <div class="activity-title">Recordatorio enviado</div>
-                                    <div class="activity-subtitle">CONT-2024-089 próximo a vencer</div>
-                                    <div class="activity-time">Hace 2 días</div>
+                                    <div class="activity-title">Contrato próximo a vencer</div>
+                                    <div class="activity-subtitle">CONT-2024-089 - Mantenimiento de Sistemas</div>
+                                    <div class="activity-time">Hace 6 horas</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot" style="background: #8b5cf6;"></div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Documentos actualizados</div>
+                                    <div class="activity-subtitle">CONT-2025-001 - Anexos técnicos</div>
+                                    <div class="activity-time">Hace 1 día</div>
                                 </div>
                             </div>
                         </div>
@@ -344,19 +527,124 @@
         </div>
     </div>
     
-    <!-- Include Footer Component -->
-    {% include 'components/partials/footer.html' %}
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Funciones modulares de contratos -->
-    <script src="{{ url_for('static', filename='js/contract_functions.js') }}"></script>
-    
-    <!-- Funciones de notificaciones -->
-    <script src="{{ url_for('static', filename='js/notification_functions.js') }}"></script>
+
     
     <!-- Include Notifications Modal Component -->
     {% include 'components/modals/notifications_modal.html' %}
-</body>
-</html>
+    
+    <!-- Incluir Modal de Crear Contrato -->
+    {% include 'components/modals/contratos/crear_contrato_modal.html' %}
+
+<script>
+// JavaScript adicional para el modal de crear contrato
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('crearContratoModal');
+    const form = document.getElementById('formContratoModal');
+    
+    // Limpiar formulario cuando se cierre el modal
+    modal.addEventListener('hidden.bs.modal', function () {
+        if (form) {
+            form.reset();
+            // Limpiar select de persona responsable
+            const personaSelect = document.getElementById('persona_responsable_id_modal');
+            if (personaSelect) {
+                personaSelect.innerHTML = '<option value="">Seleccionar cliente primero...</option>';
+            }
+            // Ocultar información del cliente
+            const infoCliente = document.getElementById('info-cliente-modal');
+            if (infoCliente) {
+                infoCliente.style.display = 'none';
+            }
+        }
+    });
+    
+    // Manejar éxito en la creación del contrato
+    modal.addEventListener('show.bs.modal', function () {
+        // Generar número de contrato automático si está vacío
+        const numeroContrato = document.getElementById('numero_contrato_modal');
+        if (numeroContrato && !numeroContrato.value) {
+            const fecha = new Date();
+            const año = fecha.getFullYear();
+            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+            const dia = String(fecha.getDate()).padStart(2, '0');
+            const hora = String(fecha.getHours()).padStart(2, '0');
+            const minuto = String(fecha.getMinutes()).padStart(2, '0');
+            numeroContrato.value = `CONT-${año}${mes}${dia}-${hora}${minuto}`;
+        }
+    });
+});
+</script>
+
+<!-- Include Modal de Crear Contrato -->
+{% include 'components/modals/contratos/crear_contrato_modal.html' %}
+
+    <!-- Scripts específicos de contratos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/contract_functions.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/notification_functions.js') }}"></script>
+    
+    <!-- Chart.js Scripts -->
+    <script>
+        // Configuración de gráficos responsivos
+        Chart.defaults.responsive = true;
+        Chart.defaults.maintainAspectRatio = false;
+        
+        // Gráfico de Estado de Contratos
+        const ctxStatus = document.getElementById('contractStatusChart');
+        if (ctxStatus) {
+            new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Activos', 'Pendientes', 'Vencidos', 'Renovados'],
+                    datasets: [{
+                        data: [45, 12, 8, 25],
+                        backgroundColor: [
+                            '#10b981',
+                            '#f59e0b', 
+                            '#ef4444',
+                            '#3b82f6'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+        
+        // Gráfico de Tipos de Contrato
+        const ctxType = document.getElementById('contractTypeChart');
+        if (ctxType) {
+            new Chart(ctxType, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Servicios', 'Productos', 'Consultoría', 'Mantenimiento'],
+                    datasets: [{
+                        data: [35, 20, 25, 20],
+                        backgroundColor: [
+                            '#8b5cf6',
+                            '#06b6d4',
+                            '#f97316', 
+                            '#84cc16'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+    </script>
+{% endblock %}

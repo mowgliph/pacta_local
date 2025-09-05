@@ -17,7 +17,7 @@ sys.path.insert(0, current_dir)
 
 # Importar los módulos
 from database import db_manager
-from models import Usuario, Cliente, Contrato, Suplemento, ActividadSistema
+from models import Usuario, Cliente, Proveedor, Contrato, Suplemento, ActividadSistema
 
 def limpiar_base_datos():
     """Elimina la base de datos existente para empezar desde cero"""
@@ -84,12 +84,11 @@ def crear_usuarios_ejemplo():
     
     return len(usuarios)
 
-def crear_clientes_proveedores():
-    """Crea clientes y proveedores de ejemplo"""
-    print("Creando clientes y proveedores de ejemplo...")
+def crear_clientes_ejemplo():
+    """Crea clientes de ejemplo"""
+    print("Creando clientes de ejemplo...")
     
-    entidades = [
-        # Clientes
+    clientes = [
         Cliente(
             nombre='Empresa ABC S.A. de C.V.',
             tipo_cliente='cliente',
@@ -116,39 +115,50 @@ def crear_clientes_proveedores():
             telefono='555-1003',
             email='ventas@industriasdef.com',
             contacto_principal='Laura Rodríguez Coordinadora'
-        ),
-        
-        # Proveedores
-        Cliente(
+        )
+    ]
+    
+    for cliente in clientes:
+        cliente.save()
+        print(f"  - Cliente creado: {cliente.nombre}")
+    
+    return len(clientes)
+
+def crear_proveedores_ejemplo():
+    """Crea proveedores de ejemplo"""
+    print("Creando proveedores de ejemplo...")
+    
+    proveedores = [
+        Proveedor(
             nombre='Tech Solutions México S.A.',
-            tipo_cliente='proveedor',
+            tipo_proveedor='empresa',
             rfc='TEC456789123',
             direccion='Zona Tecnológica 789, Col. Santa Fe, Ciudad de México',
             telefono='555-2001',
             email='ventas@techsolutions.mx',
             contacto_principal='Miguel Torres CTO'
         ),
-        Cliente(
+        Proveedor(
             nombre='Servicios Integrales del Norte',
-            tipo_cliente='proveedor',
+            tipo_proveedor='empresa',
             rfc='SIN789123456',
             direccion='Centro Comercial 321, Col. Residencial, Guadalajara',
             telefono='555-2002',
             email='servicios@integrales-norte.com',
             contacto_principal='Patricia Hernández Directora'
         ),
-        Cliente(
+        Proveedor(
             nombre='Constructora Moderna S.A.',
-            tipo_cliente='proveedor',
+            tipo_proveedor='empresa',
             rfc='CON321654987',
             direccion='Av. Construcción 654, Col. Industrial, Puebla',
             telefono='555-2003',
             email='proyectos@constructora-moderna.com',
             contacto_principal='Fernando Jiménez Ingeniero'
         ),
-        Cliente(
+        Proveedor(
             nombre='Suministros Empresariales Plus',
-            tipo_cliente='proveedor',
+            tipo_proveedor='empresa',
             rfc='SUE147258369',
             direccion='Parque Industrial 147, Col. Logística, Tijuana',
             telefono='555-2004',
@@ -157,11 +167,11 @@ def crear_clientes_proveedores():
         )
     ]
     
-    for entidad in entidades:
-        entidad.save()
-        print(f"  - {entidad.tipo_cliente.title()} creado: {entidad.nombre}")
+    for proveedor in proveedores:
+        proveedor.save()
+        print(f"  - Proveedor creado: {proveedor.nombre}")
     
-    return len(entidades)
+    return len(proveedores)
 
 def crear_contratos_ejemplo():
     """Crea contratos de ejemplo con datos realistas"""
@@ -316,7 +326,7 @@ def mostrar_estadisticas():
     
     usuarios = Usuario.get_all()
     clientes = Cliente.get_by_tipo('cliente')
-    proveedores = Cliente.get_by_tipo('proveedor')
+    proveedores = Proveedor.get_all()
     contratos = Contrato.get_all()
     contratos_activos = Contrato.get_all('activo')
     
@@ -357,7 +367,8 @@ def main():
         
         # Crear datos de ejemplo
         usuarios_creados = crear_usuarios_ejemplo()
-        entidades_creadas = crear_clientes_proveedores()
+        clientes_creados = crear_clientes_ejemplo()
+        proveedores_creados = crear_proveedores_ejemplo()
         contratos_creados = crear_contratos_ejemplo()
         crear_actividad_sistema()
         

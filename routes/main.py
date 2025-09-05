@@ -140,62 +140,7 @@ def dashboard():
                          contratos=contratos_recientes,
                          usuario=usuario_actual)
 
-@main_bp.route('/contratos')
-@login_required
-def contratos():
-    # Obtener contratos reales de la base de datos
-    contratos_db = Contrato.get_all()
-    contratos_data = []
-    
-    for contrato in contratos_db:
-        cliente = Cliente.get_by_id(contrato.cliente_id)
-        usuario = Usuario.get_by_id(contrato.usuario_responsable_id)
-        
-        # Convertir fechas de string a date si es necesario
-        if isinstance(contrato.fecha_inicio, str):
-            try:
-                fecha_inicio = datetime.strptime(contrato.fecha_inicio, '%Y-%m-%d').date()
-            except ValueError:
-                fecha_inicio = datetime.now().date()
-        else:
-            fecha_inicio = contrato.fecha_inicio
-            
-        if isinstance(contrato.fecha_fin, str):
-            try:
-                fecha_fin = datetime.strptime(contrato.fecha_fin, '%Y-%m-%d').date()
-            except ValueError:
-                fecha_fin = datetime.now().date()
-        else:
-            fecha_fin = contrato.fecha_fin
-        
-        # Calcular días para vencer
-        dias_para_vencer = (fecha_fin - datetime.now().date()).days
-        
-        contratos_data.append({
-            'id': contrato.numero_contrato,
-            'nombre': contrato.titulo,
-            'tipo': contrato.tipo_contrato,
-            'proveedor': cliente.nombre if cliente else 'N/A',
-            'fecha_inicio': fecha_inicio.strftime('%Y-%m-%d'),
-            'fecha_vencimiento': fecha_fin.strftime('%Y-%m-%d'),
-            'valor': contrato.monto_actual,
-            'estado': contrato.estado.title(),
-            'dias_para_vencer': dias_para_vencer,
-            'responsable': usuario.nombre if usuario else 'N/A',
-            'descripcion': contrato.descripcion
-        })
-    
-    # Estadísticas para la página de contratos
-    estadisticas = obtener_estadisticas_contratos()
-    estadisticas['valor_total'] = f'{estadisticas["valor_total"]/1000000:.1f}M'
-    
-    # Obtener usuario actual de la sesión
-    usuario_actual = Usuario.get_by_id(session['user_id'])
-    
-    return render_template('contratos.html', 
-                         contratos=contratos_data, 
-                         estadisticas=estadisticas,
-                         usuario=usuario_actual)
+
 
 def obtener_todos_suplementos():
     """Obtiene todos los suplementos con información enriquecida"""
@@ -369,3 +314,9 @@ def get_system_metrics_api():
             'error': str(e),
             'timestamp': datetime.now().isoformat()
         }), 500
+
+@main_bp.route('/contratos-vencidos')
+@login_required
+def contratos_vencidos():
+    """Redirige a la página de contratos vencidos"""
+    return redirect(url_for('contratos.contratos_vencidos'))

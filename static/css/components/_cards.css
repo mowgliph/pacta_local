@@ -1,0 +1,707 @@
+/* ===================================================================
+   PACTA - Componente Tarjetas
+   Archivo: _cards.css
+   Descripción: Estilos para tarjetas y componentes relacionados
+=================================================================== */
+
+/* ===== TARJETA BASE ===== */
+
+.card {
+  /* Estructura */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  
+  /* Apariencia */
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  
+  /* Transiciones */
+  transition: var(--transition-shadow), var(--transition-transform);
+  
+  /* Espaciado */
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ===== ELEMENTOS DE LA TARJETA ===== */
+
+/* Encabezado */
+.card-header {
+  padding: var(--spacing-5) var(--spacing-6);
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-light);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.card-header:last-child {
+  border-radius: var(--radius-lg);
+}
+
+/* Cuerpo */
+.card-body {
+  padding: var(--spacing-6);
+  flex: 1 1 auto;
+}
+
+.card-body:first-child {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.card-body:last-child {
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.card-body:only-child {
+  border-radius: var(--radius-lg);
+}
+
+/* Pie */
+.card-footer {
+  padding: var(--spacing-4) var(--spacing-6);
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-light);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.card-footer:first-child {
+  border-radius: var(--radius-lg);
+}
+
+/* ===== TÍTULOS Y TEXTO ===== */
+
+.card-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-3);
+  line-height: var(--line-height-tight);
+}
+
+.card-subtitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-4);
+  line-height: var(--line-height-normal);
+}
+
+.card-text {
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--spacing-4);
+}
+
+.card-text:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== IMÁGENES ===== */
+
+.card-img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.card-img-top {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.card-img-bottom {
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.card-img-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: var(--spacing-6);
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.card-img-overlay .card-title,
+.card-img-overlay .card-text {
+  color: var(--color-white);
+}
+
+/* ===== VARIANTES DE TAMAÑO ===== */
+
+/* Tarjeta pequeña */
+.card-sm {
+  border-radius: var(--radius-md);
+}
+
+.card-sm .card-header,
+.card-sm .card-body,
+.card-sm .card-footer {
+  padding: var(--spacing-4);
+}
+
+.card-sm .card-title {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-2);
+}
+
+.card-sm .card-text {
+  font-size: var(--font-size-xs);
+  margin-bottom: var(--spacing-3);
+}
+
+/* Tarjeta grande */
+.card-lg {
+  border-radius: var(--radius-xl);
+}
+
+.card-lg .card-header,
+.card-lg .card-body,
+.card-lg .card-footer {
+  padding: var(--spacing-8);
+}
+
+.card-lg .card-title {
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--spacing-4);
+}
+
+.card-lg .card-text {
+  font-size: var(--font-size-base);
+  margin-bottom: var(--spacing-5);
+}
+
+/* ===== VARIANTES DE ESTILO ===== */
+
+/* Tarjeta elevada */
+.card-elevated {
+  box-shadow: var(--shadow-lg);
+  border: none;
+}
+
+.card-elevated:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-4px);
+}
+
+/* Tarjeta plana */
+.card-flat {
+  box-shadow: none;
+  border: 1px solid var(--border-medium);
+}
+
+.card-flat:hover {
+  box-shadow: var(--shadow-sm);
+  transform: none;
+}
+
+/* Tarjeta con borde */
+.card-bordered {
+  border: 2px solid var(--border-medium);
+  box-shadow: none;
+}
+
+.card-bordered:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ===== VARIANTES DE COLOR ===== */
+
+/* Tarjeta primaria */
+.card-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.card-primary .card-header,
+.card-primary .card-footer {
+  background-color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+.card-primary .card-title,
+.card-primary .card-text {
+  color: var(--color-white);
+}
+
+/* Tarjeta secundaria */
+.card-secondary {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: var(--color-white);
+}
+
+.card-secondary .card-header,
+.card-secondary .card-footer {
+  background-color: var(--color-secondary-dark);
+  border-color: var(--color-secondary-dark);
+}
+
+.card-secondary .card-title,
+.card-secondary .card-text {
+  color: var(--color-white);
+}
+
+/* Tarjeta de éxito */
+.card-success {
+  background-color: var(--color-success-light);
+  border-color: var(--color-success);
+  color: var(--color-success-darker);
+}
+
+.card-success .card-header,
+.card-success .card-footer {
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+  color: var(--color-white);
+}
+
+/* Tarjeta de advertencia */
+.card-warning {
+  background-color: var(--color-warning-light);
+  border-color: var(--color-warning);
+  color: var(--color-warning-darker);
+}
+
+.card-warning .card-header,
+.card-warning .card-footer {
+  background-color: var(--color-warning);
+  border-color: var(--color-warning);
+  color: var(--color-white);
+}
+
+/* Tarjeta de error */
+.card-error {
+  background-color: var(--color-error-light);
+  border-color: var(--color-error);
+  color: var(--color-error-darker);
+}
+
+.card-error .card-header,
+.card-error .card-footer {
+  background-color: var(--color-error);
+  border-color: var(--color-error);
+  color: var(--color-white);
+}
+
+/* Tarjeta de información */
+.card-info {
+  background-color: var(--color-info-light);
+  border-color: var(--color-info);
+  color: var(--color-info-darker);
+}
+
+.card-info .card-header,
+.card-info .card-footer {
+  background-color: var(--color-info);
+  border-color: var(--color-info);
+  color: var(--color-white);
+}
+
+/* ===== TARJETAS ESPECIALES ===== */
+
+/* Tarjeta de métrica */
+.card-metric {
+  text-align: center;
+  padding: var(--spacing-6);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: var(--color-white);
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-metric::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  transform: rotate(45deg);
+}
+
+.card-metric-value {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  margin-bottom: var(--spacing-2);
+}
+
+.card-metric-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.card-metric-change {
+  font-size: var(--font-size-xs);
+  margin-top: var(--spacing-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-1);
+}
+
+.card-metric-change.positive {
+  color: var(--color-success-light);
+}
+
+.card-metric-change.negative {
+  color: var(--color-error-light);
+}
+
+/* Tarjeta de perfil */
+.card-profile {
+  text-align: center;
+}
+
+.card-profile-avatar {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  margin: 0 auto var(--spacing-4);
+  border: 3px solid var(--color-white);
+  box-shadow: var(--shadow-md);
+  object-fit: cover;
+}
+
+.card-profile-name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-1);
+}
+
+.card-profile-role {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-4);
+}
+
+.card-profile-stats {
+  display: flex;
+  justify-content: space-around;
+  padding-top: var(--spacing-4);
+  border-top: 1px solid var(--border-light);
+}
+
+.card-profile-stat {
+  text-align: center;
+}
+
+.card-profile-stat-value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  display: block;
+}
+
+.card-profile-stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ===== GRUPOS DE TARJETAS ===== */
+
+.card-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+}
+
+.card-group .card {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* Deck de tarjetas */
+.card-deck {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-6);
+}
+
+/* Columnas de tarjetas */
+.card-columns {
+  column-count: 3;
+  column-gap: var(--spacing-6);
+  column-fill: balance;
+}
+
+.card-columns .card {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: var(--spacing-6);
+  break-inside: avoid;
+}
+
+/* ===== ACCIONES DE TARJETA ===== */
+
+.card-actions {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+  margin-top: var(--spacing-4);
+}
+
+.card-actions:first-child {
+  margin-top: 0;
+}
+
+.card-actions .btn {
+  flex: 0 0 auto;
+}
+
+.card-actions .btn:only-child {
+  flex: 1;
+}
+
+/* ===== ESTADOS INTERACTIVOS ===== */
+
+/* Tarjeta clickeable */
+.card-clickable {
+  cursor: pointer;
+  transition: var(--transition-all);
+}
+
+.card-clickable:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-clickable:active {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Tarjeta seleccionable */
+.card-selectable {
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: var(--transition-colors);
+}
+
+.card-selectable:hover {
+  border-color: var(--color-primary-light);
+}
+
+.card-selectable.selected {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+  .card {
+    border-radius: var(--radius-md);
+  }
+  
+  .card-body {
+    padding: var(--spacing-4);
+  }
+  
+  .card-header,
+  .card-footer {
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+  
+  .card-title {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-2);
+  }
+  
+  .card-text {
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-3);
+  }
+  
+  .card-group {
+    flex-direction: column;
+  }
+  
+  .card-deck {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+  }
+  
+  .card-columns {
+    column-count: 1;
+  }
+  
+  .card-metric {
+    padding: var(--spacing-4);
+  }
+  
+  .card-metric-value {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .card-profile-avatar {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-body {
+    padding: var(--spacing-3);
+  }
+  
+  .card-header,
+  .card-footer {
+    padding: var(--spacing-2) var(--spacing-3);
+  }
+  
+  .card-title {
+    font-size: var(--font-size-base);
+  }
+  
+  .card-text {
+    font-size: var(--font-size-xs);
+  }
+  
+  .card-actions {
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+  
+  .card-actions .btn {
+    width: 100%;
+  }
+  
+  .card-profile-stats {
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+}
+
+/* ===== MEJORAS DE ACCESIBILIDAD ===== */
+
+/* Reducir movimiento para usuarios que lo prefieren */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card-clickable,
+  .card-selectable {
+    transition: none;
+  }
+  
+  .card:hover,
+  .card-clickable:hover,
+  .card-clickable:active {
+    transform: none;
+  }
+}
+
+/* Mejoras para modo de alto contraste */
+@media (prefers-contrast: high) {
+  .card {
+    border-width: 2px;
+  }
+  
+  .card-bordered {
+    border-width: 3px;
+  }
+  
+  .card-selectable.selected {
+    border-width: 3px;
+  }
+}
+
+/* ===== UTILIDADES ADICIONALES ===== */
+
+/* Tarjeta con loading */
+.card-loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.card-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+}
+
+.card-loading::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2rem;
+  height: 2rem;
+  margin: -1rem 0 0 -1rem;
+  border: 3px solid var(--color-primary-light);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: card-spin 1s linear infinite;
+  z-index: 1;
+}
+
+@keyframes card-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tarjeta compacta */
+.card-compact {
+  padding: var(--spacing-3);
+}
+
+.card-compact .card-title {
+  font-size: var(--font-size-base);
+  margin-bottom: var(--spacing-2);
+}
+
+.card-compact .card-text {
+  font-size: var(--font-size-xs);
+  margin-bottom: var(--spacing-2);
+}
+
+/* Tarjeta con icono */
+.card-icon {
+  position: relative;
+  padding-top: calc(var(--spacing-6) + 1.5rem);
+}
+
+.card-icon-element {
+  position: absolute;
+  top: var(--spacing-4);
+  left: var(--spacing-6);
+  width: 3rem;
+  height: 3rem;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xl);
+}

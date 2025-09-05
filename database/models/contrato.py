@@ -219,3 +219,30 @@ class Contrato:
         """Obtiene todos los suplementos asociados al contrato"""
         from .suplemento import Suplemento
         return Suplemento.get_by_contrato(self.id)
+    
+    @staticmethod
+    def get_expired_contracts():
+        """Obtiene todos los contratos vencidos"""
+        query = '''
+            SELECT * FROM contratos 
+            WHERE fecha_fin < date('now') 
+            AND estado IN ('activo', 'vigente')
+            ORDER BY fecha_fin ASC
+        '''
+        rows = db_manager.execute_query(query)
+        contratos = []
+        for row in rows:
+            contrato = Contrato(
+                id=row[0], numero_contrato=row[1], cliente_id=row[2], usuario_responsable_id=row[3],
+                persona_responsable_id=None, titulo=row[4], descripcion=row[5], monto_original=row[6],
+                monto_actual=row[7], fecha_inicio=row[8], fecha_fin=row[9], estado=row[10],
+                tipo_contrato=row[11], fecha_creacion=row[12], fecha_modificacion=row[13]
+            )
+            # Convertir fecha_fin de string a date si es necesario
+            if isinstance(contrato.fecha_fin, str):
+                try:
+                    contrato.fecha_fin = datetime.strptime(contrato.fecha_fin, '%Y-%m-%d').date()
+                except ValueError:
+                    contrato.fecha_fin = None
+            contratos.append(contrato)
+        return contratos

@@ -1,6 +1,7 @@
 # Importar todas las clases de modelos desde sus archivos separados
 from .usuario import Usuario
 from .cliente import Cliente
+from .proveedor import Proveedor
 from .contrato import Contrato
 from .suplemento import Suplemento
 from .persona_responsable import PersonaResponsable
@@ -11,7 +12,8 @@ from .actividad_sistema import ActividadSistema
 # Exportar todas las clases para facilitar la importación
 __all__ = [
     'Usuario',
-    'Cliente', 
+    'Cliente',
+    'Proveedor', 
     'Contrato',
     'Suplemento',
     'PersonaResponsable',

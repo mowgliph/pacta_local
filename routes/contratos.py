@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, send_file, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, send_file, current_app, session
 from functools import wraps
 from werkzeug.utils import secure_filename
-from database.models import Contrato, Cliente, PersonaResponsable, DocumentoContrato, Suplemento
+from database.models import Contrato, Cliente, PersonaResponsable, DocumentoContrato, Suplemento, Usuario, Proveedor
 from datetime import datetime
 import os
 
@@ -58,10 +58,55 @@ def listar():
     
     estados = ['borrador', 'activo', 'suspendido', 'terminado', 'cancelado']
     
-    return render_template('contratos/listar.html', 
+    # Datos adicionales para el modal de crear contrato
+    tipos_contrato = ['Servicios', 'Suministros', 'Obra', 'Consultoría', 'Mantenimiento']
+    estados_modal = ['borrador', 'activo']
+    
+    # Obtener usuario actual de la sesión
+    usuario_actual = Usuario.get_by_id(session['user_id'])
+    
+    # Calcular estadísticas para el template
+    total_contratos = len(contratos_data)
+    contratos_activos = len([c for c in contratos_data if c['contrato'].estado == 'activo'])
+    
+    # Calcular valor total de contratos activos
+    valor_total = sum([c['contrato'].monto_actual for c in contratos_data if c['contrato'].estado == 'activo'])
+    valor_total_formatted = f"{valor_total/1000000:.1f}M" if valor_total > 1000000 else f"{valor_total:,.0f}"
+    
+    # Contratos próximos a vencer (30 días)
+    from datetime import datetime, timedelta
+    fecha_limite = datetime.now().date() + timedelta(days=30)
+    proximos_vencer = 0
+    
+    for contrato_data in contratos_data:
+        contrato = contrato_data['contrato']
+        if contrato.estado == 'activo' and contrato.fecha_fin:
+            try:
+                if isinstance(contrato.fecha_fin, str):
+                    fecha_fin = datetime.strptime(contrato.fecha_fin, '%Y-%m-%d').date()
+                else:
+                    fecha_fin = contrato.fecha_fin
+                
+                if fecha_fin <= fecha_limite:
+                    proximos_vencer += 1
+            except (ValueError, TypeError):
+                continue
+    
+    estadisticas = {
+        'total_contratos': total_contratos,
+        'contratos_activos': contratos_activos,
+        'proximos_vencer': proximos_vencer,
+        'valor_total': valor_total_formatted
+    }
+    
+    return render_template('contratos.html', 
                          contratos_data=contratos_data,
                          clientes=todos_clientes,
                          estados=estados,
+                         tipos_contrato=tipos_contrato,
+                         estados_modal=estados_modal,
+                         usuario=usuario_actual,
+                         estadisticas=estadisticas,
                          filtros={
                              'cliente_id': cliente_id,
                              'estado': estado,
@@ -396,3 +441,41 @@ def buscar():
         })
     
     return jsonify(results)
+
+@contratos_bp.route('/vencidos')
+@login_required
+def contratos_vencidos():
+    """Página de contratos vencidos"""
+    try:
+        from datetime import date
+        
+        # Obtener contratos vencidos
+        contratos_vencidos = Contrato.get_expired_contracts()
+        
+        # Calcular días vencidos para cada contrato
+        for contrato in contratos_vencidos:
+            if contrato.fecha_fin:
+                dias_vencido = (date.today() - contrato.fecha_fin).days
+                contrato.dias_vencido = dias_vencido
+            else:
+                contrato.dias_vencido = 0
+        
+        # Obtener listas para filtros
+        try:
+            proveedores = Proveedor.get_all()
+        except:
+            proveedores = []  # Si no existe la tabla proveedores
+        clientes = Cliente.get_all()
+        
+        # Obtener usuario actual
+        usuario = Usuario.get_by_id(session.get('user_id'))
+        
+        return render_template('contratos-vencidos.html', 
+                             contratos_vencidos=contratos_vencidos,
+                             proveedores=proveedores,
+                             clientes=clientes,
+                             usuario=usuario)
+    
+    except Exception as e:
+        flash(f'Error al cargar contratos vencidos: {str(e)}', 'error')
+        return redirect(url_for('contratos.listar'))

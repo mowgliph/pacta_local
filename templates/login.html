@@ -59,27 +59,41 @@
             margin-bottom: 2rem;
         }
         
-        .login-logo-icon {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 12px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 28px;
-            font-weight: 600;
+        .login-logo {
+            width: 120px;
+            height: auto;
             margin-bottom: 1rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+            background: transparent;
+            border: none;
+            border-radius: 0;
+        }
+        
+        .info-icon {
+            cursor: help;
+            transition: color 0.2s ease;
+        }
+        
+        .info-icon:hover {
+            color: #0d6efd !important;
+        }
+        
+        .tooltip {
+            font-size: 0.875rem;
+        }
+        
+        .tooltip-inner {
+            max-width: 250px;
+            padding: 8px 12px;
+            background-color: #212529;
+            border-radius: 6px;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
         <div class="logo-container">
-            <div class="login-logo-icon">
-                P
-            </div>
+            <img src="{{ url_for('static', filename='images/logo-1.png') }}" alt="PACTA Logo" class="login-logo">
         </div>
         
         <div class="login-header">
@@ -118,7 +132,7 @@
         
         <div class="text-center mt-3">
             <small class="text-muted">
-                <i class="fas fa-info-circle me-1"></i>
+                <i class="fas fa-info-circle me-1 info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Si no tienes una cuenta, por favor contacta con un administrador"></i>
                 PACTA - Sistema de Gestión v1.0
             </small>
         </div>
@@ -150,6 +164,12 @@
                 const form = document.querySelector('form');
                 form.submit();
             }
+        });
+        
+        // Inicializar tooltips de Bootstrap
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     </script>
 </body>

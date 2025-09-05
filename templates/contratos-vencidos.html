@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+
+{% block title %}Contratos Vencidos - PACTA{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contratos.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container">
+        <!-- Include Sidebar Component -->
+        {% include 'components/partials/sidebar.html' %}
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Include Header Component with custom content -->
+            <div class="content-header">
+                <div>
+                    <h1 class="page-title">Contratos Vencidos</h1>
+                    <p class="page-subtitle">Gestión de contratos que han expirado</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" title="Volver a Contratos" onclick="window.location.href='/contratos'">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button class="btn-icon" id="notifications-bell" title="Notificaciones" onclick="openNotificationsModal()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar-small avatar-generated">{{ (usuario.nombre or 'Usuario').split()[0][0] }}{{ (usuario.nombre or 'Usuario').split()[1][0] if (usuario.nombre or 'Usuario').split()|length > 1 else (usuario.nombre or 'Usuario').split()[0][1] if (usuario.nombre or 'Usuario').split()[0]|length > 1 else '' }}</div>
+                        <span class="user-name-small">{{ usuario.nombre }}</span>
+                        <div class="user-dropdown">
+                            <a href="{{ url_for('users.usuario') }}" class="dropdown-item">
+                                <i class="fas fa-user"></i>
+                                <span>Perfil</span>
+                            </a>
+                            <a href="{{ url_for('main.configuracion') }}" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Configuración</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Alert Section -->
+            <div class="alert alert-warning" style="margin-bottom: 24px; padding: 16px; background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-exclamation-triangle" style="color: #f59e0b; font-size: 20px;"></i>
+                <div>
+                    <strong>Atención:</strong> Los siguientes contratos han vencido y requieren revisión inmediata.
+                </div>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="card" style="margin-bottom: 24px;">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-filter"></i>
+                        Filtros de Búsqueda
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="filters-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                        <div class="form-group">
+                            <label for="filterProveedor">Proveedor</label>
+                            <select id="filterProveedor" class="form-control">
+                                <option value="">Todos los proveedores</option>
+                                {% for proveedor in proveedores %}
+                                <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterCliente">Cliente</label>
+                            <select id="filterCliente" class="form-control">
+                                <option value="">Todos los clientes</option>
+                                {% for cliente in clientes %}
+                                <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterDiasVencido">Días vencido</label>
+                            <select id="filterDiasVencido" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="1-30">1-30 días</option>
+                                <option value="31-60">31-60 días</option>
+                                <option value="61-90">61-90 días</option>
+                                <option value="90+">Más de 90 días</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: flex; align-items: end; gap: 8px;">
+                            <button class="btn btn-primary" onclick="applyFilters()">
+                                <i class="fas fa-search"></i>
+                                Buscar
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearFilters()">
+                                <i class="fas fa-times"></i>
+                                Limpiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expired Contracts Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-clock text-warning"></i>
+                        Contratos Vencidos
+                    </h3>
+                    <div class="card-actions">
+                        <span class="badge badge-warning" id="expiredCount">{{ contratos_vencidos|length }} contratos vencidos</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="expiredContractsTable">
+                            <thead>
+                                <tr>
+                                    <th>Número</th>
+                                    <th>Proveedor/Cliente</th>
+                                    <th>Descripción</th>
+                                    <th>Fecha Vencimiento</th>
+                                    <th>Días Vencido</th>
+                                    <th>Monto</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for contrato in contratos_vencidos %}
+                                <tr data-proveedor="{{ contrato.proveedor_id or '' }}" data-cliente="{{ contrato.cliente_id or '' }}" data-dias-vencido="{{ contrato.dias_vencido }}">
+                                    <td>
+                                        <strong>{{ contrato.numero_contrato }}</strong>
+                                    </td>
+                                    <td>
+                                        {% if contrato.proveedor %}
+                                            <div class="entity-info">
+                                                <span class="badge badge-info">Proveedor</span>
+                                                <div>{{ contrato.proveedor.nombre }}</div>
+                                            </div>
+                                        {% elif contrato.cliente %}
+                                            <div class="entity-info">
+                                                <span class="badge badge-success">Cliente</span>
+                                                <div>{{ contrato.cliente.nombre }}</div>
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="contract-description">
+                                            {{ contrato.descripcion[:50] }}{% if contrato.descripcion|length > 50 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="date-info">
+                                            <strong>{{ contrato.fecha_fin.strftime('%d/%m/%Y') }}</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge {% if contrato.dias_vencido <= 30 %}badge-warning{% elif contrato.dias_vencido <= 60 %}badge-danger{% else %}badge-dark{% endif %}">
+                                            {{ contrato.dias_vencido }} días
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <strong>${{ "{:,.2f}".format(contrato.monto_actual) }}</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-danger">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            Vencido
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons" style="display: flex; gap: 4px;">
+                                            <button class="btn btn-sm btn-primary" title="Ver Detalles" onclick="viewContract({{ contrato.id }})">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-warning" title="Renovar Contrato" onclick="renewContract({{ contrato.id }})">
+                                                <i class="fas fa-redo"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-success" title="Crear Suplemento" onclick="createSupplement({{ contrato.id }})">
+                                                <i class="fas fa-file-contract"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    {% if not contratos_vencidos %}
+                    <div class="empty-state" style="text-align: center; padding: 40px; color: #6b7280;">
+                        <i class="fas fa-check-circle" style="font-size: 48px; color: #10b981; margin-bottom: 16px;"></i>
+                        <h3>¡Excelente!</h3>
+                        <p>No hay contratos vencidos en este momento.</p>
+                        <button class="btn btn-primary" onclick="window.location.href='/contratos'">
+                            <i class="fas fa-arrow-left"></i>
+                            Volver a Contratos
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            {% if contratos_vencidos %}
+            <div class="card" style="margin-top: 24px;">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-bolt"></i>
+                        Acciones Rápidas
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="quick-actions" style="display: flex; flex-wrap: wrap; gap: 12px;">
+                        <button class="btn btn-warning" onclick="renewAllExpired()">
+                            <i class="fas fa-redo"></i>
+                            Renovar Todos
+                        </button>
+                        <button class="btn btn-info" onclick="exportExpiredContracts()">
+                            <i class="fas fa-file-export"></i>
+                            Exportar Lista
+                        </button>
+                        <button class="btn btn-secondary" onclick="sendReminders()">
+                            <i class="fas fa-envelope"></i>
+                            Enviar Recordatorios
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Include Notifications Modal -->
+    {% include 'components/modals/notifications_modal.html' %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/contract_functions.js') }}"></script>
+<script src="{{ url_for('static', filename='js/notification_functions.js') }}"></script>
+<script>
+    // Expired Contracts specific functions
+    function applyFilters() {
+        const proveedorFilter = document.getElementById('filterProveedor').value;
+        const clienteFilter = document.getElementById('filterCliente').value;
+        const diasFilter = document.getElementById('filterDiasVencido').value;
+        
+        const rows = document.querySelectorAll('#expiredContractsTable tbody tr');
+        let visibleCount = 0;
+        
+        rows.forEach(row => {
+            let show = true;
+            
+            // Filter by proveedor
+            if (proveedorFilter && row.dataset.proveedor !== proveedorFilter) {
+                show = false;
+            }
+            
+            // Filter by cliente
+            if (clienteFilter && row.dataset.cliente !== clienteFilter) {
+                show = false;
+            }
+            
+            // Filter by días vencido
+            if (diasFilter) {
+                const diasVencido = parseInt(row.dataset.diasVencido);
+                switch(diasFilter) {
+                    case '1-30':
+                        if (diasVencido < 1 || diasVencido > 30) show = false;
+                        break;
+                    case '31-60':
+                        if (diasVencido < 31 || diasVencido > 60) show = false;
+                        break;
+                    case '61-90':
+                        if (diasVencido < 61 || diasVencido > 90) show = false;
+                        break;
+                    case '90+':
+                        if (diasVencido <= 90) show = false;
+                        break;
+                }
+            }
+            
+            row.style.display = show ? '' : 'none';
+            if (show) visibleCount++;
+        });
+        
+        document.getElementById('expiredCount').textContent = `${visibleCount} contratos vencidos`;
+    }
+    
+    function clearFilters() {
+        document.getElementById('filterProveedor').value = '';
+        document.getElementById('filterCliente').value = '';
+        document.getElementById('filterDiasVencido').value = '';
+        applyFilters();
+    }
+    
+    function viewContract(contractId) {
+        // Implementar vista de detalles del contrato
+        window.location.href = `/contratos/${contractId}`;
+    }
+    
+    function renewContract(contractId) {
+        // Implementar renovación de contrato
+        if (confirm('¿Está seguro de que desea renovar este contrato?')) {
+            // Lógica de renovación
+            console.log('Renovando contrato:', contractId);
+        }
+    }
+    
+    function createSupplement(contractId) {
+        // Implementar creación de suplemento
+        window.location.href = `/suplementos/nuevo?contrato=${contractId}`;
+    }
+    
+    function renewAllExpired() {
+        if (confirm('¿Está seguro de que desea renovar todos los contratos vencidos?')) {
+            // Lógica para renovar todos
+            console.log('Renovando todos los contratos vencidos');
+        }
+    }
+    
+    function exportExpiredContracts() {
+        // Implementar exportación
+        window.location.href = '/api/contratos/vencidos/export';
+    }
+    
+    function sendReminders() {
+        if (confirm('¿Desea enviar recordatorios a todos los responsables de contratos vencidos?')) {
+            // Lógica para enviar recordatorios
+            console.log('Enviando recordatorios');
+        }
+    }
+</script>
+{% endblock %}
