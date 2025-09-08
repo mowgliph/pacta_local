@@ -1,0 +1,332 @@
+/* ===================================================================
+   PACTA - Página Configuración
+   Archivo: configuracion.css
+   Descripción: Estilos específicos para la gestión de configuración del sistema
+=================================================================== */
+
+/* ===== LAYOUT PRINCIPAL DE CONFIGURACIÓN ===== */
+
+.configuracion-page {
+  padding: var(--spacing-6);
+  background-color: var(--bg-secondary);
+  min-height: 100vh;
+}
+
+.configuracion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-6);
+  padding-bottom: var(--spacing-4);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.configuracion-title {
+  margin: 0;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+
+.configuracion-subtitle {
+  margin: var(--spacing-2) 0 0;
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-normal);
+}
+
+.configuracion-actions {
+  display: flex;
+  gap: var(--spacing-3);
+  align-items: center;
+}
+
+/* ===== SECCIONES DE CONFIGURACIÓN ===== */
+
+.config-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
+}
+
+.config-section {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-base);
+}
+
+.config-section:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.config-section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
+  padding-bottom: var(--spacing-3);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.config-section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-lg);
+  color: var(--color-white);
+}
+
+.config-section-icon.primary {
+  background-color: var(--color-primary);
+}
+
+.config-section-icon.success {
+  background-color: var(--color-success);
+}
+
+.config-section-icon.warning {
+  background-color: var(--color-warning);
+}
+
+.config-section-icon.purple {
+  background-color: var(--color-purple);
+}
+
+.config-section-title {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.config-section-description {
+  margin: var(--spacing-1) 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+/* ===== FORMULARIOS DE CONFIGURACIÓN ===== */
+
+.config-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.config-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.config-form-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-1);
+}
+
+.config-form-input {
+  padding: var(--spacing-3);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: var(--transition-base);
+}
+
+.config-form-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-alpha);
+}
+
+.config-form-select {
+  padding: var(--spacing-3);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.config-form-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-alpha);
+}
+
+/* ===== CONFIGURACIÓN DE SISTEMA ===== */
+
+.system-config {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+  margin-bottom: var(--spacing-6);
+  border: 1px solid var(--border-light);
+}
+
+.system-config-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-4);
+  padding-bottom: var(--spacing-3);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.system-config-title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.system-config-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.system-config-status.active {
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.system-config-status.inactive {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger-dark);
+}
+
+/* ===== CONFIGURACIÓN DE SEGURIDAD ===== */
+
+.security-config {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+  margin-bottom: var(--spacing-6);
+  border: 1px solid var(--border-light);
+}
+
+.security-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-4);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.security-option:last-child {
+  border-bottom: none;
+}
+
+.security-option-info {
+  flex: 1;
+}
+
+.security-option-title {
+  margin: 0 0 var(--spacing-1);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+
+.security-option-description {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.security-toggle {
+  position: relative;
+  width: 48px;
+  height: 24px;
+  background-color: var(--border-light);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.security-toggle.active {
+  background-color: var(--color-primary);
+}
+
+.security-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background-color: var(--color-white);
+  border-radius: 50%;
+  transition: var(--transition-base);
+}
+
+.security-toggle.active::after {
+  transform: translateX(24px);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+@media (max-width: 768px) {
+  .configuracion-page {
+    padding: var(--spacing-4);
+  }
+  
+  .configuracion-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+  }
+  
+  .config-sections {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+  }
+  
+  .config-section {
+    padding: var(--spacing-4);
+  }
+  
+  .security-option {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+  }
+}
+
+@media (max-width: 480px) {
+  .configuracion-title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .config-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+  }
+  
+  .config-section-icon {
+    width: 32px;
+    height: 32px;
+    font-size: var(--font-size-base);
+  }
+}

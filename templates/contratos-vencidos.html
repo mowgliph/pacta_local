@@ -14,34 +14,19 @@
         <!-- Main Content -->
         <div class="main-content">
             <!-- Include Header Component with custom content -->
-            <div class="content-header">
-                <div>
-                    <h1 class="page-title">Contratos Vencidos</h1>
-                    <p class="page-subtitle">Gestión de contratos que han expirado</p>
-                </div>
-                <div class="header-actions">
-                    <button class="btn-icon" title="Volver a Contratos" onclick="window.location.href='/contratos'">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
-                    <button class="btn-icon" id="notifications-bell" title="Notificaciones" onclick="openNotificationsModal()">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
-                    </button>
-                    <div class="user-menu">
-                        <div class="user-avatar-small avatar-generated">{{ (usuario.nombre or 'Usuario').split()[0][0] }}{{ (usuario.nombre or 'Usuario').split()[1][0] if (usuario.nombre or 'Usuario').split()|length > 1 else (usuario.nombre or 'Usuario').split()[0][1] if (usuario.nombre or 'Usuario').split()[0]|length > 1 else '' }}</div>
-                        <span class="user-name-small">{{ usuario.nombre }}</span>
-                        <div class="user-dropdown">
-                            <a href="{{ url_for('users.usuario') }}" class="dropdown-item">
-                                <i class="fas fa-user"></i>
-                                <span>Perfil</span>
-                            </a>
-                            <a href="{{ url_for('main.configuracion') }}" class="dropdown-item">
-                                <i class="fas fa-cog"></i>
-                                <span>Configuración</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+            {% set page_title = "Contratos Vencidos" %}
+            {% set page_subtitle = "Gestión de contratos que han expirado" %}
+            {% set page_icon = "fas fa-clock" %}
+            {% set show_notifications = true %}
+            {% set show_user_menu = true %}
+            {% include 'components/partials/content_header.html' %}
+            
+            <!-- Additional Header Actions -->
+            <div class="additional-header-actions" style="margin-bottom: 16px;">
+                <button class="btn btn-secondary" title="Volver a Contratos" onclick="window.location.href='/contratos'">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver a Contratos
+                </button>
             </div>
             
             <!-- Alert Section -->

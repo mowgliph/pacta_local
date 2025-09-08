@@ -10,115 +10,76 @@
         <!-- Main Content -->
         <div class="main-content">
             <!-- Include Header Component with custom content -->
-            <div class="content-header">
-                <div>
-                    <h1 class="page-title">Dashboard</h1>
-                    <p class="page-subtitle">Resumen general del sistema PACTA</p>
-                </div>
-                <div class="header-actions">
-                    <button class="btn-icon" title="Actualizar">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
-                    <button class="btn-icon" title="Configuración" onclick="window.location.href='{{ url_for('main.configuracion') }}'">
-                        <i class="fas fa-cog"></i>
-                    </button>
-                    <button class="btn-icon notification-bell" id="notifications-bell" title="Notificaciones" onclick="openNotificationsModal()">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge" style="display: none;">0</span>
-                    </button>
-                    <div class="user-menu">
-                        <div class="user-avatar-small avatar-generated">{{ (usuario.nombre or 'Usuario').split()[0][0] }}{{ (usuario.nombre or 'Usuario').split()[1][0] if (usuario.nombre or 'Usuario').split()|length > 1 else (usuario.nombre or 'Usuario').split()[0][1] if (usuario.nombre or 'Usuario').split()[0]|length > 1 else '' }}</div>
-                        <span class="user-name-small">{{ usuario.nombre }}</span>
-                        <div class="user-dropdown">
-                            <a href="{{ url_for('users.usuario') }}" class="dropdown-item">
-                                <i class="fas fa-user"></i>
-                                <span>Perfil</span>
-                            </a>
-                            <a href="{{ url_for('main.configuracion') }}" class="dropdown-item">
-                                <i class="fas fa-cog"></i>
-                                <span>Configuración</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% include 'components/partials/content_header.html' %}
             
             <!-- Main Metrics Cards -->
             <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Total Contratos</span>
-                        <i class="fas fa-file-contract metric-icon" style="color: #3b82f6;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.total_contratos }}</div>
-                    <div class="metric-change positive">{{ estadisticas.contratos_activos }} activos</div>
-                </div>
+                {% set metric_label = 'Total Contratos' %}
+                {% set metric_value = estadisticas.total_contratos %}
+                {% set metric_icon = 'fas fa-file-contract' %}
+                {% set metric_color = 'text-primary' %}
+                {% set metric_change = estadisticas.contratos_activos ~ ' activos' %}
+                {% set change_type = 'positive' %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Reportes Generados</span>
-                        <i class="fas fa-chart-bar metric-icon" style="color: #10b981;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.total_reportes }}</div>
-                    <div class="metric-change positive">{{ estadisticas.reportes_mes }} este mes</div>
-                </div>
+                {% set metric_label = 'Reportes Generados' %}
+                {% set metric_value = estadisticas.total_reportes %}
+                {% set metric_icon = 'fas fa-chart-bar' %}
+                {% set metric_color = 'text-success' %}
+                {% set metric_change = estadisticas.reportes_mes ~ ' este mes' %}
+                {% set change_type = 'positive' %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Usuarios Activos</span>
-                        <i class="fas fa-users metric-icon" style="color: #f59e0b;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.usuarios_activos }}</div>
-                    <div class="metric-change positive">{{ estadisticas.sesiones_mes }} sesiones/mes</div>
-                </div>
+                {% set metric_label = 'Usuarios Activos' %}
+                {% set metric_value = estadisticas.usuarios_activos %}
+                {% set metric_icon = 'fas fa-users' %}
+                {% set metric_color = 'text-warning' %}
+                {% set metric_change = estadisticas.sesiones_mes ~ ' sesiones/mes' %}
+                {% set change_type = 'positive' %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Valor Total</span>
-                        <i class="fas fa-dollar-sign metric-icon" style="color: #8b5cf6;"></i>
-                    </div>
-                    <div class="metric-value">${{ estadisticas.valor_total }}</div>
-                    <div class="metric-change positive">En contratos activos</div>
-                </div>
+                {% set metric_label = 'Valor Total' %}
+                {% set metric_value = '$' ~ estadisticas.valor_total %}
+                {% set metric_icon = 'fas fa-dollar-sign' %}
+                {% set metric_color = 'text-purple' %}
+                {% set metric_change = 'En contratos activos' %}
+                {% set change_type = 'positive' %}
+                {% include 'components/partials/metric_card.html' %}
             </div>
             
             <!-- Secondary Metrics Cards -->
-            <div class="metrics-grid" style="margin-top: 20px;">
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Uptime del Sistema</span>
-                        <i class="fas fa-server metric-icon" style="color: #10b981;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.uptime }}%</div>
-                    <div class="metric-change positive">Disponibilidad</div>
-                </div>
+            <div class="metrics-grid mt-4">
+                {% set metric_label = "Uptime del Sistema" %}
+                {% set metric_value = estadisticas.uptime ~ "%" %}
+                {% set metric_icon = "fas fa-server" %}
+                {% set metric_color = "text-success" %}
+                {% set metric_change = "Disponibilidad" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Tiempo de Respuesta</span>
-                        <i class="fas fa-tachometer-alt metric-icon" style="color: #3b82f6;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.tiempo_respuesta }}ms</div>
-                    <div class="metric-change positive">Promedio</div>
-                </div>
+                {% set metric_label = "Tiempo de Respuesta" %}
+                {% set metric_value = estadisticas.tiempo_respuesta ~ "ms" %}
+                {% set metric_icon = "fas fa-tachometer-alt" %}
+                {% set metric_color = "text-primary" %}
+                {% set metric_change = "Promedio" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Próximos a Vencer</span>
-                        <i class="fas fa-clock metric-icon" style="color: #f59e0b;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.contratos_por_vencer }}</div>
-                    <div class="metric-change negative">Requieren atención</div>
-                </div>
+                {% set metric_label = "Próximos a Vencer" %}
+                {% set metric_value = estadisticas.contratos_por_vencer %}
+                {% set metric_icon = "fas fa-clock" %}
+                {% set metric_color = "text-warning" %}
+                {% set metric_change = "Requieren atención" %}
+                {% set change_type = "negative" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Reportes Pendientes</span>
-                        <i class="fas fa-exclamation-triangle metric-icon" style="color: #ef4444;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.reportes_pendientes }}</div>
-                    <div class="metric-change negative">Por procesar</div>
-                </div>
+                {% set metric_label = "Reportes Pendientes" %}
+                {% set metric_value = estadisticas.reportes_pendientes %}
+                {% set metric_icon = "fas fa-exclamation-triangle" %}
+                {% set metric_color = "text-danger" %}
+                {% set metric_change = "Por procesar" %}
+                {% set change_type = "negative" %}
+                {% include 'components/partials/metric_card.html' %}
             </div>
             
             <!-- Vertical Blocks Layout -->
@@ -130,20 +91,20 @@
                         <p class="block-subtitle">Herramientas principales del sistema</p>
                     </div>
                     <div class="block-content">
-                        <div class="contract-actions" style="display: flex; flex-wrap: nowrap; gap: 12px;">
-                            <button class="btn-account" style="flex: 1; min-width: 150px; padding: 12px; background: #3b82f6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                        <div class="contract-actions d-flex flex-nowrap gap-3">
+                            <button class="btn btn-primary flex-fill d-flex align-items-center gap-2" style="min-width: 150px;">
                                 <i class="fas fa-file-contract"></i>
                                 Gestionar Contratos
                             </button>
-                            <button class="btn-account" style="flex: 1; min-width: 150px; padding: 12px; background: #10b981; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn btn-success flex-fill d-flex align-items-center gap-2" style="min-width: 150px;">
                                 <i class="fas fa-chart-bar"></i>
                                 Ver Reportes
                             </button>
-                            <button class="btn-account" style="flex: 1; min-width: 150px; padding: 12px; background: #f59e0b; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn btn-warning flex-fill d-flex align-items-center gap-2" style="min-width: 150px;">
                                 <i class="fas fa-user"></i>
                                 Perfil de Usuario
                             </button>
-                            <button class="btn-account" style="flex: 1; min-width: 150px; padding: 12px; background: #8b5cf6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn btn-purple flex-fill d-flex align-items-center gap-2" style="min-width: 150px;">
                                 <i class="fas fa-cog"></i>
                                 Configuración
                             </button>
@@ -229,7 +190,7 @@
                                 </table>
                             </div>
                             <div class="table-footer">
-                                <a href="/contratos" class="btn-account" style="background: #3b82f6; text-decoration: none; color: white;">
+                                <a href="/contratos" class="btn btn-primary text-decoration-none">
                                     Ver Todos los Contratos
                                 </a>
                             </div>

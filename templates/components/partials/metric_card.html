@@ -1,0 +1,15 @@
+<!-- Metric Card Component -->
+<!-- Usage: Set variables before include: metric_label, metric_value, metric_icon, metric_color, metric_change, change_type -->
+<div class="metric-card">
+    <div class="metric-header">
+        <span class="metric-label">{{ metric_label }}</span>
+        <i class="{{ metric_icon }} metric-icon {{ metric_color }}"></i>
+    </div>
+    <div class="metric-value">{{ metric_value }}</div>
+    {% if metric_change %}
+    <div class="metric-change {{ change_type }}">{{ metric_change }}</div>
+    {% endif %}
+    {% if metric_subtitle %}
+    <div class="metric-subtitle">{{ metric_subtitle }}</div>
+    {% endif %}
+</div>

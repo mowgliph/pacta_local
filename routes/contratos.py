@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, send_file, current_app, session
 from functools import wraps
 from werkzeug.utils import secure_filename
-from database.models import Contrato, Cliente, PersonaResponsable, DocumentoContrato, Suplemento, Usuario, Proveedor
+from database.models import Contrato, Cliente, PersonaResponsable, DocumentoContrato, Suplemento, Usuario, Proveedor, Notificacion
 from datetime import datetime
 import os
 
@@ -15,6 +15,13 @@ def login_required(f):
     return decorated_function
 
 contratos_bp = Blueprint('contratos', __name__, url_prefix='/contratos')
+
+# Función helper para obtener contador de notificaciones
+def get_notificaciones_count():
+    """Obtiene el número de notificaciones no leídas del usuario actual"""
+    if 'user_id' in session:
+        return Notificacion.get_unread_count(session['user_id'])
+    return 0
 
 # Configuración para subida de archivos
 UPLOAD_FOLDER = 'uploads/contratos'
@@ -92,12 +99,44 @@ def listar():
             except (ValueError, TypeError):
                 continue
     
+    # Calcular contratos pendientes y vencidos
+    contratos_pendientes = len([c for c in contratos_data if c['contrato'].estado == 'borrador'])
+    contratos_vencidos = 0
+    
+    # Calcular contratos vencidos (fecha_fin pasada)
+    from datetime import datetime
+    fecha_actual = datetime.now().date()
+    
+    for contrato_data in contratos_data:
+        contrato = contrato_data['contrato']
+        if contrato.estado == 'activo' and contrato.fecha_fin:
+            try:
+                if isinstance(contrato.fecha_fin, str):
+                    fecha_fin = datetime.strptime(contrato.fecha_fin, '%Y-%m-%d').date()
+                else:
+                    fecha_fin = contrato.fecha_fin
+                
+                if fecha_fin < fecha_actual:
+                    contratos_vencidos += 1
+            except (ValueError, TypeError):
+                continue
+    
+    contratos_stats = {
+        'total': total_contratos,
+        'activos': contratos_activos,
+        'pendientes': contratos_pendientes,
+        'vencidos': contratos_vencidos
+    }
+    
     estadisticas = {
         'total_contratos': total_contratos,
         'contratos_activos': contratos_activos,
         'proximos_vencer': proximos_vencer,
         'valor_total': valor_total_formatted
     }
+    
+    # Obtener contador de notificaciones
+    notificaciones_count = get_notificaciones_count()
     
     return render_template('contratos.html', 
                          contratos_data=contratos_data,
@@ -107,6 +146,8 @@ def listar():
                          estados_modal=estados_modal,
                          usuario=usuario_actual,
                          estadisticas=estadisticas,
+                         contratos_stats=contratos_stats,
+                         notificaciones_count=notificaciones_count,
                          filtros={
                              'cliente_id': cliente_id,
                              'estado': estado,
@@ -196,10 +237,14 @@ def crear():
     tipos_contrato = ['Servicios', 'Suministros', 'Obra', 'Consultoría', 'Mantenimiento']
     estados = ['borrador', 'activo']
     
+    # Obtener contador de notificaciones
+    notificaciones_count = get_notificaciones_count()
+    
     return render_template('contratos/crear.html',
                          clientes=todos_clientes,
                          tipos_contrato=tipos_contrato,
-                         estados=estados)
+                         estados=estados,
+                         notificaciones_count=notificaciones_count)
 
 @contratos_bp.route('/<int:id>')
 @login_required
@@ -215,12 +260,16 @@ def detalle(id):
     documentos = contrato.get_documentos()
     suplementos = contrato.get_suplementos()
     
+    # Obtener contador de notificaciones
+    notificaciones_count = get_notificaciones_count()
+    
     return render_template('contratos/detalle.html',
                          contrato=contrato,
                          cliente=cliente,
                          persona_responsable=persona_responsable,
                          documentos=documentos,
-                         suplementos=suplementos)
+                         suplementos=suplementos,
+                         notificaciones_count=notificaciones_count)
 
 @contratos_bp.route('/<int:id>/editar', methods=['GET', 'POST'])
 @login_required
@@ -266,12 +315,16 @@ def editar(id):
     tipos_contrato = ['Servicios', 'Suministros', 'Obra', 'Consultoría', 'Mantenimiento']
     estados = ['borrador', 'activo', 'suspendido', 'terminado', 'cancelado']
     
+    # Obtener contador de notificaciones
+    notificaciones_count = get_notificaciones_count()
+    
     return render_template('contratos/editar.html',
                          contrato=contrato,
                          clientes=todos_clientes,
                          personas_responsables=personas_responsables,
                          tipos_contrato=tipos_contrato,
-                         estados=estados)
+                         estados=estados,
+                         notificaciones_count=notificaciones_count)
 
 @contratos_bp.route('/<int:id>/eliminar', methods=['POST'])
 @login_required
@@ -470,11 +523,15 @@ def contratos_vencidos():
         # Obtener usuario actual
         usuario = Usuario.get_by_id(session.get('user_id'))
         
+        # Obtener contador de notificaciones
+        notificaciones_count = get_notificaciones_count()
+        
         return render_template('contratos-vencidos.html', 
                              contratos_vencidos=contratos_vencidos,
                              proveedores=proveedores,
                              clientes=clientes,
-                             usuario=usuario)
+                             usuario=usuario,
+                             notificaciones_count=notificaciones_count)
     
     except Exception as e:
         flash(f'Error al cargar contratos vencidos: {str(e)}', 'error')

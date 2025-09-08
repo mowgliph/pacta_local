@@ -10,26 +10,25 @@
         <!-- Main Content -->
         <div class="main-content">
             <!-- Content Header -->
-            <div class="content-header">
-                <div>
-                    <h1 class="page-title">
-                        <i class="fas fa-building" style="color: #3b82f6; margin-right: 12px;"></i>
-                        Gestión de Proveedores
-                    </h1>
-                    <p class="page-subtitle">Administra todos los proveedores del sistema</p>
-                </div>
-                <div class="header-actions">
-                    <button class="btn-primary" onclick="openAddProviderModal()" style="display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-plus"></i>
-                        Añadir Proveedor
-                    </button>
-                    <button class="btn-icon" title="Actualizar" onclick="location.reload()">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
-                    <button class="btn-icon" title="Exportar" onclick="exportProviders()">
-                        <i class="fas fa-download"></i>
-                    </button>
-                </div>
+            {% set page_title = "Gestión de Proveedores" %}
+            {% set page_subtitle = "Administra todos los proveedores del sistema" %}
+            {% set page_icon = "fas fa-building" %}
+            {% set show_notifications = true %}
+            {% set show_user_menu = true %}
+            {% include 'components/partials/content_header.html' %}
+            
+            <!-- Additional Header Actions -->
+            <div class="header-actions" style="background: white; padding: 16px 20px; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; gap: 12px; justify-content: flex-end;">
+                <button class="btn-primary" onclick="openAddProviderModal()" style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-plus"></i>
+                    Añadir Proveedor
+                </button>
+                <button class="btn-icon" title="Actualizar" onclick="location.reload()">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="btn-icon" title="Exportar" onclick="exportProviders()">
+                    <i class="fas fa-download"></i>
+                </button>
             </div>
             
             <!-- Search and Filter Section -->
@@ -60,207 +59,190 @@
             
             <!-- Providers Statistics Cards -->
             <div class="metrics-grid" style="margin-bottom: 24px;">
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Total Proveedores</span>
-                        <i class="fas fa-building metric-icon" style="color: #3b82f6;"></i>
-                    </div>
-                    <div class="metric-value">24</div>
-                    <div class="metric-change positive">+3 este mes</div>
-                </div>
+                <!-- Total Proveedores -->
+                {% set metric_label = "Total Proveedores" %}
+                {% set metric_value = estadisticas.total_proveedores if estadisticas and estadisticas.total_proveedores else "24" %}
+                {% set metric_icon = "fas fa-building" %}
+                {% set metric_color = "#3b82f6" %}
+                {% set metric_change = "+3 este mes" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Proveedores Activos</span>
-                        <i class="fas fa-check-circle metric-icon" style="color: #10b981;"></i>
-                    </div>
-                    <div class="metric-value">21</div>
-                    <div class="metric-change positive">87.5% del total</div>
-                </div>
+                <!-- Proveedores Activos -->
+                {% set metric_label = "Proveedores Activos" %}
+                {% set metric_value = estadisticas.proveedores_activos if estadisticas and estadisticas.proveedores_activos else "21" %}
+                {% set metric_icon = "fas fa-check-circle" %}
+                {% set metric_color = "#10b981" %}
+                {% set metric_change = "87.5% del total" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Contratos Totales</span>
-                        <i class="fas fa-file-contract metric-icon" style="color: #f59e0b;"></i>
-                    </div>
-                    <div class="metric-value">156</div>
-                    <div class="metric-change positive">Con proveedores</div>
-                </div>
+                <!-- Contratos Totales -->
+                {% set metric_label = "Contratos Totales" %}
+                {% set metric_value = estadisticas.contratos_totales if estadisticas and estadisticas.contratos_totales else "156" %}
+                {% set metric_icon = "fas fa-file-contract" %}
+                {% set metric_color = "#f59e0b" %}
+                {% set metric_change = "Con proveedores" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Valor Promedio</span>
-                        <i class="fas fa-dollar-sign metric-icon" style="color: #8b5cf6;"></i>
-                    </div>
-                    <div class="metric-value">$45,200</div>
-                    <div class="metric-change positive">Por contrato</div>
-                </div>
+                <!-- Valor Promedio -->
+                {% set metric_label = "Valor Promedio" %}
+                {% set metric_value = "$" + "{:,.0f}".format(estadisticas.valor_promedio) if estadisticas and estadisticas.valor_promedio else "$45,200" %}
+                {% set metric_icon = "fas fa-dollar-sign" %}
+                {% set metric_color = "#8b5cf6" %}
+                {% set metric_change = "Por contrato" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
             </div>
             
-            <!-- Providers Table -->
-            <div class="providers-table-section" style="background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden;">
-                <div class="table-header" style="padding: 20px; border-bottom: 1px solid #f3f4f6; display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: #374151;">Lista de Proveedores</h3>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn-icon" title="Vista de tabla" onclick="toggleView('table')" id="tableViewBtn">
-                            <i class="fas fa-table"></i>
-                        </button>
-                        <button class="btn-icon" title="Vista de tarjetas" onclick="toggleView('cards')" id="cardsViewBtn">
-                            <i class="fas fa-th-large"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Table View -->
-                <div id="tableView" class="table-responsive">
-                    <table class="table" style="margin: 0;">
-                        <thead style="background: #f8fafc;">
-                            <tr>
-                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Proveedor</th>
-                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Categoría</th>
-                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Contratos</th>
-                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Valor Total</th>
-                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Estado</th>
-                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Contacto</th>
-                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="providersTableBody">
-                            <tr style="border-bottom: 1px solid #f3f4f6;">
-                                <td style="padding: 16px; border: none;">
-                                    <div style="display: flex; align-items: center; gap: 12px;">
-                                        <div class="provider-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px;">
-                                            TC
-                                        </div>
-                                        <div>
-                                            <div style="font-weight: 600; color: #374151;">TechCorp S.A.</div>
-                                            <div style="font-size: 12px; color: #6b7280;">ID: PROV-001</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <span class="badge" style="background: #dbeafe; color: #1d4ed8; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Servicios de Tecnología</span>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-weight: 600; color: #374151;">5</div>
-                                    <div style="font-size: 12px; color: #6b7280;">3 activos</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-weight: 600; color: #10b981;">$425,000</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <span class="status-badge active" style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">Activo</span>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-size: 13px; color: #374151;">tech@corp.com</div>
-                                    <div style="font-size: 12px; color: #6b7280;">+1 234-567-8900</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="display: flex; gap: 4px;">
-                                        <button class="btn-icon-small" title="Ver detalles" onclick="viewProvider('PROV-001')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn-icon-small" title="Editar" onclick="editProvider('PROV-001')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn-icon-small" title="Eliminar" onclick="deleteProvider('PROV-001')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-                            <tr style="border-bottom: 1px solid #f3f4f6;">
-                                <td style="padding: 16px; border: none;">
-                                    <div style="display: flex; align-items: center; gap: 12px;">
-                                        <div class="provider-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #10b981, #047857); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px;">
-                                            LS
-                                        </div>
-                                        <div>
-                                            <div style="font-weight: 600; color: #374151;">Legal Solutions</div>
-                                            <div style="font-size: 12px; color: #6b7280;">ID: PROV-002</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <span class="badge" style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Consultoría Legal</span>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-weight: 600; color: #374151;">3</div>
-                                    <div style="font-size: 12px; color: #6b7280;">2 activos</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-weight: 600; color: #10b981;">$150,000</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <span class="status-badge active" style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">Activo</span>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-size: 13px; color: #374151;">info@legalsol.com</div>
-                                    <div style="font-size: 12px; color: #6b7280;">+1 234-567-8901</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="display: flex; gap: 4px;">
-                                        <button class="btn-icon-small" title="Ver detalles" onclick="viewProvider('PROV-002')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn-icon-small" title="Editar" onclick="editProvider('PROV-002')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn-icon-small" title="Eliminar" onclick="deleteProvider('PROV-002')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-                            <tr style="border-bottom: 1px solid #f3f4f6;">
-                                <td style="padding: 16px; border: none;">
-                                    <div style="display: flex; align-items: center; gap: 12px;">
-                                        <div class="provider-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px;">
-                                            CS
-                                        </div>
-                                        <div>
-                                            <div style="font-weight: 600; color: #374151;">Construction Services</div>
-                                            <div style="font-size: 12px; color: #6b7280;">ID: PROV-003</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <span class="badge" style="background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Construcción y Obras</span>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-weight: 600; color: #374151;">2</div>
-                                    <div style="font-size: 12px; color: #6b7280;">2 activos</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-weight: 600; color: #10b981;">$320,000</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <span class="status-badge active" style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">Activo</span>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-size: 13px; color: #374151;">contact@construction.com</div>
-                                    <div style="font-size: 12px; color: #6b7280;">+1 234-567-8902</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="display: flex; gap: 4px;">
-                                        <button class="btn-icon-small" title="Ver detalles" onclick="viewProvider('PROV-003')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn-icon-small" title="Editar" onclick="editProvider('PROV-003')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn-icon-small" title="Eliminar" onclick="deleteProvider('PROV-003')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <!-- Reusable Table Component -->
+            {% set table_config = {
+                'id': 'providers-table',
+                'title': 'Lista de Proveedores',
+                'api_endpoint': '/api/providers',
+                'show_search': true,
+                'show_filters': true,
+                'show_export': true,
+                'show_pagination': true,
+                'items_per_page': 10,
+                'columns': [
+                    {
+                        'key': 'provider_info',
+                        'label': 'Proveedor',
+                        'sortable': true,
+                        'template': '<div style="display: flex; align-items: center; gap: 12px;"><div class="provider-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, {{avatar_color_1}}, {{avatar_color_2}}); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px;">{{initials}}</div><div><div style="font-weight: 600; color: #374151;">{{name}}</div><div style="font-size: 12px; color: #6b7280;">ID: {{id}}</div></div></div>'
+                    },
+                    {
+                        'key': 'category',
+                        'label': 'Categoría',
+                        'sortable': true,
+                        'template': '<span class="badge" style="background: {{category_bg}}; color: {{category_color}}; padding: 4px 8px; border-radius: 4px; font-size: 12px;">{{category_name}}</span>'
+                    },
+                    {
+                        'key': 'contracts',
+                        'label': 'Contratos',
+                        'sortable': true,
+                        'template': '<div style="font-weight: 600; color: #374151;">{{total_contracts}}</div><div style="font-size: 12px; color: #6b7280;">{{active_contracts}} activos</div>'
+                    },
+                    {
+                        'key': 'total_value',
+                        'label': 'Valor Total',
+                        'sortable': true,
+                        'template': '<div style="font-weight: 600; color: #10b981;">${{total_value}}</div>'
+                    },
+                    {
+                        'key': 'status',
+                        'label': 'Estado',
+                        'sortable': true,
+                        'template': '<span class="status-badge {{status_class}}" style="background: {{status_bg}}; color: {{status_color}}; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{{status_text}}</span>'
+                    },
+                    {
+                        'key': 'contact',
+                        'label': 'Contacto',
+                        'sortable': false,
+                        'template': '<div style="font-size: 13px; color: #374151;">{{email}}</div><div style="font-size: 12px; color: #6b7280;">{{phone}}</div>'
+                    },
+                    {
+                        'key': 'actions',
+                        'label': 'Acciones',
+                        'sortable': false,
+                        'template': '<div style="display: flex; gap: 4px;"><button class="btn-icon-small" title="Ver detalles" onclick="viewProvider(\'{{id}}\');"><i class="fas fa-eye"></i></button><button class="btn-icon-small" title="Editar" onclick="editProvider(\'{{id}}\');"><i class="fas fa-edit"></i></button><button class="btn-icon-small" title="Eliminar" onclick="deleteProvider(\'{{id}}\');"><i class="fas fa-trash"></i></button></div>'
+                    }
+                ],
+                'filters': [
+                    {
+                        'key': 'category',
+                        'label': 'Categoría',
+                        'type': 'select',
+                        'options': [
+                            {'value': '', 'label': 'Todas las categorías'},
+                            {'value': 'tecnologia', 'label': 'Servicios de Tecnología'},
+                            {'value': 'legal', 'label': 'Consultoría Legal'},
+                            {'value': 'construccion', 'label': 'Construcción y Obras'},
+                            {'value': 'financiero', 'label': 'Servicios Financieros'},
+                            {'value': 'marketing', 'label': 'Marketing y Publicidad'}
+                        ]
+                    },
+                    {
+                        'key': 'status',
+                        'label': 'Estado',
+                        'type': 'select',
+                        'options': [
+                            {'value': '', 'label': 'Todos los estados'},
+                            {'value': 'activo', 'label': 'Activo'},
+                            {'value': 'inactivo', 'label': 'Inactivo'},
+                            {'value': 'pendiente', 'label': 'Pendiente'}
+                        ]
+                    }
+                ],
+                'default_data': [
+                    {
+                        'id': 'PROV-001',
+                        'name': 'TechCorp S.A.',
+                        'initials': 'TC',
+                        'avatar_color_1': '#3b82f6',
+                        'avatar_color_2': '#1d4ed8',
+                        'category': 'tecnologia',
+                        'category_name': 'Servicios de Tecnología',
+                        'category_bg': '#dbeafe',
+                        'category_color': '#1d4ed8',
+                        'total_contracts': '5',
+                        'active_contracts': '3',
+                        'total_value': '425,000',
+                        'status': 'activo',
+                        'status_text': 'Activo',
+                        'status_class': 'active',
+                        'status_bg': '#d1fae5',
+                        'status_color': '#065f46',
+                        'email': 'tech@corp.com',
+                        'phone': '+1 234-567-8900'
+                    },
+                    {
+                        'id': 'PROV-002',
+                        'name': 'Legal Solutions',
+                        'initials': 'LS',
+                        'avatar_color_1': '#10b981',
+                        'avatar_color_2': '#047857',
+                        'category': 'legal',
+                        'category_name': 'Consultoría Legal',
+                        'category_bg': '#d1fae5',
+                        'category_color': '#065f46',
+                        'total_contracts': '3',
+                        'active_contracts': '2',
+                        'total_value': '150,000',
+                        'status': 'activo',
+                        'status_text': 'Activo',
+                        'status_class': 'active',
+                        'status_bg': '#d1fae5',
+                        'status_color': '#065f46',
+                        'email': 'info@legalsol.com',
+                        'phone': '+1 234-567-8901'
+                    },
+                    {
+                        'id': 'PROV-003',
+                        'name': 'Construction Services',
+                        'initials': 'CS',
+                        'avatar_color_1': '#f59e0b',
+                        'avatar_color_2': '#d97706',
+                        'category': 'construccion',
+                        'category_name': 'Construcción y Obras',
+                        'category_bg': '#fef3c7',
+                        'category_color': '#92400e',
+                        'total_contracts': '2',
+                        'active_contracts': '2',
+                        'total_value': '320,000',
+                        'status': 'activo',
+                        'status_text': 'Activo',
+                        'status_class': 'active',
+                        'status_bg': '#d1fae5',
+                        'status_color': '#065f46',
+                        'email': 'contact@construction.com',
+                        'phone': '+1 234-567-8902'
+                    }
+                ]
+            } %}
+            {% include 'components/partials/reusable_table.html' %}
         </div>
     </div>
     
@@ -337,6 +319,10 @@
             </div>
         </div>
     </div>
+    
+    <!-- Reusable Table Component Styles and Scripts -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/reusable_table.css') }}">
+    <script src="{{ url_for('static', filename='js/reusable_table.js') }}"></script>
     
     <script>
         // Provider management functions

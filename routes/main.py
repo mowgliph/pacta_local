@@ -2,11 +2,21 @@ from flask import Blueprint, render_template, redirect, url_for, session, flash,
 from functools import wraps
 from datetime import datetime, timedelta
 import random
-from database.models import Usuario, Cliente, Contrato, Suplemento, ActividadSistema
+from database.models import Usuario, Cliente, Contrato, Suplemento, ActividadSistema, Notificacion
 from services.system_metrics import get_system_metrics
 from services.config_metrics import get_config_metrics
 
 main_bp = Blueprint('main', __name__)
+
+# Función helper para obtener contador de notificaciones
+def get_notificaciones_count():
+    """Obtiene el contador de notificaciones no leídas del usuario actual"""
+    if 'user_id' not in session:
+        return 0
+    try:
+        return Notificacion.get_unread_count(session['user_id'])
+    except Exception:
+        return 0
 
 # Decorador para requerir login
 def login_required(f):
@@ -32,38 +42,54 @@ def admin_required(f):
 
 def obtener_estadisticas_contratos():
     """Obtiene estadísticas de contratos desde la base de datos"""
-    contratos = Contrato.get_all()
+    try:
+        contratos = Contrato.get_all()
+        
+        if not contratos:
+            return {
+                'total_contratos': 0,
+                'contratos_activos': 0,
+                'valor_total': 0,
+                'proximos_vencer': 0
+            }
+        
+        total_contratos = len(contratos)
+        contratos_activos = len([c for c in contratos if c.estado == 'activo'])
+        
+        # Calcular valor total
+        valor_total = sum([c.monto_actual for c in contratos if c.estado == 'activo'])
+        
+        # Contratos próximos a vencer (30 días)
+        fecha_limite = datetime.now().date() + timedelta(days=30)
+        proximos_vencer = 0
+        
+        for c in contratos:
+            if c.estado == 'activo' and c.fecha_fin:
+                # Convertir fecha_fin de string a date si es necesario
+                if isinstance(c.fecha_fin, str):
+                    try:
+                        fecha_fin = datetime.strptime(c.fecha_fin, '%Y-%m-%d').date()
+                    except ValueError:
+                        continue
+                else:
+                    fecha_fin = c.fecha_fin
+                
+                if fecha_fin <= fecha_limite:
+                    proximos_vencer += 1
     
-    total_contratos = len(contratos)
-    contratos_activos = len([c for c in contratos if c.estado == 'activo'])
-    
-    # Calcular valor total
-    valor_total = sum([c.monto_actual for c in contratos if c.estado == 'activo'])
-    
-    # Contratos próximos a vencer (30 días)
-    fecha_limite = datetime.now().date() + timedelta(days=30)
-    proximos_vencer = 0
-    
-    for c in contratos:
-        if c.estado == 'activo' and c.fecha_fin:
-            # Convertir fecha_fin de string a date si es necesario
-            if isinstance(c.fecha_fin, str):
-                try:
-                    fecha_fin = datetime.strptime(c.fecha_fin, '%Y-%m-%d').date()
-                except ValueError:
-                    continue
-            else:
-                fecha_fin = c.fecha_fin
-            
-            if fecha_fin <= fecha_limite:
-                proximos_vencer += 1
-    
-    return {
-        'total_contratos': total_contratos,
-        'contratos_activos': contratos_activos,
-        'valor_total': valor_total,
-        'proximos_vencer': proximos_vencer
-    }
+        return {
+            'total_contratos': total_contratos,
+            'contratos_activos': contratos_activos,
+            'valor_total': valor_total,
+            'proximos_vencer': proximos_vencer
+        }
+    except Exception as e:
+        return {
+            'total_contratos': 0,
+            'contratos_activos': 0,
+            'valor_total': 0,
+            'proximos_vencer': 0
+        }
 
 # Ruta principal - Redirigir a dashboard
 @main_bp.route('/')
@@ -135,10 +161,20 @@ def dashboard():
     # Obtener usuario actual de la sesión
     usuario_actual = Usuario.get_by_id(session['user_id'])
     
+    # Obtener contador de notificaciones
+    notificaciones_count = get_notificaciones_count()
+    
     return render_template('dashboard.html', 
                          estadisticas=estadisticas_completas, 
                          contratos=contratos_recientes,
-                         usuario=usuario_actual)
+                         actividad_reciente=actividad_reciente,
+                         usuario=usuario_actual,
+                         notificaciones_count=notificaciones_count,
+                         page_title='Dashboard',
+                         page_subtitle='Panel de control y métricas del sistema',
+                         page_icon='fas fa-tachometer-alt',
+                         show_notifications=True,
+                         show_user_menu=True)
 
 
 
@@ -207,10 +243,19 @@ def suplementos():
     # Obtener usuario actual de la sesión
     usuario_actual = Usuario.get_by_id(session['user_id'])
     
+    # Obtener contador de notificaciones
+    notificaciones_count = get_notificaciones_count()
+    
     return render_template('suplementos.html', 
                          suplementos=suplementos, 
                          estadisticas=estadisticas,
-                         usuario=usuario_actual)
+                         usuario=usuario_actual,
+                         notificaciones_count=notificaciones_count,
+                         page_title='Suplementos',
+                         page_subtitle='Gestión y administración de suplementos contractuales',
+                         page_icon='fas fa-file-plus',
+                         show_notifications=True,
+                         show_user_menu=True)
 
 @main_bp.route('/reportes')
 @login_required
@@ -257,10 +302,19 @@ def reportes():
     # Obtener usuario actual de la sesión
     usuario_actual = Usuario.get_by_id(session['user_id'])
     
+    # Obtener contador de notificaciones
+    notificaciones_count = get_notificaciones_count()
+    
     return render_template('reportes.html', 
                          reportes=reportes_data, 
                          estadisticas=estadisticas,
-                         usuario=usuario_actual)
+                         usuario=usuario_actual,
+                         notificaciones_count=notificaciones_count,
+                         page_title='Reportes',
+                         page_subtitle='Generación y gestión de reportes del sistema',
+                         page_icon='fas fa-chart-bar',
+                         show_notifications=True,
+                         show_user_menu=True)
 
 @main_bp.route('/configuracion')
 @admin_required
@@ -274,16 +328,26 @@ def configuracion():
     # Obtener usuario actual de la sesión
     usuario_actual = Usuario.get_by_id(session['user_id'])
     
+    # Obtener contador de notificaciones
+    notificaciones_count = get_notificaciones_count()
+    
     return render_template('configuracion.html', 
                          estadisticas=estadisticas,
                          metricas_servidor=metricas_servidor,
-                         usuario=usuario_actual)
+                         usuario=usuario_actual,
+                         notificaciones_count=notificaciones_count,
+                         page_title='Configuración',
+                         page_subtitle='Configuración del sistema y administración',
+                         page_icon='fas fa-cog',
+                         show_notifications=True,
+                         show_user_menu=True)
 
 @main_bp.route('/backup')
 @login_required
 def backup():
     usuario = Usuario.get_by_id(session['user_id'])
-    return render_template('backup_management.html', usuario=usuario)
+    notificaciones_count = get_notificaciones_count()
+    return render_template('backup_management.html', usuario=usuario, notificaciones_count=notificaciones_count)
 
 
 

@@ -11,6 +11,12 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'tu-clave-secreta-aqui'
 
+# Configuración específica de Jinja2 para evitar problemas de recursión
+app.jinja_env.auto_reload = True
+app.jinja_env.cache = {}
+# Deshabilitar autoescape temporalmente para resolver recursión
+app.jinja_env.autoescape = False
+
 # Registrar blueprints
 register_blueprints(app)
 

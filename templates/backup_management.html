@@ -3,20 +3,25 @@
 {% block title %}Gestión de Backups - PACTA{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/backup.css') }}">
     <div class="dashboard-container">
         <!-- Include Sidebar Component -->
         {% include 'components/partials/sidebar.html' %}
         
         <!-- Main Content -->
         <div class="main-content">
-            <!-- Include Header Component with custom content -->
-            <div class="content-header">
-                <div>
-                    <h1 class="page-title">Gestión de Backups</h1>
-                    <p class="page-subtitle">Administra los respaldos de tu sistema PACTA</p>
-                </div>
-                <div class="header-actions">
+            <!-- Set variables for header component -->
+            {% set page_title = "Gestión de Backups" %}
+            {% set page_subtitle = "Administra los respaldos de tu sistema PACTA" %}
+            {% set page_icon = "fas fa-archive" %}
+            {% set show_notifications = true %}
+            {% set show_user_menu = true %}
+            
+            <!-- Include Header Component -->
+            {% include 'components/partials/content_header.html' %}
+            
+            <!-- Additional Header Actions -->
+            <div class="additional-header-actions mb-4">
+                <div class="d-flex gap-2 flex-wrap">
                     <button class="btn btn-primary" onclick="showCreateBackupModal()" id="createBackupBtn">
                         <i class="fas fa-plus"></i>
                         Crear Backup
@@ -29,83 +34,64 @@
                         <i class="fas fa-cog"></i>
                         Configurar
                     </button>
-
-                    <button class="btn-icon" id="notifications-bell" title="Notificaciones" onclick="openNotificationsModal()">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
-                    </button>
-                    <div class="user-menu">
-                        <div class="user-avatar-small avatar-generated" id="userAvatar"></div>
-                        <span class="user-name-small">{{ usuario.nombre }}</span>
-                        <div class="user-dropdown">
-                            <a href="{{ url_for('users.usuario') }}" class="dropdown-item">
-                                <i class="fas fa-user"></i>
-                                <span>Perfil</span>
-                            </a>
-                            <a href="{{ url_for('main.configuracion') }}" class="dropdown-item">
-                                <i class="fas fa-cog"></i>
-                                <span>Configuración</span>
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <!-- Backup Status Cards -->
-            <div class="metrics-grid" style="margin-bottom: 24px;">
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Total de Backups</span>
-                        <i class="fas fa-archive metric-icon" style="color: #3b82f6;"></i>
-                    </div>
-                    <div class="metric-value" id="totalBackups">-</div>
-                    <div class="metric-change neutral" id="backupStorage">Calculando...</div>
-                </div>
+            <div class="metrics-grid mb-4">
+                <!-- Total de Backups Card -->
+                {% set metric_label = "Total de Backups" %}
+                {% set metric_value = backup_stats.total_backups if backup_stats and backup_stats.total_backups else "-" %}
+                {% set metric_icon = "fas fa-archive" %}
+                {% set metric_color = "primary" %}
+                {% set metric_change = backup_stats.storage_info if backup_stats and backup_stats.storage_info else "Calculando..." %}
+                {% set change_type = "neutral" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Último Backup</span>
-                        <i class="fas fa-clock metric-icon" style="color: #10b981;"></i>
-                    </div>
-                    <div class="metric-value" id="lastBackupTime">-</div>
-                    <div class="metric-change positive" id="lastBackupType">-</div>
-                </div>
+                <!-- Último Backup Card -->
+                {% set metric_label = "Último Backup" %}
+                {% set metric_value = backup_stats.last_backup_time if backup_stats and backup_stats.last_backup_time else "-" %}
+                {% set metric_icon = "fas fa-clock" %}
+                {% set metric_color = "success" %}
+                {% set metric_change = backup_stats.last_backup_type if backup_stats and backup_stats.last_backup_type else "-" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Estado del Sistema</span>
-                        <i class="fas fa-heartbeat metric-icon" style="color: #f59e0b;"></i>
-                    </div>
-                    <div class="metric-value" id="systemStatus">Verificando...</div>
-                    <div class="metric-change neutral" id="nextScheduled">-</div>
-                </div>
+                <!-- Estado del Sistema Card -->
+                {% set metric_label = "Estado del Sistema" %}
+                {% set metric_value = backup_stats.system_status if backup_stats and backup_stats.system_status else "Verificando..." %}
+                {% set metric_icon = "fas fa-heartbeat" %}
+                {% set metric_color = "warning" %}
+                {% set metric_change = backup_stats.next_scheduled if backup_stats and backup_stats.next_scheduled else "-" %}
+                {% set change_type = "neutral" %}
+                {% include 'components/partials/metric_card.html' %}
             </div>
 
             <!-- Herramientas de Backup -->
-            <div class="block-section" style="margin-bottom: 24px;">
+            <div class="block-section mb-4">
                 <div class="block-header">
                     <h3 class="block-title">Herramientas de Backup</h3>
                     <p class="block-subtitle">Acciones rápidas para gestionar tus respaldos</p>
                 </div>
                 <div class="block-content">
-                    <div style="padding: 24px;">
-                        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-                            <button class="btn-account" onclick="createBackup()" style="flex: 1; min-width: 200px; padding: 12px; background: #10b981; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
-                                <i class="fas fa-plus-circle"></i>
-                                Crear Backup
-                            </button>
-                            <button class="btn-account" onclick="showRestoreOptions()" style="flex: 1; min-width: 200px; padding: 12px; background: #f59e0b; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
-                                <i class="fas fa-undo-alt"></i>
-                                Restaurar Sistema
-                            </button>
-                            <button class="btn-account" onclick="showDownloadOptions()" style="flex: 1; min-width: 200px; padding: 12px; background: #3b82f6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
-                                <i class="fas fa-download"></i>
-                                Descargar Backup
-                            </button>
-                            <button class="btn-account" onclick="cleanupOldBackups()" id="cleanupToolBtn" style="flex: 1; min-width: 200px; padding: 12px; background: #ef4444; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
-                                <i class="fas fa-broom"></i>
-                                Limpiar Backups
-                            </button>
+                        <div class="p-4">
+                            <div class="d-flex flex-wrap gap-3">
+                                <button class="btn btn-success flex-fill d-flex align-items-center gap-2" onclick="createBackup()" style="min-width: 200px;">
+                                    <i class="fas fa-plus-circle"></i>
+                                    Crear Backup
+                                </button>
+                                <button class="btn btn-warning flex-fill d-flex align-items-center gap-2" onclick="showRestoreOptions()" style="min-width: 200px;">
+                                    <i class="fas fa-undo-alt"></i>
+                                    Restaurar Sistema
+                                </button>
+                            <button class="btn btn-primary flex-fill d-flex align-items-center gap-2" onclick="showDownloadOptions()" style="min-width: 200px;">
+                                    <i class="fas fa-download"></i>
+                                    Descargar Backup
+                                </button>
+                            <button class="btn btn-danger flex-fill d-flex align-items-center gap-2" onclick="cleanupOldBackups()" id="cleanupToolBtn" style="min-width: 200px;">
+                                    <i class="fas fa-broom"></i>
+                                    Limpiar Backups Antiguos
+                                </button>
                         </div>
                     </div>
                 </div>
@@ -137,22 +123,124 @@
                         </button>
                     </div>
 
-                    <!-- Backup List Table -->
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Nombre del Backup</th>
-                                    <th>Tipo</th>
-                                    <th>Tamaño</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="backupList">
-                                <!-- Backups will be loaded here dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
+                    <!-- Reusable Table Component -->
+                    {% set table_config = {
+                        'id': 'backups-table',
+                        'title': 'Lista de Backups',
+                        'api_endpoint': '/api/backups',
+                        'show_search': true,
+                        'show_filters': true,
+                        'show_export': true,
+                        'show_pagination': true,
+                        'items_per_page': 10,
+                        'columns': [
+                            {
+                                'key': 'backup_info',
+                                'label': 'Información del Backup',
+                                'sortable': true,
+                                'template': '<div><div style="font-weight: 600; color: #374151;">{{name}}</div><div style="font-size: 12px; color: #6b7280;">{{created_date}} - {{created_time}}</div></div>'
+                            },
+                            {
+                                'key': 'type',
+                                'label': 'Tipo',
+                                'sortable': true,
+                                'template': '<span class="badge" style="background: {{type_bg}}; color: {{type_color}}; padding: 4px 8px; border-radius: 4px; font-size: 12px;">{{type_name}}</span>'
+                            },
+                            {
+                                'key': 'size',
+                                'label': 'Tamaño',
+                                'sortable': true,
+                                'template': '<div style="font-weight: 600; color: #374151;">{{size}}</div>'
+                            },
+                            {
+                                'key': 'status',
+                                'label': 'Estado',
+                                'sortable': true,
+                                'template': '<span class="status-badge {{status_class}}" style="background: {{status_bg}}; color: {{status_color}}; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{{status_text}}</span>'
+                            },
+                            {
+                                'key': 'actions',
+                                'label': 'Acciones',
+                                'sortable': false,
+                                'template': '<div style="display: flex; gap: 4px;"><button class="btn-icon-small" title="Descargar" onclick="downloadBackup(\'{{id}}\');"><i class="fas fa-download"></i></button><button class="btn-icon-small" title="Restaurar" onclick="restoreBackup(\'{{id}}\');"><i class="fas fa-undo"></i></button><button class="btn-icon-small" title="Eliminar" onclick="deleteBackup(\'{{id}}\');"><i class="fas fa-trash"></i></button></div>'
+                            }
+                        ],
+                        'filters': [
+                            {
+                                'key': 'type',
+                                'label': 'Tipo',
+                                'type': 'select',
+                                'options': [
+                                    {'value': '', 'label': 'Todos los tipos'},
+                                    {'value': 'completo', 'label': 'Backup Completo'},
+                                    {'value': 'incremental', 'label': 'Backup Incremental'},
+                                    {'value': 'diferencial', 'label': 'Backup Diferencial'}
+                                ]
+                            },
+                            {
+                                'key': 'status',
+                                'label': 'Estado',
+                                'type': 'select',
+                                'options': [
+                                    {'value': '', 'label': 'Todos los estados'},
+                                    {'value': 'completado', 'label': 'Completado'},
+                                    {'value': 'en_progreso', 'label': 'En Progreso'},
+                                    {'value': 'fallido', 'label': 'Fallido'}
+                                ]
+                            }
+                        ],
+                        'default_data': [
+                            {
+                                'id': 'backup-001',
+                                'name': 'Backup_Sistema_2024-01-15',
+                                'created_date': '15/01/2024',
+                                'created_time': '14:30',
+                                'type': 'completo',
+                                'type_name': 'Backup Completo',
+                                'type_bg': '#dbeafe',
+                                'type_color': '#1d4ed8',
+                                'size': '2.5 GB',
+                                'status': 'completado',
+                                'status_text': 'Completado',
+                                'status_class': 'completed',
+                                'status_bg': '#d1fae5',
+                                'status_color': '#065f46'
+                            },
+                            {
+                                'id': 'backup-002',
+                                'name': 'Backup_Incremental_2024-01-14',
+                                'created_date': '14/01/2024',
+                                'created_time': '02:00',
+                                'type': 'incremental',
+                                'type_name': 'Backup Incremental',
+                                'type_bg': '#d1fae5',
+                                'type_color': '#065f46',
+                                'size': '450 MB',
+                                'status': 'completado',
+                                'status_text': 'Completado',
+                                'status_class': 'completed',
+                                'status_bg': '#d1fae5',
+                                'status_color': '#065f46'
+                            },
+                            {
+                                'id': 'backup-003',
+                                'name': 'Backup_Sistema_2024-01-13',
+                                'created_date': '13/01/2024',
+                                'created_time': '23:45',
+                                'type': 'diferencial',
+                                'type_name': 'Backup Diferencial',
+                                'type_bg': '#fef3c7',
+                                'type_color': '#92400e',
+                                'size': '1.2 GB',
+                                'status': 'completado',
+                                'status_text': 'Completado',
+                                'status_class': 'completed',
+                                'status_bg': '#d1fae5',
+                                'status_color': '#065f46'
+                            }
+                        ]
+                    } %}
+                    {% include 'components/partials/reusable_table.html' %}
                 </div>
             </div>
         </div>
@@ -211,6 +299,10 @@
 
 
 
+    <!-- Reusable Table Component Styles and Scripts -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/reusable_table.css') }}">
+    <script src="{{ url_for('static', filename='js/reusable_table.js') }}"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- Funciones de backup -->

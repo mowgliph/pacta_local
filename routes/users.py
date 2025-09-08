@@ -1,11 +1,18 @@
 from flask import Blueprint, render_template, jsonify, request, flash, session, redirect, url_for
 from functools import wraps
 from datetime import datetime, timedelta
-from database.models import Usuario, ActividadSistema, Contrato
+from database.models import Usuario, ActividadSistema, Contrato, Notificacion
 from services.system_metrics import get_system_metrics
 from services.user_stats import get_user_personal_stats
 
 users_bp = Blueprint('users', __name__)
+
+# Función helper para obtener contador de notificaciones
+def get_notificaciones_count():
+    """Obtiene el número de notificaciones no leídas del usuario actual"""
+    if 'user_id' in session:
+        return Notificacion.get_unread_count(session['user_id'])
+    return 0
 
 # Decorador para requerir login
 def login_required(f):
@@ -100,7 +107,9 @@ def usuario():
     estadisticas_usuario = {
         'contratos_asignados': len(contratos_usuario),
         'contratos_activos': len([c for c in contratos_usuario if c.estado == 'activo']),
-        'reportes_mes': reportes_mes,
+        'proximos_vencer': len([c for c in contratos_usuario if c.estado == 'activo']),  # Simulado
+        'valor_total': '2.4M',  # Simulado
+        'reportes_generados': reportes_mes,
         'actividades_recientes': len(actividades_usuario)
     }
     
@@ -110,12 +119,16 @@ def usuario():
     # Obtener estadísticas personales del usuario
     estadisticas_personales = get_user_personal_stats(usuario_actual.id if usuario_actual else 1)
     
+    # Obtener contador de notificaciones
+    notificaciones_count = get_notificaciones_count()
+    
     return render_template('usuario.html', 
                          usuario=usuario_actual,
                          estadisticas=estadisticas_usuario,
                          actividades=actividades_usuario,
                          metricas_servidor=metricas_servidor,
-                         estadisticas_personales=estadisticas_personales)
+                         estadisticas_personales=estadisticas_personales,
+                         notificaciones_count=notificaciones_count)
 
 @users_bp.route('/usuarios_lista')
 @admin_required
@@ -129,21 +142,27 @@ def usuarios_lista():
     usuarios_activos = len([u for u in usuarios if u.activo])
     usuarios_inactivos = total_usuarios - usuarios_activos
     administradores = len([u for u in usuarios if u.es_admin])
+    usuarios_regulares = total_usuarios - administradores
     
     estadisticas = {
         'total_usuarios': total_usuarios,
         'usuarios_activos': usuarios_activos,
         'usuarios_inactivos': usuarios_inactivos,
-        'administradores': administradores
+        'administradores': administradores,
+        'usuarios_regulares': usuarios_regulares
     }
     
     # Obtener usuario actual de la sesión
     usuario_actual = Usuario.get_by_id(session['user_id'])
     
+    # Obtener contador de notificaciones
+    notificaciones_count = get_notificaciones_count()
+    
     return render_template('usuarios_lista.html', 
                          usuarios=usuarios,
                          estadisticas=estadisticas,
-                         usuario=usuario_actual)
+                         usuario=usuario_actual,
+                         notificaciones_count=notificaciones_count)
 
 @users_bp.route('/crear_usuario', methods=['GET', 'POST'])
 @admin_required
@@ -218,7 +237,13 @@ def crear_usuario():
     
     # GET request - mostrar formulario
     usuario_actual = Usuario.get_by_id(session['user_id'])
-    return render_template('crear_usuario.html', usuario=usuario_actual)
+    
+    # Obtener contador de notificaciones
+    notificaciones_count = get_notificaciones_count()
+    
+    return render_template('crear_usuario.html', 
+                         usuario=usuario_actual,
+                         notificaciones_count=notificaciones_count)
 
 # Ruta para editar perfil de usuario
 @users_bp.route('/editar_perfil', methods=['POST'])

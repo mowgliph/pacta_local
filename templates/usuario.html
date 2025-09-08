@@ -9,36 +9,36 @@
         
         <!-- Main Content -->
         <div class="main-content">
-            <!-- Include Header Component with custom content -->
-            <div class="content-header">
-                <div>
-                    <h1 class="page-title">Perfil de Usuario</h1>
-                    <p class="page-subtitle">Gestiona tu información personal y preferencias</p>
-                </div>
-                <div class="header-actions">
-                    <button class="btn-icon" title="Editar Perfil" onclick="toggleEditMode()">
-                        <i class="fas fa-edit" id="editIcon"></i>
-                    </button>
-                    <button class="btn-icon notification-bell" id="notifications-bell" title="Notificaciones" onclick="openNotificationsModal()">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge" style="display: none;">0</span>
-                    </button>
-                    <div class="user-menu">
-                        <div class="user-avatar-small avatar-generated">{{ (usuario.nombre or 'Usuario').split()[0][0] }}{{ (usuario.nombre or 'Usuario').split()[1][0] if (usuario.nombre or 'Usuario').split()|length > 1 else (usuario.nombre or 'Usuario').split()[0][1] if (usuario.nombre or 'Usuario').split()[0]|length > 1 else '' }}</div>
-                        <span class="user-name-small">{{ usuario.nombre }}</span>
-                        <div class="user-dropdown">
-                            <a href="{{ url_for('users.usuario') }}" class="dropdown-item">
-                <i class="fas fa-user"></i>
-                <span>Mi Perfil</span>
-            </a>
-            <a href="{{ url_for('main.configuracion') }}" class="dropdown-item">
-                                <i class="fas fa-cog"></i>
-                                <span>Configuración</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% set page_title = "Perfil de Usuario" %}
+            {% set page_subtitle = "Gestiona tu información personal y configuraciones" %}
+            {% set page_icon = "fas fa-user-circle" %}
+            {% set buttons = [
+                {
+                    'text': 'Editar Perfil',
+                    'icon': 'fas fa-edit',
+                    'class': 'btn-outline-primary',
+                    'action': 'edit'
+                },
+                {
+                    'text': 'Guardar Cambios',
+                    'icon': 'fas fa-save',
+                    'class': 'btn-primary',
+                    'action': 'save'
+                }
+            ] %}
+            {% set stats = [
+                {
+                    'value': usuario.ultimo_acceso or 'Hoy',
+                    'label': 'Último acceso'
+                },
+                {
+                    'value': usuario.rol or 'Administrador',
+                    'label': 'Rol'
+                }
+            ] %}
+            {% set show_notifications = true %}
+            {% set show_user_menu = true %}
+            {% include 'components/partials/content_header.html' %}
             
             <!-- User Profile Card -->
             <div class="user-profile-card" style="background: white; border-radius: 16px; padding: 32px; margin-bottom: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
@@ -126,11 +126,11 @@
                         </div>
                     </form>
                     <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
-                        <button onclick="cancelEdit()" class="btn-account" style="padding: 12px 24px; background: #6b7280; color: white;">
+                        <button onclick="cancelEdit()" class="btn btn-secondary">
                             <i class="fas fa-times" style="margin-right: 8px;"></i>
                             Cancelar
                         </button>
-                        <button onclick="saveChanges()" class="btn-account" style="padding: 12px 24px; background: #10b981; color: white;">
+                        <button onclick="saveChanges()" class="btn btn-success">
                             <i class="fas fa-save" style="margin-right: 8px;"></i>
                             Guardar Cambios
                         </button>
@@ -140,41 +140,37 @@
             
             <!-- Tarjetas de Métricas -->
             <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Contratos Activos</span>
-                        <i class="fas fa-file-contract metric-icon" style="color: #3b82f6;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.contratos_activos or 156 }}</div>
-                    <div class="metric-change positive">+12 este mes</div>
-                </div>
+                {% set metric_label = "Contratos Activos" %}
+                {% set metric_value = estadisticas.contratos_activos or 156 %}
+                {% set metric_icon = "fas fa-file-contract" %}
+                {% set metric_color = "text-primary" %}
+                {% set metric_change = "+12 este mes" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Valor Total</span>
-                        <i class="fas fa-dollar-sign metric-icon" style="color: #10b981;"></i>
-                    </div>
-                    <div class="metric-value">${{ estadisticas.valor_total or '2.4M' }}</div>
-                    <div class="metric-change positive">+8.2% vs mes anterior</div>
-                </div>
+                {% set metric_label = "Valor Total" %}
+                {% set metric_value = "$" ~ (estadisticas.valor_total or '2.4M') %}
+                {% set metric_icon = "fas fa-dollar-sign" %}
+                {% set metric_color = "text-success" %}
+                {% set metric_change = "+8.2% vs mes anterior" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Próximos a Vencer</span>
-                        <i class="fas fa-clock metric-icon" style="color: #f59e0b;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.proximos_vencer or 23 }}</div>
-                    <div class="metric-change negative">Requieren atención</div>
-                </div>
+                {% set metric_label = "Próximos a Vencer" %}
+                {% set metric_value = estadisticas.proximos_vencer or 23 %}
+                {% set metric_icon = "fas fa-clock" %}
+                {% set metric_color = "text-warning" %}
+                {% set metric_change = "Requieren atención" %}
+                {% set change_type = "negative" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Reportes Generados</span>
-                        <i class="fas fa-chart-bar metric-icon" style="color: #8b5cf6;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.reportes_generados or 89 }}</div>
-                    <div class="metric-change positive">+15 esta semana</div>
-                </div>
+                {% set metric_label = "Reportes Generados" %}
+                {% set metric_value = estadisticas.reportes_generados or 89 %}
+                {% set metric_icon = "fas fa-chart-bar" %}
+                {% set metric_color = "text-purple" %}
+                {% set metric_change = "+15 esta semana" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
             </div>
             
             <!-- Vertical Blocks Layout -->
@@ -186,20 +182,20 @@
                         <p class="block-subtitle">Herramientas y funciones principales</p>
                     </div>
                     <div class="block-content">
-                        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-                            <button class="btn-account" onclick="openNewUserModal()" style="flex: 1; min-width: 200px; padding: 12px; background: #3b82f6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                        <div class="d-flex flex-wrap gap-3">
+                            <button class="btn btn-primary flex-fill d-flex align-items-center gap-2" onclick="openNewUserModal()" style="min-width: 200px;">
                                 <i class="fas fa-user-plus"></i>
                                 Nuevo Usuario
                             </button>
-                            <button class="btn-account" onclick="window.location.href='{{ url_for('users.usuarios_lista') }}'" style="flex: 1; min-width: 200px; padding: 12px; background: #10b981; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn btn-success flex-fill d-flex align-items-center gap-2" onclick="window.location.href='{{ url_for('users.usuarios_lista') }}'" style="min-width: 200px;">
                                 <i class="fas fa-users"></i>
                                 Ver Lista de Usuarios
                             </button>
-                            <button class="btn-account" onclick="openNotificationsModal()" style="flex: 1; min-width: 200px; padding: 12px; background: #f59e0b; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn btn-warning flex-fill d-flex align-items-center gap-2" onclick="openNotificationsModal()" style="min-width: 200px;">
                                 <i class="fas fa-bell"></i>
                                 Ver Notificaciones
                             </button>
-                            <button class="btn-account" onclick="window.location.href='{{ url_for('main.configuracion') }}'" style="flex: 1; min-width: 200px; padding: 12px; background: #8b5cf6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn btn-purple flex-fill d-flex align-items-center gap-2" onclick="window.location.href='{{ url_for('main.configuracion') }}'" style="min-width: 200px;">
                                 <i class="fas fa-cog"></i>
                                 Configuraciones
                             </button>
@@ -284,35 +280,9 @@
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='js/user_functions.js') }}"></script>
     <script src="{{ url_for('static', filename='js/notification_functions.js') }}"></script>
     <script>
-
-        
-        // Edit Mode Functions
-        function toggleEditMode() {
-            const editForm = document.getElementById('editForm');
-            const editIcon = document.getElementById('editIcon');
-            
-            if (isEditMode) {
-                editForm.style.display = 'none';
-                editIcon.className = 'fas fa-edit';
-                isEditMode = false;
-            } else {
-                editForm.style.display = 'block';
-                editIcon.className = 'fas fa-times';
-                isEditMode = true;
-            }
-        }
-        
-        function cancelEdit() {
-            toggleEditMode();
-            // Reset form values to original
-            document.getElementById('editNombre').value = '{{ usuario.nombre or "Ana Martínez" }}';
-            document.getElementById('editCargo').value = '{{ usuario.cargo or "Gerente de Operaciones" }}';
-            document.getElementById('editEmail').value = '{{ usuario.email or "ana.martinez@pacta.com" }}';
-            document.getElementById('editTelefono').value = '{{ usuario.telefono or "+57 300 123 4567" }}';
-        }
+        // Las funciones de edición están definidas en user_functions.js
         
         function saveChanges() {
             // Get form values

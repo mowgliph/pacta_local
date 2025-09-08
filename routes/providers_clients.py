@@ -1,9 +1,16 @@
 from flask import Blueprint, render_template, redirect, url_for, session, flash, jsonify, request
 from functools import wraps
 from datetime import datetime, timedelta
-from database.models import Usuario, Cliente, Contrato
+from database.models import Usuario, Cliente, Contrato, Notificacion
 
 providers_clients_bp = Blueprint('providers_clients', __name__)
+
+# Función helper para obtener contador de notificaciones
+def get_notificaciones_count():
+    """Obtiene el número de notificaciones no leídas del usuario actual"""
+    if 'user_id' in session:
+        return Notificacion.get_unread_count(session['user_id'])
+    return 0
 
 # Decorador para requerir login
 def login_required(f):
@@ -70,10 +77,14 @@ def proveedores():
             'valor_promedio': int(valor_total_proveedores / len(contratos_proveedores)) if contratos_proveedores else 0
         }
         
+        # Obtener contador de notificaciones
+        notificaciones_count = get_notificaciones_count()
+        
         return render_template('proveedores.html', 
                              proveedores=proveedores,
                              estadisticas=estadisticas,
-                             usuario=usuario_actual)
+                             usuario=usuario_actual,
+                             notificaciones_count=notificaciones_count)
     except Exception as e:
         flash(f'Error al cargar proveedores: {str(e)}', 'error')
         return redirect(url_for('main.dashboard'))
@@ -108,10 +119,14 @@ def clientes():
             'valor_promedio': int(valor_total_clientes / len(contratos_clientes)) if contratos_clientes else 0
         }
         
+        # Obtener contador de notificaciones
+        notificaciones_count = get_notificaciones_count()
+        
         return render_template('clientes.html', 
                              clientes=clientes,
                              estadisticas=estadisticas,
-                             usuario=usuario_actual)
+                             usuario=usuario_actual,
+                             notificaciones_count=notificaciones_count)
     except Exception as e:
         flash(f'Error al cargar clientes: {str(e)}', 'error')
         return redirect(url_for('main.dashboard'))

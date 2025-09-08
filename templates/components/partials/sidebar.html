@@ -3,10 +3,7 @@
     <!-- Sidebar Header -->
     <div class="sidebar-header">
         <a href="{{ url_for('main.index') }}" class="logo" style="text-decoration: none; color: inherit; cursor: pointer;">
-            <div class="logo-icon">
-                <i class="fas fa-file-contract"></i>
-            </div>
-            <div class="logo-text">PACTA</div>
+            <img src="{{ url_for('static', filename='images/pacta_logo.png') }}" alt="PACTA" class="logo-image">
         </a>
     </div>
 
@@ -61,13 +58,21 @@
     <!-- Sidebar Footer -->
     <div class="sidebar-footer">
         <div class="user-profile">
-            <div class="user-avatar avatar-generated">{{ (usuario.nombre or 'Usuario').split()[0][0] }}{{ (usuario.nombre or 'Usuario').split()[1][0] if (usuario.nombre or 'Usuario').split()|length > 1 else (usuario.nombre or 'Usuario').split()[0][1] if (usuario.nombre or 'Usuario').split()[0]|length > 1 else '' }}</div>
+            <div class="user-avatar avatar-generated">
+                {% set nombre_parts = (usuario.nombre or 'Usuario').split() %}
+                {{ nombre_parts[0][0] if nombre_parts else 'U' }}
+                {% if nombre_parts|length > 1 %}
+                    {{ nombre_parts[1][0] }}
+                {% elif nombre_parts and nombre_parts[0]|length > 1 %}
+                    {{ nombre_parts[0][1] }}
+                {% endif %}
+            </div>
             <div class="user-info">
                 <div class="user-name">{{ usuario.nombre or 'Usuario' }}</div>
                 <div class="user-title">{{ 'Administrador' if usuario.es_admin else 'Usuario' }}</div>
                 <div style="display: flex; gap: 8px; margin-top: 8px;">
-                    <a href="{{ url_for('users.usuario') }}" class="btn-account" style="text-decoration: none; flex: 1;">Perfil</a>
-                    <a href="{{ url_for('auth.logout') }}" class="btn-account logout-btn" style="text-decoration: none; flex: 1;" title="Cerrar Sesión">
+                    <a href="{{ url_for('users.usuario') }}" class="btn btn-primary flex-fill text-decoration-none">Perfil</a>
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger flex-fill text-decoration-none" title="Cerrar Sesión">
                         <i class="fas fa-sign-out-alt"></i>
                     </a>
                 </div>

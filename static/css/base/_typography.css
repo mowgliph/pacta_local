@@ -530,26 +530,3 @@ ol ul {
     -moz-osx-font-smoothing: grayscale;
   }
 }
-
-/* Mejoras para modo oscuro */
-@media (prefers-color-scheme: dark) {
-  body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  code {
-    background-color: var(--color-gray-800);
-    color: var(--color-gray-200);
-  }
-  
-  pre {
-    background-color: var(--color-gray-800);
-    border-color: var(--color-gray-700);
-  }
-  
-  blockquote {
-    background-color: var(--color-gray-800);
-    border-left-color: var(--color-primary);
-  }
-}

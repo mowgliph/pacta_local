@@ -10,26 +10,25 @@
         <!-- Main Content -->
         <div class="main-content">
             <!-- Content Header -->
-            <div class="content-header">
-                <div>
-                    <h1 class="page-title">
-                        <i class="fas fa-handshake" style="color: #10b981; margin-right: 12px;"></i>
-                        Gestión de Clientes
-                    </h1>
-                    <p class="page-subtitle">Administra todos los clientes del sistema</p>
-                </div>
-                <div class="header-actions">
-                    <button class="btn-primary" onclick="openAddClientModal()" style="display: flex; align-items: center; gap: 8px; background: #10b981;">
-                        <i class="fas fa-plus"></i>
-                        Añadir Cliente
-                    </button>
-                    <button class="btn-icon" title="Actualizar" onclick="location.reload()">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
-                    <button class="btn-icon" title="Exportar" onclick="exportClients()">
-                        <i class="fas fa-download"></i>
-                    </button>
-                </div>
+            {% set page_title = "Gestión de Clientes" %}
+            {% set page_subtitle = "Administra todos los clientes del sistema" %}
+            {% set page_icon = "fas fa-handshake" %}
+            {% set show_notifications = false %}
+            {% set show_user_menu = false %}
+            {% include 'components/partials/content_header.html' %}
+            
+            <!-- Additional Header Actions -->
+            <div class="header-actions" style="margin-top: -60px; margin-bottom: 20px; display: flex; justify-content: flex-end; gap: 8px;">
+                <button class="btn-primary" onclick="openAddClientModal()" style="display: flex; align-items: center; gap: 8px; background: #10b981;">
+                    <i class="fas fa-plus"></i>
+                    Añadir Cliente
+                </button>
+                <button class="btn-icon" title="Actualizar" onclick="location.reload()">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="btn-icon" title="Exportar" onclick="exportClients()">
+                    <i class="fas fa-download"></i>
+                </button>
             </div>
             
             <!-- Search and Filter Section -->
@@ -61,251 +60,165 @@
             
             <!-- Clients Statistics Cards -->
             <div class="metrics-grid" style="margin-bottom: 24px;">
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Total Clientes</span>
-                        <i class="fas fa-handshake metric-icon" style="color: #10b981;"></i>
-                    </div>
-                    <div class="metric-value">18</div>
-                    <div class="metric-change positive">+2 este mes</div>
-                </div>
+                <!-- Total Clientes -->
+                {% set metric_label = "Total Clientes" %}
+                {% set metric_value = "18" %}
+                {% set metric_icon = "fas fa-handshake" %}
+                {% set metric_color = "style='color: #10b981;'" %}
+                {% set metric_change = "+2 este mes" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Clientes Activos</span>
-                        <i class="fas fa-check-circle metric-icon" style="color: #3b82f6;"></i>
-                    </div>
-                    <div class="metric-value">16</div>
-                    <div class="metric-change positive">88.9% del total</div>
-                </div>
+                <!-- Clientes Activos -->
+                {% set metric_label = "Clientes Activos" %}
+                {% set metric_value = "16" %}
+                {% set metric_icon = "fas fa-check-circle" %}
+                {% set metric_color = "style='color: #3b82f6;'" %}
+                {% set metric_change = "88.9% del total" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Contratos Totales</span>
-                        <i class="fas fa-file-contract metric-icon" style="color: #f59e0b;"></i>
-                    </div>
-                    <div class="metric-value">142</div>
-                    <div class="metric-change positive">Con clientes</div>
-                </div>
+                <!-- Contratos Totales -->
+                {% set metric_label = "Contratos Totales" %}
+                {% set metric_value = "142" %}
+                {% set metric_icon = "fas fa-file-contract" %}
+                {% set metric_color = "style='color: #f59e0b;'" %}
+                {% set metric_change = "Con clientes" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Valor Promedio</span>
-                        <i class="fas fa-dollar-sign metric-icon" style="color: #8b5cf6;"></i>
-                    </div>
-                    <div class="metric-value">$68,500</div>
-                    <div class="metric-change positive">Por contrato</div>
-                </div>
+                <!-- Valor Promedio -->
+                {% set metric_label = "Valor Promedio" %}
+                {% set metric_value = "$68,500" %}
+                {% set metric_icon = "fas fa-dollar-sign" %}
+                {% set metric_color = "style='color: #8b5cf6;'" %}
+                {% set metric_change = "Por contrato" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
             </div>
             
             <!-- Clients Table -->
-            <div class="clients-table-section" style="background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden;">
-                <div class="table-header" style="padding: 20px; border-bottom: 1px solid #f3f4f6; display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: #374151;">Lista de Clientes</h3>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn-icon" title="Vista de tabla" onclick="toggleView('table')" id="tableViewBtn">
-                            <i class="fas fa-table"></i>
-                        </button>
-                        <button class="btn-icon" title="Vista de tarjetas" onclick="toggleView('cards')" id="cardsViewBtn">
-                            <i class="fas fa-th-large"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Table View -->
-                <div id="tableView" class="table-responsive">
-                    <table class="table" style="margin: 0;">
-                        <thead style="background: #f8fafc;">
-                            <tr>
-                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Cliente</th>
-                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Industria</th>
-                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Contratos</th>
-                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Valor Total</th>
-                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Estado</th>
-                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Contacto</th>
-                                <th style="padding: 16px; font-weight: 600; color: #374151; border: none;">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="clientsTableBody">
-                            <tr style="border-bottom: 1px solid #f3f4f6;">
-                                <td style="padding: 16px; border: none;">
-                                    <div style="display: flex; align-items: center; gap: 12px;">
-                                        <div class="client-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #10b981, #047857); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px;">
-                                            GI
-                                        </div>
-                                        <div>
-                                            <div style="font-weight: 600; color: #374151;">Global Industries</div>
-                                            <div style="font-size: 12px; color: #6b7280;">ID: CLI-001</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <span class="badge" style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Manufactura Industrial</span>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-weight: 600; color: #374151;">7</div>
-                                    <div style="font-size: 12px; color: #6b7280;">5 activos</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-weight: 600; color: #10b981;">$850,000</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <span class="status-badge active" style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">Activo</span>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-size: 13px; color: #374151;">contact@globalind.com</div>
-                                    <div style="font-size: 12px; color: #6b7280;">+1 555-123-4567</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="display: flex; gap: 4px;">
-                                        <button class="btn-icon-small" title="Ver detalles" onclick="viewClient('CLI-001')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn-icon-small" title="Editar" onclick="editClient('CLI-001')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn-icon-small" title="Eliminar" onclick="deleteClient('CLI-001')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-                            <tr style="border-bottom: 1px solid #f3f4f6;">
-                                <td style="padding: 16px; border: none;">
-                                    <div style="display: flex; align-items: center; gap: 12px;">
-                                        <div class="client-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px;">
-                                            MS
-                                        </div>
-                                        <div>
-                                            <div style="font-weight: 600; color: #374151;">Metro Solutions</div>
-                                            <div style="font-size: 12px; color: #6b7280;">ID: CLI-002</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <span class="badge" style="background: #dbeafe; color: #1d4ed8; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Servicios Urbanos</span>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-weight: 600; color: #374151;">4</div>
-                                    <div style="font-size: 12px; color: #6b7280;">3 activos</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-weight: 600; color: #10b981;">$620,000</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <span class="status-badge active" style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">Activo</span>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-size: 13px; color: #374151;">info@metrosol.com</div>
-                                    <div style="font-size: 12px; color: #6b7280;">+1 555-234-5678</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="display: flex; gap: 4px;">
-                                        <button class="btn-icon-small" title="Ver detalles" onclick="viewClient('CLI-002')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn-icon-small" title="Editar" onclick="editClient('CLI-002')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn-icon-small" title="Eliminar" onclick="deleteClient('CLI-002')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-                            <tr style="border-bottom: 1px solid #f3f4f6;">
-                                <td style="padding: 16px; border: none;">
-                                    <div style="display: flex; align-items: center; gap: 12px;">
-                                        <div class="client-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px;">
-                                            FG
-                                        </div>
-                                        <div>
-                                            <div style="font-weight: 600; color: #374151;">Financial Group</div>
-                                            <div style="font-size: 12px; color: #6b7280;">ID: CLI-003</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <span class="badge" style="background: #ede9fe; color: #7c3aed; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Servicios Financieros</span>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-weight: 600; color: #374151;">3</div>
-                                    <div style="font-size: 12px; color: #6b7280;">3 activos</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-weight: 600; color: #10b981;">$480,000</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <span class="status-badge active" style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">Activo</span>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-size: 13px; color: #374151;">admin@fingroup.com</div>
-                                    <div style="font-size: 12px; color: #6b7280;">+1 555-345-6789</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="display: flex; gap: 4px;">
-                                        <button class="btn-icon-small" title="Ver detalles" onclick="viewClient('CLI-003')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn-icon-small" title="Editar" onclick="editClient('CLI-003')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn-icon-small" title="Eliminar" onclick="deleteClient('CLI-003')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-                            <tr style="border-bottom: 1px solid #f3f4f6;">
-                                <td style="padding: 16px; border: none;">
-                                    <div style="display: flex; align-items: center; gap: 12px;">
-                                        <div class="client-avatar" style="width: 40px; height: 40px; background: linear-gradient(135deg, #ef4444, #dc2626); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px;">
-                                            RC
-                                        </div>
-                                        <div>
-                                            <div style="font-weight: 600; color: #374151;">Retail Chain</div>
-                                            <div style="font-size: 12px; color: #6b7280;">ID: CLI-004</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <span class="badge" style="background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Retail y Comercio</span>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-weight: 600; color: #374151;">2</div>
-                                    <div style="font-size: 12px; color: #6b7280;">1 activo</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-weight: 600; color: #10b981;">$280,000</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <span class="status-badge prospecto" style="background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">Prospecto</span>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="font-size: 13px; color: #374151;">sales@retailchain.com</div>
-                                    <div style="font-size: 12px; color: #6b7280;">+1 555-456-7890</div>
-                                </td>
-                                <td style="padding: 16px; border: none;">
-                                    <div style="display: flex; gap: 4px;">
-                                        <button class="btn-icon-small" title="Ver detalles" onclick="viewClient('CLI-004')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn-icon-small" title="Editar" onclick="editClient('CLI-004')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn-icon-small" title="Eliminar" onclick="deleteClient('CLI-004')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            {% set table_config = {
+                'id': 'clients-table',
+                'title': 'Lista de Clientes',
+                'api_endpoint': '/api/clients',
+                'show_search': true,
+                'show_filters': true,
+                'show_export': true,
+                'show_pagination': true,
+                'items_per_page': 10,
+                'columns': [
+                    {
+                        'key': 'client_info',
+                        'label': 'Cliente',
+                        'sortable': true,
+                        'template': 'client_info'
+                    },
+                    {
+                        'key': 'industry',
+                        'label': 'Industria',
+                        'sortable': true,
+                        'template': 'badge'
+                    },
+                    {
+                        'key': 'contracts',
+                        'label': 'Contratos',
+                        'sortable': true,
+                        'template': 'contracts_count'
+                    },
+                    {
+                        'key': 'total_value',
+                        'label': 'Valor Total',
+                        'sortable': true,
+                        'template': 'currency'
+                    },
+                    {
+                        'key': 'status',
+                        'label': 'Estado',
+                        'sortable': true,
+                        'template': 'status_badge'
+                    },
+                    {
+                        'key': 'contact',
+                        'label': 'Contacto',
+                        'sortable': false,
+                        'template': 'contact_info'
+                    },
+                    {
+                        'key': 'actions',
+                        'label': 'Acciones',
+                        'sortable': false,
+                        'template': 'actions'
+                    }
+                ],
+                'filters': [
+                    {
+                        'key': 'industry',
+                        'label': 'Industria',
+                        'type': 'select',
+                        'options': [
+                            {'value': '', 'label': 'Todas las industrias'},
+                            {'value': 'manufactura', 'label': 'Manufactura Industrial'},
+                            {'value': 'servicios', 'label': 'Servicios Urbanos'},
+                            {'value': 'financiero', 'label': 'Servicios Financieros'},
+                            {'value': 'retail', 'label': 'Retail y Comercio'},
+                            {'value': 'salud', 'label': 'Salud y Medicina'},
+                            {'value': 'educacion', 'label': 'Educación'}
+                        ]
+                    },
+                    {
+                        'key': 'status',
+                        'label': 'Estado',
+                        'type': 'select',
+                        'options': [
+                            {'value': '', 'label': 'Todos los estados'},
+                            {'value': 'activo', 'label': 'Activo'},
+                            {'value': 'inactivo', 'label': 'Inactivo'},
+                            {'value': 'prospecto', 'label': 'Prospecto'}
+                        ]
+                    }
+                ],
+                'default_data': [
+                    {
+                        'id': 'CLI-001',
+                        'client_info': {'name': 'Global Industries', 'id': 'CLI-001', 'avatar': 'GI', 'color': '#10b981'},
+                        'industry': {'value': 'manufactura', 'label': 'Manufactura Industrial', 'color': '#d1fae5', 'text_color': '#065f46'},
+                        'contracts': {'total': 7, 'active': 5},
+                        'total_value': 850000,
+                        'status': {'value': 'activo', 'label': 'Activo'},
+                        'contact': {'email': 'contact@globalind.com', 'phone': '+1 555-123-4567'}
+                    },
+                    {
+                        'id': 'CLI-002',
+                        'client_info': {'name': 'Metro Solutions', 'id': 'CLI-002', 'avatar': 'MS', 'color': '#3b82f6'},
+                        'industry': {'value': 'servicios', 'label': 'Servicios Urbanos', 'color': '#dbeafe', 'text_color': '#1d4ed8'},
+                        'contracts': {'total': 4, 'active': 3},
+                        'total_value': 620000,
+                        'status': {'value': 'activo', 'label': 'Activo'},
+                        'contact': {'email': 'info@metrosol.com', 'phone': '+1 555-234-5678'}
+                    },
+                    {
+                        'id': 'CLI-003',
+                        'client_info': {'name': 'Financial Group', 'id': 'CLI-003', 'avatar': 'FG', 'color': '#8b5cf6'},
+                        'industry': {'value': 'financiero', 'label': 'Servicios Financieros', 'color': '#ede9fe', 'text_color': '#7c3aed'},
+                        'contracts': {'total': 3, 'active': 3},
+                        'total_value': 480000,
+                        'status': {'value': 'activo', 'label': 'Activo'},
+                        'contact': {'email': 'admin@fingroup.com', 'phone': '+1 555-345-6789'}
+                    },
+                    {
+                        'id': 'CLI-004',
+                        'client_info': {'name': 'Retail Chain', 'id': 'CLI-004', 'avatar': 'RC', 'color': '#ef4444'},
+                        'industry': {'value': 'retail', 'label': 'Retail y Comercio', 'color': '#fee2e2', 'text_color': '#991b1b'},
+                        'contracts': {'total': 2, 'active': 1},
+                        'total_value': 280000,
+                        'status': {'value': 'prospecto', 'label': 'Prospecto'},
+                        'contact': {'email': 'sales@retailchain.com', 'phone': '+1 555-456-7890'}
+                    }
+                ]
+            } %}
+            {% include 'components/partials/reusable_table.html' %}
+
         </div>
     </div>
     
@@ -405,6 +318,10 @@
             </div>
         </div>
     </div>
+    
+    <!-- Reusable Table Component Styles and Scripts -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/reusable_table.css') }}">
+    <script src="{{ url_for('static', filename='js/reusable_table.js') }}"></script>
     
     <script>
         // Client management functions

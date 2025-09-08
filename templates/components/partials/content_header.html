@@ -1,0 +1,26 @@
+<!-- Content Header Component -->
+<!-- Usage: Set variables before include: page_title, page_subtitle, page_icon, show_notifications, show_user_menu -->
+<div class="content-header">
+    <div class="page-title-section">
+        {% if page_icon %}
+        <i class="{{ page_icon }} page-icon"></i>
+        {% endif %}
+        <div>
+            <h1 class="page-title">{{ page_title or 'Sistema PACTA' }}</h1>
+            {% if page_subtitle %}
+            <p class="page-subtitle">{{ page_subtitle }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="header-actions">
+        {% if show_notifications %}
+        <button class="btn-icon" onclick="openNotificationsModal()" title="Notificaciones">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+        </button>
+        {% endif %}
+        {% if show_user_menu %}
+        {% include 'components/partials/user_menu.html' %}
+        {% endif %}
+    </div>
+</div>

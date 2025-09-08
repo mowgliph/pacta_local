@@ -10,73 +10,50 @@
         <!-- Main Content -->
         <div class="main-content">
             <!-- Include Header Component with custom content -->
-            <div class="content-header">
-                <div>
-                    <h1 class="page-title">Reportes</h1>
-                    <p class="page-subtitle">Análisis y reportes empresariales</p>
-                </div>
-                <div class="header-actions">
-                    <button class="btn-icon" title="Generar Reporte">
-                        <i class="fas fa-chart-bar"></i>
-                    </button>
-                    <button class="btn-icon" id="notifications-bell" title="Notificaciones" onclick="openNotificationsModal()">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
-                    </button>
-                    <div class="user-menu">
-                        <div class="user-avatar-small avatar-generated">{{ (usuario.nombre or 'Usuario').split()[0][0] }}{{ (usuario.nombre or 'Usuario').split()[1][0] if (usuario.nombre or 'Usuario').split()|length > 1 else (usuario.nombre or 'Usuario').split()[0][1] if (usuario.nombre or 'Usuario').split()[0]|length > 1 else '' }}</div>
-                        <span class="user-name-small">{{ usuario.nombre }}</span>
-                        <div class="user-dropdown">
-                            <a href="{{ url_for('users.usuario') }}" class="dropdown-item">
-                <i class="fas fa-user"></i>
-                <span>Mi Perfil</span>
-            </a>
-            <a href="{{ url_for('main.configuracion') }}" class="dropdown-item">
-                                <i class="fas fa-cog"></i>
-                                <span>Configuración</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% set page_title = 'Reportes' %}
+            {% set page_subtitle = 'Generación y análisis de reportes' %}
+            {% set page_icon = 'fas fa-chart-bar' %}
+            {% set show_notifications = true %}
+            {% set show_user_menu = true %}
+            {% include 'components/partials/content_header.html' %}
             
             <!-- Metrics Cards -->
             <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Reportes Generados</span>
-                        <i class="fas fa-file-alt metric-icon" style="color: #3b82f6;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.reportes_generados or 89 }}</div>
-                    <div class="metric-change positive">+18% vs mes anterior</div>
-                </div>
+                <!-- Reportes Generados -->
+                {% set metric_label = "Reportes Generados" %}
+                {% set metric_value = estadisticas.reportes_generados or 89 %}
+                {% set metric_icon = "fas fa-file-alt" %}
+                {% set metric_color = "text-primary" %}
+                {% set metric_change = "+18% vs mes anterior" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Reportes Automáticos</span>
-                        <i class="fas fa-robot metric-icon" style="color: #10b981;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.reportes_automaticos or 34 }}</div>
-                    <div class="metric-change positive">+5% vs mes anterior</div>
-                </div>
+                <!-- Reportes Automáticos -->
+                {% set metric_label = "Reportes Automáticos" %}
+                {% set metric_value = estadisticas.reportes_automaticos or 34 %}
+                {% set metric_icon = "fas fa-robot" %}
+                {% set metric_color = "text-success" %}
+                {% set metric_change = "+5% vs mes anterior" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Tiempo Promedio</span>
-                        <i class="fas fa-stopwatch metric-icon" style="color: #f59e0b;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.tiempo_promedio or '2.3h' }}</div>
-                    <div class="metric-change negative">-12% vs mes anterior</div>
-                </div>
+                <!-- Tiempo Promedio -->
+                {% set metric_label = "Tiempo Promedio" %}
+                {% set metric_value = estadisticas.tiempo_promedio or '2.3h' %}
+                {% set metric_icon = "fas fa-stopwatch" %}
+                {% set metric_color = "text-warning" %}
+                {% set metric_change = "-12% vs mes anterior" %}
+                {% set change_type = "negative" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Descargas</span>
-                        <i class="fas fa-download metric-icon" style="color: #8b5cf6;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.descargas or 267 }}</div>
-                    <div class="metric-change positive">+22% vs mes anterior</div>
-                </div>
+                <!-- Descargas -->
+                {% set metric_label = "Descargas" %}
+                {% set metric_value = estadisticas.descargas or 267 %}
+                {% set metric_icon = "fas fa-download" %}
+                {% set metric_color = "text-purple" %}
+                {% set metric_change = "+22% vs mes anterior" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
             </div>
             
             <!-- Vertical Blocks Layout -->
@@ -88,20 +65,20 @@
                         <p class="block-subtitle">Herramientas para crear reportes personalizados</p>
                     </div>
                     <div class="block-content">
-                        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #3b82f6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                        <div class="d-flex flex-wrap gap-3">
+                            <button class="btn btn-primary flex-fill d-flex align-items-center gap-2" style="min-width: 200px;">
                                 <i class="fas fa-chart-line"></i>
                                 Reporte Financiero
                             </button>
-                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #10b981; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn btn-success flex-fill d-flex align-items-center gap-2" style="min-width: 200px;">
                                 <i class="fas fa-users"></i>
                                 Reporte de Personal
                             </button>
-                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #f59e0b; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn btn-warning flex-fill d-flex align-items-center gap-2" style="min-width: 200px;">
                                 <i class="fas fa-file-contract"></i>
                                 Estado de Contratos
                             </button>
-                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #8b5cf6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn btn-purple flex-fill d-flex align-items-center gap-2" style="min-width: 200px;">
                                 <i class="fas fa-cog"></i>
                                 Reporte Personalizado
                             </button>

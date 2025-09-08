@@ -2,6 +2,10 @@
 
 {% block title %}Configuración - PACTA{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/configuracion.css') }}">
+{% endblock %}
+
 {% block content %}
     <div class="dashboard-container">
         <!-- Include Sidebar Component -->
@@ -10,66 +14,41 @@
         <!-- Main Content -->
         <div class="main-content">
             <!-- Include Header Component with custom content -->
-            <div class="content-header">
-                <div>
-                    <h1 class="page-title">Configuración</h1>
-                    <p class="page-subtitle">Configuración del sistema y preferencias</p>
-                </div>
-                <div class="header-actions">
-                    <button class="btn-icon" onclick="openConfigModal()" title="Configuración General">
-                        <i class="fas fa-cogs"></i>
-                    </button>
-                    <button class="btn-icon" id="notifications-bell" title="Notificaciones" onclick="openNotificationsModal()">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
-                    </button>
-                    <div class="user-menu">
-                        <div class="user-avatar-small avatar-generated">{{ (usuario.nombre or 'Usuario').split()[0][0] }}{{ (usuario.nombre or 'Usuario').split()[1][0] if (usuario.nombre or 'Usuario').split()|length > 1 else (usuario.nombre or 'Usuario').split()[0][1] if (usuario.nombre or 'Usuario').split()[0]|length > 1 else '' }}</div>
-                        <span class="user-name-small">{{ usuario.nombre }}</span>
-                        <div class="user-dropdown">
-                            <a href="{{ url_for('users.usuario') }}" class="dropdown-item">
-                <i class="fas fa-user"></i>
-                <span>Perfil</span>
-            </a>
-            <a href="{{ url_for('main.configuracion') }}" class="dropdown-item">
-                                <i class="fas fa-cog"></i>
-                                <span>Configuración</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% set page_title = 'Configuración' %}
+            {% set page_subtitle = 'Configuración del sistema y preferencias' %}
+            {% set page_icon = 'fas fa-cog' %}
+            {% set show_notifications = true %}
+            {% set show_user_menu = true %}
+            {% include 'components/partials/content_header.html' %}
             
             <!-- Metrics Cards -->
             <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Usuarios Activos</span>
-                        <i class="fas fa-users metric-icon" style="color: #3b82f6;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.usuarios_activos or 24 }}</div>
-                    <div class="metric-change positive">+3 este mes</div>
-                </div>
+                <!-- Usuarios Activos -->
+                {% set metric_label = "Usuarios Activos" %}
+                {% set metric_value = estadisticas.usuarios_activos or 24 %}
+                {% set metric_icon = "fas fa-users" %}
+                {% set metric_color = "text-primary" %}
+                {% set metric_change = "+3 este mes" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-
+                <!-- Último Backup -->
+                {% set metric_label = "Último Backup" %}
+                {% set metric_value = estadisticas.ultimo_backup or 'Sin backups' %}
+                {% set metric_icon = "fas fa-database" %}
+                {% set metric_color = "text-warning" %}
+                {% set metric_change = estadisticas.ultimo_backup_tipo or 'N/A' %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Último Backup</span>
-                        <i class="fas fa-database metric-icon" style="color: #f59e0b;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.ultimo_backup or 'Sin backups' }}</div>
-                    <div class="metric-change positive">{{ estadisticas.ultimo_backup_tipo or 'N/A' }}</div>
-                </div>
-                
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-label">Espacio Usado</span>
-                        <i class="fas fa-hdd metric-icon" style="color: #8b5cf6;"></i>
-                    </div>
-                    <div class="metric-value">{{ estadisticas.espacio_usado or '68%' }}</div>
-                    <div class="metric-change neutral">De {{ estadisticas.espacio_total or '500GB' }}</div>
-                </div>
+                <!-- Espacio Usado -->
+                {% set metric_label = "Espacio Usado" %}
+                {% set metric_value = estadisticas.espacio_usado or '68%' %}
+                {% set metric_icon = "fas fa-hdd" %}
+                {% set metric_color = "text-purple" %}
+                {% set metric_change = "De " + (estadisticas.espacio_total or '500GB') %}
+                {% set change_type = "neutral" %}
+                {% include 'components/partials/metric_card.html' %}
             </div>
             
             <!-- Vertical Blocks Layout -->
@@ -83,19 +62,19 @@
                     <div class="block-content">
                         <div style="padding: 24px;">
                         <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-                            <button class="btn-account" onclick="openConfigModal()" style="flex: 1; min-width: 200px; padding: 12px; background: #667eea; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn btn-purple flex-fill d-flex align-items-center gap-2" onclick="openConfigModal()" style="min-width: 200px;">
                                 <i class="fas fa-cogs"></i>
                                 Configuración General
                             </button>
-                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #3b82f6; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;" onclick="window.location.href='{{ url_for('main.backup') }}'">
+                            <button class="btn btn-primary flex-fill d-flex align-items-center gap-2" onclick="window.location.href='{{ url_for('main.backup') }}'" style="min-width: 200px;">
                                 <i class="fas fa-database"></i>
                                 Gestionar Backups
                             </button>
-                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #10b981; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;" onclick="window.location.href='{{ url_for('users.usuarios_lista') }}'">
+                            <button class="btn btn-success flex-fill d-flex align-items-center gap-2" onclick="window.location.href='{{ url_for('users.usuarios_lista') }}'" style="min-width: 200px;">
                                 <i class="fas fa-users-cog"></i>
                                 Gestionar Usuarios
                             </button>
-                            <button class="btn-account" style="flex: 1; min-width: 200px; padding: 12px; background: #f59e0b; justify-content: flex-start; display: flex; align-items: center; gap: 8px; color: white;">
+                            <button class="btn btn-warning flex-fill d-flex align-items-center gap-2" style="min-width: 200px;">
                                 <i class="fas fa-shield-alt"></i>
                                 Configurar Seguridad
                             </button>

@@ -2,9 +2,16 @@ from flask import Blueprint, render_template, redirect, url_for, session
 from functools import wraps
 from datetime import datetime
 import requests
-from database.models import Usuario
+from database.models import Usuario, Notificacion
 
 changelog_bp = Blueprint('changelog', __name__)
+
+# Función helper para obtener contador de notificaciones
+def get_notificaciones_count():
+    """Obtiene el número de notificaciones no leídas del usuario actual"""
+    if 'user_id' in session:
+        return Notificacion.get_unread_count(session['user_id'])
+    return 0
 
 # Decorador para requerir login
 def login_required(f):
@@ -30,13 +37,17 @@ def changelog():
     last_update = commits[0]['date'] if commits else "N/A"
     contributors = list(set([commit['author'] for commit in commits if commit.get('author')]))
     
+    # Obtener contador de notificaciones
+    notificaciones_count = get_notificaciones_count()
+    
     return render_template('changelog.html', 
                          commits=commits,
                          spanish_summary=spanish_summary,
                          version=version,
                          last_update=last_update,
                          contributors=contributors,
-                         usuario=usuario_actual)
+                         usuario=usuario_actual,
+                         notificaciones_count=notificaciones_count)
 
 def get_github_commits():
     """Obtiene los commits desde la API de GitHub"""

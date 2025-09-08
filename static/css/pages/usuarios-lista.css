@@ -1,0 +1,784 @@
+/* ===================================================================
+   PACTA - Página Lista de Usuarios
+   Archivo: usuarios-lista.css
+   Descripción: Estilos específicos para la gestión de lista de usuarios
+=================================================================== */
+
+/* ===== LAYOUT PRINCIPAL DE LISTA DE USUARIOS ===== */
+
+.usuarios-lista-page {
+  padding: var(--spacing-6);
+  background-color: var(--bg-secondary);
+  min-height: 100vh;
+}
+
+.usuarios-lista-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-6);
+  padding-bottom: var(--spacing-4);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.usuarios-lista-title {
+  margin: 0;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+
+.usuarios-lista-subtitle {
+  margin: var(--spacing-2) 0 0;
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-normal);
+}
+
+.usuarios-lista-actions {
+  display: flex;
+  gap: var(--spacing-3);
+  align-items: center;
+}
+
+/* ===== MÉTRICAS DE USUARIOS ===== */
+
+.usuarios-lista-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+}
+
+.usuarios-metric-card {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-5);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.usuarios-metric-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.usuarios-metric-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-3);
+}
+
+.usuarios-metric-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xl);
+  color: var(--color-white);
+}
+
+.usuarios-metric-icon.total {
+  background-color: var(--color-primary);
+}
+
+.usuarios-metric-icon.activos {
+  background-color: var(--color-success);
+}
+
+.usuarios-metric-icon.inactivos {
+  background-color: var(--color-secondary);
+}
+
+.usuarios-metric-icon.administradores {
+  background-color: var(--color-purple);
+}
+
+.usuarios-metric-value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.usuarios-metric-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: var(--spacing-1) 0 0;
+}
+
+.usuarios-metric-trend {
+  position: absolute;
+  top: var(--spacing-3);
+  right: var(--spacing-3);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-full);
+}
+
+.usuarios-metric-trend.up {
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.usuarios-metric-trend.down {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger-dark);
+}
+
+/* ===== FILTROS Y BÚSQUEDA ===== */
+
+.usuarios-lista-filters {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+  border: 1px solid var(--border-light);
+  display: flex;
+  gap: var(--spacing-4);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.usuarios-lista-search {
+  flex: 1;
+  min-width: 250px;
+  position: relative;
+}
+
+.usuarios-lista-search-input {
+  width: 100%;
+  padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) var(--spacing-10);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: var(--transition-base);
+}
+
+.usuarios-lista-search-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-alpha);
+}
+
+.usuarios-lista-search-icon {
+  position: absolute;
+  left: var(--spacing-3);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+}
+
+.usuarios-lista-filter-select {
+  padding: var(--spacing-3);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  min-width: 150px;
+}
+
+.usuarios-lista-filter-group {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+}
+
+.usuarios-lista-filter-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* ===== VISTA DE TABLA ===== */
+
+.usuarios-lista-container {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+}
+
+.usuarios-lista-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.usuarios-lista-table-header {
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.usuarios-lista-table-header th {
+  padding: var(--spacing-4);
+  text-align: left;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.usuarios-lista-table-header th:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.usuarios-lista-table-header th.sortable {
+  position: relative;
+}
+
+.usuarios-lista-table-header th.sortable::after {
+  content: '\f0dc';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  position: absolute;
+  right: var(--spacing-3);
+  opacity: 0.5;
+  font-size: var(--font-size-xs);
+}
+
+.usuarios-lista-table-header th.sorted-asc::after {
+  content: '\f0de';
+  opacity: 1;
+  color: var(--color-primary);
+}
+
+.usuarios-lista-table-header th.sorted-desc::after {
+  content: '\f0dd';
+  opacity: 1;
+  color: var(--color-primary);
+}
+
+.usuarios-lista-table-row {
+  border-bottom: 1px solid var(--border-light);
+  transition: var(--transition-base);
+}
+
+.usuarios-lista-table-row:hover {
+  background-color: var(--bg-secondary);
+}
+
+.usuarios-lista-table-row:last-child {
+  border-bottom: none;
+}
+
+.usuarios-lista-table-cell {
+  padding: var(--spacing-4);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+/* ===== INFORMACIÓN DEL USUARIO ===== */
+
+.usuario-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.usuario-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  flex-shrink: 0;
+}
+
+.usuario-avatar.admin {
+  background-color: var(--color-purple);
+}
+
+.usuario-avatar.inactive {
+  background-color: var(--color-secondary);
+}
+
+.usuario-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.usuario-nombre {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+.usuario-email {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.usuario-departamento {
+  font-size: var(--font-size-xs);
+  color: var(--color-primary);
+  margin: 0;
+}
+
+/* ===== ESTADO DEL USUARIO ===== */
+
+.usuario-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.usuario-estado.activo {
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.usuario-estado.inactivo {
+  background-color: var(--color-secondary-light);
+  color: var(--color-secondary-dark);
+}
+
+.usuario-estado.suspendido {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger-dark);
+}
+
+.usuario-estado.pendiente {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+.usuario-estado-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+/* ===== ROL DEL USUARIO ===== */
+
+.usuario-rol {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border: 1px solid;
+}
+
+.usuario-rol.administrador {
+  background-color: var(--color-purple-light);
+  color: var(--color-purple-dark);
+  border-color: var(--color-purple);
+}
+
+.usuario-rol.editor {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  border-color: var(--color-primary);
+}
+
+.usuario-rol.visualizador {
+  background-color: var(--color-secondary-light);
+  color: var(--color-secondary-dark);
+  border-color: var(--color-secondary);
+}
+
+.usuario-rol.invitado {
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border-color: var(--border-light);
+}
+
+.usuario-rol-icon {
+  font-size: var(--font-size-xs);
+}
+
+/* ===== ÚLTIMA ACTIVIDAD ===== */
+
+.usuario-actividad {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.usuario-actividad-fecha {
+  font-size: var(--font-size-xs);
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.usuario-actividad-tiempo {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.usuario-actividad.reciente {
+  color: var(--color-success);
+}
+
+.usuario-actividad.antigua {
+  color: var(--color-warning);
+}
+
+.usuario-actividad.muy-antigua {
+  color: var(--color-danger);
+}
+
+/* ===== ACCIONES DE USUARIO ===== */
+
+.usuario-actions {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+}
+
+.usuario-action-btn {
+  padding: var(--spacing-2) var(--spacing-3);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition-base);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.usuario-action-btn.view {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.usuario-action-btn.view:hover {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.usuario-action-btn.edit {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+.usuario-action-btn.edit:hover {
+  background-color: var(--color-warning);
+  color: var(--color-white);
+}
+
+.usuario-action-btn.delete {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger-dark);
+}
+
+.usuario-action-btn.delete:hover {
+  background-color: var(--color-danger);
+  color: var(--color-white);
+}
+
+.usuario-action-btn.activate {
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.usuario-action-btn.activate:hover {
+  background-color: var(--color-success);
+  color: var(--color-white);
+}
+
+.usuario-action-btn.deactivate {
+  background-color: var(--color-secondary-light);
+  color: var(--color-secondary-dark);
+}
+
+.usuario-action-btn.deactivate:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+}
+
+/* ===== PAGINACIÓN ===== */
+
+.usuarios-lista-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-4);
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-light);
+}
+
+.usuarios-lista-pagination-info {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.usuarios-lista-pagination-controls {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+}
+
+.usuarios-lista-pagination-btn {
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: var(--transition-base);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.usuarios-lista-pagination-btn:hover {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+
+.usuarios-lista-pagination-btn.active {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+
+.usuarios-lista-pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.usuarios-lista-pagination-btn:disabled:hover {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+/* ===== VISTA DE TARJETAS (ALTERNATIVA) ===== */
+
+.usuarios-lista-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-4);
+}
+
+.usuario-card {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-5);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-base);
+}
+
+.usuario-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.usuario-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
+}
+
+.usuario-card-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-lg);
+}
+
+.usuario-card-info {
+  flex: 1;
+}
+
+.usuario-card-nombre {
+  margin: 0 0 var(--spacing-1);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.usuario-card-email {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.usuario-card-body {
+  margin-bottom: var(--spacing-4);
+}
+
+.usuario-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-3);
+}
+
+.usuario-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.usuario-card-actions {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+/* ===== TOGGLE DE VISTA ===== */
+
+.usuarios-lista-view-toggle {
+  display: flex;
+  gap: var(--spacing-2);
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-1);
+}
+
+.usuarios-lista-view-btn {
+  padding: var(--spacing-2) var(--spacing-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: var(--transition-base);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.usuarios-lista-view-btn.active {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.usuarios-lista-view-btn:hover:not(.active) {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+@media (max-width: 768px) {
+  .usuarios-lista-page {
+    padding: var(--spacing-4);
+  }
+  
+  .usuarios-lista-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+  }
+  
+  .usuarios-lista-metrics {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-3);
+  }
+  
+  .usuarios-lista-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .usuarios-lista-search {
+    min-width: auto;
+  }
+  
+  .usuarios-lista-table {
+    font-size: var(--font-size-xs);
+  }
+  
+  .usuarios-lista-table-cell {
+    padding: var(--spacing-2);
+  }
+  
+  .usuario-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+  }
+  
+  .usuario-actions {
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+  
+  .usuarios-lista-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .usuarios-lista-title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .usuarios-lista-metrics {
+    grid-template-columns: 1fr;
+  }
+  
+  .usuarios-lista-table-header th {
+    padding: var(--spacing-2);
+    font-size: var(--font-size-xs);
+  }
+  
+  .usuario-action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .usuarios-lista-pagination {
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+  
+  .usuarios-lista-pagination-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, session
 from functools import wraps
-from database.models import PersonaResponsable, Cliente
+from database.models import PersonaResponsable, Cliente, Notificacion
 from database.database import DatabaseManager
 import logging
 
@@ -10,6 +10,13 @@ logger = logging.getLogger(__name__)
 
 # Crear blueprint para personas responsables
 personas_bp = Blueprint('personas', __name__, url_prefix='/personas')
+
+# Función helper para obtener contador de notificaciones
+def get_notificaciones_count():
+    """Obtiene el número de notificaciones no leídas del usuario actual"""
+    if 'user_id' in session:
+        return Notificacion.get_unread_count(session['user_id'])
+    return 0
 
 # Decorador para requerir login (simplificado)
 def login_required(f):
@@ -36,9 +43,13 @@ def listar_personas():
                 if cliente:
                     clientes[persona['cliente_id']] = cliente
         
+        # Obtener contador de notificaciones
+        notificaciones_count = get_notificaciones_count()
+        
         return render_template('personas/listar.html', 
                              personas=personas, 
-                             clientes=clientes)
+                             clientes=clientes,
+                             notificaciones_count=notificaciones_count)
     except Exception as e:
         logger.error(f"Error al listar personas: {e}")
         flash('Error al cargar la lista de personas', 'error')
@@ -96,7 +107,9 @@ def crear_persona():
     # Obtener lista de clientes para el formulario
     try:
         clientes = Cliente.obtener_todos()
-        return render_template('personas/crear.html', clientes=clientes)
+        # Obtener contador de notificaciones
+        notificaciones_count = get_notificaciones_count()
+        return render_template('personas/crear.html', clientes=clientes, notificaciones_count=notificaciones_count)
     except Exception as e:
         logger.error(f"Error al cargar clientes: {e}")
         flash('Error al cargar la lista de clientes', 'error')
@@ -152,7 +165,9 @@ def editar_persona(persona_id):
         
         # Obtener lista de clientes para el formulario
         clientes = Cliente.obtener_todos()
-        return render_template('personas/editar.html', persona=persona, clientes=clientes)
+        # Obtener contador de notificaciones
+        notificaciones_count = get_notificaciones_count()
+        return render_template('personas/editar.html', persona=persona, clientes=clientes, notificaciones_count=notificaciones_count)
         
     except Exception as e:
         logger.error(f"Error al editar persona: {e}")

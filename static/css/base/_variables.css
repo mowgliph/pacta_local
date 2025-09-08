@@ -12,6 +12,7 @@
   --color-primary: #667eea;
   --color-primary-light: #8b9df0;
   --color-primary-dark: #4c63d2;
+  --color-primary-darker: #3b4db8;
   --color-primary-50: rgba(102, 126, 234, 0.05);
   --color-primary-100: rgba(102, 126, 234, 0.1);
   --color-primary-200: rgba(102, 126, 234, 0.2);
@@ -22,6 +23,7 @@
   --color-secondary: #764ba2;
   --color-secondary-light: #9b6bc7;
   --color-secondary-dark: #5a3a7d;
+  --color-secondary-darker: #4a2f66;
   
   /* Gradientes */
   --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
@@ -34,24 +36,28 @@
   --color-success: #10b981;
   --color-success-light: #34d399;
   --color-success-dark: #059669;
+  --color-success-darker: #047857;
   --color-success-bg: #dcfce7;
   --color-success-text: #166534;
   
   --color-warning: #f59e0b;
   --color-warning-light: #fbbf24;
   --color-warning-dark: #d97706;
+  --color-warning-darker: #b45309;
   --color-warning-bg: #fef3c7;
   --color-warning-text: #92400e;
   
   --color-error: #ef4444;
   --color-error-light: #f87171;
   --color-error-dark: #dc2626;
+  --color-error-darker: #b91c1c;
   --color-error-bg: #fee2e2;
   --color-error-text: #991b1b;
   
   --color-info: #3b82f6;
   --color-info-light: #60a5fa;
   --color-info-dark: #2563eb;
+  --color-info-darker: #1d4ed8;
   --color-info-bg: #dbeafe;
   --color-info-text: #1e40af;
   
@@ -224,29 +230,9 @@
   --z-index-toast: 1080;
 }
 
-/* ===== VARIABLES PARA MODO OSCURO (FUTURO) ===== */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Colores de Texto en Modo Oscuro */
-    --text-primary: var(--color-gray-100);
-    --text-secondary: var(--color-gray-400);
-    --text-muted: var(--color-gray-500);
-    
-    /* Colores de Fondo en Modo Oscuro */
-    --bg-primary: var(--color-gray-900);
-    --bg-secondary: var(--color-gray-800);
-    --bg-tertiary: var(--color-gray-700);
-    
-    /* Colores de Borde en Modo Oscuro */
-    --border-light: var(--color-gray-700);
-    --border-medium: var(--color-gray-600);
-    --border-dark: var(--color-gray-500);
-  }
-}
-
 /* ===== UTILIDADES DE VARIABLES ===== */
 
-/* Clase para forzar modo claro */
+/* Clase para forzar modo claro (por defecto) */
 .theme-light {
   --text-primary: var(--color-gray-800);
   --text-secondary: var(--color-gray-500);
@@ -257,17 +243,4 @@
   --border-light: var(--color-gray-200);
   --border-medium: var(--color-gray-300);
   --border-dark: var(--color-gray-400);
-}
-
-/* Clase para forzar modo oscuro */
-.theme-dark {
-  --text-primary: var(--color-gray-100);
-  --text-secondary: var(--color-gray-400);
-  --text-muted: var(--color-gray-500);
-  --bg-primary: var(--color-gray-900);
-  --bg-secondary: var(--color-gray-800);
-  --bg-tertiary: var(--color-gray-700);
-  --border-light: var(--color-gray-700);
-  --border-medium: var(--color-gray-600);
-  --border-dark: var(--color-gray-500);
 }
