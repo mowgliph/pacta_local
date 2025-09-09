@@ -1,0 +1,299 @@
+/* ===================================================================
+   PACTA - Estilos para Componente de Acciones Rápidas
+   Archivo: quick_actions.css
+   Descripción: Estilos específicos para el componente quick_actions.html
+=================================================================== */
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.actions-block {
+    background: var(--bg-primary, #ffffff);
+    border-radius: var(--radius-lg, 12px);
+    border: 1px solid var(--border-light, #e5e7eb);
+    box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.1));
+    transition: var(--transition-base, all 0.2s ease);
+    margin-bottom: var(--spacing-6, 24px);
+}
+
+.actions-block:hover {
+    box-shadow: var(--shadow-md, 0 4px 6px rgba(0, 0, 0, 0.1));
+    transform: translateY(-1px);
+}
+
+/* ===== HEADER DEL BLOQUE ===== */
+.actions-block .block-header {
+    padding: var(--spacing-6, 24px) var(--spacing-6, 24px) var(--spacing-4, 16px);
+    border-bottom: 1px solid var(--border-light, #e5e7eb);
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: var(--radius-lg, 12px) var(--radius-lg, 12px) 0 0;
+}
+
+.actions-block .block-title {
+    font-size: var(--font-size-xl, 1.25rem);
+    font-weight: var(--font-weight-bold, 700);
+    color: var(--text-primary, #1f2937);
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.actions-block .block-subtitle {
+    font-size: var(--font-size-sm, 0.875rem);
+    color: var(--text-secondary, #6b7280);
+    margin: var(--spacing-2, 8px) 0 0;
+    line-height: 1.4;
+}
+
+/* ===== CONTENIDO DEL BLOQUE ===== */
+.actions-block .block-content {
+    padding: var(--spacing-6, 24px);
+}
+
+.contract-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-3, 12px);
+    align-items: stretch;
+}
+
+/* ===== BOTONES DE ACCIÓN ===== */
+.contract-actions .btn {
+    position: relative;
+    font-weight: var(--font-weight-medium, 500);
+    font-size: var(--font-size-sm, 0.875rem);
+    padding: var(--spacing-3, 12px) var(--spacing-4, 16px);
+    border-radius: var(--radius-md, 8px);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    border: 2px solid transparent;
+    overflow: hidden;
+}
+
+.contract-actions .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.contract-actions .btn:hover::before {
+    left: 100%;
+}
+
+.contract-actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.contract-actions .btn:active {
+    transform: translateY(0);
+    transition: transform 0.1s ease;
+}
+
+.contract-actions .btn i {
+    font-size: var(--font-size-base, 1rem);
+    transition: transform 0.3s ease;
+}
+
+.contract-actions .btn:hover i {
+    transform: scale(1.1);
+}
+
+/* ===== VARIANTES DE COLORES ===== */
+.contract-actions .btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    border-color: #3b82f6;
+}
+
+.contract-actions .btn-primary:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    border-color: #1d4ed8;
+}
+
+.contract-actions .btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border-color: #10b981;
+}
+
+.contract-actions .btn-success:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    border-color: #059669;
+}
+
+.contract-actions .btn-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border-color: #f59e0b;
+}
+
+.contract-actions .btn-warning:hover {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    border-color: #d97706;
+}
+
+.contract-actions .btn-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border-color: #ef4444;
+}
+
+.contract-actions .btn-danger:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    border-color: #dc2626;
+}
+
+.contract-actions .btn-info {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    border-color: #06b6d4;
+}
+
+.contract-actions .btn-info:hover {
+    background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+    border-color: #0891b2;
+}
+
+.contract-actions .btn-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    border-color: #8b5cf6;
+    color: white;
+}
+
+.contract-actions .btn-purple:hover {
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+    border-color: #7c3aed;
+    color: white;
+}
+
+/* ===== BOTONES DESHABILITADOS ===== */
+.contract-actions .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.contract-actions .btn:disabled::before {
+    display: none;
+}
+
+.contract-actions .btn:disabled:hover i {
+    transform: none;
+}
+
+/* ===== FOOTER DEL BLOQUE ===== */
+.actions-block .block-content .mt-3 {
+    border-top: 1px solid var(--border-light, #e5e7eb);
+    padding-top: var(--spacing-4, 16px);
+    margin-top: var(--spacing-6, 24px) !important;
+}
+
+.actions-block .btn-outline-primary {
+    border: 2px solid var(--color-primary, #3b82f6);
+    color: var(--color-primary, #3b82f6);
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.actions-block .btn-outline-primary:hover {
+    background: var(--color-primary, #3b82f6);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .actions-block .block-header {
+        padding: var(--spacing-4, 16px);
+    }
+    
+    .actions-block .block-content {
+        padding: var(--spacing-4, 16px);
+    }
+    
+    .contract-actions {
+        flex-direction: column;
+        gap: var(--spacing-2, 8px);
+    }
+    
+    .contract-actions .btn {
+        min-width: 100% !important;
+        justify-content: center;
+    }
+    
+    .actions-block .block-title {
+        font-size: var(--font-size-lg, 1.125rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .actions-block {
+        margin: 0 -var(--spacing-4, 16px) var(--spacing-6, 24px);
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+    
+    .actions-block .block-header {
+        border-radius: 0;
+    }
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.actions-block {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.contract-actions .btn {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.contract-actions .btn:nth-child(1) { animation-delay: 0.1s; }
+.contract-actions .btn:nth-child(2) { animation-delay: 0.2s; }
+.contract-actions .btn:nth-child(3) { animation-delay: 0.3s; }
+.contract-actions .btn:nth-child(4) { animation-delay: 0.4s; }
+.contract-actions .btn:nth-child(5) { animation-delay: 0.5s; }
+.contract-actions .btn:nth-child(6) { animation-delay: 0.6s; }
+
+/* ===== ACCESIBILIDAD ===== */
+.contract-actions .btn:focus {
+    outline: 2px solid var(--color-primary, #3b82f6);
+    outline-offset: 2px;
+}
+
+.contract-actions .btn:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* ===== MODO OSCURO (si se implementa) ===== */
+@media (prefers-color-scheme: dark) {
+    .actions-block {
+        background: var(--bg-primary-dark, #1f2937);
+        border-color: var(--border-dark, #374151);
+    }
+    
+    .actions-block .block-header {
+        background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+        border-color: var(--border-dark, #374151);
+    }
+    
+    .actions-block .block-title {
+        color: var(--text-primary-dark, #f9fafb);
+    }
+    
+    .actions-block .block-subtitle {
+        color: var(--text-secondary-dark, #d1d5db);
+    }
+}

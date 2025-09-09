@@ -111,146 +111,56 @@
                         <p class="block-subtitle">Gestión completa de todos los suplementos contractuales</p>
                     </div>
                     <div class="block-content">
-                        <!-- Reusable Table Component -->
-                        {% set table_config = {
-                            'id': 'suplementos-table',
-                            'title': 'Lista de Suplementos',
-                            'api_endpoint': '/api/suplementos',
-                            'show_search': true,
-                            'show_filters': true,
-                            'show_export': true,
-                            'show_pagination': true,
-                            'items_per_page': 10,
-                            'columns': [
-                                {
-                                    'key': 'suplemento_info',
-                                    'label': 'Suplemento',
-                                    'sortable': true,
-                                    'template': '<div class="customer-info"><i class="fas fa-file-plus" style="color: #3b82f6; margin-right: 8px;"></i><div><div style="font-weight: 500;">{{numero_suplemento}}</div><div style="font-size: 12px; color: #64748b;">{{descripcion_short}}</div></div></div>'
-                                },
-                                {
-                                    'key': 'contrato_info',
-                                    'label': 'Contrato',
-                                    'sortable': true,
-                                    'template': '<div class="customer-info"><i class="fas fa-file-contract" style="color: #10b981; margin-right: 8px;"></i><div><div style="font-weight: 500;">{{contrato_numero}}</div><div style="font-size: 12px; color: #64748b;">{{cliente_nombre}}</div></div></div>'
-                                },
-                                {
-                                    'key': 'tipo_modificacion',
-                                    'label': 'Tipo Modificación',
-                                    'sortable': true,
-                                    'template': '<span class="badge" style="background: {{tipo_bg}}; color: {{tipo_color}}; padding: 4px 8px; border-radius: 4px; font-size: 12px;">{{tipo_modificacion}}</span>'
-                                },
-                                {
-                                    'key': 'monto',
-                                    'label': 'Monto',
-                                    'sortable': true,
-                                    'template': '<div class="{{monto_class}}" style="font-weight: 600;">${{monto_formatted}}</div>'
-                                },
-                                {
-                                    'key': 'fecha_modificacion',
-                                    'label': 'Fecha',
-                                    'sortable': true,
-                                    'template': '<div style="font-weight: 500; color: #374151;">{{fecha_modificacion}}</div>'
-                                },
-                                {
-                                    'key': 'estado',
-                                    'label': 'Estado',
-                                    'sortable': true,
-                                    'template': '<span class="status-badge {{estado_class}}" style="background: {{estado_bg}}; color: {{estado_color}}; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{{estado_text}}</span>'
-                                },
-                                {
-                                    'key': 'actions',
-                                    'label': 'Acciones',
-                                    'sortable': false,
-                                    'template': '<div style="display: flex; gap: 4px;"><button class="btn-icon-small" title="Ver" onclick="viewSupplement(\'{{id}}\');"><i class="fas fa-eye"></i></button><button class="btn-icon-small" title="Editar" onclick="editSupplement(\'{{id}}\');"><i class="fas fa-edit"></i></button>{{approve_button}}</div>'
-                                }
-                            ],
-                            'filters': [
-                                {
-                                    'key': 'estado',
-                                    'label': 'Estado',
-                                    'type': 'select',
-                                    'options': [
-                                        {'value': '', 'label': 'Todos los estados'},
-                                        {'value': 'aprobado', 'label': 'Aprobado'},
-                                        {'value': 'pendiente', 'label': 'Pendiente'},
-                                        {'value': 'rechazado', 'label': 'Rechazado'}
-                                    ]
-                                },
-                                {
-                                    'key': 'tipo_modificacion',
-                                    'label': 'Tipo',
-                                    'type': 'select',
-                                    'options': [
-                                        {'value': '', 'label': 'Todos los tipos'},
-                                        {'value': 'ampliacion_monto', 'label': 'Ampliación de Monto'},
-                                        {'value': 'extension_plazo', 'label': 'Extensión de Plazo'},
-                                        {'value': 'modificacion_alcance', 'label': 'Modificación de Alcance'},
-                                        {'value': 'otros', 'label': 'Otros'}
-                                    ]
-                                }
-                            ],
-                            'default_data': [
-                                {
-                                    'id': 'sup-001',
-                                    'numero_suplemento': 'SUP-2025-001',
-                                    'descripcion_short': 'Ampliación de monto contractual...',
-                                    'contrato_numero': 'CON-2024-015',
-                                    'cliente_nombre': 'Empresa ABC S.A.',
-                                    'tipo_modificacion': 'Ampliación de Monto',
-                                    'tipo_bg': '#dbeafe',
-                                    'tipo_color': '#1d4ed8',
-                                    'monto_formatted': '125,000',
-                                    'monto_class': 'text-success',
-                                    'fecha_modificacion': '15/01/2025',
-                                    'estado': 'aprobado',
-                                    'estado_text': 'Aprobado',
-                                    'estado_class': 'delivered',
-                                    'estado_bg': '#d1fae5',
-                                    'estado_color': '#065f46',
-                                    'approve_button': ''
-                                },
-                                {
-                                    'id': 'sup-002',
-                                    'numero_suplemento': 'SUP-2025-002',
-                                    'descripcion_short': 'Extensión de plazo de ejecución...',
-                                    'contrato_numero': 'CON-2024-012',
-                                    'cliente_nombre': 'Constructora XYZ Ltda.',
-                                    'tipo_modificacion': 'Extensión de Plazo',
-                                    'tipo_bg': '#d1fae5',
-                                    'tipo_color': '#065f46',
-                                    'monto_formatted': '0',
-                                    'monto_class': 'text-muted',
-                                    'fecha_modificacion': '12/01/2025',
-                                    'estado': 'pendiente',
-                                    'estado_text': 'Pendiente',
-                                    'estado_class': 'processing',
-                                    'estado_bg': '#fef3c7',
-                                    'estado_color': '#92400e',
-                                    'approve_button': '<button class="btn-icon-small" title="Aprobar" onclick="approveSupplement(\'sup-002\');"><i class="fas fa-check"></i></button>'
-                                },
-                                {
-                                    'id': 'sup-003',
-                                    'numero_suplemento': 'SUP-2025-003',
-                                    'descripcion_short': 'Modificación de alcance técnico...',
-                                    'contrato_numero': 'CON-2024-008',
-                                    'cliente_nombre': 'Servicios DEF S.A.S.',
-                                    'tipo_modificacion': 'Modificación de Alcance',
-                                    'tipo_bg': '#fef3c7',
-                                    'tipo_color': '#92400e',
-                                    'monto_formatted': '75,500',
-                                    'monto_class': 'text-success',
-                                    'fecha_modificacion': '10/01/2025',
-                                    'estado': 'aprobado',
-                                    'estado_text': 'Aprobado',
-                                    'estado_class': 'delivered',
-                                    'estado_bg': '#d1fae5',
-                                    'estado_color': '#065f46',
-                                    'approve_button': ''
-                                }
-                            ]
-                        } %}
-                        {% include 'components/partials/reusable_table.html' %}
+                        <!-- Tabla Consistente de Suplementos -->
+                        {% set table_headers = [
+                            {'title': 'Suplemento', 'sortable': true, 'class': 'text-start'},
+                            {'title': 'Contrato', 'sortable': true, 'class': 'text-start'},
+                            {'title': 'Tipo Modificación', 'sortable': true, 'class': 'text-center'},
+                            {'title': 'Monto', 'sortable': true, 'class': 'text-end'},
+                            {'title': 'Fecha', 'sortable': true, 'class': 'text-center'},
+                            {'title': 'Estado', 'sortable': true, 'class': 'text-center'},
+                            {'title': 'Acciones', 'sortable': false, 'class': 'text-center'}
+                        ] %}
+                        
+                        {% set table_data = [
+                            {
+                                'cells': [
+                                    {'content': '<div class="d-flex align-items-center"><i class="fas fa-file-plus text-primary me-2"></i><div><div class="fw-medium">SUP-2025-001</div><small class="text-muted">Ampliación de monto contractual...</small></div></div>', 'class': 'text-start'},
+                                    {'content': '<div class="d-flex align-items-center"><i class="fas fa-file-contract text-success me-2"></i><div><div class="fw-medium">CON-2024-015</div><small class="text-muted">Empresa ABC S.A.</small></div></div>', 'class': 'text-start'},
+                                    {'content': '<span class="badge" style="background-color: #dbeafe; color: #1d4ed8;">Ampliación de Monto</span>', 'class': 'text-center'},
+                                    {'content': '<span class="fw-bold text-success">$125,000</span>', 'class': 'text-end'},
+                                    {'content': '<span class="fw-medium">15/01/2025</span>', 'class': 'text-center'},
+                                    {'content': '<span class="badge bg-success">Aprobado</span>', 'class': 'text-center'},
+                                    {'type': 'actions', 'actions': [{'icon': 'fas fa-eye', 'title': 'Ver', 'onclick': 'viewSupplement(\'sup-001\')'}, {'icon': 'fas fa-edit', 'title': 'Editar', 'onclick': 'editSupplement(\'sup-001\')'}], 'class': 'text-center'}
+                                ]
+                            },
+                            {
+                                'cells': [
+                                    {'content': '<div class="d-flex align-items-center"><i class="fas fa-file-plus text-primary me-2"></i><div><div class="fw-medium">SUP-2025-002</div><small class="text-muted">Extensión de plazo de ejecución...</small></div></div>', 'class': 'text-start'},
+                                    {'content': '<div class="d-flex align-items-center"><i class="fas fa-file-contract text-success me-2"></i><div><div class="fw-medium">CON-2024-012</div><small class="text-muted">Constructora XYZ Ltda.</small></div></div>', 'class': 'text-start'},
+                                    {'content': '<span class="badge" style="background-color: #d1fae5; color: #065f46;">Extensión de Plazo</span>', 'class': 'text-center'},
+                                    {'content': '<span class="text-muted">$0</span>', 'class': 'text-end'},
+                                    {'content': '<span class="fw-medium">12/01/2025</span>', 'class': 'text-center'},
+                                    {'content': '<span class="badge bg-warning">Pendiente</span>', 'class': 'text-center'},
+                                    {'type': 'actions', 'actions': [{'icon': 'fas fa-eye', 'title': 'Ver', 'onclick': 'viewSupplement(\'sup-002\')'}, {'icon': 'fas fa-edit', 'title': 'Editar', 'onclick': 'editSupplement(\'sup-002\')'}, {'icon': 'fas fa-check', 'title': 'Aprobar', 'onclick': 'approveSupplement(\'sup-002\')'}], 'class': 'text-center'}
+                                ]
+                            },
+                            {
+                                'cells': [
+                                    {'content': '<div class="d-flex align-items-center"><i class="fas fa-file-plus text-primary me-2"></i><div><div class="fw-medium">SUP-2025-003</div><small class="text-muted">Modificación de alcance técnico...</small></div></div>', 'class': 'text-start'},
+                                    {'content': '<div class="d-flex align-items-center"><i class="fas fa-file-contract text-success me-2"></i><div><div class="fw-medium">CON-2024-008</div><small class="text-muted">Servicios DEF S.A.S.</small></div></div>', 'class': 'text-start'},
+                                    {'content': '<span class="badge" style="background-color: #fef3c7; color: #92400e;">Modificación de Alcance</span>', 'class': 'text-center'},
+                                    {'content': '<span class="fw-bold text-success">$75,500</span>', 'class': 'text-end'},
+                                    {'content': '<span class="fw-medium">10/01/2025</span>', 'class': 'text-center'},
+                                    {'content': '<span class="badge bg-success">Aprobado</span>', 'class': 'text-center'},
+                                    {'type': 'actions', 'actions': [{'icon': 'fas fa-eye', 'title': 'Ver', 'onclick': 'viewSupplement(\'sup-003\')'}, {'icon': 'fas fa-edit', 'title': 'Editar', 'onclick': 'editSupplement(\'sup-003\')'}], 'class': 'text-center'}
+                                ]
+                            }
+                        ] %}
+                        
+                        {% set empty_message = 'No hay suplementos registrados en el sistema.' %}
+                        
+                        {% include 'components/partials/consistent_table.html' %}
                     </div>
                 </div>
                 
@@ -301,9 +211,7 @@
         </div>
     </div>
 
-    <!-- Reusable Table Component Styles and Scripts -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/reusable_table.css') }}">
-    <script src="{{ url_for('static', filename='js/reusable_table.js') }}"></script>
+
     
     <!-- Chart.js for charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

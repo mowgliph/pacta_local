@@ -10,7 +10,7 @@ if database_dir not in sys.path:
 from database import db_manager
 
 class Usuario:
-    def __init__(self, id=None, nombre=None, email=None, username=None, password=None, telefono=None, cargo=None, departamento=None, es_admin=False, fecha_creacion=None, activo=True):
+    def __init__(self, id=None, nombre=None, email=None, username=None, password=None, telefono=None, cargo=None, departamento=None, es_admin=False, fecha_creacion=None, activo=True, rol='user'):
         self.id = id
         self.nombre = nombre
         self.email = email
@@ -22,6 +22,7 @@ class Usuario:
         self.es_admin = es_admin
         self.fecha_creacion = fecha_creacion
         self.activo = activo
+        self.rol = rol  # 'admin', 'user', 'guest', 'viewer'
     
     def save(self):
         """Guarda o actualiza el usuario en la base de datos"""
@@ -29,18 +30,18 @@ class Usuario:
             # Actualizar usuario existente
             query = '''
                 UPDATE usuarios 
-                SET nombre=?, email=?, username=?, password=?, telefono=?, cargo=?, departamento=?, es_admin=?, activo=?
+                SET nombre=?, email=?, username=?, password=?, telefono=?, cargo=?, departamento=?, es_admin=?, activo=?, rol=?
                 WHERE id=?
             '''
-            params = (self.nombre, self.email, self.username, self.password, self.telefono, self.cargo, self.departamento, self.es_admin, self.activo, self.id)
+            params = (self.nombre, self.email, self.username, self.password, self.telefono, self.cargo, self.departamento, self.es_admin, self.activo, self.rol, self.id)
             db_manager.execute_update(query, params)
         else:
             # Crear nuevo usuario
             query = '''
-                INSERT INTO usuarios (nombre, email, username, password, telefono, cargo, departamento, es_admin, activo)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO usuarios (nombre, email, username, password, telefono, cargo, departamento, es_admin, activo, rol)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             '''
-            params = (self.nombre, self.email, self.username, self.password, self.telefono, self.cargo, self.departamento, self.es_admin, self.activo)
+            params = (self.nombre, self.email, self.username, self.password, self.telefono, self.cargo, self.departamento, self.es_admin, self.activo, self.rol)
             self.id = db_manager.execute_insert(query, params)
         return self
     
@@ -62,7 +63,8 @@ class Usuario:
                 departamento=row['departamento'],
                 es_admin=row['es_admin'] if 'es_admin' in row.keys() else False,
                 fecha_creacion=row['fecha_creacion'],
-                activo=row['activo']
+                activo=row['activo'],
+                rol=row['rol'] if 'rol' in row.keys() else 'user'
             )
         return None
     
@@ -84,7 +86,8 @@ class Usuario:
                 departamento=row['departamento'],
                 es_admin=row['es_admin'] if 'es_admin' in row.keys() else False,
                 fecha_creacion=row['fecha_creacion'],
-                activo=row['activo']
+                activo=row['activo'],
+                rol=row['rol'] if 'rol' in row.keys() else 'user'
             )
         return None
     
@@ -122,24 +125,51 @@ class Usuario:
                 departamento=row['departamento'],
                 es_admin=row['es_admin'] if 'es_admin' in row.keys() else False,
                 fecha_creacion=row['fecha_creacion'],
-                activo=row['activo']
+                activo=row['activo'],
+                rol=row['rol'] if 'rol' in row.keys() else 'user'
+            ))
+        return usuarios
+    
+    @classmethod
+    def get_recent(cls, limit=10, activos_solo=True):
+        """Obtiene los usuarios más recientes por fecha de creación"""
+        query = "SELECT * FROM usuarios"
+        if activos_solo:
+            query += " WHERE activo = 1"
+        query += " ORDER BY fecha_creacion DESC LIMIT ?"
+        
+        results = db_manager.execute_query(query, (limit,))
+        usuarios = []
+        for row in results:
+            usuarios.append(cls(
+                id=row['id'],
+                nombre=row['nombre'],
+                email=row['email'],
+                username=row['username'] if 'username' in row.keys() else None,
+                password=row['password'] if 'password' in row.keys() else None,
+                telefono=row['telefono'],
+                cargo=row['cargo'],
+                departamento=row['departamento'],
+                es_admin=row['es_admin'] if 'es_admin' in row.keys() else False,
+                fecha_creacion=row['fecha_creacion'],
+                activo=row['activo'],
+                rol=row['rol'] if 'rol' in row.keys() else 'user'
             ))
         return usuarios
     
     def delete(self):
-        """Elimina el usuario de la base de datos (eliminación lógica)"""
+        """Elimina el usuario de la base de datos (eliminación física)"""
         if not self.id:
             raise ValueError("No se puede eliminar un usuario sin ID")
         
-        # Eliminación lógica: marcar como inactivo
-        query = "UPDATE usuarios SET activo = 0 WHERE id = ?"
+        # Eliminación física: borrar completamente de la base de datos
+        query = "DELETE FROM usuarios WHERE id = ?"
         db_manager.execute_update(query, (self.id,))
-        self.activo = False
         return True
     
     @classmethod
     def delete_by_id(cls, user_id):
-        """Elimina un usuario por su ID (eliminación lógica)"""
-        query = "UPDATE usuarios SET activo = 0 WHERE id = ?"
+        """Elimina un usuario por su ID (eliminación física)"""
+        query = "DELETE FROM usuarios WHERE id = ?"
         db_manager.execute_update(query, (user_id,))
         return True

@@ -72,7 +72,7 @@
                 <div class="user-title">{{ 'Administrador' if usuario.es_admin else 'Usuario' }}</div>
                 <div style="display: flex; gap: 8px; margin-top: 8px;">
                     <a href="{{ url_for('users.usuario') }}" class="btn btn-primary flex-fill text-decoration-none">Perfil</a>
-            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger flex-fill text-decoration-none" title="Cerrar Sesión">
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-danger flex-fill text-decoration-none" title="Cerrar Sesión">
                         <i class="fas fa-sign-out-alt"></i>
                     </a>
                 </div>

@@ -1,0 +1,39 @@
+<!-- Toast Container Component - Sistema unificado de notificaciones -->
+<!-- Este componente debe incluirse en todas las páginas que necesiten mostrar toasts -->
+
+<!-- Toast Container -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <!-- Los toasts se insertarán aquí dinámicamente -->
+</div>
+
+<!-- Template para toasts -->
+<template id="toast-template">
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-body">
+            <span class="toast-message"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+        </div>
+    </div>
+</template>
+
+<!-- Script del Toast Manager -->
+<script src="{{ url_for('static', filename='js/toast_manager.js') }}"></script>
+
+<!-- Script de inicialización -->
+<script>
+// Asegurar que el toast manager esté disponible globalmente
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar que Bootstrap esté cargado
+    if (typeof bootstrap === 'undefined') {
+        console.warn('Bootstrap no está cargado. Los toasts pueden no funcionar correctamente.');
+    }
+    
+    // Inicializar toast manager si no existe
+    if (!window.toastManager) {
+        window.toastManager = new ToastManager();
+    }
+    
+    // Mensaje de bienvenida para desarrollo (opcional - remover en producción)
+    // console.log('Toast Manager inicializado correctamente');
+});
+</script>

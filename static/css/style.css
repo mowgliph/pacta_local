@@ -29,6 +29,10 @@
 @import url('./components/_forms.css');
 @import url('./components/_cards.css');
 @import url('./components/_tables.css');
+@import url('./components/toast.css');
+@import url('./components/modals/user_modal.css');
+@import url('./components/user_tools.css');
+@import url('./components/quick_actions.css');
 
 /* 7. Estilos específicos por página - Más específicos */
 @import url('./pages/dashboard.css');

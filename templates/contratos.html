@@ -312,105 +312,94 @@
                         <p class="block-subtitle">Gestión completa de todos los contratos activos</p>
                     </div>
                     <div class="block-content">
-                        <!-- Reusable Table Component -->
-                        {% set table_config = {
-                            'id': 'contratos-table',
-                            'title': 'Contratos Recientes',
-                            'api_endpoint': '/api/contratos',
-                            'show_search': true,
-                            'show_filters': true,
-                            'show_export': true,
-                            'show_pagination': true,
-                            'items_per_page': 10,
-                            'columns': [
-                                {
-                                    'key': 'numero_contrato',
-                                    'label': 'Contrato',
-                                    'sortable': true,
-                                    'type': 'custom',
-                                    'template': '<div class="customer-info"><i class="fas fa-file-contract" style="color: #3b82f6; margin-right: 8px;"></i><div><div style="font-weight: 500;">{{numero_contrato}}</div><div style="font-size: 12px; color: #64748b;">{{descripcion}}</div></div></div>'
-                                },
-                                {
-                                    'key': 'cliente',
-                                    'label': 'Cliente',
-                                    'sortable': true,
-                                    'type': 'custom',
-                                    'template': '<div class="customer-info"><i class="fas fa-building" style="color: #10b981; margin-right: 8px;"></i><div><div style="font-weight: 500;">{{cliente_nombre}}</div><div style="font-size: 12px; color: #64748b;">{{cliente_tipo}}</div></div></div>'
-                                },
-                                {
-                                    'key': 'fecha_inicio',
-                                    'label': 'Fecha Inicio',
-                                    'sortable': true,
-                                    'type': 'date'
-                                },
-                                {
-                                    'key': 'valor',
-                                    'label': 'Valor',
-                                    'sortable': true,
-                                    'type': 'currency',
-                                    'class': 'text-success'
-                                },
-                                {
-                                    'key': 'estado',
-                                    'label': 'Estado',
-                                    'sortable': true,
-                                    'type': 'status'
-                                },
-                                {
-                                    'key': 'fecha_vencimiento',
-                                    'label': 'Vencimiento',
-                                    'sortable': true,
-                                    'type': 'date'
-                                },
-                                {
-                                    'key': 'acciones',
-                                    'label': 'Acciones',
-                                    'sortable': false,
-                                    'type': 'actions',
-                                    'actions': [
-                                        {'icon': 'fas fa-eye', 'title': 'Ver', 'action': 'view'},
-                                        {'icon': 'fas fa-edit', 'title': 'Editar', 'action': 'edit'}
-                                    ]
-                                }
-                            ],
-                            'filters': [
-                                {'key': 'estado', 'label': 'Estado', 'type': 'select', 'options': [{'value': 'activo', 'label': 'Activo'}, {'value': 'pendiente', 'label': 'Pendiente'}, {'value': 'vencido', 'label': 'Vencido'}]},
-                                {'key': 'cliente_tipo', 'label': 'Tipo Cliente', 'type': 'select', 'options': [{'value': 'empresa', 'label': 'Empresa'}, {'value': 'persona', 'label': 'Persona'}]}
-                            ],
-                            'default_data': [
-                                {
-                                    'numero_contrato': 'CONT-2025-003',
-                                    'descripcion': 'Servicios de Consultoría',
-                                    'cliente_nombre': 'TechCorp S.A.',
-                                    'cliente_tipo': 'Tecnología',
-                                    'fecha_inicio': '15 Ene 2025',
-                                    'valor': '$125,000',
-                                    'estado': 'activo',
-                                    'fecha_vencimiento': '15 Ene 2026'
-                                },
-                                {
-                                    'numero_contrato': 'CONT-2025-002',
-                                    'descripcion': 'Desarrollo de Software',
-                                    'cliente_nombre': 'InnovaSoft Ltd.',
-                                    'cliente_tipo': 'Software',
-                                    'fecha_inicio': '10 Ene 2025',
-                                    'valor': '$85,000',
-                                    'estado': 'pendiente',
-                                    'fecha_vencimiento': '10 Jul 2025'
-                                },
-                                {
-                                    'numero_contrato': 'CONT-2025-001',
-                                    'descripcion': 'Mantenimiento de Sistemas',
-                                    'cliente_nombre': 'GlobalTech Inc.',
-                                    'cliente_tipo': 'Tecnología',
-                                    'fecha_inicio': '05 Ene 2025',
-                                    'valor': '$65,000',
-                                    'estado': 'activo',
-                                    'fecha_vencimiento': '05 Dic 2025'
-                                }
-                            ]
-                        } %}
-                        {% include 'components/partials/reusable_table.html' %}
+                        {% set table_headers = [
+                            {'title': 'Contrato', 'sortable': true, 'class': ''},
+                            {'title': 'Cliente', 'sortable': true, 'class': ''},
+                            {'title': 'Fecha Inicio', 'sortable': true, 'class': ''},
+                            {'title': 'Valor', 'sortable': true, 'class': 'text-end'},
+                            {'title': 'Estado', 'sortable': true, 'class': 'text-center'},
+                            {'title': 'Vencimiento', 'sortable': true, 'class': ''},
+                            {'title': 'Acciones', 'sortable': false, 'class': 'text-center col-actions'}
+                        ] %}
+                        
+                        {% set table_data = [
+                            {
+                                'cells': [
+                                    {
+                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-file-contract text-primary me-2"></i><div><div class="fw-semibold">CONT-2025-003</div><small class="text-muted">Servicios de Consultoría</small></div></div>',
+                                        'class': ''
+                                    },
+                                    {
+                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-building text-success me-2"></i><div><div class="fw-semibold">TechCorp S.A.</div><small class="text-muted">Tecnología</small></div></div>',
+                                        'class': ''
+                                    },
+                                    {'value': '15 Ene 2025', 'class': ''},
+                                    {'value': '<span class="fw-semibold text-success">$125,000</span>', 'class': 'text-end'},
+                                    {'type': 'badge', 'value': 'Activo', 'variant': 'success', 'class': 'text-center'},
+                                    {'value': '15 Ene 2026', 'class': ''},
+                                    {
+                                        'type': 'actions',
+                                        'actions': [
+                                            {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewContract("CONT-2025-003")', 'tooltip': 'Ver contrato'},
+                                            {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editContract("CONT-2025-003")', 'tooltip': 'Editar contrato'}
+                                        ],
+                                        'class': 'text-center'
+                                    }
+                                ]
+                            },
+                            {
+                                'cells': [
+                                    {
+                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-file-contract text-primary me-2"></i><div><div class="fw-semibold">CONT-2025-002</div><small class="text-muted">Desarrollo de Software</small></div></div>',
+                                        'class': ''
+                                    },
+                                    {
+                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-building text-success me-2"></i><div><div class="fw-semibold">InnovaSoft Ltd.</div><small class="text-muted">Software</small></div></div>',
+                                        'class': ''
+                                    },
+                                    {'value': '10 Ene 2025', 'class': ''},
+                                    {'value': '<span class="fw-semibold text-success">$85,000</span>', 'class': 'text-end'},
+                                    {'type': 'badge', 'value': 'Pendiente', 'variant': 'warning', 'class': 'text-center'},
+                                    {'value': '10 Jul 2025', 'class': ''},
+                                    {
+                                        'type': 'actions',
+                                        'actions': [
+                                            {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewContract("CONT-2025-002")', 'tooltip': 'Ver contrato'},
+                                            {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editContract("CONT-2025-002")', 'tooltip': 'Editar contrato'}
+                                        ],
+                                        'class': 'text-center'
+                                    }
+                                ]
+                            },
+                            {
+                                'cells': [
+                                    {
+                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-file-contract text-primary me-2"></i><div><div class="fw-semibold">CONT-2025-001</div><small class="text-muted">Mantenimiento de Sistemas</small></div></div>',
+                                        'class': ''
+                                    },
+                                    {
+                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-building text-success me-2"></i><div><div class="fw-semibold">GlobalTech Inc.</div><small class="text-muted">Tecnología</small></div></div>',
+                                        'class': ''
+                                    },
+                                    {'value': '05 Ene 2025', 'class': ''},
+                                    {'value': '<span class="fw-semibold text-success">$65,000</span>', 'class': 'text-end'},
+                                    {'type': 'badge', 'value': 'Activo', 'variant': 'success', 'class': 'text-center'},
+                                    {'value': '05 Dic 2025', 'class': ''},
+                                    {
+                                        'type': 'actions',
+                                        'actions': [
+                                            {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewContract("CONT-2025-001")', 'tooltip': 'Ver contrato'},
+                                            {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editContract("CONT-2025-001")', 'tooltip': 'Editar contrato'}
+                                        ],
+                                        'class': 'text-center'
+                                    }
+                                ]
+                            }
+                        ] %}
+                        
+                        {% set empty_message = 'No hay contratos disponibles' %}
+                        
+                        {% include 'components/partials/consistent_table.html' %}
                     </div>
                 </div>
 
@@ -512,9 +501,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Include Modal de Crear Contrato -->
 {% include 'components/modals/contratos/crear_contrato_modal.html' %}
 
-    <!-- Reusable Table Component Styles and Scripts -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/reusable_table.css') }}">
-    <script src="{{ url_for('static', filename='js/reusable_table.js') }}"></script>
+
     
     <!-- Scripts específicos de contratos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

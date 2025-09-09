@@ -134,22 +134,26 @@ def usuario():
 @admin_required
 def usuarios_lista():
     """Página de lista de usuarios (solo para administradores)"""
-    # Obtener todos los usuarios
-    usuarios = Usuario.get_all()
+    # Obtener los últimos 10 usuarios agregados recientemente
+    usuarios = Usuario.get_recent(limit=10, activos_solo=False)
     
     # Calcular estadísticas
     total_usuarios = len(usuarios)
     usuarios_activos = len([u for u in usuarios if u.activo])
     usuarios_inactivos = total_usuarios - usuarios_activos
     administradores = len([u for u in usuarios if u.es_admin])
-    usuarios_regulares = total_usuarios - administradores
+    usuarios_regulares = len([u for u in usuarios if u.activo and getattr(u, 'rol', 'user') == 'user'])
+    
+    # Calcular usuarios invitados usando el campo rol
+    usuarios_invitados = len([u for u in usuarios if u.activo and getattr(u, 'rol', 'user') == 'guest'])
     
     estadisticas = {
         'total_usuarios': total_usuarios,
         'usuarios_activos': usuarios_activos,
         'usuarios_inactivos': usuarios_inactivos,
         'administradores': administradores,
-        'usuarios_regulares': usuarios_regulares
+        'usuarios_regulares': usuarios_regulares,
+        'usuarios_invitados': usuarios_invitados
     }
     
     # Obtener usuario actual de la sesión
@@ -178,7 +182,8 @@ def crear_usuario():
             telefono = request.form.get('telefono')
             cargo = request.form.get('cargo')
             departamento = request.form.get('departamento')
-            es_admin = request.form.get('es_admin') == 'on'
+            rol = request.form.get('rol', 'user')
+            es_admin = request.form.get('es_admin') == 'on' or rol == 'admin'
             
             # Validaciones básicas
             if not all([nombre, email, username, password]):
@@ -209,7 +214,8 @@ def crear_usuario():
                 telefono=telefono,
                 cargo=cargo,
                 departamento=departamento,
-                es_admin=es_admin
+                es_admin=es_admin,
+                rol=rol
             )
             
             nuevo_usuario.save()
@@ -380,7 +386,8 @@ def editar_usuario(user_id):
         telefono = request.form.get('telefono', '').strip()
         cargo = request.form.get('cargo', '').strip()
         departamento = request.form.get('departamento', '').strip()
-        es_admin = request.form.get('es_admin') == 'true'
+        rol = request.form.get('rol', 'user')
+        es_admin = request.form.get('es_admin') == 'true' or rol == 'admin'
         activo = request.form.get('activo', 'true') == 'true'
         nueva_password = request.form.get('nueva_password', '')
         
@@ -421,6 +428,7 @@ def editar_usuario(user_id):
         usuario_a_editar.telefono = telefono
         usuario_a_editar.cargo = cargo
         usuario_a_editar.departamento = departamento
+        usuario_a_editar.rol = rol
         usuario_a_editar.es_admin = es_admin
         usuario_a_editar.activo = activo
         
@@ -483,16 +491,16 @@ def eliminar_usuario(user_id):
                     'message': 'No se puede eliminar el último administrador del sistema'
                 }), 400
         
-        # Realizar eliminación lógica
+        # Realizar eliminación física
         usuario_a_eliminar.delete()
         
         # Registrar actividad
         actividad = ActividadSistema(
             usuario_id=session['user_id'],
-            accion='Eliminación de Usuario',
+            accion='Eliminación Física de Usuario',
             tabla_afectada='usuarios',
             registro_id=user_id,
-            detalles=f'Usuario {usuario_a_eliminar.username} eliminado por {session.get("username", "")}'
+            detalles=f'Usuario {usuario_a_eliminar.username} eliminado permanentemente por {session.get("username", "")}'
         )
         actividad.save()
         
@@ -503,9 +511,154 @@ def eliminar_usuario(user_id):
         
     except Exception as e:
         return jsonify({
+            'success': False,
+            'message': f'Error al eliminar usuario: {str(e)}'
+        }), 500
+
+@users_bp.route('/api/usuario/<int:user_id>', methods=['PUT'])
+@api_login_required
+@admin_required
+def update_user_api(user_id):
+    """
+    API para actualizar un usuario
+    Solo accesible para administradores
+    """
+    try:
+        # Obtener el usuario a actualizar
+        usuario = Usuario.get_by_id(user_id)
+        if not usuario:
+            return jsonify({
                 'success': False,
-                'message': f'Error al eliminar usuario: {str(e)}'
-            }), 500
+                'message': 'Usuario no encontrado'
+            }), 404
+        
+        # Obtener datos del request
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                'success': False,
+                'message': 'No se proporcionaron datos para actualizar'
+            }), 400
+        
+        # Validaciones
+        if 'email' in data:
+            # Verificar que el email no esté en uso por otro usuario
+            usuarios = Usuario.get_all()
+            existing_user = next((u for u in usuarios if u.email == data['email'] and u.id != user_id), None)
+            
+            if existing_user:
+                return jsonify({
+                    'success': False,
+                    'message': 'El email ya está en uso por otro usuario'
+                }), 400
+        
+        if 'username' in data:
+            # Verificar que el username no esté en uso por otro usuario
+            existing_user = Usuario.get_by_username(data['username'])
+            if existing_user and existing_user.id != user_id:
+                return jsonify({
+                    'success': False,
+                    'message': 'El nombre de usuario ya está en uso'
+                }), 400
+        
+        # Actualizar campos permitidos
+        if 'nombre' in data:
+            usuario.nombre = data['nombre'].strip()
+        
+        if 'email' in data:
+            usuario.email = data['email'].strip().lower()
+        
+        if 'username' in data:
+            usuario.username = data['username'].strip()
+        
+        if 'cargo' in data:
+            usuario.cargo = data['cargo'].strip() if data['cargo'] else None
+        
+        if 'telefono' in data:
+            usuario.telefono = data['telefono'].strip() if data['telefono'] else None
+        
+        if 'departamento' in data:
+            usuario.departamento = data['departamento'].strip() if data['departamento'] else None
+        
+        if 'es_admin' in data:
+            # Verificar que no se esté desactivando el último admin
+            if not data['es_admin'] and usuario.es_admin:
+                usuarios = Usuario.get_all()
+                admin_count = len([u for u in usuarios if u.es_admin and u.activo])
+                if admin_count <= 1:
+                    return jsonify({
+                        'success': False,
+                        'message': 'No se puede quitar privilegios de administrador al último administrador activo'
+                    }), 400
+            
+            usuario.es_admin = data['es_admin']
+        
+        if 'rol' in data:
+            # Validar que el rol sea válido
+            roles_validos = ['admin', 'user', 'guest']
+            if data['rol'] not in roles_validos:
+                return jsonify({
+                    'success': False,
+                    'message': f'Rol inválido. Los roles válidos son: {", ".join(roles_validos)}'
+                }), 400
+            
+            usuario.rol = data['rol']
+        
+        if 'activo' in data:
+            # No permitir desactivar al usuario actual
+            if user_id == session['user_id'] and not data['activo']:
+                return jsonify({
+                    'success': False,
+                    'message': 'No puedes desactivar tu propia cuenta'
+                }), 400
+            
+            # Si se está desactivando un admin, verificar que no sea el último
+            if usuario.es_admin and not data['activo']:
+                usuarios = Usuario.get_all()
+                administradores_activos = [u for u in usuarios if u.es_admin and u.activo and u.id != user_id]
+                if len(administradores_activos) == 0:
+                    return jsonify({
+                        'success': False,
+                        'message': 'No se puede desactivar al último administrador del sistema'
+                    }), 400
+            
+            usuario.activo = data['activo']
+        
+        # Guardar cambios
+        usuario.save()
+        
+        # Registrar actividad
+        actividad = ActividadSistema(
+            usuario_id=session['user_id'],
+            accion='Actualización de Usuario (API)',
+            tabla_afectada='usuarios',
+            registro_id=user_id,
+            detalles=f'Usuario {usuario.username} actualizado por {session.get("username", "")}'
+        )
+        actividad.save()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Usuario actualizado correctamente',
+            'usuario': {
+                'id': usuario.id,
+                'nombre': usuario.nombre,
+                'email': usuario.email,
+                'username': usuario.username,
+                'cargo': usuario.cargo,
+                'telefono': usuario.telefono,
+                'departamento': usuario.departamento,
+                'es_admin': usuario.es_admin,
+                'activo': usuario.activo
+            }
+        })
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error interno del servidor: {str(e)}'
+        }), 500
 
 # Ruta API para obtener datos de un usuario específico
 @users_bp.route('/api/usuario/<int:user_id>', methods=['GET'])
@@ -531,6 +684,7 @@ def obtener_usuario_api(user_id):
                 'cargo': usuario.cargo,
                 'departamento': usuario.departamento,
                 'es_admin': usuario.es_admin,
+                'rol': usuario.rol,
                 'activo': usuario.activo,
                 'fecha_creacion': usuario.fecha_creacion
             }
@@ -540,4 +694,123 @@ def obtener_usuario_api(user_id):
         return jsonify({
             'success': False,
             'message': f'Error al obtener usuario: {str(e)}'
+        }), 500
+
+# Ruta para activar/desactivar usuarios (solo admin)
+@users_bp.route('/toggle_user_status/<int:user_id>', methods=['POST'])
+@api_login_required
+@admin_required
+def toggle_user_status(user_id):
+    """Activar o desactivar usuario (solo administradores)"""
+    try:
+        # Obtener datos del request
+        data = request.get_json()
+        activate = data.get('activate', True)
+        
+        # Verificar que el usuario existe
+        usuario = Usuario.get_by_id(user_id)
+        if not usuario:
+            return jsonify({
+                'success': False,
+                'message': 'Usuario no encontrado'
+            }), 404
+        
+        # No permitir desactivar al usuario actual
+        if user_id == session['user_id'] and not activate:
+            return jsonify({
+                'success': False,
+                'message': 'No puedes desactivar tu propia cuenta'
+            }), 400
+        
+        # Si se está desactivando un admin, verificar que no sea el último
+        if usuario.es_admin and not activate:
+            administradores_activos = [u for u in Usuario.get_all() if u.es_admin and u.activo and u.id != user_id]
+            if len(administradores_activos) == 0:
+                return jsonify({
+                    'success': False,
+                    'message': 'No se puede desactivar al último administrador del sistema'
+                }), 400
+        
+        # Actualizar estado del usuario
+        usuario.activo = activate
+        usuario.save()
+        
+        # Registrar actividad
+        accion = 'Activación' if activate else 'Desactivación'
+        actividad = ActividadSistema(
+            usuario_id=session['user_id'],
+            accion=f'{accion} de Usuario',
+            tabla_afectada='usuarios',
+            registro_id=user_id,
+            detalles=f'Usuario {usuario.username} {"activado" if activate else "desactivado"} por {session.get("username", "")}'
+        )
+        actividad.save()
+        
+        return jsonify({
+            'success': True,
+            'message': f'Usuario {"activado" if activate else "desactivado"} exitosamente'
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al cambiar estado del usuario: {str(e)}'
+        }), 500
+
+@users_bp.route('/api/usuario/<int:user_id>', methods=['DELETE'])
+@api_login_required
+@admin_required
+def delete_user_api(user_id):
+    """Eliminar un usuario específico"""
+    try:
+        # Obtener el usuario a eliminar
+        user_to_delete = Usuario.get_by_id(user_id)
+        if not user_to_delete:
+            return jsonify({
+                'success': False,
+                'message': 'Usuario no encontrado'
+            }), 404
+        
+        # Verificar que no sea el último administrador
+        if user_to_delete.es_admin:
+            administradores_activos = [u for u in Usuario.get_all() if u.es_admin and u.activo and u.id != user_id]
+            if len(administradores_activos) == 0:
+                return jsonify({
+                    'success': False,
+                    'message': 'No se puede eliminar el último administrador del sistema'
+                }), 400
+        
+        # Verificar que no se esté eliminando a sí mismo
+        if user_to_delete.id == session['user_id']:
+            return jsonify({
+                'success': False,
+                'message': 'No puedes eliminar tu propia cuenta'
+            }), 400
+        
+        # Guardar información para el log
+        deleted_username = user_to_delete.username
+        deleted_email = user_to_delete.email
+        
+        # Eliminar el usuario (eliminación física)
+        user_to_delete.delete()
+        
+        # Registrar la actividad
+        actividad = ActividadSistema(
+            usuario_id=session['user_id'],
+            accion='Eliminación Física de Usuario (API)',
+            tabla_afectada='usuarios',
+            registro_id=user_id,
+            detalles=f'Usuario eliminado permanentemente: {deleted_username} ({deleted_email}) por {session.get("username", "")}'
+        )
+        actividad.save()
+        
+        return jsonify({
+            'success': True,
+            'message': f'Usuario {deleted_username} eliminado correctamente'
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al eliminar usuario: {str(e)}'
         }), 500

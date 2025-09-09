@@ -400,32 +400,37 @@ function updateNotificationBadge() {
 }
 
 function showNotificationToast(message) {
-    // Crear toast si no existe
-    if (!document.getElementById('notificationToast')) {
-        const toastHTML = `
-            <div class="toast-container position-fixed top-0 end-0 p-3">
-                <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-header">
-                        <i class="fas fa-bell me-2"></i>
-                        <strong class="me-auto">Notificaciones</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div class="toast-body" id="toastMessage">
-                        ${message}
+    // Usar el sistema unificado de toasts
+    if (window.toastManager) {
+        window.toastManager.showInfo(message, 'Notificaciones');
+    } else {
+        // Fallback al sistema anterior si el nuevo no está disponible
+        if (!document.getElementById('notificationToast')) {
+            const toastHTML = `
+                <div class="toast-container position-fixed top-0 end-0 p-3">
+                    <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <i class="fas fa-bell me-2"></i>
+                            <strong class="me-auto">Notificaciones</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body" id="toastMessage">
+                            ${message}
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
-        document.body.insertAdjacentHTML('beforeend', toastHTML);
-    } else {
-        const toastMessageElement = document.getElementById('toastMessage');
-        if (toastMessageElement) {
-            toastMessageElement.textContent = message;
+            `;
+            document.body.insertAdjacentHTML('beforeend', toastHTML);
+        } else {
+            const toastMessageElement = document.getElementById('toastMessage');
+            if (toastMessageElement) {
+                toastMessageElement.textContent = message;
+            }
         }
+        
+        const toast = new bootstrap.Toast(document.getElementById('notificationToast'));
+        toast.show();
     }
-    
-    const toast = new bootstrap.Toast(document.getElementById('notificationToast'));
-    toast.show();
 }
 
 // Inicializar el gestor de notificaciones cuando se carga la página

@@ -1,0 +1,91 @@
+<!-- ===================================================================
+   PACTA - Plantilla de Herramientas/Acciones Rápidas
+   Archivo: quick_actions.html
+   Descripción: Componente reutilizable para bloques de acciones rápidas
+   
+   Variables requeridas:
+   - actions_title: Título del bloque (string)
+   - actions_subtitle: Subtítulo del bloque (string, opcional)
+   - actions_list: Lista de objetos de acción con las siguientes propiedades:
+     * text: Texto del botón (string)
+     * icon: Clase del icono FontAwesome (string)
+     * color: Clase de color del botón Bootstrap (string, ej: 'btn-primary')
+     * onclick: Función JavaScript a ejecutar (string, opcional)
+     * href: URL de destino (string, opcional)
+     * modal: ID del modal a abrir (string, opcional)
+     * tooltip: Texto del tooltip (string, opcional)
+     * disabled: Si el botón está deshabilitado (boolean, opcional)
+     * min_width: Ancho mínimo del botón (string, opcional, default: '200px')
+   
+   Ejemplo de uso:
+   {% set actions_title = "Acciones Rápidas" %}
+   {% set actions_subtitle = "Herramientas principales del sistema" %}
+   {% set actions_list = [
+       {
+           'text': 'Nuevo Contrato',
+           'icon': 'fas fa-plus',
+           'color': 'btn-primary',
+           'onclick': 'openNewContractModal()',
+           'tooltip': 'Crear un nuevo contrato'
+       },
+       {
+           'text': 'Ver Reportes',
+           'icon': 'fas fa-chart-bar',
+           'color': 'btn-success',
+           'href': '/reportes'
+       }
+   ] %}
+=================================================================== -->
+
+<div class="block-section actions-block">
+    <div class="block-header">
+        <h3 class="block-title">
+            {% if actions_icon %}
+            <i class="{{ actions_icon }}" style="color: {{ actions_icon_color|default('#10b981') }}; margin-right: 8px;"></i>
+            {% endif %}
+            {{ actions_title|default('Acciones Rápidas') }}
+        </h3>
+        {% if actions_subtitle %}
+        <p class="block-subtitle">{{ actions_subtitle }}</p>
+        {% endif %}
+    </div>
+    <div class="block-content">
+        <div class="contract-actions d-flex flex-wrap gap-3">
+            {% for action in actions_list %}
+            <button class="btn {{ action.color|default('btn-primary') }} flex-fill d-flex align-items-center gap-2" 
+                    style="min-width: {{ action.min_width|default('200px') }};"
+                    {% if action.onclick %}onclick="{{ action.onclick }}"{% endif %}
+                    {% if action.href %}onclick="window.location.href='{{ action.href }}'"{% endif %}
+                    {% if action.modal %}data-bs-toggle="modal" data-bs-target="{{ action.modal }}"{% endif %}
+                    {% if action.tooltip %}title="{{ action.tooltip }}" data-bs-toggle="tooltip"{% endif %}
+                    {% if action.disabled %}disabled{% endif %}>
+                <i class="{{ action.icon }}"></i>
+                {{ action.text }}
+            </button>
+            {% endfor %}
+        </div>
+        
+        {% if actions_footer_text %}
+        <div class="mt-3 text-center">
+            {% if actions_footer_link %}
+            <a href="{{ actions_footer_link }}" class="btn btn-outline-primary text-decoration-none">
+                {{ actions_footer_text }}
+            </a>
+            {% else %}
+            <p class="text-muted mb-0">{{ actions_footer_text }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Inicializar tooltips si están presentes -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar tooltips de Bootstrap para este bloque
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>

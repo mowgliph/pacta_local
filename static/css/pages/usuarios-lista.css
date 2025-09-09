@@ -44,10 +44,42 @@
 /* ===== MÉTRICAS DE USUARIOS ===== */
 
 .usuarios-lista-metrics {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: var(--spacing-4);
   margin-bottom: var(--spacing-6);
+  max-width: 100%;
+}
+
+.usuarios-lista-metrics > * {
+  flex: 1 1 250px;
+  max-width: calc(20% - var(--spacing-4));
+  min-width: 250px;
+}
+
+@media (max-width: 1400px) {
+  .usuarios-lista-metrics > * {
+    max-width: calc(25% - var(--spacing-4));
+  }
+}
+
+@media (max-width: 1200px) {
+  .usuarios-lista-metrics > * {
+    max-width: calc(33.333% - var(--spacing-4));
+  }
+}
+
+@media (max-width: 900px) {
+  .usuarios-lista-metrics > * {
+    max-width: calc(50% - var(--spacing-4));
+  }
+}
+
+@media (max-width: 600px) {
+  .usuarios-lista-metrics > * {
+    max-width: 100%;
+  }
 }
 
 .usuarios-metric-card {
@@ -98,6 +130,14 @@
 
 .usuarios-metric-icon.administradores {
   background-color: var(--color-purple);
+}
+
+.usuarios-metric-icon.viewer {
+  background-color: var(--color-info);
+}
+
+.usuarios-metric-icon.invitados {
+  background-color: var(--color-warning);
 }
 
 .usuarios-metric-value {
@@ -415,9 +455,21 @@
 }
 
 .usuario-rol.invitado {
-  background-color: var(--bg-tertiary);
-  color: var(--text-secondary);
-  border-color: var(--border-light);
+  background-color: var(--color-warning-light);
+  color: var(--color-warning-dark);
+  border-color: var(--color-warning);
+}
+
+.usuario-rol.viewer {
+  background-color: var(--color-info-light);
+  color: var(--color-info-dark);
+  border-color: var(--color-info);
+}
+
+.usuario-rol.user {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  border-color: var(--color-primary);
 }
 
 .usuario-rol-icon {

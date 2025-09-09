@@ -39,9 +39,17 @@ class DatabaseManager:
                     departamento VARCHAR(50),
                     es_admin BOOLEAN DEFAULT 0,
                     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    activo BOOLEAN DEFAULT 1
+                    activo BOOLEAN DEFAULT 1,
+                    rol VARCHAR(20) DEFAULT 'user'
                 )
             ''')
+            
+            # Agregar columna rol si no existe (para bases de datos existentes)
+            try:
+                cursor.execute('ALTER TABLE usuarios ADD COLUMN rol VARCHAR(20) DEFAULT "user"')
+            except sqlite3.OperationalError:
+                # La columna ya existe, continuar
+                pass
             
             # Crear tabla de clientes
             cursor.execute('''

@@ -137,9 +137,13 @@
         });
     </script>
     
-    <!-- Funciones de usuario cargadas desde archivo modular -->
-    <script src="{{ url_for('static', filename='js/user_functions.js') }}"></script>
     <!-- Funciones del sidebar cargadas desde archivo modular -->
     <script src="{{ url_for('static', filename='js/sidebar_functions.js') }}"></script>
+    
+    <!-- Componente de Modal de Confirmación Reutilizable -->
+    <script src="{{ url_for('static', filename='js/confirm_modal.js') }}"></script>
+    
+    <!-- Sistema unificado de toasts -->
+    {% include 'components/partials/toast_container.html' %}
 </body>
 </html>

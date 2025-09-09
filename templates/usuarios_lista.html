@@ -19,10 +19,7 @@
             
             <!-- Additional Header Actions -->
             <div class="additional-header-actions" style="margin-top: 16px; display: flex; justify-content: flex-end;">
-                <button class="btn btn-primary" onclick="openNewUserModal()">
-                    <i class="fas fa-user-plus"></i>
-                    Nuevo Usuario
-                </button>
+                <!-- Botón de agregar usuario removido -->
             </div>
             
             <!-- Estadísticas de Usuarios -->
@@ -62,34 +59,31 @@
                 {% set metric_change = "Permisos estándar" %}
                 {% set change_type = "neutral" %}
                 {% include 'components/partials/metric_card.html' %}
+                
+                <!-- Usuarios Invitados -->
+                {% set metric_label = "Usuarios Invitados" %}
+                {% set metric_value = estadisticas.usuarios_invitados %}
+                {% set metric_icon = "fas fa-user-plus" %}
+                {% set metric_color = "text-info" %}
+                {% set metric_change = "Acceso temporal" %}
+                {% set change_type = "neutral" %}
+                {% include 'components/partials/metric_card.html' %}
+                
+
             </div>
             
-            <!-- Filtros y Búsqueda -->
-            <div class="block-section" style="margin-bottom: 24px;">
-                <div class="block-content" style="padding: 16px;">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control" id="searchUsers" placeholder="Buscar usuarios por nombre o email...">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <select class="form-control" id="filterRole">
-                                <option value="">Todos los roles</option>
-                                <option value="admin">Administradores</option>
-                                <option value="user">Usuarios</option>
-                                <option value="viewer">Solo Lectura</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <select class="form-control" id="filterStatus">
-                                <option value="">Todos los estados</option>
-                                <option value="active">Activos</option>
-                                <option value="inactive">Inactivos</option>
-                            </select>
-                        </div>
-                    </div>
+            <!-- Bloque de filtros y búsqueda eliminado -->
+            
+
+            
+            <!-- Información de selección -->
+            <div id="selectionInfo" class="mt-3" style="display: none;">
+                <div class="alert alert-info" style="margin: 0; padding: 12px; border-radius: 8px; background: #e0f2fe; border: 1px solid #81d4fa; color: #01579b;">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="selectionCount">0</span> usuario(s) seleccionado(s)
+                    <button class="btn btn-sm btn-outline-primary ms-2" onclick="clearSelection()" style="padding: 2px 8px; font-size: 12px;">
+                        Limpiar selección
+                    </button>
                 </div>
             </div>
             
@@ -100,179 +94,106 @@
                     <p class="block-subtitle">Lista completa de usuarios registrados</p>
                 </div>
                 <div class="block-content" style="padding: 0;">
-                    <!-- Reusable Table Component -->
-                    {% set table_config = {
-                        'id': 'users-table',
-                        'api_endpoint': '/api/usuarios',
-                        'search_enabled': true,
-                        'filter_enabled': true,
-                        'export_enabled': true,
-                        'pagination_enabled': true,
-                        'columns': [
-                            {
-                                'key': 'usuario',
-                                'label': 'Usuario',
-                                'sortable': true,
-                                'template': '''
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar-sm me-3">
-                                            <div class="avatar-title bg-{{ row.avatar_color or "primary" }} rounded-circle">
-                                                <i class="fas fa-user"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0">{{ row.nombre }}</h6>
-                                            <small class="text-muted">{{ row.cargo or "Sin cargo" }}</small>
-                                        </div>
-                                    </div>
-                                '''
-                            },
-                            {
-                                'key': 'email',
-                                'label': 'Email',
-                                'sortable': true
-                            },
-                            {
-                                'key': 'rol',
-                                'label': 'Rol',
-                                'sortable': true,
-                                'template': '''
-                                    <span class="badge bg-{{ "danger" if row.es_admin else "primary" }}">
-                                        {{ "Administrador" if row.es_admin else "Usuario" }}
-                                    </span>
-                                '''
-                            },
-                            {
-                                'key': 'estado',
-                                'label': 'Estado',
-                                'sortable': true,
-                                'template': '''
-                                    <span class="badge bg-{{ "success" if row.activo else "warning" }}">
-                                        {{ "Activo" if row.activo else "Inactivo" }}
-                                    </span>
-                                '''
-                            },
-                            {
-                                'key': 'ultimo_acceso',
-                                'label': 'Último Acceso',
-                                'sortable': true,
-                                'template': '{{ row.ultimo_acceso or "Nunca" }}'
-                            },
-                            {
-                                'key': 'acciones',
-                                'label': 'Acciones',
-                                'sortable': false,
-                                'template': '''
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#" onclick="viewUser({{ row.id }})"><i class="fas fa-eye me-2"></i>Ver Detalles</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="editUser({{ row.id }})"><i class="fas fa-edit me-2"></i>Editar</a></li>
-                                            <li><hr class="dropdown-divider"></li>
-                                            {% if row.activo %}
-                                                <li><a class="dropdown-item text-warning" href="#" onclick="toggleUserStatus({{ row.id }}, false)"><i class="fas fa-user-slash me-2"></i>Desactivar</a></li>
-                                            {% else %}
-                                                <li><a class="dropdown-item text-success" href="#" onclick="toggleUserStatus({{ row.id }}, true)"><i class="fas fa-user-check me-2"></i>Activar</a></li>
-                                            {% endif %}
-                                        </ul>
-                                    </div>
-                                '''
-                            }
-                        ],
-                        'filters': [
-                            {
-                                'key': 'rol',
-                                'label': 'Rol',
-                                'type': 'select',
-                                'options': [
-                                    {'value': '', 'label': 'Todos los roles'},
-                                    {'value': 'admin', 'label': 'Administrador'},
-                                    {'value': 'user', 'label': 'Usuario'}
-                                ]
-                            },
-                            {
-                                'key': 'estado',
-                                'label': 'Estado',
-                                'type': 'select',
-                                'options': [
-                                    {'value': '', 'label': 'Todos los estados'},
-                                    {'value': 'activo', 'label': 'Activo'},
-                                    {'value': 'inactivo', 'label': 'Inactivo'}
-                                ]
-                            }
-                        ],
-                        'default_data': usuarios or [
-                            {
-                                'id': 1,
-                                'nombre': 'Juan Pérez',
-                                'email': 'juan.perez@empresa.com',
-                                'cargo': 'Administrador de Sistema',
-                                'es_admin': true,
-                                'activo': true,
-                                'ultimo_acceso': 'Hace 2 horas',
-                                'avatar_color': 'primary'
-                            },
-                            {
-                                'id': 2,
-                                'nombre': 'María García',
-                                'email': 'maria.garcia@empresa.com',
-                                'cargo': 'Analista de Contratos',
-                                'es_admin': false,
-                                'activo': true,
-                                'ultimo_acceso': 'Hace 1 día',
-                                'avatar_color': 'info'
-                            },
-                            {
-                                'id': 3,
-                                'nombre': 'Carlos López',
-                                'email': 'carlos.lopez@empresa.com',
-                                'cargo': 'Supervisor de Proveedores',
-                                'es_admin': false,
-                                'activo': false,
-                                'ultimo_acceso': 'Hace 1 semana',
-                                'avatar_color': 'warning'
-                            }
-                        ]
-                    } %}
-                    {% include 'components/partials/reusable_table.html' %}
+                    <!-- Tabla de Usuarios -->
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col" style="width: 50px;">
+                                        <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" style="transform: scale(1.2);">
+                                    </th>
+                                    <th scope="col" class="sortable">Usuario <span class="sort-icon"></span></th>
+                                    <th scope="col" class="sortable">Email <span class="sort-icon"></span></th>
+                                    <th scope="col" class="sortable">Rol <span class="sort-icon"></span></th>
+                                    <th scope="col" class="sortable">Estado <span class="sort-icon"></span></th>
+                                    <th scope="col" class="sortable">Último Acceso <span class="sort-icon"></span></th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if usuarios and usuarios|length > 0 %}
+                                    {% for usuario in usuarios %}
+                                        {% set avatar_colors = ['#dc3545', '#0ea5e9', '#f59e0b', '#10b981', '#8b5cf6', '#f97316'] %}
+                                        {% set avatar_color = avatar_colors[loop.index0 % avatar_colors|length] %}
+                                        <tr>
+                                            <td style="text-align: center;">
+                                                <input type="checkbox" class="user-checkbox" value="{{ usuario.id }}" onchange="updateSelection()" style="transform: scale(1.2);">
+                                            </td>
+                                            <td>
+                                                <div style="display: flex; align-items: center; gap: 12px;">
+                                                    <div class="avatar-sm" style="width: 40px; height: 40px; background: {{ avatar_color }}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                                                        <i class="fas fa-user"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div style="font-weight: 600; color: #374151;">{{ usuario.nombre or 'N/A' }}</div>
+                                                        <div style="font-size: 12px; color: #6b7280;">{{ usuario.cargo or 'Sin cargo' }}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{ usuario.email or 'N/A' }}</td>
+                                            <td>
+                                                {% if usuario.rol == 'admin' %}
+                                                    <span class="badge" style="background: #dc3545; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Administrador</span>
+                                                {% elif usuario.rol == 'user' %}
+                                                    <span class="badge" style="background: #3b82f6; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Usuario Regular</span>
+                                                {% elif usuario.rol == 'guest' %}
+                                                    <span class="badge" style="background: #f59e0b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Invitado</span>
+                                                {% else %}
+                                                    <span class="badge" style="background: {{ '#dc3545' if usuario.es_admin else '#3b82f6' }}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                                                        {{ 'Administrador' if usuario.es_admin else 'Usuario' }}
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <span class="status-badge {{ 'active' if usuario.activo else 'inactive' }}" style="background: {{ '#d1fae5' if usuario.activo else '#fef3c7' }}; color: {{ '#065f46' if usuario.activo else '#92400e' }}; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">
+                                                    {{ 'Activo' if usuario.activo else 'Inactivo' }}
+                                                </span>
+                                            </td>
+                                            <td>{{ usuario.ultimo_acceso.strftime('%d/%m/%Y %H:%M') if usuario.ultimo_acceso else 'Nunca' }}</td>
+                                            <td>
+                                                <div style="display: flex; gap: 4px;">
+                                                    <button class="btn-icon-small" title="Ver detalles" onclick="viewUser({{ usuario.id }});">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="btn-icon-small" title="Editar" onclick="editUser({{ usuario.id }});">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn-icon-small" title="{{ 'Desactivar' if usuario.activo else 'Activar' }}" onclick="toggleUserStatus({{ usuario.id }}, {{ 'false' if usuario.activo else 'true' }});">
+                                                        <i class="fas fa-user-{{ 'slash' if usuario.activo else 'check' }}"></i>
+                                                    </button>
+                                                    <button class="btn-icon-small btn-danger" title="Eliminar usuario" onclick="deleteUser({{ usuario.id }});">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted py-4">
+                                            <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
+                                            No se encontraron usuarios
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Botón Añadir Nuevo Usuario -->
+                    <div class="d-flex justify-content-center mt-3 mb-3">
+                        <button class="btn btn-primary btn-lg" onclick="window.openNewUserModal()" style="padding: 12px 24px; font-size: 16px;">
+                            <i class="fas fa-user-plus me-2"></i>
+                            Añadir Nuevo Usuario
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/user_functions.js') }}"></script>
     <script>
-        // Funciones de búsqueda y filtrado
-        document.getElementById('searchUsers').addEventListener('input', filterUsers);
-        document.getElementById('filterRole').addEventListener('change', filterUsers);
-        document.getElementById('filterStatus').addEventListener('change', filterUsers);
-        
-        function filterUsers() {
-            const searchTerm = document.getElementById('searchUsers').value.toLowerCase();
-            const roleFilter = document.getElementById('filterRole').value;
-            const statusFilter = document.getElementById('filterStatus').value;
-            const rows = document.querySelectorAll('#usersTable tbody tr[data-user-id]');
-            
-            rows.forEach(row => {
-                const userName = row.querySelector('td:first-child').textContent.toLowerCase();
-                const userEmail = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                const userRole = row.getAttribute('data-role');
-                const userStatus = row.getAttribute('data-status');
-                
-                const matchesSearch = userName.includes(searchTerm) || userEmail.includes(searchTerm);
-                const matchesRole = !roleFilter || userRole === roleFilter;
-                const matchesStatus = !statusFilter || userStatus === statusFilter;
-                
-                if (matchesSearch && matchesRole && matchesStatus) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
+        // Funciones de búsqueda y filtrado eliminadas
         
         // Las funciones openNewUserModal() y createNewUser() están ahora en /static/js/user_functions.js
         // El modal se carga dinámicamente desde /components/modals/user_modal
@@ -344,8 +265,10 @@
                                              <div class="mb-3">
                                                  <label for="editUserRole" class="form-label">Rol del Usuario</label>
                                                  <select class="form-control" id="editUserRole">
-                                                     <option value="user" ${!user.es_admin ? 'selected' : ''}>Usuario Regular</option>
-                                                     <option value="admin" ${user.es_admin ? 'selected' : ''}>Administrador</option>
+                                                     <option value="admin" ${user.rol === 'admin' ? 'selected' : ''}>Administrador</option>
+                                                     <option value="user" ${user.rol === 'user' ? 'selected' : ''}>Usuario Regular</option>
+
+                                                     <option value="guest" ${user.rol === 'guest' ? 'selected' : ''}>Invitado</option>
                                                  </select>
                                              </div>
                                          </div>
@@ -404,7 +327,7 @@
              })
              .catch(error => {
                  console.error('Error:', error);
-                 alert('Error al obtener datos del usuario');
+                 showToastError('Error al obtener datos del usuario');
              });
          }
         
@@ -420,32 +343,33 @@
                  cargo: document.getElementById('editUserCargo').value.trim(),
                  telefono: document.getElementById('editUserTelefono').value.trim(),
                  departamento: document.getElementById('editUserDepartamento').value.trim(),
+                 rol: document.getElementById('editUserRole').value,
                  es_admin: document.getElementById('editUserRole').value === 'admin' ? 'true' : 'false',
                  activo: document.getElementById('editUserActivo').checked ? 'true' : 'false'
              };
             
             // Validar campos requeridos
             if (!userData.nombre || !userData.email) {
-                alert('Por favor complete todos los campos requeridos (Nombre y Email)');
+                showToastError('Por favor complete todos los campos requeridos (Nombre y Email)');
                 return;
             }
             
             // Validar formato de email
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(userData.email)) {
-                alert('Por favor ingrese un email válido');
+                showToastError('Por favor ingrese un email válido');
                 return;
             }
             
             // Validar contraseñas si se están cambiando
             if (password || passwordConfirm) {
                 if (password !== passwordConfirm) {
-                    alert('Las contraseñas no coinciden');
+                    showToastError('Las contraseñas no coinciden');
                     return;
                 }
                 
                 if (password.length < 6) {
-                    alert('La contraseña debe tener al menos 6 caracteres');
+                    showToastError('La contraseña debe tener al menos 6 caracteres');
                     return;
                 }
                 
@@ -468,35 +392,56 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Usuario actualizado exitosamente');
+                    showToastSuccess('Usuario actualizado exitosamente');
                     bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
                     // Recargar la página para mostrar los cambios
                     window.location.reload();
                 } else {
-                    alert('Error al actualizar usuario: ' + data.message);
+                    showToastError('Error al actualizar usuario: ' + data.message);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error al actualizar usuario');
+                showToastError('Error al actualizar usuario');
             });
+        }
+        
+        function deleteUser(userId) {
+            if (confirm('¿Está seguro de que desea eliminar este usuario? Esta acción no se puede deshacer.')) {
+                fetch(`/api/usuario/${userId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToastSuccess('Usuario eliminado exitosamente');
+                        // Recargar la página para mostrar los cambios
+                        window.location.reload();
+                    } else {
+                        showToastError('Error al eliminar usuario: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToastError('Error al eliminar usuario');
+                });
+            }
         }
         
         function toggleUserStatus(userId, activate) {
             const action = activate ? 'activar' : 'desactivar';
             if (confirm(`¿Está seguro de que desea ${action} este usuario?`)) {
                 // Implementar cambio de estado
-                alert(`Función para ${action} usuario en desarrollo`);
+                showToastInfo(`Función para ${action} usuario en desarrollo`);
             }
         }
         
     </script>
     
-    <!-- Reusable Table Component Styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/reusable_table.css') }}">
-    
-    <!-- Reusable Table Component Script -->
-    <script src="{{ url_for('static', filename='js/components/reusable_table.js') }}"></script>
+
     
     <!-- Include User Modal Component -->
     {% include 'components/modals/user_modal.html' %}

@@ -112,6 +112,8 @@
 .sidebar-nav {
     flex: 1;
     padding: 16px 0;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .nav-list {
@@ -152,8 +154,14 @@
 }
 
 .sidebar-footer {
-    padding: 20px;
+    padding: 16px 20px;
     border-top: 1px solid #e2e8f0;
+    flex-shrink: 0;
+    margin-top: auto;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .user-profile {
@@ -254,7 +262,7 @@
 @media (max-width: 768px) {
     .sidebar-footer {
         padding: 12px 16px;
-        min-height: auto;
+        min-height: 70px;
     }
     
     .sidebar-footer .user-profile {
@@ -285,12 +293,9 @@
 @media (max-height: 600px) {
     .sidebar-footer {
         padding: 8px 16px;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: 240px;
-        z-index: 1000;
+        min-height: 60px;
+        flex-shrink: 0;
+        margin-top: auto;
     }
     
     .sidebar-footer .user-profile {
@@ -309,6 +314,7 @@
 @media (max-width: 480px) {
     .sidebar-footer {
         padding: 10px 12px;
+        min-height: 65px;
     }
     
     .sidebar-footer .user-profile {
@@ -366,9 +372,9 @@
     
     .sidebar-footer {
         padding: 6px 12px;
-        position: fixed;
-        bottom: 0;
-        width: 240px;
+        min-height: 55px;
+        flex-shrink: 0;
+        margin-top: auto;
     }
     
     .sidebar-footer .user-profile {
@@ -381,6 +387,53 @@
         font-size: 9px;
         min-width: 50px;
     }
+}
+
+/* Estilos específicos para botones Bootstrap en sidebar footer */
+.sidebar-footer .btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid transparent;
+}
+
+.sidebar-footer .btn-primary {
+    background-color: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+.sidebar-footer .btn-primary:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    transform: translateY(-1px);
+    text-decoration: none;
+    color: white;
+}
+
+.sidebar-footer .btn-danger {
+    background-color: #ef4444;
+    color: white;
+    border-color: #ef4444;
+}
+
+.sidebar-footer .btn-danger:hover {
+    background-color: #dc2626;
+    border-color: #dc2626;
+    transform: translateY(-1px);
+    text-decoration: none;
+    color: white;
+}
+
+.sidebar-footer .flex-fill {
+    flex: 1;
 }
 
 /* Main Content */

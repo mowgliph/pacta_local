@@ -141,59 +141,48 @@
                         <p class="block-subtitle">Últimos contratos registrados en el sistema</p>
                     </div>
                     <div class="block-content">
-                        <div class="table-card">
-                            <div class="table-container">
-                                <table class="orders-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Contrato</th>
-                                            <th>Proveedor</th>
-                                            <th>Fecha Vencimiento</th>
-                                            <th>Valor</th>
-                                            <th>Estado</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for contrato in contratos %}
-                                        <tr>
-                                            <td>
-                                                <div class="customer-info">
-                                                    <i class="fas fa-file-contract" style="color: #3b82f6; margin-right: 8px;"></i>
-                                                    <div>
-                                                        <div style="font-weight: 500;">{{ contrato.id }}</div>
-                                                        <div style="font-size: 12px; color: #64748b;">{{ contrato.tipo }}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="customer-info">
-                                                    <img src="https://via.placeholder.com/32x32/3b82f6/ffffff?text={{ contrato.proveedor[0] }}" alt="Proveedor" class="customer-avatar">
-                                                    <div>
-                                                        <div style="font-weight: 500;">{{ contrato.proveedor }}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>{{ contrato.fecha_vencimiento }}</td>
-                                            <td style="font-weight: 600;">${{ "{:,}".format(contrato.valor) }}</td>
-                                            <td>
-                                                {% if contrato.estado == 'Activo' %}
-                                                    <span class="status-badge delivered">{{ contrato.estado }}</span>
-                                                {% elif contrato.estado == 'Por Vencer' %}
-                                                    <span class="status-badge processing">{{ contrato.estado }}</span>
-                                                {% else %}
-                                                    <span class="status-badge cancelled">{{ contrato.estado }}</span>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="table-footer">
-                                <a href="/contratos" class="btn btn-primary text-decoration-none">
-                                    Ver Todos los Contratos
-                                </a>
-                            </div>
+                        <!-- Tabla Consistente de Contratos Recientes -->
+                        {% set table_headers = [
+                            {'title': 'Contrato', 'sortable': true, 'class': ''},
+                            {'title': 'Proveedor', 'sortable': true, 'class': ''},
+                            {'title': 'Fecha Vencimiento', 'sortable': true, 'class': ''},
+                            {'title': 'Valor', 'sortable': true, 'class': 'text-end'},
+                            {'title': 'Estado', 'sortable': true, 'class': 'text-center'}
+                        ] %}
+                        
+                        {% set table_data = [] %}
+                        {% for contrato in contratos %}
+                            {% set row_data = {
+                                'cells': [
+                                    {
+                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-file-contract text-primary me-2"></i><div><div class="fw-semibold">' + contrato.id|string + '</div><small class="text-muted">' + contrato.tipo|string + '</small></div></div>',
+                                        'class': ''
+                                    },
+                                    {
+                                        'value': '<div class="d-flex align-items-center"><img src="https://via.placeholder.com/32x32/3b82f6/ffffff?text=' + contrato.proveedor[0]|string + '" alt="Proveedor" class="rounded-circle me-2" style="width: 32px; height: 32px;"><div><div class="fw-semibold">' + contrato.proveedor|string + '</div></div></div>',
+                                        'class': ''
+                                    },
+                                    {'value': contrato.fecha_vencimiento|string, 'class': ''},
+                                    {'value': '<span class="fw-semibold text-success">$' + "{:,}".format(contrato.valor) + '</span>', 'class': 'text-end'},
+                                    {
+                                        'type': 'badge',
+                                        'value': contrato.estado|string,
+                                        'variant': 'success' if contrato.estado == 'Activo' else ('warning' if contrato.estado == 'Por Vencer' else 'danger'),
+                                        'class': 'text-center'
+                                    }
+                                ]
+                            } %}
+                            {% set _ = table_data.append(row_data) %}
+                        {% endfor %}
+                        
+                        {% set empty_message = 'No hay contratos recientes disponibles' %}
+                        
+                        {% include 'components/partials/consistent_table.html' %}
+                        
+                        <div class="mt-3 text-center">
+                            <a href="/contratos" class="btn btn-primary text-decoration-none">
+                                Ver Todos los Contratos
+                            </a>
                         </div>
                     </div>
                 </div>

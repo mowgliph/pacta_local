@@ -714,3 +714,169 @@
 .table .status-indicator.unknown {
   background-color: var(--color-gray-400);
 }
+
+/* ===== TABLA CONSISTENTE ===== */
+
+/* Estilos específicos para la plantilla de tabla consistente */
+.table-responsive {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: var(--spacing-6);
+}
+
+.table.table-hover.table-striped {
+  margin-bottom: 0;
+  background-color: var(--bg-primary);
+}
+
+.table.table-hover.table-striped thead th {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  font-weight: var(--font-weight-semibold);
+  border: none;
+  padding: var(--spacing-4);
+  position: relative;
+}
+
+.table.table-hover.table-striped thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition-colors);
+}
+
+.table.table-hover.table-striped thead th.sortable:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.table.table-hover.table-striped thead th .sort-icon {
+  position: absolute;
+  right: var(--spacing-3);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.6;
+}
+
+.table.table-hover.table-striped thead th .sort-icon::before {
+  content: '\f0dc';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  font-size: var(--font-size-sm);
+}
+
+.table.table-hover.table-striped thead th.sorted-asc .sort-icon::before {
+  content: '\f0de';
+  opacity: 1;
+}
+
+.table.table-hover.table-striped thead th.sorted-desc .sort-icon::before {
+  content: '\f0dd';
+  opacity: 1;
+}
+
+.table.table-hover.table-striped tbody tr {
+  transition: var(--transition-colors);
+}
+
+.table.table-hover.table-striped tbody tr:hover {
+  background-color: var(--color-primary-light) !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.table.table-hover.table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--bg-secondary);
+}
+
+.table.table-hover.table-striped tbody td {
+  padding: var(--spacing-3) var(--spacing-4);
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* Estado vacío */
+.table.table-hover.table-striped tbody td.text-center.text-muted {
+  padding: var(--spacing-8) var(--spacing-4);
+  background-color: var(--bg-secondary);
+}
+
+/* Botones en tabla */
+.table .btn-group-sm .btn {
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: var(--font-size-xs);
+  border-radius: var(--radius-sm);
+  margin-right: var(--spacing-1);
+}
+
+.table .btn-group-sm .btn:last-child {
+  margin-right: 0;
+}
+
+/* Badges en tabla */
+.table .badge {
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-full);
+}
+
+/* Enlaces en tabla */
+.table a.text-decoration-none {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+  transition: var(--transition-colors);
+}
+
+.table a.text-decoration-none:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline !important;
+}
+
+/* Paginación */
+.pagination {
+  margin-top: var(--spacing-6);
+  margin-bottom: 0;
+}
+
+.pagination .page-link {
+  color: var(--color-primary);
+  border-color: var(--border-medium);
+  padding: var(--spacing-2) var(--spacing-3);
+  transition: var(--transition-colors);
+}
+
+.pagination .page-link:hover {
+  color: var(--color-primary-dark);
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.pagination .page-item.disabled .page-link {
+  color: var(--text-muted);
+  background-color: var(--bg-secondary);
+  border-color: var(--border-light);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .table.table-hover.table-striped thead th,
+  .table.table-hover.table-striped tbody td {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-sm);
+  }
+  
+  .table .btn-group-sm .btn {
+    padding: var(--spacing-1);
+    font-size: var(--font-size-xs);
+  }
+  
+  .table .badge {
+    font-size: 10px;
+    padding: 2px var(--spacing-1);
+  }
+}

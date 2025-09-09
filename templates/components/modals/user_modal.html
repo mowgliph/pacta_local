@@ -42,7 +42,7 @@
                                 <option value="">Seleccionar rol...</option>
                                 <option value="admin">Administrador</option>
                                 <option value="user">Usuario</option>
-                                <option value="viewer">Solo Lectura</option>
+                                <option value="guest">Invitado</option>
                             </select>
                         </div>
                     </div>
@@ -51,6 +51,125 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" onclick="createNewUser()">Crear Usuario</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para ver/editar detalles de usuario -->
+<div class="modal fade" id="userDetailsModal" tabindex="-1" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userDetailsModalLabel">
+                    <i class="fas fa-user me-2"></i>Detalles del Usuario
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Vista de solo lectura -->
+                <div id="userDetailsView">
+                    <div class="row">
+                        <div class="col-md-12 mb-3 text-center">
+                            <div id="userDetailsAvatar" class="user-avatar-large mb-3"></div>
+                            <h4 id="userDetailsNombre"></h4>
+                            <p class="text-muted" id="userDetailsEmail"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Nombre de Usuario:</label>
+                            <p id="userDetailsUsername" class="mb-0"></p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Teléfono:</label>
+                            <p id="userDetailsTelefono" class="mb-0"></p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Cargo:</label>
+                            <p id="userDetailsCargo" class="mb-0"></p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Departamento:</label>
+                            <p id="userDetailsDepartamento" class="mb-0"></p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Rol:</label>
+                            <p id="userDetailsRol" class="mb-0"></p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Estado:</label>
+                            <p id="userDetailsEstado" class="mb-0"></p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Último Acceso:</label>
+                            <p id="userDetailsUltimoAcceso" class="mb-0"></p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Fecha de Creación:</label>
+                            <p id="userDetailsFechaCreacion" class="mb-0"></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Formulario de edición -->
+                <div id="userDetailsEdit" style="display: none;">
+                    <form id="editUserForm">
+                        <input type="hidden" id="editUserId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editUserNombre" class="form-label">Nombre Completo *</label>
+                                <input type="text" class="form-control" id="editUserNombre" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editUserEmail" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="editUserEmail" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editUserTelefono" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="editUserTelefono">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editUserCargo" class="form-label">Cargo</label>
+                                <input type="text" class="form-control" id="editUserCargo">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editUserDepartamento" class="form-label">Departamento</label>
+                                <input type="text" class="form-control" id="editUserDepartamento">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editUserRole" class="form-label">Rol *</label>
+                                <select class="form-control" id="editUserRole" required>
+                                    <option value="admin">Administrador</option>
+                                    <option value="user">Usuario Regular</option>
+                                    <option value="guest">Invitado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editUserActivo" class="form-label">Estado *</label>
+                                <select class="form-control" id="editUserActivo" required>
+                                    <option value="true">Activo</option>
+                                    <option value="false">Inactivo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editUserPassword" class="form-label">Nueva Contraseña</label>
+                                <input type="password" class="form-control" id="editUserPassword" placeholder="Dejar vacío para mantener actual">
+                                <small class="form-text text-muted">Mínimo 6 caracteres</small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="userDetailsViewFooter">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="toggleEditModeModal()">Editar</button>
+                </div>
+                <div id="userDetailsEditFooter" style="display: none;">
+                    <button type="button" class="btn btn-secondary" onclick="toggleEditModeModal()">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveUserChanges()">Guardar Cambios</button>
+                </div>
             </div>
         </div>
     </div>

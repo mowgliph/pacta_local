@@ -1,0 +1,99 @@
+<!-- ===================================================================
+   PACTA - Plantilla de Tabla Consistente
+   Archivo: consistent_table.html
+   Descripción: Plantilla HTML para tablas con estilos consistentes
+=================================================================== -->
+
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                {% for header in table_headers %}
+                <th scope="col" class="{% if header.sortable %}sortable{% endif %} {% if header.class %}{{ header.class }}{% endif %}">
+                    {{ header.title }}
+                    {% if header.sortable %}
+                    <span class="sort-icon"></span>
+                    {% endif %}
+                </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% if table_data and table_data|length > 0 %}
+                {% for row in table_data %}
+                <tr class="{% if row.class %}{{ row.class }}{% endif %}">
+                    {% for cell in row.cells %}
+                    <td class="{% if cell.class %}{{ cell.class }}{% endif %}">
+                        {% if cell.type == 'actions' %}
+                            <div class="btn-group btn-group-sm" role="group">
+                                {% for action in cell.actions %}
+                                <button type="button" class="btn btn-{{ action.variant|default('outline-primary') }}" 
+                                        onclick="{{ action.onclick }}" 
+                                        {% if action.tooltip %}title="{{ action.tooltip }}"{% endif %}>
+                                    {% if action.icon %}<i class="{{ action.icon }}"></i>{% endif %}
+                                    {% if action.text %}{{ action.text }}{% endif %}
+                                </button>
+                                {% endfor %}
+                            </div>
+                        {% elif cell.type == 'badge' %}
+                            <span class="badge bg-{{ cell.variant|default('secondary') }}">{{ cell.value }}</span>
+                        {% elif cell.type == 'link' %}
+                            <a href="{{ cell.url }}" class="{% if cell.link_class %}{{ cell.link_class }}{% else %}text-decoration-none{% endif %}">
+                                {{ cell.value }}
+                            </a>
+                        {% else %}
+                            {{ cell.value }}
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="{{ table_headers|length }}" class="text-center text-muted py-4">
+                        <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
+                        {{ empty_message|default('No hay datos disponibles') }}
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Paginación (opcional) -->
+{% if pagination and pagination.total_pages > 1 %}
+<nav aria-label="Paginación de tabla">
+    <ul class="pagination justify-content-center">
+        <!-- Página anterior -->
+        <li class="page-item {% if pagination.current_page <= 1 %}disabled{% endif %}">
+            <a class="page-link" href="?page={{ pagination.current_page - 1 }}" aria-label="Anterior">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        
+        <!-- Páginas numeradas -->
+        {% for page_num in range(1, pagination.total_pages + 1) %}
+            {% if page_num == pagination.current_page %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                </li>
+            {% elif page_num <= 3 or page_num > pagination.total_pages - 3 or (page_num >= pagination.current_page - 1 and page_num <= pagination.current_page + 1) %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                </li>
+            {% elif page_num == 4 or page_num == pagination.total_pages - 3 %}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            {% endif %}
+        {% endfor %}
+        
+        <!-- Página siguiente -->
+        <li class="page-item {% if pagination.current_page >= pagination.total_pages %}disabled{% endif %}">
+            <a class="page-link" href="?page={{ pagination.current_page + 1 }}" aria-label="Siguiente">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+{% endif %}

@@ -1,74 +1,20 @@
 // Funciones para la gestión de backups
 
-// Funciones de utilidad para mostrar mensajes
+// Funciones de utilidad para mostrar mensajes usando el sistema unificado de toasts
 function showSuccess(message) {
-    // Crear toast de éxito
-    const toast = document.createElement('div');
-    toast.className = 'toast align-items-center text-white bg-success border-0';
-    toast.setAttribute('role', 'alert');
-    toast.setAttribute('aria-live', 'assertive');
-    toast.setAttribute('aria-atomic', 'true');
-    toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">
-                <i class="fas fa-check-circle me-2"></i>
-                ${message}
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    `;
-    
-    // Agregar al contenedor de toasts o crear uno
-    let toastContainer = document.querySelector('.toast-container');
-    if (!toastContainer) {
-        toastContainer = document.createElement('div');
-        toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
-        document.body.appendChild(toastContainer);
+    if (window.toastManager) {
+        window.toastManager.showSuccess(message);
+    } else {
+        alert(message);
     }
-    
-    toastContainer.appendChild(toast);
-    const bsToast = new bootstrap.Toast(toast);
-    bsToast.show();
-    
-    // Remover el toast del DOM después de que se oculte
-    toast.addEventListener('hidden.bs.toast', () => {
-        toast.remove();
-    });
 }
 
 function showError(message) {
-    // Crear toast de error
-    const toast = document.createElement('div');
-    toast.className = 'toast align-items-center text-white bg-danger border-0';
-    toast.setAttribute('role', 'alert');
-    toast.setAttribute('aria-live', 'assertive');
-    toast.setAttribute('aria-atomic', 'true');
-    toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                ${message}
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    `;
-    
-    // Agregar al contenedor de toasts o crear uno
-    let toastContainer = document.querySelector('.toast-container');
-    if (!toastContainer) {
-        toastContainer = document.createElement('div');
-        toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
-        document.body.appendChild(toastContainer);
+    if (window.toastManager) {
+        window.toastManager.showError(message);
+    } else {
+        alert(message);
     }
-    
-    toastContainer.appendChild(toast);
-    const bsToast = new bootstrap.Toast(toast);
-    bsToast.show();
-    
-    // Remover el toast del DOM después de que se oculte
-    toast.addEventListener('hidden.bs.toast', () => {
-        toast.remove();
-    });
 }
 
 // Función para mostrar opciones de restauración

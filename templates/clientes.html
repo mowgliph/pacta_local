@@ -98,126 +98,110 @@
             </div>
             
             <!-- Clients Table -->
-            {% set table_config = {
-                'id': 'clients-table',
-                'title': 'Lista de Clientes',
-                'api_endpoint': '/api/clients',
-                'show_search': true,
-                'show_filters': true,
-                'show_export': true,
-                'show_pagination': true,
-                'items_per_page': 10,
-                'columns': [
-                    {
-                        'key': 'client_info',
-                        'label': 'Cliente',
-                        'sortable': true,
-                        'template': 'client_info'
-                    },
-                    {
-                        'key': 'industry',
-                        'label': 'Industria',
-                        'sortable': true,
-                        'template': 'badge'
-                    },
-                    {
-                        'key': 'contracts',
-                        'label': 'Contratos',
-                        'sortable': true,
-                        'template': 'contracts_count'
-                    },
-                    {
-                        'key': 'total_value',
-                        'label': 'Valor Total',
-                        'sortable': true,
-                        'template': 'currency'
-                    },
-                    {
-                        'key': 'status',
-                        'label': 'Estado',
-                        'sortable': true,
-                        'template': 'status_badge'
-                    },
-                    {
-                        'key': 'contact',
-                        'label': 'Contacto',
-                        'sortable': false,
-                        'template': 'contact_info'
-                    },
-                    {
-                        'key': 'actions',
-                        'label': 'Acciones',
-                        'sortable': false,
-                        'template': 'actions'
-                    }
-                ],
-                'filters': [
-                    {
-                        'key': 'industry',
-                        'label': 'Industria',
-                        'type': 'select',
-                        'options': [
-                            {'value': '', 'label': 'Todas las industrias'},
-                            {'value': 'manufactura', 'label': 'Manufactura Industrial'},
-                            {'value': 'servicios', 'label': 'Servicios Urbanos'},
-                            {'value': 'financiero', 'label': 'Servicios Financieros'},
-                            {'value': 'retail', 'label': 'Retail y Comercio'},
-                            {'value': 'salud', 'label': 'Salud y Medicina'},
-                            {'value': 'educacion', 'label': 'Educación'}
-                        ]
-                    },
-                    {
-                        'key': 'status',
-                        'label': 'Estado',
-                        'type': 'select',
-                        'options': [
-                            {'value': '', 'label': 'Todos los estados'},
-                            {'value': 'activo', 'label': 'Activo'},
-                            {'value': 'inactivo', 'label': 'Inactivo'},
-                            {'value': 'prospecto', 'label': 'Prospecto'}
-                        ]
-                    }
-                ],
-                'default_data': [
-                    {
-                        'id': 'CLI-001',
-                        'client_info': {'name': 'Global Industries', 'id': 'CLI-001', 'avatar': 'GI', 'color': '#10b981'},
-                        'industry': {'value': 'manufactura', 'label': 'Manufactura Industrial', 'color': '#d1fae5', 'text_color': '#065f46'},
-                        'contracts': {'total': 7, 'active': 5},
-                        'total_value': 850000,
-                        'status': {'value': 'activo', 'label': 'Activo'},
-                        'contact': {'email': 'contact@globalind.com', 'phone': '+1 555-123-4567'}
-                    },
-                    {
-                        'id': 'CLI-002',
-                        'client_info': {'name': 'Metro Solutions', 'id': 'CLI-002', 'avatar': 'MS', 'color': '#3b82f6'},
-                        'industry': {'value': 'servicios', 'label': 'Servicios Urbanos', 'color': '#dbeafe', 'text_color': '#1d4ed8'},
-                        'contracts': {'total': 4, 'active': 3},
-                        'total_value': 620000,
-                        'status': {'value': 'activo', 'label': 'Activo'},
-                        'contact': {'email': 'info@metrosol.com', 'phone': '+1 555-234-5678'}
-                    },
-                    {
-                        'id': 'CLI-003',
-                        'client_info': {'name': 'Financial Group', 'id': 'CLI-003', 'avatar': 'FG', 'color': '#8b5cf6'},
-                        'industry': {'value': 'financiero', 'label': 'Servicios Financieros', 'color': '#ede9fe', 'text_color': '#7c3aed'},
-                        'contracts': {'total': 3, 'active': 3},
-                        'total_value': 480000,
-                        'status': {'value': 'activo', 'label': 'Activo'},
-                        'contact': {'email': 'admin@fingroup.com', 'phone': '+1 555-345-6789'}
-                    },
-                    {
-                        'id': 'CLI-004',
-                        'client_info': {'name': 'Retail Chain', 'id': 'CLI-004', 'avatar': 'RC', 'color': '#ef4444'},
-                        'industry': {'value': 'retail', 'label': 'Retail y Comercio', 'color': '#fee2e2', 'text_color': '#991b1b'},
-                        'contracts': {'total': 2, 'active': 1},
-                        'total_value': 280000,
-                        'status': {'value': 'prospecto', 'label': 'Prospecto'},
-                        'contact': {'email': 'sales@retailchain.com', 'phone': '+1 555-456-7890'}
-                    }
-                ]
-            } %}
-            {% include 'components/partials/reusable_table.html' %}
+            {% set table_headers = [
+                {'title': 'Cliente', 'sortable': true, 'class': ''},
+                {'title': 'Industria', 'sortable': true, 'class': ''},
+                {'title': 'Contratos', 'sortable': true, 'class': 'text-center'},
+                {'title': 'Valor Total', 'sortable': true, 'class': 'text-end'},
+                {'title': 'Estado', 'sortable': true, 'class': 'text-center'},
+                {'title': 'Contacto', 'sortable': false, 'class': ''},
+                {'title': 'Acciones', 'sortable': false, 'class': 'text-center col-actions'}
+            ] %}
+            
+            {% set table_data = [
+                {
+                    'cells': [
+                        {
+                            'value': '<div class="d-flex align-items-center"><div class="avatar-sm me-3" style="background: #10b981; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: bold;">GI</div><div><div class="fw-semibold">Global Industries</div><small class="text-muted">CLI-001</small></div></div>',
+                            'class': ''
+                        },
+                        {'type': 'badge', 'value': 'Manufactura Industrial', 'variant': 'success', 'class': ''},
+                        {'value': '<div class="text-center"><span class="fw-semibold">7</span><br><small class="text-muted">5 activos</small></div>', 'class': 'text-center'},
+                        {'value': '<span class="fw-semibold text-success">$850,000</span>', 'class': 'text-end'},
+                        {'type': 'badge', 'value': 'Activo', 'variant': 'success', 'class': 'text-center'},
+                        {'value': '<div><small class="text-muted">contact@globalind.com</small><br><small class="text-muted">+1 555-123-4567</small></div>', 'class': ''},
+                        {
+                            'type': 'actions',
+                            'actions': [
+                                {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewClient("CLI-001")', 'tooltip': 'Ver cliente'},
+                                {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editClient("CLI-001")', 'tooltip': 'Editar cliente'},
+                                {'icon': 'fas fa-trash', 'variant': 'outline-danger', 'onclick': 'deleteClient("CLI-001")', 'tooltip': 'Eliminar cliente'}
+                            ],
+                            'class': 'text-center'
+                        }
+                    ]
+                },
+                {
+                    'cells': [
+                        {
+                            'value': '<div class="d-flex align-items-center"><div class="avatar-sm me-3" style="background: #3b82f6; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: bold;">MS</div><div><div class="fw-semibold">Metro Solutions</div><small class="text-muted">CLI-002</small></div></div>',
+                            'class': ''
+                        },
+                        {'type': 'badge', 'value': 'Servicios Urbanos', 'variant': 'primary', 'class': ''},
+                        {'value': '<div class="text-center"><span class="fw-semibold">4</span><br><small class="text-muted">3 activos</small></div>', 'class': 'text-center'},
+                        {'value': '<span class="fw-semibold text-success">$620,000</span>', 'class': 'text-end'},
+                        {'type': 'badge', 'value': 'Activo', 'variant': 'success', 'class': 'text-center'},
+                        {'value': '<div><small class="text-muted">info@metrosol.com</small><br><small class="text-muted">+1 555-234-5678</small></div>', 'class': ''},
+                        {
+                            'type': 'actions',
+                            'actions': [
+                                {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewClient("CLI-002")', 'tooltip': 'Ver cliente'},
+                                {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editClient("CLI-002")', 'tooltip': 'Editar cliente'},
+                                {'icon': 'fas fa-trash', 'variant': 'outline-danger', 'onclick': 'deleteClient("CLI-002")', 'tooltip': 'Eliminar cliente'}
+                            ],
+                            'class': 'text-center'
+                        }
+                    ]
+                },
+                {
+                    'cells': [
+                        {
+                            'value': '<div class="d-flex align-items-center"><div class="avatar-sm me-3" style="background: #8b5cf6; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: bold;">FG</div><div><div class="fw-semibold">Financial Group</div><small class="text-muted">CLI-003</small></div></div>',
+                            'class': ''
+                        },
+                        {'type': 'badge', 'value': 'Servicios Financieros', 'variant': 'secondary', 'class': ''},
+                        {'value': '<div class="text-center"><span class="fw-semibold">3</span><br><small class="text-muted">3 activos</small></div>', 'class': 'text-center'},
+                        {'value': '<span class="fw-semibold text-success">$480,000</span>', 'class': 'text-end'},
+                        {'type': 'badge', 'value': 'Activo', 'variant': 'success', 'class': 'text-center'},
+                        {'value': '<div><small class="text-muted">admin@fingroup.com</small><br><small class="text-muted">+1 555-345-6789</small></div>', 'class': ''},
+                        {
+                            'type': 'actions',
+                            'actions': [
+                                {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewClient("CLI-003")', 'tooltip': 'Ver cliente'},
+                                {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editClient("CLI-003")', 'tooltip': 'Editar cliente'},
+                                {'icon': 'fas fa-trash', 'variant': 'outline-danger', 'onclick': 'deleteClient("CLI-003")', 'tooltip': 'Eliminar cliente'}
+                            ],
+                            'class': 'text-center'
+                        }
+                    ]
+                },
+                {
+                    'cells': [
+                        {
+                            'value': '<div class="d-flex align-items-center"><div class="avatar-sm me-3" style="background: #ef4444; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: bold;">RC</div><div><div class="fw-semibold">Retail Chain</div><small class="text-muted">CLI-004</small></div></div>',
+                            'class': ''
+                        },
+                        {'type': 'badge', 'value': 'Retail y Comercio', 'variant': 'danger', 'class': ''},
+                        {'value': '<div class="text-center"><span class="fw-semibold">2</span><br><small class="text-muted">1 activo</small></div>', 'class': 'text-center'},
+                        {'value': '<span class="fw-semibold text-success">$280,000</span>', 'class': 'text-end'},
+                        {'type': 'badge', 'value': 'Prospecto', 'variant': 'warning', 'class': 'text-center'},
+                        {'value': '<div><small class="text-muted">sales@retailchain.com</small><br><small class="text-muted">+1 555-456-7890</small></div>', 'class': ''},
+                        {
+                            'type': 'actions',
+                            'actions': [
+                                {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewClient("CLI-004")', 'tooltip': 'Ver cliente'},
+                                {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editClient("CLI-004")', 'tooltip': 'Editar cliente'},
+                                {'icon': 'fas fa-trash', 'variant': 'outline-danger', 'onclick': 'deleteClient("CLI-004")', 'tooltip': 'Eliminar cliente'}
+                            ],
+                            'class': 'text-center'
+                        }
+                    ]
+                }
+            ] %}
+            
+            {% set empty_message = 'No hay clientes disponibles' %}
+            
+            {% include 'components/partials/consistent_table.html' %}
 
         </div>
     </div>
@@ -319,9 +303,7 @@
         </div>
     </div>
     
-    <!-- Reusable Table Component Styles and Scripts -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/reusable_table.css') }}">
-    <script src="{{ url_for('static', filename='js/reusable_table.js') }}"></script>
+
     
     <script>
         // Client management functions

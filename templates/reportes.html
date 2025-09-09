@@ -115,139 +115,119 @@
                         <p class="block-subtitle">Historial completo de reportes generados</p>
                     </div>
                     <div class="block-content">
-                    <div class="table-card">
-                        <div class="table-header">
-                            <h3>Reportes Recientes</h3>
+                        <!-- Tabla Consistente de Reportes Recientes -->
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="mb-0">Reportes Recientes</h3>
                             <div>
-                                <button class="btn-icon" title="Filtrar">
+                                <button class="btn btn-outline-secondary btn-sm me-2" title="Filtrar">
                                     <i class="fas fa-filter"></i>
                                 </button>
-                                <button class="btn-icon" title="Exportar">
+                                <button class="btn btn-outline-primary btn-sm" title="Exportar">
                                     <i class="fas fa-download"></i>
                                 </button>
                             </div>
                         </div>
-                        <div class="table-container">
-                            <table class="orders-table">
-                                <thead>
-                                    <tr>
-                                        <th>Reporte</th>
-                                        <th>Tipo</th>
-                                        <th>Fecha Generación</th>
-                                        <th>Tamaño</th>
-                                        <th>Estado</th>
-                                        <th>Descargas</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="customer-info">
-                                                <i class="fas fa-chart-line" style="color: #3b82f6; margin-right: 8px;"></i>
-                                                <div>
-                                                    <div style="font-weight: 500;">Análisis Financiero Q1</div>
-                                                    <div style="font-size: 12px; color: #64748b;">Trimestral</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="status-badge" style="background: #dbeafe; color: #1e40af;">Financiero</span>
-                                        </td>
-                                        <td>28/01/2025</td>
-                                        <td>2.4 MB</td>
-                                        <td><span class="status-badge delivered">Completado</span></td>
-                                        <td style="font-weight: 600;">45</td>
-                                        <td>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Descargar">
-                                                <i class="fas fa-download"></i>
-                                            </button>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Ver">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="customer-info">
-                                                <i class="fas fa-users" style="color: #10b981; margin-right: 8px;"></i>
-                                                <div>
-                                                    <div style="font-weight: 500;">Reporte de Personal</div>
-                                                    <div style="font-size: 12px; color: #64748b;">Mensual</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="status-badge" style="background: #dcfce7; color: #166534;">RRHH</span>
-                                        </td>
-                                        <td>25/01/2025</td>
-                                        <td>1.8 MB</td>
-                                        <td><span class="status-badge delivered">Completado</span></td>
-                                        <td style="font-weight: 600;">23</td>
-                                        <td>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Descargar">
-                                                <i class="fas fa-download"></i>
-                                            </button>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Ver">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="customer-info">
-                                                <i class="fas fa-file-contract" style="color: #f59e0b; margin-right: 8px;"></i>
-                                                <div>
-                                                    <div style="font-weight: 500;">Estado de Contratos</div>
-                                                    <div style="font-size: 12px; color: #64748b;">Semanal</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="status-badge" style="background: #fef3c7; color: #92400e;">Contratos</span>
-                                        </td>
-                                        <td>22/01/2025</td>
-                                        <td>3.1 MB</td>
-                                        <td><span class="status-badge processing">Procesando</span></td>
-                                        <td style="font-weight: 600;">12</td>
-                                        <td>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Ver Progreso">
-                                                <i class="fas fa-spinner"></i>
-                                            </button>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Cancelar">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="customer-info">
-                                                <i class="fas fa-chart-pie" style="color: #8b5cf6; margin-right: 8px;"></i>
-                                                <div>
-                                                    <div style="font-weight: 500;">Reporte Ejecutivo</div>
-                                                    <div style="font-size: 12px; color: #64748b;">Diario</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="status-badge" style="background: #ede9fe; color: #6b21a8;">Ejecutivo</span>
-                                        </td>
-                                        <td>20/01/2025</td>
-                                        <td>5.2 MB</td>
-                                        <td><span class="status-badge delivered">Completado</span></td>
-                                        <td style="font-weight: 600;">78</td>
-                                        <td>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Descargar">
-                                                <i class="fas fa-download"></i>
-                                            </button>
-                                            <button class="btn-icon" style="width: 32px; height: 32px;" title="Ver">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        
+                        {% set table_headers = [
+                            {'title': 'Reporte', 'sortable': true, 'class': ''},
+                            {'title': 'Tipo', 'sortable': true, 'class': 'text-center'},
+                            {'title': 'Fecha Generación', 'sortable': true, 'class': ''},
+                            {'title': 'Tamaño', 'sortable': true, 'class': 'text-center'},
+                            {'title': 'Estado', 'sortable': true, 'class': 'text-center'},
+                            {'title': 'Descargas', 'sortable': true, 'class': 'text-center'},
+                            {'title': 'Acciones', 'sortable': false, 'class': 'text-center'}
+                        ] %}
+                        
+                        {% set table_data = [
+                            {
+                                'cells': [
+                                    {
+                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-chart-line text-primary me-2"></i><div><div class="fw-semibold">Análisis Financiero Q1</div><small class="text-muted">Trimestral</small></div></div>',
+                                        'class': ''
+                                    },
+                                    {'type': 'badge', 'value': 'Financiero', 'variant': 'primary', 'class': 'text-center'},
+                                    {'value': '28/01/2025', 'class': ''},
+                                    {'value': '2.4 MB', 'class': 'text-center'},
+                                    {'type': 'badge', 'value': 'Completado', 'variant': 'success', 'class': 'text-center'},
+                                    {'value': '<span class="fw-semibold">45</span>', 'class': 'text-center'},
+                                    {
+                                        'type': 'actions',
+                                        'actions': [
+                                            {'icon': 'fas fa-download', 'variant': 'outline-primary', 'onclick': 'downloadReport("financiero-q1")', 'tooltip': 'Descargar'},
+                                            {'icon': 'fas fa-eye', 'variant': 'outline-secondary', 'onclick': 'viewReport("financiero-q1")', 'tooltip': 'Ver'}
+                                        ],
+                                        'class': 'text-center'
+                                    }
+                                ]
+                            },
+                            {
+                                'cells': [
+                                    {
+                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-users text-success me-2"></i><div><div class="fw-semibold">Reporte de Personal</div><small class="text-muted">Mensual</small></div></div>',
+                                        'class': ''
+                                    },
+                                    {'type': 'badge', 'value': 'RRHH', 'variant': 'success', 'class': 'text-center'},
+                                    {'value': '25/01/2025', 'class': ''},
+                                    {'value': '1.8 MB', 'class': 'text-center'},
+                                    {'type': 'badge', 'value': 'Completado', 'variant': 'success', 'class': 'text-center'},
+                                    {'value': '<span class="fw-semibold">23</span>', 'class': 'text-center'},
+                                    {
+                                        'type': 'actions',
+                                        'actions': [
+                                            {'icon': 'fas fa-download', 'variant': 'outline-primary', 'onclick': 'downloadReport("personal")', 'tooltip': 'Descargar'},
+                                            {'icon': 'fas fa-eye', 'variant': 'outline-secondary', 'onclick': 'viewReport("personal")', 'tooltip': 'Ver'}
+                                        ],
+                                        'class': 'text-center'
+                                    }
+                                ]
+                            },
+                            {
+                                'cells': [
+                                    {
+                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-file-contract text-warning me-2"></i><div><div class="fw-semibold">Estado de Contratos</div><small class="text-muted">Semanal</small></div></div>',
+                                        'class': ''
+                                    },
+                                    {'type': 'badge', 'value': 'Contratos', 'variant': 'warning', 'class': 'text-center'},
+                                    {'value': '22/01/2025', 'class': ''},
+                                    {'value': '3.1 MB', 'class': 'text-center'},
+                                    {'type': 'badge', 'value': 'Procesando', 'variant': 'warning', 'class': 'text-center'},
+                                    {'value': '<span class="fw-semibold">12</span>', 'class': 'text-center'},
+                                    {
+                                        'type': 'actions',
+                                        'actions': [
+                                            {'icon': 'fas fa-spinner', 'variant': 'outline-warning', 'onclick': 'viewProgress("contratos")', 'tooltip': 'Ver Progreso'},
+                                            {'icon': 'fas fa-times', 'variant': 'outline-danger', 'onclick': 'cancelReport("contratos")', 'tooltip': 'Cancelar'}
+                                        ],
+                                        'class': 'text-center'
+                                    }
+                                ]
+                            },
+                            {
+                                'cells': [
+                                    {
+                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-chart-pie" style="color: #8b5cf6;" class="me-2"></i><div><div class="fw-semibold">Reporte Ejecutivo</div><small class="text-muted">Diario</small></div></div>',
+                                        'class': ''
+                                    },
+                                    {'type': 'badge', 'value': 'Ejecutivo', 'variant': 'secondary', 'class': 'text-center'},
+                                    {'value': '20/01/2025', 'class': ''},
+                                    {'value': '5.2 MB', 'class': 'text-center'},
+                                    {'type': 'badge', 'value': 'Completado', 'variant': 'success', 'class': 'text-center'},
+                                    {'value': '<span class="fw-semibold">78</span>', 'class': 'text-center'},
+                                    {
+                                        'type': 'actions',
+                                        'actions': [
+                                            {'icon': 'fas fa-download', 'variant': 'outline-primary', 'onclick': 'downloadReport("ejecutivo")', 'tooltip': 'Descargar'},
+                                            {'icon': 'fas fa-eye', 'variant': 'outline-secondary', 'onclick': 'viewReport("ejecutivo")', 'tooltip': 'Ver'}
+                                        ],
+                                        'class': 'text-center'
+                                    }
+                                ]
+                            }
+                        ] %}
+                        
+                        {% set empty_message = 'No hay reportes disponibles' %}
+                        
+                        {% include 'components/partials/consistent_table.html' %}
                     </div>
                     </div>
                 </div>
