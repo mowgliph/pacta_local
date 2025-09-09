@@ -145,5 +145,19 @@
     
     <!-- Sistema unificado de toasts -->
     {% include 'components/partials/toast_container.html' %}
+    
+    <!-- Script de inicialización de datos de ejemplo -->
+    <script src="{{ url_for('static', filename='js/init_sample_data.js') }}"></script>
+    
+    <!-- Inicializar datos de ejemplo si es necesario -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Solo mostrar el modal de inicialización en el dashboard principal
+            if (window.location.pathname === '/' || window.location.pathname === '/dashboard') {
+                const sampleDataInit = new SampleDataInitializer();
+                sampleDataInit.checkAndInitialize();
+            }
+        });
+    </script>
 </body>
 </html>
