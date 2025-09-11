@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, session, flash, jsonify, request
 from functools import wraps
 from datetime import datetime, timedelta
-from database.models import Usuario, Cliente, Contrato, Notificacion
+from database.models import Usuario, Cliente, Contrato, Notificacion, Proveedor
 
 providers_clients_bp = Blueprint('providers_clients', __name__)
 
@@ -49,6 +49,67 @@ def api_login_required(f):
 
 # ===== RUTAS DE PROVEEDORES =====
 
+@providers_clients_bp.route('/api/proveedores/estadisticas', methods=['GET'])
+@api_login_required
+def api_get_estadisticas_proveedores():
+    """API para obtener estadísticas de proveedores"""
+    try:
+        # Fechas para comparación
+        hoy = datetime.now()
+        inicio_mes_actual = hoy.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        if inicio_mes_actual.month == 1:
+            inicio_mes_anterior = inicio_mes_actual.replace(year=inicio_mes_actual.year-1, month=12)
+        else:
+            inicio_mes_anterior = inicio_mes_actual.replace(month=inicio_mes_actual.month-1)
+        
+        # Obtener todos los proveedores
+        proveedores = Proveedor.get_all()
+        
+        # Obtener contratos para estadísticas
+        contratos = Contrato.get_all()
+        
+        # Estadísticas actuales
+        total_proveedores = len(proveedores)
+        proveedores_activos = len([p for p in proveedores if p.activo])
+        contratos_proveedores = [c for c in contratos if any(p.id == c.proveedor_id for p in proveedores) if hasattr(c, 'proveedor_id')]
+        valor_total_proveedores = sum([c.monto_actual for c in contratos_proveedores if c.estado == 'activo'])
+        
+        # Estadísticas del mes anterior
+        proveedores_mes_anterior = [p for p in proveedores if p.fecha_creacion and p.fecha_creacion < inicio_mes_actual]
+        total_proveedores_mes_anterior = len(proveedores_mes_anterior)
+        
+        contratos_mes_anterior = [c for c in contratos_proveedores if hasattr(c, 'fecha_inicio') and c.fecha_inicio and c.fecha_inicio < inicio_mes_actual]
+        contratos_totales_mes_anterior = len(contratos_mes_anterior)
+        
+        # Calcular cambios
+        cambio_proveedores = total_proveedores - total_proveedores_mes_anterior
+        cambio_contratos = len(contratos_proveedores) - contratos_totales_mes_anterior
+        
+        # Porcentaje de proveedores activos
+        porcentaje_activos = (proveedores_activos / total_proveedores * 100) if total_proveedores > 0 else 0
+        
+        estadisticas = {
+            'total_proveedores': total_proveedores,
+            'proveedores_activos': proveedores_activos,
+            'contratos_totales': len(contratos_proveedores),
+            'valor_promedio': int(valor_total_proveedores / len(contratos_proveedores)) if contratos_proveedores else 0,
+            'valor_total': int(valor_total_proveedores),
+            'cambio_proveedores': cambio_proveedores,
+            'cambio_contratos': cambio_contratos,
+            'porcentaje_activos': round(porcentaje_activos, 1)
+        }
+        
+        return jsonify({
+            'success': True,
+            'estadisticas': estadisticas
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error al obtener estadísticas: {str(e)}'
+        }), 500
+
 @providers_clients_bp.route('/proveedores')
 @login_required
 def proveedores():
@@ -58,8 +119,7 @@ def proveedores():
         usuario_actual = Usuario.get_by_id(session['user_id'])
         
         # Obtener todos los proveedores
-        clientes = Cliente.get_all()
-        proveedores = [c for c in clientes if c.tipo_cliente == 'proveedor']
+        proveedores = Proveedor.get_all()
         
         # Obtener contratos para estadísticas
         contratos = Contrato.get_all()
@@ -67,7 +127,7 @@ def proveedores():
         # Calcular estadísticas de proveedores
         total_proveedores = len(proveedores)
         proveedores_activos = len([p for p in proveedores if p.activo])
-        contratos_proveedores = [c for c in contratos if any(p.id == c.cliente_id for p in proveedores)]
+        contratos_proveedores = [c for c in contratos if any(p.id == c.proveedor_id for p in proveedores) if hasattr(c, 'proveedor_id')]
         valor_total_proveedores = sum([c.monto_actual for c in contratos_proveedores if c.estado == 'activo'])
         
         estadisticas = {
@@ -138,14 +198,14 @@ def clientes():
 def api_get_proveedores():
     """API para obtener lista de proveedores"""
     try:
-        clientes = Cliente.get_all()
-        proveedores = [c for c in clientes if c.tipo_cliente == 'proveedor']
+        proveedores = Proveedor.get_all()
         
         proveedores_data = []
         for proveedor in proveedores:
             proveedores_data.append({
                 'id': proveedor.id,
                 'nombre': proveedor.nombre,
+                'tipo_proveedor': proveedor.tipo_proveedor,
                 'rfc': proveedor.rfc,
                 'email': proveedor.email,
                 'telefono': proveedor.telefono,
@@ -180,9 +240,9 @@ def api_create_proveedor():
             }), 400
         
         # Crear nuevo proveedor
-        proveedor = Cliente(
+        proveedor = Proveedor(
             nombre=data.get('nombre'),
-            tipo_cliente='proveedor',
+            tipo_proveedor=data.get('tipo_proveedor', 'servicio'),
             rfc=data.get('rfc', ''),
             direccion=data.get('direccion', ''),
             telefono=data.get('telefono', ''),
@@ -285,9 +345,9 @@ def api_update_proveedor(proveedor_id):
     """API para actualizar un proveedor"""
     try:
         data = request.get_json()
-        proveedor = Cliente.get_by_id(proveedor_id)
+        proveedor = Proveedor.get_by_id(proveedor_id)
         
-        if not proveedor or proveedor.tipo_cliente != 'proveedor':
+        if not proveedor:
             return jsonify({
                 'success': False,
                 'message': 'Proveedor no encontrado'
@@ -296,6 +356,8 @@ def api_update_proveedor(proveedor_id):
         # Actualizar campos
         if 'nombre' in data:
             proveedor.nombre = data['nombre']
+        if 'tipo_proveedor' in data:
+            proveedor.tipo_proveedor = data['tipo_proveedor']
         if 'rfc' in data:
             proveedor.rfc = data['rfc']
         if 'email' in data:
@@ -368,9 +430,9 @@ def api_update_cliente(cliente_id):
 def api_delete_proveedor(proveedor_id):
     """API para eliminar un proveedor"""
     try:
-        proveedor = Cliente.get_by_id(proveedor_id)
+        proveedor = Proveedor.get_by_id(proveedor_id)
         
-        if not proveedor or proveedor.tipo_cliente != 'proveedor':
+        if not proveedor:
             return jsonify({
                 'success': False,
                 'message': 'Proveedor no encontrado'
@@ -378,7 +440,7 @@ def api_delete_proveedor(proveedor_id):
         
         # Verificar si tiene contratos asociados
         contratos = Contrato.get_all()
-        contratos_proveedor = [c for c in contratos if c.cliente_id == proveedor_id]
+        contratos_proveedor = [c for c in contratos if hasattr(c, 'proveedor_id') and c.proveedor_id == proveedor_id]
         
         if contratos_proveedor:
             return jsonify({
@@ -386,7 +448,9 @@ def api_delete_proveedor(proveedor_id):
                 'message': 'No se puede eliminar el proveedor porque tiene contratos asociados'
             }), 400
         
-        proveedor.delete()
+        # Marcar como inactivo en lugar de eliminar
+        proveedor.activo = False
+        proveedor.save()
         
         return jsonify({
             'success': True,

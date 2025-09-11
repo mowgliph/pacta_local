@@ -4,6 +4,196 @@
    Descripción: Estilos específicos para la gestión de proveedores
 =================================================================== */
 
+/* ===== AVATARES DE PROVEEDORES ===== */
+.proveedor-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: white;
+    text-transform: uppercase;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.proveedor-avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.proveedor-avatar.color-blue {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+.proveedor-avatar.color-green {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.proveedor-avatar.color-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.proveedor-avatar.color-pink {
+    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+}
+
+.proveedor-avatar.color-yellow {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.proveedor-avatar.color-red {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.proveedor-avatar.color-indigo {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+}
+
+.proveedor-avatar.color-teal {
+    background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
+}
+
+/* ===== INFORMACIÓN DE PROVEEDOR EN TABLA ===== */
+.proveedor-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.proveedor-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.proveedor-name {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.proveedor-tipo {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* ===== BADGES MEJORADOS PARA PROVEEDORES ===== */
+.proveedor-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.proveedor-badge.activo {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    color: #065f46;
+}
+
+.proveedor-badge.inactivo {
+    background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+    color: #991b1b;
+}
+
+.proveedor-badge.tipo {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+
+/* ===== BOTONES DE ACCIÓN MEJORADOS ===== */
+.proveedor-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.proveedor-action-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 12px;
+}
+
+.proveedor-action-btn.edit {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+}
+
+.proveedor-action-btn.edit:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.proveedor-action-btn.delete {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+}
+
+.proveedor-action-btn.delete:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+}
+
+/* ===== TABLA DE PROVEEDORES MEJORADA ===== */
+.proveedores-table {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Mantener el color original de la tabla de proveedores */
+.proveedores-table thead th {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 16px 12px;
+    border-bottom: 2px solid #81d4fa;
+}
+
+.proveedores-table tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.proveedores-table tbody tr:hover {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.proveedores-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
 /* ===== LAYOUT PRINCIPAL DE PROVEEDORES ===== */
 
 .proveedores-page {

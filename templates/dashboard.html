@@ -92,19 +92,19 @@
                     </div>
                     <div class="block-content">
                         <div class="contract-actions d-flex flex-nowrap gap-3">
-                            <button class="btn btn-primary flex-fill d-flex align-items-center gap-2" style="min-width: 150px;">
+                            <button class="btn btn-primary flex-fill d-flex align-items-center gap-2" style="min-width: 150px;" onclick="window.location.href='{{ url_for('contratos.listar') }}'">
                                 <i class="fas fa-file-contract"></i>
                                 Gestionar Contratos
                             </button>
-                            <button class="btn btn-success flex-fill d-flex align-items-center gap-2" style="min-width: 150px;">
+                            <button class="btn btn-success flex-fill d-flex align-items-center gap-2" style="min-width: 150px;" onclick="window.location.href='{{ url_for('main.reportes') }}'">
                                 <i class="fas fa-chart-bar"></i>
                                 Ver Reportes
                             </button>
-                            <button class="btn btn-warning flex-fill d-flex align-items-center gap-2" style="min-width: 150px;">
+                            <button class="btn btn-warning flex-fill d-flex align-items-center gap-2" style="min-width: 150px;" onclick="window.location.href='{{ url_for('users.usuario') }}'">
                                 <i class="fas fa-user"></i>
                                 Perfil de Usuario
                             </button>
-                            <button class="btn btn-purple flex-fill d-flex align-items-center gap-2" style="min-width: 150px;">
+                            <button class="btn btn-purple flex-fill d-flex align-items-center gap-2" style="min-width: 150px;" onclick="window.location.href='{{ url_for('main.configuracion') }}'">
                                 <i class="fas fa-cog"></i>
                                 Configuración
                             </button>

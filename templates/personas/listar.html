@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}Gestión de Personas Responsables - PACTA{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container">
+        <!-- Include Sidebar Component -->
+        {% include 'components/partials/sidebar.html' %}
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Content Header -->
+            {% set page_title = "Gestión de Personas Responsables" %}
+            {% set page_subtitle = "Administra todas las personas responsables del sistema" %}
+            {% set page_icon = "fas fa-users" %}
+            {% set show_notifications = true %}
+            {% set show_user_menu = true %}
+            {% include 'components/partials/content_header.html' %}
+
+            <!-- Personas Statistics Cards -->
+            <div class="metrics-grid" style="margin-bottom: 32px;">
+                <!-- Total Personas -->
+                {% set metric_label = "Total Personas" %}
+                {% set metric_value = estadisticas.total_personas if estadisticas and estadisticas.total_personas else "0" %}
+                {% set metric_icon = "fas fa-users" %}
+                {% set metric_color = "text-primary" %}
+                {% if estadisticas and estadisticas.cambio_personas is defined %}
+                    {% set cambio = estadisticas.cambio_personas %}
+                    {% set metric_change = ("+" + cambio|string + " este mes") if cambio >= 0 else (cambio|string + " este mes") %}
+                    {% set change_type = "positive" if cambio >= 0 else "negative" %}
+                {% else %}
+                    {% set metric_change = "0 este mes" %}
+                    {% set change_type = "neutral" %}
+                {% endif %}
+                {% include 'components/partials/metric_card.html' %}
+                
+                <!-- Personas Activas -->
+                {% set metric_label = "Personas Activas" %}
+                {% set metric_value = estadisticas.personas_activas if estadisticas and estadisticas.personas_activas else "0" %}
+                {% set metric_icon = "fas fa-check-circle" %}
+                {% set metric_color = "text-success" %}
+                {% if estadisticas and estadisticas.porcentaje_activas is defined %}
+                    {% set metric_change = estadisticas.porcentaje_activas|string + "% del total" %}
+                {% else %}
+                    {% set metric_change = "0% del total" %}
+                {% endif %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
+                
+                <!-- Personas Principales -->
+                {% set metric_label = "Personas Principales" %}
+                {% set metric_value = estadisticas.personas_principales if estadisticas and estadisticas.personas_principales else "0" %}
+                {% set metric_icon = "fas fa-star" %}
+                {% set metric_color = "text-warning" %}
+                {% if estadisticas and estadisticas.porcentaje_principales is defined %}
+                    {% set metric_change = estadisticas.porcentaje_principales|string + "% del total" %}
+                {% else %}
+                    {% set metric_change = "0% del total" %}
+                {% endif %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
+                
+                <!-- Clientes con Personas -->
+                {% set metric_label = "Clientes con Personas" %}
+                {% set metric_value = estadisticas.clientes_con_personas if estadisticas and estadisticas.clientes_con_personas else "0" %}
+                {% set metric_icon = "fas fa-building" %}
+                {% set metric_color = "text-purple" %}
+                {% set metric_change = "Clientes activos" %}
+                {% set change_type = "positive" %}
+                {% include 'components/partials/metric_card.html' %}
+            </div>
+            
+            <!-- Tabla de Personas Responsables -->
+            <div class="block-section">
+                <div class="block-header">
+                    <h3 class="block-title">Personas Responsables del Sistema</h3>
+                    <p class="block-subtitle">Lista completa de personas responsables registradas</p>
+                </div>
+                <div class="block-content" style="padding: 0;">
+                    <!-- Barra de acciones -->
+                    <div class="action-bar" style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                        <div style="display: flex; gap: 8px;">
+                            <button id="btnAddPersona" class="btn-icon-action" title="Añadir Persona Responsable" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #3b82f6; border: none; border-radius: 6px; color: white; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button id="btnSearchPersona" class="btn-icon-action" title="Buscar Personas" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #10b981; border: none; border-radius: 6px; color: white; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <div id="searchContainer" style="display: none; flex: 1; max-width: 300px; margin-left: 16px;">
+                            <input type="text" id="searchInput" placeholder="Buscar personas..." style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                        </div>
+                    </div>
+                    
+                    <!-- Tabla de Personas -->
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped personas-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="sortable">Nombre <span class="sort-icon"></span></th>
+                                    <th scope="col" class="sortable">Cliente <span class="sort-icon"></span></th>
+                                    <th scope="col" class="sortable">Cargo <span class="sort-icon"></span></th>
+                                    <th scope="col" class="sortable">Email <span class="sort-icon"></span></th>
+                                    <th scope="col" class="sortable">Teléfono <span class="sort-icon"></span></th>
+                                    <th scope="col" class="sortable">Principal <span class="sort-icon"></span></th>
+                                    <th scope="col" class="sortable">Estado <span class="sort-icon"></span></th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="personasTableBody">
+                                <!-- Los datos se cargarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <!-- Add Persona Modal -->
+    <div class="modal fade" id="addPersonaModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-plus" style="color: #3b82f6; margin-right: 8px;"></i>
+                        Añadir Nueva Persona Responsable
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addPersonaForm">
+                        <input type="hidden" id="personaId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nombre Completo *</label>
+                                <input type="text" class="form-control" id="personaNombre" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Documento Oficial *</label>
+                                <div id="currentDocumentInfo" style="display: none;"></div>
+                                <input type="file" class="form-control" id="personaDocumento" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required>
+                                <div class="form-text">Subir carta oficial que avale a la persona como responsable (PDF, DOC, DOCX, JPG, PNG)</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Cargo</label>
+                                <input type="text" class="form-control" id="personaCargo">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="personaEmail">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="personaTelefono">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Estado</label>
+                                <select class="form-control" id="personaActivo">
+                                    <option value="true">Activo</option>
+                                    <option value="false">Inactivo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="personaEsPrincipal">
+                                    <label class="form-check-label" for="personaEsPrincipal">
+                                        Es persona principal
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Observaciones</label>
+                                <textarea class="form-control" id="personaObservaciones" rows="2" placeholder="Observaciones adicionales sobre el documento"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="savePersonaBtn">Guardar Persona</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .persona-tag {
+        display: inline-block;
+        background: #e0f2fe;
+        color: #0277bd;
+        padding: 4px 8px;
+        border-radius: 4px;
+        margin: 2px;
+        font-size: 12px;
+        border: 1px solid #b3e5fc;
+    }
+    
+    .persona-tag .remove-persona {
+        margin-left: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        color: #d32f2f;
+    }
+    
+    .persona-tag .remove-persona:hover {
+        color: #b71c1c;
+    }
+    
+    .dropdown-menu {
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .dropdown-item {
+        padding: 8px 12px;
+        cursor: pointer;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .dropdown-item:hover {
+        background-color: #f8fafc;
+    }
+    
+    .dropdown-item:last-child {
+        border-bottom: none;
+    }
+    
+    .persona-info .persona-name {
+        font-weight: 500;
+        color: #1e293b;
+    }
+    
+    .persona-info .persona-details {
+        font-size: 12px;
+        color: #64748b;
+        margin-top: 2px;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/personas.js') }}"></script>
+{% endblock %}

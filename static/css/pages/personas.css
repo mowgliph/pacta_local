@@ -1,0 +1,378 @@
+/* ===================================================================
+   PACTA - Estilos para Página de Personas Responsables
+   Archivo: personas.css
+   Descripción: Estilos específicos para la gestión de personas responsables
+=================================================================== */
+
+/* ===== AVATARES DE PERSONAS ===== */
+.persona-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: white;
+    text-transform: uppercase;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.persona-avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.persona-avatar.color-blue {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+.persona-avatar.color-green {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.persona-avatar.color-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.persona-avatar.color-pink {
+    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+}
+
+.persona-avatar.color-yellow {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.persona-avatar.color-red {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.persona-avatar.color-indigo {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+}
+
+.persona-avatar.color-teal {
+    background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
+}
+
+/* ===== INFORMACIÓN DE PERSONA EN TABLA ===== */
+.persona-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.persona-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.persona-name {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.persona-cargo {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* ===== BADGES MEJORADOS PARA PERSONAS ===== */
+.persona-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.persona-badge.principal {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #92400e;
+}
+
+.persona-badge.secundaria {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+
+.persona-badge.activo {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    color: #065f46;
+}
+
+.persona-badge.inactivo {
+    background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+    color: #991b1b;
+}
+
+/* ===== BOTONES DE ACCIÓN MEJORADOS ===== */
+.persona-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.persona-action-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 12px;
+}
+
+.persona-action-btn.view {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.persona-action-btn.view:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+}
+
+.persona-action-btn.edit {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+}
+
+.persona-action-btn.edit:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.persona-action-btn.delete {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+}
+
+.persona-action-btn.delete:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+}
+
+/* ===== TABLA DE PERSONAS MEJORADA ===== */
+.personas-table {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.personas-table thead th {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 16px 12px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.personas-table tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.personas-table tbody tr:hover {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.personas-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ===== MODAL DE VISTA PREVIA DE PERSONA ===== */
+.persona-view-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.persona-view-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.persona-view-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.persona-view-modal.show .persona-view-content {
+    transform: scale(1);
+}
+
+.persona-view-header {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.persona-view-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.persona-view-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+.persona-view-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.persona-view-body {
+    display: flex;
+    height: 500px;
+}
+
+.persona-details-section {
+    flex: 1;
+    padding: 20px;
+    border-right: 1px solid #e2e8f0;
+    overflow-y: auto;
+}
+
+.persona-document-section {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+}
+
+.persona-detail-item {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.persona-detail-label {
+    font-weight: 600;
+    color: #374151;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+.persona-detail-value {
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.document-preview {
+    max-width: 100%;
+    max-height: 400px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.no-document {
+    color: #6b7280;
+    font-style: italic;
+    text-align: center;
+    padding: 40px;
+}
+
+.persona-view-footer {
+    padding: 20px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    background: #f8fafc;
+}
+
+.persona-view-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.persona-view-btn.edit {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+}
+
+.persona-view-btn.edit:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    transform: translateY(-1px);
+}
+
+.persona-view-btn.close {
+    background: #6b7280;
+    color: white;
+}
+
+.persona-view-btn.close:hover {
+    background: #4b5563;
+    transform: translateY(-1px);
+}

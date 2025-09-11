@@ -9,7 +9,6 @@ DATABASE_PATH = 'pacta_local.db'
 class DatabaseManager:
     def __init__(self, db_path=DATABASE_PATH):
         self.db_path = db_path
-        self.init_database()
     
     @contextmanager
     def get_connection(self):

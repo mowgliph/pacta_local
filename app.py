@@ -20,6 +20,7 @@ app.register_blueprint(init_data_api)
 
 def init_db():
     """Inicializa la base de datos y crea el usuario administrador"""
+    # Inicializar la base de datos explícitamente
     db_manager.init_database()
     
     # Crear usuario administrador automáticamente

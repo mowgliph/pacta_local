@@ -1,12 +1,17 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, session
 from functools import wraps
-from database.models import PersonaResponsable, Cliente, Notificacion
+from database.models import PersonaResponsable, Cliente, Notificacion, Usuario
 from database.database import DatabaseManager
 import logging
+import os
+from werkzeug.utils import secure_filename
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Crear instancia del gestor de base de datos
+db_manager = DatabaseManager()
 
 # Crear blueprint para personas responsables
 personas_bp = Blueprint('personas', __name__, url_prefix='/personas')
@@ -18,12 +23,12 @@ def get_notificaciones_count():
         return Notificacion.get_unread_count(session['user_id'])
     return 0
 
-# Decorador para requerir login (simplificado)
+# Decorador para requerir login
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        # Aquí iría la lógica de verificación de sesión
-        # Por ahora permitimos el acceso
+        if 'user_id' not in session:
+            return redirect(url_for('auth.login'))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -33,22 +38,35 @@ def listar_personas():
     """Mostrar lista de todas las personas responsables"""
     try:
         # Obtener todas las personas responsables
-        personas = PersonaResponsable.obtener_todos()
+        personas = PersonaResponsable.get_all()
         
-        # Obtener información de clientes para mostrar nombres
-        clientes = {}
-        for persona in personas:
-            if persona['cliente_id'] not in clientes:
-                cliente = Cliente.obtener_por_id(persona['cliente_id'])
-                if cliente:
-                    clientes[persona['cliente_id']] = cliente
+        # Obtener todos los clientes para el formulario
+        clientes = Cliente.get_all()
         
-        # Obtener contador de notificaciones
+        # Calcular estadísticas
+        total_personas = len(personas)
+        personas_activas = len([p for p in personas if p.activo])
+        personas_principales = len([p for p in personas if p.es_principal])
+        clientes_con_personas = len(set([p.cliente_id for p in personas if p.cliente_id is not None]))
+        
+        estadisticas = {
+            'total_personas': total_personas,
+            'personas_activas': personas_activas,
+            'personas_principales': personas_principales,
+            'clientes_con_personas': clientes_con_personas,
+            'porcentaje_activas': round((personas_activas / total_personas * 100) if total_personas > 0 else 0, 1),
+            'porcentaje_principales': round((personas_principales / total_personas * 100) if total_personas > 0 else 0, 1)
+        }
+        
+        # Obtener usuario actual y contador de notificaciones
+        usuario = Usuario.get_by_id(session['user_id'])
         notificaciones_count = get_notificaciones_count()
         
         return render_template('personas/listar.html', 
-                             personas=personas, 
+                             personas=personas,
                              clientes=clientes,
+                             estadisticas=estadisticas,
+                             usuario=usuario,
                              notificaciones_count=notificaciones_count)
     except Exception as e:
         logger.error(f"Error al listar personas: {e}")
@@ -62,51 +80,66 @@ def crear_persona():
     if request.method == 'POST':
         try:
             # Obtener datos del formulario
-            cliente_id = request.form.get('cliente_id')
             nombre = request.form.get('nombre')
-            cargo = request.form.get('cargo')
-            telefono = request.form.get('telefono')
-            email = request.form.get('email')
-            es_principal = request.form.get('es_principal') == 'on'
+            if not nombre:
+                return jsonify({'success': False, 'message': 'El nombre es un campo obligatorio'}), 400
             
-            # Validar datos requeridos
-            if not cliente_id or not nombre:
-                flash('Cliente y nombre son campos obligatorios', 'error')
-                return redirect(request.url)
+            # Obtener cliente_id (opcional ahora)
+            cliente_id = request.form.get('cliente_id')
+            if cliente_id:
+                cliente_id = int(cliente_id)
+            else:
+                cliente_id = None
             
-            # Si es principal, desactivar otros principales del mismo cliente
-            if es_principal:
-                db = DatabaseManager()
-                db.execute_query(
+            # Manejar archivo de documento
+            documento_path = None
+            if 'documento' in request.files:
+                file = request.files['documento']
+                if file and file.filename != '':
+                    filename = secure_filename(file.filename)
+                    # Crear directorio si no existe
+                    upload_folder = os.path.join('static', 'uploads', 'documentos')
+                    os.makedirs(upload_folder, exist_ok=True)
+                    # Guardar archivo
+                    documento_path = os.path.join(upload_folder, filename)
+                    file.save(documento_path)
+            
+            # Si es principal y tiene cliente, desactivar otros principales del mismo cliente
+            es_principal_value = request.form.get('es_principal')
+            es_principal = es_principal_value in ['true', 'True', '1', 'on', True]
+            if es_principal and cliente_id:
+                db_manager.execute_update(
                     "UPDATE personas_responsables SET es_principal = 0 WHERE cliente_id = ?",
                     (cliente_id,)
                 )
             
             # Crear nueva persona
             persona = PersonaResponsable(
-                cliente_id=int(cliente_id),
+                cliente_id=cliente_id,
                 nombre=nombre,
-                cargo=cargo,
-                telefono=telefono,
-                email=email,
-                es_principal=es_principal
+                cargo=request.form.get('cargo'),
+                telefono=request.form.get('telefono'),
+                email=request.form.get('email'),
+                es_principal=es_principal,
+                activo=request.form.get('activo', 'true').lower() == 'true',
+                documento_path=documento_path,
+                observaciones=request.form.get('observaciones')
             )
             
-            persona_id = persona.guardar()
+            persona_id = persona.save()
             
             if persona_id:
-                flash('Persona responsable creada exitosamente', 'success')
-                return redirect(url_for('personas.listar_personas'))
+                return jsonify({'success': True, 'message': 'Persona responsable creada exitosamente', 'id': persona_id})
             else:
-                flash('Error al crear la persona responsable', 'error')
+                return jsonify({'success': False, 'message': 'Error al crear la persona responsable'}), 500
                 
         except Exception as e:
             logger.error(f"Error al crear persona: {e}")
-            flash('Error al crear la persona responsable', 'error')
+            return jsonify({'success': False, 'message': 'Error al crear la persona responsable'}), 500
     
     # Obtener lista de clientes para el formulario
     try:
-        clientes = Cliente.obtener_todos()
+        clientes = Cliente.get_all()
         # Obtener contador de notificaciones
         notificaciones_count = get_notificaciones_count()
         return render_template('personas/crear.html', clientes=clientes, notificaciones_count=notificaciones_count)
@@ -120,87 +153,113 @@ def crear_persona():
 def editar_persona(persona_id):
     """Editar persona responsable existente"""
     try:
-        persona = PersonaResponsable.obtener_por_id(persona_id)
+        persona = PersonaResponsable.get_by_id(persona_id)
         if not persona:
-            flash('Persona no encontrada', 'error')
-            return redirect(url_for('personas.listar_personas'))
+            return jsonify({'success': False, 'message': 'Persona no encontrada'}), 404
         
         if request.method == 'POST':
-            # Obtener datos del formulario
+            # Obtener datos del formulario (FormData)
             nombre = request.form.get('nombre')
-            cargo = request.form.get('cargo')
-            telefono = request.form.get('telefono')
-            email = request.form.get('email')
-            es_principal = request.form.get('es_principal') == 'on'
-            activo = request.form.get('activo') == 'on'
-            
-            # Validar datos requeridos
             if not nombre:
-                flash('El nombre es obligatorio', 'error')
-                return redirect(request.url)
+                return jsonify({'success': False, 'message': 'El nombre es obligatorio'}), 400
+            
+            # Obtener cliente_id (opcional)
+            cliente_id = request.form.get('cliente_id')
+            if cliente_id:
+                cliente_id = int(cliente_id)
+            else:
+                cliente_id = None
+            
+            # Manejar archivo de documento
+            documento_path = persona.documento_path  # Mantener el documento actual por defecto
+            if 'documento' in request.files:
+                file = request.files['documento']
+                if file and file.filename != '':
+                    # Eliminar documento anterior si existe
+                    if persona.documento_path and os.path.exists(persona.documento_path):
+                        try:
+                            os.remove(persona.documento_path)
+                            logger.info(f"Documento anterior eliminado: {persona.documento_path}")
+                        except Exception as e:
+                            logger.warning(f"No se pudo eliminar el documento anterior: {e}")
+                    
+                    # Guardar nuevo documento
+                    filename = secure_filename(file.filename)
+                    upload_folder = os.path.join('static', 'uploads', 'documentos')
+                    os.makedirs(upload_folder, exist_ok=True)
+                    documento_path = os.path.join(upload_folder, filename)
+                    file.save(documento_path)
             
             # Si es principal, desactivar otros principales del mismo cliente
-            if es_principal and not persona['es_principal']:
-                db = DatabaseManager()
-                db.execute_query(
+            es_principal_value = request.form.get('es_principal')
+            es_principal = es_principal_value in ['true', 'True', '1', 'on', True]
+            if es_principal and not persona.es_principal and cliente_id:
+                db_manager.execute_update(
                     "UPDATE personas_responsables SET es_principal = 0 WHERE cliente_id = ? AND id != ?",
-                    (persona['cliente_id'], persona_id)
+                    (cliente_id, persona_id)
                 )
             
-            # Actualizar persona
-            db = DatabaseManager()
-            resultado = db.execute_update(
-                """UPDATE personas_responsables 
-                   SET nombre = ?, cargo = ?, telefono = ?, email = ?, 
-                       es_principal = ?, activo = ?
-                   WHERE id = ?""",
-                (nombre, cargo, telefono, email, es_principal, activo, persona_id)
-            )
+            # Actualizar datos de la persona
+            persona.nombre = nombre
+            persona.cliente_id = cliente_id
+            persona.cargo = request.form.get('cargo')
+            persona.telefono = request.form.get('telefono')
+            persona.email = request.form.get('email')
+            persona.es_principal = es_principal
+            persona.activo = request.form.get('activo', 'true').lower() == 'true'
+            persona.documento_path = documento_path
+            persona.observaciones = request.form.get('observaciones')
             
-            if resultado:
-                flash('Persona actualizada exitosamente', 'success')
-                return redirect(url_for('personas.listar_personas'))
+            # Guardar cambios
+            if persona.save():
+                return jsonify({'success': True, 'message': 'Persona actualizada exitosamente'})
             else:
-                flash('Error al actualizar la persona', 'error')
+                return jsonify({'success': False, 'message': 'Error al actualizar la persona'}), 500
         
-        # Obtener lista de clientes para el formulario
-        clientes = Cliente.obtener_todos()
-        # Obtener contador de notificaciones
-        notificaciones_count = get_notificaciones_count()
-        return render_template('personas/editar.html', persona=persona, clientes=clientes, notificaciones_count=notificaciones_count)
+        # GET request - devolver datos de la persona
+        return jsonify({
+            'success': True,
+            'persona': {
+                'id': persona.id,
+                'nombre': persona.nombre,
+                'cliente_id': persona.cliente_id,
+                'cargo': persona.cargo,
+                'telefono': persona.telefono,
+                'email': persona.email,
+                'es_principal': persona.es_principal,
+                'activo': persona.activo,
+                'documento_path': persona.documento_path,
+                'observaciones': persona.observaciones
+            }
+        })
         
     except Exception as e:
         logger.error(f"Error al editar persona: {e}")
-        flash('Error al procesar la solicitud', 'error')
-        return redirect(url_for('personas.listar_personas'))
+        return jsonify({'success': False, 'message': 'Error al procesar la solicitud'}), 500
 
 @personas_bp.route('/eliminar/<int:persona_id>', methods=['POST'])
 @login_required
 def eliminar_persona(persona_id):
-    """Eliminar persona responsable"""
+    """Eliminar persona responsable completamente"""
     try:
-        persona = PersonaResponsable.obtener_por_id(persona_id)
+        persona = PersonaResponsable.get_by_id(persona_id)
         if not persona:
-            flash('Persona no encontrada', 'error')
-            return redirect(url_for('personas.listar_personas'))
+            return jsonify({'success': False, 'message': 'Persona no encontrada'}), 404
         
-        # Marcar como inactivo en lugar de eliminar físicamente
-        db = DatabaseManager()
-        resultado = db.execute_update(
-            "UPDATE personas_responsables SET activo = 0 WHERE id = ?",
-            (persona_id,)
-        )
+        nombre_persona = persona.nombre
         
-        if resultado:
-            flash('Persona eliminada exitosamente', 'success')
+        # Eliminar físicamente la persona y sus documentos asociados
+        if persona.delete():
+            return jsonify({
+                'success': True, 
+                'message': f'{nombre_persona} ha sido eliminada completamente del sistema'
+            })
         else:
-            flash('Error al eliminar la persona', 'error')
+            return jsonify({'success': False, 'message': 'Error al eliminar la persona'}), 500
             
     except Exception as e:
         logger.error(f"Error al eliminar persona: {e}")
-        flash('Error al eliminar la persona', 'error')
-    
-    return redirect(url_for('personas.listar_personas'))
+        return jsonify({'success': False, 'message': f'Error al eliminar la persona: {str(e)}'}), 500
 
 @personas_bp.route('/buscar')
 @login_required
@@ -250,3 +309,106 @@ def personas_por_cliente(cliente_id):
     except Exception as e:
         logger.error(f"Error al obtener personas por cliente: {e}")
         return jsonify({'error': 'Error al obtener personas'}), 500
+
+@personas_bp.route('/api/search')
+@login_required
+def search_personas():
+    """Buscar personas responsables por nombre, cargo o email"""
+    try:
+        search_term = request.args.get('q', '').strip()
+        if not search_term:
+            return jsonify({'personas': []})
+        
+        personas = PersonaResponsable.search(search_term)
+        
+        # Convertir a diccionario para JSON
+        personas_data = []
+        for persona in personas:
+            personas_data.append({
+                'id': persona.id,
+                'nombre': persona.nombre,
+                'cargo': persona.cargo,
+                'email': persona.email,
+                'telefono': persona.telefono,
+                'cliente_id': persona.cliente_id
+            })
+        
+        return jsonify({'personas': personas_data})
+    except Exception as e:
+        logger.error(f"Error al buscar personas: {e}")
+        return jsonify({'error': 'Error en la búsqueda'}), 500
+
+@personas_bp.route('/api/get_by_ids', methods=['POST'])
+@login_required
+def get_personas_by_ids():
+    """Obtener personas responsables por lista de IDs"""
+    try:
+        data = request.get_json()
+        if not data or 'ids' not in data:
+            return jsonify({'success': False, 'error': 'IDs requeridos'}), 400
+        
+        ids = data['ids']
+        if not isinstance(ids, list) or not ids:
+            return jsonify({'success': False, 'error': 'Lista de IDs inválida'}), 400
+        
+        personas = PersonaResponsable.get_by_ids(ids)
+        
+        # Convertir a diccionario para JSON
+        personas_data = []
+        for persona in personas:
+            personas_data.append({
+                'id': persona.id,
+                'nombre': persona.nombre,
+                'cargo': persona.cargo,
+                'email': persona.email,
+                'telefono': persona.telefono,
+                'cliente_id': persona.cliente_id
+            })
+        
+        return jsonify({'success': True, 'personas': personas_data})
+    except Exception as e:
+        logger.error(f"Error al obtener personas por IDs: {e}")
+        return jsonify({'success': False, 'error': 'Error al obtener personas'}), 500
+
+@personas_bp.route('/api/all')
+@login_required
+def get_all_personas():
+    """API endpoint para obtener todas las personas responsables con información de clientes"""
+    try:
+        # Obtener todas las personas (incluyendo inactivas)
+        personas = PersonaResponsable.get_all(activos_solo=False)
+        
+        # Obtener información de clientes
+        clientes = {}
+        for persona in personas:
+            if persona.cliente_id and persona.cliente_id not in clientes:
+                cliente = Cliente.get_by_id(persona.cliente_id)
+                if cliente:
+                    clientes[persona.cliente_id] = cliente
+        
+        # Formatear datos para el frontend
+        personas_data = []
+        for persona in personas:
+            cliente = clientes.get(persona.cliente_id) if persona.cliente_id else None
+            persona_dict = {
+                'id': persona.id,
+                'nombre': persona.nombre,
+                'cliente_id': persona.cliente_id,
+                'cliente_nombre': cliente.nombre if cliente else 'Sin cliente',
+                'cargo': persona.cargo,
+                'email': persona.email,
+                'telefono': persona.telefono,
+                'activo': persona.activo,
+                'es_principal': persona.es_principal,
+                'documento_path': persona.documento_path
+            }
+            personas_data.append(persona_dict)
+        
+        return jsonify({
+            'success': True,
+            'personas': personas_data
+        })
+        
+    except Exception as e:
+        logger.error(f"Error al obtener todas las personas: {str(e)}")
+        return jsonify({'success': False, 'error': 'Error al obtener personas'}), 500

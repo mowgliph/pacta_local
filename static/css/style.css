@@ -25,6 +25,7 @@
 @import url('./base/_utilities.css');
 
 /* 6. Componentes reutilizables - En orden de complejidad */
+@import url('./components/_avatars.css');
 @import url('./components/_buttons.css');
 @import url('./components/_forms.css');
 @import url('./components/_cards.css');
@@ -48,6 +49,7 @@
 @import url('./pages/usuarios-lista.css');
 @import url('./pages/usuarios.css');
 @import url('./pages/login.css');
+@import url('./pages/personas.css');
 
 /* ===== ESTILOS GLOBALES ADICIONALES ===== */
 
@@ -958,6 +960,8 @@ body {
 .customer-avatar.avatar-generated.color-pink {
     background: #ec4899;
 }
+
+
 
 .status-badge {
     padding: 4px 12px;

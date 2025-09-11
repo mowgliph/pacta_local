@@ -128,6 +128,13 @@ class SampleDataInitializer {
     }
 
     /**
+     * Función de compatibilidad para checkAndInitialize
+     */
+    async checkAndInitialize() {
+        return this.autoInitialize();
+    }
+
+    /**
      * Verifica automáticamente si necesita inicializar datos
      */
     async autoInitialize() {

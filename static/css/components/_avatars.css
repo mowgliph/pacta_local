@@ -1,0 +1,292 @@
+/* ===================================================================
+   PACTA - Componente de Avatares
+   Archivo: _avatars.css
+   Descripción: Estilos estandarizados para todos los avatares de la aplicación
+=================================================================== */
+
+/* ===== ESTILOS BASE PARA AVATARES ===== */
+.avatar {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    object-fit: cover;
+}
+
+.avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== TAMAÑOS DE AVATARES ===== */
+.avatar-xs {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+    border-width: 1px;
+}
+
+.avatar-sm {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+}
+
+.avatar-md {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+}
+
+.avatar-lg {
+    width: 48px;
+    height: 48px;
+    font-size: 16px;
+}
+
+.avatar-xl {
+    width: 56px;
+    height: 56px;
+    font-size: 18px;
+}
+
+.avatar-2xl {
+    width: 80px;
+    height: 80px;
+    font-size: 28px;
+    border-width: 3px;
+}
+
+/* ===== COLORES DE AVATARES ===== */
+.avatar-blue {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+.avatar-green {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.avatar-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.avatar-pink {
+    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+}
+
+.avatar-yellow {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.avatar-red {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.avatar-indigo {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+}
+
+.avatar-teal {
+    background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
+}
+
+.avatar-orange {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.avatar-gray {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+}
+
+.avatar-slate {
+    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+}
+
+/* ===== AVATAR POR DEFECTO ===== */
+.avatar-default {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* ===== VARIANTES ESPECIALES ===== */
+.avatar-bordered {
+    border: 3px solid #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.avatar-no-hover:hover {
+    transform: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-square {
+    border-radius: 8px;
+}
+
+.avatar-rounded {
+    border-radius: 12px;
+}
+
+/* ===== CONTENEDORES DE AVATAR CON INFORMACIÓN ===== */
+.avatar-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar-info-sm {
+    gap: 8px;
+}
+
+.avatar-info-lg {
+    gap: 16px;
+}
+
+.avatar-details {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.avatar-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.avatar-subtitle {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* ===== GRUPOS DE AVATARES ===== */
+.avatar-group {
+    display: flex;
+    align-items: center;
+}
+
+.avatar-group .avatar {
+    margin-left: -8px;
+    border: 2px solid #fff;
+    position: relative;
+    z-index: 1;
+}
+
+.avatar-group .avatar:first-child {
+    margin-left: 0;
+}
+
+.avatar-group .avatar:hover {
+    z-index: 2;
+}
+
+/* ===== ESTADOS DE AVATAR ===== */
+.avatar-online::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 25%;
+    height: 25%;
+    background: #10b981;
+    border: 2px solid #fff;
+    border-radius: 50%;
+}
+
+.avatar-offline::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 25%;
+    height: 25%;
+    background: #6b7280;
+    border: 2px solid #fff;
+    border-radius: 50%;
+}
+
+.avatar-busy::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 25%;
+    height: 25%;
+    background: #ef4444;
+    border: 2px solid #fff;
+    border-radius: 50%;
+}
+
+/* ===== RESPONSIVIDAD ===== */
+@media (max-width: 768px) {
+    .avatar-info {
+        gap: 8px;
+    }
+    
+    .avatar-name {
+        font-size: 13px;
+    }
+    
+    .avatar-subtitle {
+        font-size: 11px;
+    }
+}
+
+/* ===== COMPATIBILIDAD CON CLASES EXISTENTES ===== */
+/* Mapeo de clases existentes a las nuevas clases estandarizadas */
+.user-avatar {
+    @extend .avatar, .avatar-md, .avatar-default;
+}
+
+.user-avatar-small {
+    @extend .avatar, .avatar-sm, .avatar-default;
+}
+
+.user-avatar-large {
+    @extend .avatar, .avatar-2xl, .avatar-default, .avatar-bordered;
+}
+
+.customer-avatar {
+    @extend .avatar, .avatar-sm;
+}
+
+.provider-avatar {
+    @extend .avatar, .avatar-lg;
+}
+
+.responsible-avatar {
+    @extend .avatar, .avatar-xl;
+}
+
+.persona-avatar {
+    @extend .avatar, .avatar-md;
+}
+
+.proveedor-avatar {
+    @extend .avatar, .avatar-md;
+}
+
+.usuario-avatar {
+    @extend .avatar, .avatar-md;
+}
+
+.contract-avatar {
+    @extend .avatar, .avatar-md;
+}
+
+.dashboard-user-avatar {
+    @extend .avatar, .avatar-lg, .avatar-default;
+}
+
+.card-profile-avatar {
+    @extend .avatar, .avatar-xl, .avatar-bordered;
+}
