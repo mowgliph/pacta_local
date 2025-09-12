@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Gestión de Clientes - PACTA{% endblock %}
+{% block title %}Gestión de Clientes{% endblock %}
 
 {% block content %}
     <div class="dashboard-container">
@@ -12,360 +12,247 @@
             <!-- Content Header -->
             {% set page_title = "Gestión de Clientes" %}
             {% set page_subtitle = "Administra todos los clientes del sistema" %}
-            {% set page_icon = "fas fa-handshake" %}
-            {% set show_notifications = false %}
-            {% set show_user_menu = false %}
+            {% set page_icon = "fas fa-users" %}
+            {% set show_notifications = true %}
+            {% set show_user_menu = true %}
             {% include 'components/partials/content_header.html' %}
-            
-            <!-- Additional Header Actions -->
-            <div class="header-actions" style="margin-top: -60px; margin-bottom: 20px; display: flex; justify-content: flex-end; gap: 8px;">
-                <button class="btn-primary" onclick="openAddClientModal()" style="display: flex; align-items: center; gap: 8px; background: #10b981;">
-                    <i class="fas fa-plus"></i>
-                    Añadir Cliente
-                </button>
-                <button class="btn-icon" title="Actualizar" onclick="location.reload()">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
-                <button class="btn-icon" title="Exportar" onclick="exportClients()">
-                    <i class="fas fa-download"></i>
-                </button>
-            </div>
-            
-            <!-- Search and Filter Section -->
-            <div class="search-filter-section" style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
-                    <div class="search-box" style="flex: 1; min-width: 300px;">
-                        <div style="position: relative;">
-                            <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #6b7280;"></i>
-                            <input type="text" id="searchClients" placeholder="Buscar clientes por nombre, industria o contacto..." style="width: 100%; padding: 12px 12px 12px 40px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
-                        </div>
-                    </div>
-                    <select id="industryFilter" style="padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; min-width: 180px;">
-                        <option value="">Todas las industrias</option>
-                        <option value="manufactura">Manufactura Industrial</option>
-                        <option value="servicios">Servicios Urbanos</option>
-                        <option value="financiero">Servicios Financieros</option>
-                        <option value="retail">Retail y Comercio</option>
-                        <option value="salud">Salud y Medicina</option>
-                        <option value="educacion">Educación</option>
-                    </select>
-                    <select id="statusFilter" style="padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; min-width: 120px;">
-                        <option value="">Todos los estados</option>
-                        <option value="activo">Activo</option>
-                        <option value="inactivo">Inactivo</option>
-                        <option value="prospecto">Prospecto</option>
-                    </select>
+    
+    <!-- Métricas principales -->
+    <div class="metrics-grid">
+        <!-- Total Clientes -->
+        {% set metric_label = "Total Clientes" %}
+        {% set metric_value = estadisticas.total_clientes if estadisticas and estadisticas.total_clientes else "0" %}
+        {% set metric_icon = "fas fa-users" %}
+        {% set metric_color = "text-primary" %}
+        {% if estadisticas and estadisticas.cambio_clientes is defined %}
+            {% set cambio = estadisticas.cambio_clientes %}
+            {% set metric_change = ("+" + cambio|string + " este mes") if cambio >= 0 else (cambio|string + " este mes") %}
+            {% set change_type = "positive" if cambio >= 0 else "negative" %}
+        {% else %}
+            {% set metric_change = "0 este mes" %}
+            {% set change_type = "neutral" %}
+        {% endif %}
+        {% include 'components/partials/metric_card.html' %}
+        
+        <!-- Clientes Activos -->
+        {% set metric_label = "Clientes Activos" %}
+        {% set metric_value = estadisticas.clientes_activos if estadisticas and estadisticas.clientes_activos else "0" %}
+        {% set metric_icon = "fas fa-check-circle" %}
+        {% set metric_color = "text-success" %}
+        {% if estadisticas and estadisticas.porcentaje_activos is defined %}
+            {% set metric_change = estadisticas.porcentaje_activos|string + "% del total" %}
+        {% else %}
+            {% set metric_change = "0% del total" %}
+        {% endif %}
+        {% set change_type = "positive" %}
+        {% include 'components/partials/metric_card.html' %}
+        
+        <!-- Total Contratos -->
+        {% set metric_label = "Total Contratos" %}
+        {% set metric_value = estadisticas.contratos_totales if estadisticas and estadisticas.contratos_totales else "0" %}
+        {% set metric_icon = "fas fa-file-contract" %}
+        {% set metric_color = "text-info" %}
+        {% if estadisticas and estadisticas.cambio_contratos is defined %}
+            {% set cambio = estadisticas.cambio_contratos %}
+            {% set metric_change = ("+" + cambio|string + " este mes") if cambio >= 0 else (cambio|string + " este mes") %}
+            {% set change_type = "positive" if cambio >= 0 else "negative" %}
+        {% else %}
+            {% set metric_change = "0 este mes" %}
+            {% set change_type = "neutral" %}
+        {% endif %}
+        {% include 'components/partials/metric_card.html' %}
+        
+        <!-- Valor Total -->
+        {% set metric_label = "Valor Total" %}
+        {% set metric_value = "$" + "{:,.0f}".format(estadisticas.valor_total) if estadisticas and estadisticas.valor_total else "$0" %}
+        {% set metric_icon = "fas fa-dollar-sign" %}
+        {% set metric_color = "text-warning" %}
+        {% set metric_change = "En contratos activos" %}
+        {% set change_type = "positive" %}
+        {% include 'components/partials/metric_card.html' %}
+    </div>
+
+    <!-- Tabla de Clientes -->
+    <div class="block-section">
+        <div class="block-header">
+            <h3 class="block-title">Clientes del Sistema</h3>
+            <p class="block-subtitle">Lista completa de clientes registrados</p>
+        </div>
+        <div class="block-content" style="padding: 0;">
+            <!-- Barra de acciones -->
+            <div class="action-bar" style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <div style="display: flex; gap: 8px;">
+                    <button id="btnAddClient" class="btn-icon-action" title="Añadir Cliente" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #3b82f6; border: none; border-radius: 6px; color: white; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button id="btnSearchClient" class="btn-icon-action" title="Buscar Clientes" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #10b981; border: none; border-radius: 6px; color: white; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div id="searchContainer" style="display: none; flex: 1; max-width: 300px; margin-left: 16px;">
+                    <input type="text" id="searchInput" placeholder="Buscar clientes..." style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
                 </div>
             </div>
             
-            <!-- Clients Statistics Cards -->
-            <div class="metrics-grid" style="margin-bottom: 24px;">
-                <!-- Total Clientes -->
-                {% set metric_label = "Total Clientes" %}
-                {% set metric_value = "18" %}
-                {% set metric_icon = "fas fa-handshake" %}
-                {% set metric_color = "style='color: #10b981;'" %}
-                {% set metric_change = "+2 este mes" %}
-                {% set change_type = "positive" %}
-                {% include 'components/partials/metric_card.html' %}
-                
-                <!-- Clientes Activos -->
-                {% set metric_label = "Clientes Activos" %}
-                {% set metric_value = "16" %}
-                {% set metric_icon = "fas fa-check-circle" %}
-                {% set metric_color = "style='color: #3b82f6;'" %}
-                {% set metric_change = "88.9% del total" %}
-                {% set change_type = "positive" %}
-                {% include 'components/partials/metric_card.html' %}
-                
-                <!-- Contratos Totales -->
-                {% set metric_label = "Contratos Totales" %}
-                {% set metric_value = "142" %}
-                {% set metric_icon = "fas fa-file-contract" %}
-                {% set metric_color = "style='color: #f59e0b;'" %}
-                {% set metric_change = "Con clientes" %}
-                {% set change_type = "positive" %}
-                {% include 'components/partials/metric_card.html' %}
-                
-                <!-- Valor Promedio -->
-                {% set metric_label = "Valor Promedio" %}
-                {% set metric_value = "$68,500" %}
-                {% set metric_icon = "fas fa-dollar-sign" %}
-                {% set metric_color = "style='color: #8b5cf6;'" %}
-                {% set metric_change = "Por contrato" %}
-                {% set change_type = "positive" %}
-                {% include 'components/partials/metric_card.html' %}
+            <!-- Tabla de Clientes -->
+            <div class="table-responsive">
+                <table class="table table-hover table-striped clientes-table">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="sortable">Cliente <span class="sort-icon"></span></th>
+                            <th scope="col" class="sortable">Tipo <span class="sort-icon"></span></th>
+                            <th scope="col" class="sortable">Email <span class="sort-icon"></span></th>
+                            <th scope="col" class="sortable">Teléfono <span class="sort-icon"></span></th>
+                            <th scope="col" class="sortable">Estado <span class="sort-icon"></span></th>
+                            <th scope="col" class="sortable">Fecha Registro <span class="sort-icon"></span></th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientesTableBody">
+                        <!-- Los datos se cargarán dinámicamente -->
+                    </tbody>
+                </table>
             </div>
-            
-            <!-- Clients Table -->
-            {% set table_headers = [
-                {'title': 'Cliente', 'sortable': true, 'class': ''},
-                {'title': 'Industria', 'sortable': true, 'class': ''},
-                {'title': 'Contratos', 'sortable': true, 'class': 'text-center'},
-                {'title': 'Valor Total', 'sortable': true, 'class': 'text-end'},
-                {'title': 'Estado', 'sortable': true, 'class': 'text-center'},
-                {'title': 'Contacto', 'sortable': false, 'class': ''},
-                {'title': 'Acciones', 'sortable': false, 'class': 'text-center col-actions'}
-            ] %}
-            
-            {% set table_data = [
-                {
-                    'cells': [
-                        {
-                            'value': '<div class="d-flex align-items-center"><div class="avatar-sm me-3" style="background: #10b981; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: bold;">GI</div><div><div class="fw-semibold">Global Industries</div><small class="text-muted">CLI-001</small></div></div>',
-                            'class': ''
-                        },
-                        {'type': 'badge', 'value': 'Manufactura Industrial', 'variant': 'success', 'class': ''},
-                        {'value': '<div class="text-center"><span class="fw-semibold">7</span><br><small class="text-muted">5 activos</small></div>', 'class': 'text-center'},
-                        {'value': '<span class="fw-semibold text-success">$850,000</span>', 'class': 'text-end'},
-                        {'type': 'badge', 'value': 'Activo', 'variant': 'success', 'class': 'text-center'},
-                        {'value': '<div><small class="text-muted">contact@globalind.com</small><br><small class="text-muted">+1 555-123-4567</small></div>', 'class': ''},
-                        {
-                            'type': 'actions',
-                            'actions': [
-                                {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewClient("CLI-001")', 'tooltip': 'Ver cliente'},
-                                {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editClient("CLI-001")', 'tooltip': 'Editar cliente'},
-                                {'icon': 'fas fa-trash', 'variant': 'outline-danger', 'onclick': 'deleteClient("CLI-001")', 'tooltip': 'Eliminar cliente'}
-                            ],
-                            'class': 'text-center'
-                        }
-                    ]
-                },
-                {
-                    'cells': [
-                        {
-                            'value': '<div class="d-flex align-items-center"><div class="avatar-sm me-3" style="background: #3b82f6; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: bold;">MS</div><div><div class="fw-semibold">Metro Solutions</div><small class="text-muted">CLI-002</small></div></div>',
-                            'class': ''
-                        },
-                        {'type': 'badge', 'value': 'Servicios Urbanos', 'variant': 'primary', 'class': ''},
-                        {'value': '<div class="text-center"><span class="fw-semibold">4</span><br><small class="text-muted">3 activos</small></div>', 'class': 'text-center'},
-                        {'value': '<span class="fw-semibold text-success">$620,000</span>', 'class': 'text-end'},
-                        {'type': 'badge', 'value': 'Activo', 'variant': 'success', 'class': 'text-center'},
-                        {'value': '<div><small class="text-muted">info@metrosol.com</small><br><small class="text-muted">+1 555-234-5678</small></div>', 'class': ''},
-                        {
-                            'type': 'actions',
-                            'actions': [
-                                {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewClient("CLI-002")', 'tooltip': 'Ver cliente'},
-                                {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editClient("CLI-002")', 'tooltip': 'Editar cliente'},
-                                {'icon': 'fas fa-trash', 'variant': 'outline-danger', 'onclick': 'deleteClient("CLI-002")', 'tooltip': 'Eliminar cliente'}
-                            ],
-                            'class': 'text-center'
-                        }
-                    ]
-                },
-                {
-                    'cells': [
-                        {
-                            'value': '<div class="d-flex align-items-center"><div class="avatar-sm me-3" style="background: #8b5cf6; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: bold;">FG</div><div><div class="fw-semibold">Financial Group</div><small class="text-muted">CLI-003</small></div></div>',
-                            'class': ''
-                        },
-                        {'type': 'badge', 'value': 'Servicios Financieros', 'variant': 'secondary', 'class': ''},
-                        {'value': '<div class="text-center"><span class="fw-semibold">3</span><br><small class="text-muted">3 activos</small></div>', 'class': 'text-center'},
-                        {'value': '<span class="fw-semibold text-success">$480,000</span>', 'class': 'text-end'},
-                        {'type': 'badge', 'value': 'Activo', 'variant': 'success', 'class': 'text-center'},
-                        {'value': '<div><small class="text-muted">admin@fingroup.com</small><br><small class="text-muted">+1 555-345-6789</small></div>', 'class': ''},
-                        {
-                            'type': 'actions',
-                            'actions': [
-                                {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewClient("CLI-003")', 'tooltip': 'Ver cliente'},
-                                {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editClient("CLI-003")', 'tooltip': 'Editar cliente'},
-                                {'icon': 'fas fa-trash', 'variant': 'outline-danger', 'onclick': 'deleteClient("CLI-003")', 'tooltip': 'Eliminar cliente'}
-                            ],
-                            'class': 'text-center'
-                        }
-                    ]
-                },
-                {
-                    'cells': [
-                        {
-                            'value': '<div class="d-flex align-items-center"><div class="avatar-sm me-3" style="background: #ef4444; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: bold;">RC</div><div><div class="fw-semibold">Retail Chain</div><small class="text-muted">CLI-004</small></div></div>',
-                            'class': ''
-                        },
-                        {'type': 'badge', 'value': 'Retail y Comercio', 'variant': 'danger', 'class': ''},
-                        {'value': '<div class="text-center"><span class="fw-semibold">2</span><br><small class="text-muted">1 activo</small></div>', 'class': 'text-center'},
-                        {'value': '<span class="fw-semibold text-success">$280,000</span>', 'class': 'text-end'},
-                        {'type': 'badge', 'value': 'Prospecto', 'variant': 'warning', 'class': 'text-center'},
-                        {'value': '<div><small class="text-muted">sales@retailchain.com</small><br><small class="text-muted">+1 555-456-7890</small></div>', 'class': ''},
-                        {
-                            'type': 'actions',
-                            'actions': [
-                                {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewClient("CLI-004")', 'tooltip': 'Ver cliente'},
-                                {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editClient("CLI-004")', 'tooltip': 'Editar cliente'},
-                                {'icon': 'fas fa-trash', 'variant': 'outline-danger', 'onclick': 'deleteClient("CLI-004")', 'tooltip': 'Eliminar cliente'}
-                            ],
-                            'class': 'text-center'
-                        }
-                    ]
-                }
-            ] %}
-            
-            {% set empty_message = 'No hay clientes disponibles' %}
-            
-            {% include 'components/partials/consistent_table.html' %}
-
         </div>
     </div>
-    
-    <!-- Add Client Modal -->
-    <div class="modal fade" id="addClientModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-plus" style="color: #10b981; margin-right: 8px;"></i>
-                        Añadir Nuevo Cliente
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+    <!-- Personas Responsables Recientes -->
+    <div class="block-section" style="margin-top: 32px;">
+        <div class="recent-personas-column" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <div class="column-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f3f4f6;">
+                <div>
+                    <h4 style="font-size: 18px; font-weight: 600; color: #374151; margin: 0; display: flex; align-items: center;">
+                        <i class="fas fa-users" style="color: #8b5cf6; margin-right: 8px;"></i>
+                        Personas Responsables Recientes
+                    </h4>
+                    <p style="font-size: 14px; color: #6b7280; margin: 4px 0 0 0;">Últimas 5 personas asignadas a clientes</p>
                 </div>
-                <div class="modal-body">
-                    <form id="addClientForm">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Nombre de la Empresa *</label>
+                <button class="btn btn-primary btn-sm d-flex align-items-center gap-2" onclick="window.location.href='/personas'">
+                    <i class="fas fa-cog"></i>
+                    Gestionar Personas
+                </button>
+            </div>
+            
+            <div class="personas-list" id="personasRecientesContainer" style="display: flex; flex-direction: column; gap: 16px;">
+                <!-- Los datos se cargarán dinámicamente -->
+                <div class="loading-message" style="text-align: center; padding: 40px; color: #6b7280;">
+                    <i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i>
+                    Cargando personas responsables...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar/editar cliente -->
+<div class="modal fade" id="clientModal" tabindex="-1" aria-labelledby="clientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="clientModalLabel">Agregar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="clientForm">
+                    <input type="hidden" id="clientId">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="clientName" class="form-label">Nombre *</label>
                                 <input type="text" class="form-control" id="clientName" required>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Industria *</label>
-                                <select class="form-control" id="clientIndustry" required>
-                                    <option value="">Seleccionar industria</option>
-                                    <option value="manufactura">Manufactura Industrial</option>
-                                    <option value="servicios">Servicios Urbanos</option>
-                                    <option value="financiero">Servicios Financieros</option>
-                                    <option value="retail">Retail y Comercio</option>
-                                    <option value="salud">Salud y Medicina</option>
-                                    <option value="educacion">Educación</option>
-                                </select>
-                            </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Email de Contacto *</label>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="clientEmail" class="form-label">Email *</label>
                                 <input type="email" class="form-control" id="clientEmail" required>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Teléfono</label>
-                                <input type="tel" class="form-control" id="clientPhone">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="clientPhone" class="form-label">Teléfono</label>
+                                <input type="text" class="form-control" id="clientPhone">
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label class="form-label">Dirección</label>
-                                <textarea class="form-control" id="clientAddress" rows="2"></textarea>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Persona de Contacto</label>
-                                <input type="text" class="form-control" id="clientContact">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Estado</label>
-                                <select class="form-control" id="clientStatus">
-                                    <option value="activo">Activo</option>
-                                    <option value="inactivo">Inactivo</option>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="clientType" class="form-label">Tipo de Cliente</label>
+                                <select class="form-select" id="clientType">
+                                    <option value="cliente">Cliente</option>
                                     <option value="prospecto">Prospecto</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Tamaño de Empresa</label>
-                                <select class="form-control" id="clientSize">
-                                    <option value="">Seleccionar tamaño</option>
-                                    <option value="pequena">Pequeña (1-50 empleados)</option>
-                                    <option value="mediana">Mediana (51-250 empleados)</option>
-                                    <option value="grande">Grande (251-1000 empleados)</option>
-                                    <option value="corporativo">Corporativo (1000+ empleados)</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Potencial de Negocio</label>
-                                <select class="form-control" id="clientPotential">
-                                    <option value="">Seleccionar potencial</option>
-                                    <option value="bajo">Bajo</option>
-                                    <option value="medio">Medio</option>
-                                    <option value="alto">Alto</option>
-                                    <option value="premium">Premium</option>
-                                </select>
-                            </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="clientAddress" class="form-label">Dirección</label>
+                        <textarea class="form-control" id="clientAddress" rows="3"></textarea>
+                    </div>
+                    
+                    <!-- Sección de personas de contacto -->
+                    <div class="mb-3">
+                        <label class="form-label">Personas de Contacto</label>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" id="personaSearch" placeholder="Buscar persona por nombre...">
+                            <button class="btn btn-outline-secondary" type="button" id="clearPersonaSearch">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Notas Adicionales</label>
-                            <textarea class="form-control" id="clientNotes" rows="3"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="saveClient()" style="background: #10b981; border-color: #10b981;">Guardar Cliente</button>
-                </div>
+                        <div id="personaResults" class="list-group mb-2" style="display: none;"></div>
+                        <div id="selectedPersonas"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveClientBtn">Guardar</button>
             </div>
         </div>
     </div>
-    
+</div>
 
-    
-    <script>
-        // Client management functions
-        function openAddClientModal() {
-            const modal = new bootstrap.Modal(document.getElementById('addClientModal'));
-            modal.show();
-        }
-        
-        function saveClient() {
-            // Here you would implement the save functionality
-            alert('Funcionalidad de guardar cliente - Implementar con backend');
-            bootstrap.Modal.getInstance(document.getElementById('addClientModal')).hide();
-        }
-        
-        function viewClient(id) {
-            alert('Ver detalles del cliente: ' + id);
-        }
-        
-        function editClient(id) {
-            alert('Editar cliente: ' + id);
-        }
-        
-        function deleteClient(id) {
-            if (confirm('¿Está seguro de que desea eliminar este cliente?')) {
-                alert('Eliminar cliente: ' + id);
-            }
-        }
-        
-        function exportClients() {
-            alert('Exportar lista de clientes - Implementar funcionalidad');
-        }
-        
-        function toggleView(view) {
-            // Toggle between table and cards view
-            const tableView = document.getElementById('tableView');
-            const tableBtn = document.getElementById('tableViewBtn');
-            const cardsBtn = document.getElementById('cardsViewBtn');
-            
-            if (view === 'table') {
-                tableView.style.display = 'block';
-                tableBtn.classList.add('active');
-                cardsBtn.classList.remove('active');
-            } else {
-                // Cards view implementation would go here
-                alert('Vista de tarjetas - Implementar si es necesario');
-            }
-        }
-        
-        // Search and filter functionality
-        document.getElementById('searchClients').addEventListener('input', function() {
-            // Implement search functionality
-            console.log('Searching:', this.value);
-        });
-        
-        document.getElementById('industryFilter').addEventListener('change', function() {
-            // Implement industry filter
-            console.log('Filter by industry:', this.value);
-        });
-        
-        document.getElementById('statusFilter').addEventListener('change', function() {
-            // Implement status filter
-            console.log('Filter by status:', this.value);
-        });
-    </script>
+<!-- Modal para ver detalles del cliente -->
+<div class="modal fade" id="viewClientModal" tabindex="-1" aria-labelledby="viewClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewClientModalLabel">Detalles del Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="viewClientContent">
+                <!-- El contenido se cargará dinámicamente -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para ver detalles de persona -->
+<div class="modal fade" id="personaDetailsModal" tabindex="-1" aria-labelledby="personaDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="personaDetailsModalLabel">Detalles de la Persona</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="personaDetailsContent">
+                <!-- El contenido se cargará dinámicamente -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div> <!-- /main-content -->
+    </div> <!-- /dashboard-container -->
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/clientes.js') }}"></script>
 {% endblock %}

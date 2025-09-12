@@ -134,175 +134,16 @@
                 </div>
                 
 
-                    <!-- Providers and Clients Management Section -->
-                    <div class="block-section providers-clients-block">
-                        <div class="block-header">
-                            <div class="block-title-section">
-                                <h3 class="block-title">
-                                    <i class="fas fa-users" style="color: #3b82f6; margin-right: 8px;"></i>
-                                    Gestión de Proveedores y Clientes
-                                </h3>
-                                <p class="block-subtitle">Información de proveedores y clientes con mayor actividad contractual</p>
-                            </div>
-                        </div>
-                        <div class="block-content">
-                            <!-- Two Column Layout -->
-                            <div class="providers-clients-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-                                
-                                <!-- Providers Column -->
-                                <div class="providers-column" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                                    <div class="column-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f3f4f6;">
-                                        <div>
-                                            <h4 style="font-size: 18px; font-weight: 600; color: #374151; margin: 0; display: flex; align-items: center;">
-                                                <i class="fas fa-building" style="color: #3b82f6; margin-right: 8px;"></i>
-                                                Proveedores Principales
-                                            </h4>
-                                            <p style="font-size: 14px; color: #6b7280; margin: 4px 0 0 0;">Top proveedores por número de contratos</p>
-                                        </div>
-                                        <button class="btn btn-primary btn-sm d-flex align-items-center gap-2" onclick="window.location.href='/proveedores'">
-                                            <i class="fas fa-cog"></i>
-                                            Gestionar Proveedor
-                                        </button>
-                                    </div>
-                                    
-                                    <div class="providers-list" style="display: flex; flex-direction: column; gap: 16px;">
-                                        <div class="provider-item" style="display: flex; align-items: center; padding: 16px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
-                                            <div class="provider-avatar" style="width: 48px; height: 48px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; margin-right: 12px;">
-                                                TC
-                                            </div>
-                                            <div class="provider-details" style="flex: 1;">
-                                                <h5 style="font-size: 16px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">TechCorp S.A.</h5>
-                                                <p style="font-size: 13px; color: #6b7280; margin: 0 0 8px 0;">Servicios de Tecnología</p>
-                                                <div style="display: flex; gap: 16px; font-size: 12px;">
-                                                    <span style="color: #3b82f6; font-weight: 600;">5 Contratos</span>
-                                                    <span style="color: #10b981; font-weight: 600;">$425,000</span>
-                                                </div>
-                                            </div>
-                                            <div class="provider-actions" style="display: flex; flex-direction: column; gap: 4px;">
-                                                <button class="btn-icon" style="width: 32px; height: 32px; background: #f3f4f6; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Ver detalles">
-                                                    <i class="fas fa-eye" style="color: #6b7280; font-size: 14px;"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="provider-item" style="display: flex; align-items: center; padding: 16px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #10b981;">
-                                            <div class="provider-avatar" style="width: 48px; height: 48px; background: linear-gradient(135deg, #10b981, #047857); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; margin-right: 12px;">
-                                                LS
-                                            </div>
-                                            <div class="provider-details" style="flex: 1;">
-                                                <h5 style="font-size: 16px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">Legal Solutions</h5>
-                                                <p style="font-size: 13px; color: #6b7280; margin: 0 0 8px 0;">Consultoría Legal</p>
-                                                <div style="display: flex; gap: 16px; font-size: 12px;">
-                                                    <span style="color: #3b82f6; font-weight: 600;">3 Contratos</span>
-                                                    <span style="color: #10b981; font-weight: 600;">$150,000</span>
-                                                </div>
-                                            </div>
-                                            <div class="provider-actions" style="display: flex; flex-direction: column; gap: 4px;">
-                                                <button class="btn-icon" style="width: 32px; height: 32px; background: #f3f4f6; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Ver detalles">
-                                                    <i class="fas fa-eye" style="color: #6b7280; font-size: 14px;"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="provider-item" style="display: flex; align-items: center; padding: 16px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #f59e0b;">
-                                            <div class="provider-avatar" style="width: 48px; height: 48px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; margin-right: 12px;">
-                                                CS
-                                            </div>
-                                            <div class="provider-details" style="flex: 1;">
-                                                <h5 style="font-size: 16px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">Construction Services</h5>
-                                                <p style="font-size: 13px; color: #6b7280; margin: 0 0 8px 0;">Construcción y Obras</p>
-                                                <div style="display: flex; gap: 16px; font-size: 12px;">
-                                                    <span style="color: #3b82f6; font-weight: 600;">2 Contratos</span>
-                                                    <span style="color: #10b981; font-weight: 600;">$320,000</span>
-                                                </div>
-                                            </div>
-                                            <div class="provider-actions" style="display: flex; flex-direction: column; gap: 4px;">
-                                                <button class="btn-icon" style="width: 32px; height: 32px; background: #f3f4f6; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Ver detalles">
-                                                    <i class="fas fa-eye" style="color: #6b7280; font-size: 14px;"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Clients Column -->
-                                <div class="clients-column" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                                    <div class="column-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f3f4f6;">
-                                        <div>
-                                            <h4 style="font-size: 18px; font-weight: 600; color: #374151; margin: 0; display: flex; align-items: center;">
-                                                <i class="fas fa-handshake" style="color: #10b981; margin-right: 8px;"></i>
-                                                Clientes Principales
-                                            </h4>
-                                            <p style="font-size: 14px; color: #6b7280; margin: 4px 0 0 0;">Top clientes por número de contratos</p>
-                                        </div>
-                                        <button class="btn btn-success btn-sm d-flex align-items-center gap-2" onclick="window.location.href='/clientes'">
-                                            <i class="fas fa-cog"></i>
-                                            Gestionar Cliente
-                                        </button>
-                                    </div>
-                                    
-                                    <div class="clients-list" style="display: flex; flex-direction: column; gap: 16px;">
-                                        <div class="client-item" style="display: flex; align-items: center; padding: 16px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #10b981;">
-                                            <div class="client-avatar" style="width: 48px; height: 48px; background: linear-gradient(135deg, #10b981, #047857); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; margin-right: 12px;">
-                                                GI
-                                            </div>
-                                            <div class="client-details" style="flex: 1;">
-                                                <h5 style="font-size: 16px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">Global Industries</h5>
-                                                <p style="font-size: 13px; color: #6b7280; margin: 0 0 8px 0;">Manufactura Industrial</p>
-                                                <div style="display: flex; gap: 16px; font-size: 12px;">
-                                                    <span style="color: #3b82f6; font-weight: 600;">7 Contratos</span>
-                                                    <span style="color: #10b981; font-weight: 600;">$850,000</span>
-                                                </div>
-                                            </div>
-                                            <div class="client-actions" style="display: flex; flex-direction: column; gap: 4px;">
-                                                <button class="btn-icon" style="width: 32px; height: 32px; background: #f3f4f6; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Ver detalles">
-                                                    <i class="fas fa-eye" style="color: #6b7280; font-size: 14px;"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="client-item" style="display: flex; align-items: center; padding: 16px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #3b82f6;">
-                                            <div class="client-avatar" style="width: 48px; height: 48px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; margin-right: 12px;">
-                                                MS
-                                            </div>
-                                            <div class="client-details" style="flex: 1;">
-                                                <h5 style="font-size: 16px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">Metro Solutions</h5>
-                                                <p style="font-size: 13px; color: #6b7280; margin: 0 0 8px 0;">Servicios Urbanos</p>
-                                                <div style="display: flex; gap: 16px; font-size: 12px;">
-                                                    <span style="color: #3b82f6; font-weight: 600;">4 Contratos</span>
-                                                    <span style="color: #10b981; font-weight: 600;">$620,000</span>
-                                                </div>
-                                            </div>
-                                            <div class="client-actions" style="display: flex; flex-direction: column; gap: 4px;">
-                                                <button class="btn-icon" style="width: 32px; height: 32px; background: #f3f4f6; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Ver detalles">
-                                                    <i class="fas fa-eye" style="color: #6b7280; font-size: 14px;"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="client-item" style="display: flex; align-items: center; padding: 16px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #8b5cf6;">
-                                            <div class="client-avatar" style="width: 48px; height: 48px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; margin-right: 12px;">
-                                                FG
-                                            </div>
-                                            <div class="client-details" style="flex: 1;">
-                                                <h5 style="font-size: 16px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">Financial Group</h5>
-                                                <p style="font-size: 13px; color: #6b7280; margin: 0 0 8px 0;">Servicios Financieros</p>
-                                                <div style="display: flex; gap: 16px; font-size: 12px;">
-                                                    <span style="color: #3b82f6; font-weight: 600;">3 Contratos</span>
-                                                    <span style="color: #10b981; font-weight: 600;">$480,000</span>
-                                                </div>
-                                            </div>
-                                            <div class="client-actions" style="display: flex; flex-direction: column; gap: 4px;">
-                                                <button class="btn-icon" style="width: 32px; height: 32px; background: #f3f4f6; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Ver detalles">
-                                                    <i class="fas fa-eye" style="color: #6b7280; font-size: 14px;"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Providers and Clients Management Section - Dynamic Component -->
+                    {% set providers_api_url = "/api/providers-summary" %}
+                    {% set clients_api_url = "/api/clients-summary" %}
+                    {% set data_max_items = "3" %}
+                    {% set data_title = "Proveedores y Clientes Principales" %}
+                    {% set data_subtitle = "Vista rápida de los principales proveedores y clientes del sistema" %}
+                    {% set data_providers_manage_url = "/proveedores" %}
+                    {% set data_clients_manage_url = "/clientes" %}
+                    {% set component_id = "providers-clients-contratos" %}
+                    {% include 'components/partials/providers-clients-block.html' with context %}
                 </div>
 
                 <!-- Contracts Table Block -->
@@ -572,4 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     </script>
+    
+    <!-- Providers Clients Block Component Script -->
+    <script src="{{ url_for('static', filename='js/providers-clients-block.js') }}"></script>
 {% endblock %}

@@ -167,7 +167,7 @@
 
 /* Mantener el color original de la tabla de proveedores */
 .proveedores-table thead th {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     color: white;
     font-weight: 600;
     font-size: 12px;

@@ -1,0 +1,72 @@
+<!-- Add Persona Modal -->
+<div class="modal fade" id="addPersonaModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus" style="color: #3b82f6; margin-right: 8px;"></i>
+                    Añadir Nueva Persona Responsable
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addPersonaForm">
+                    <input type="hidden" id="personaId">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nombre Completo *</label>
+                            <input type="text" class="form-control" id="personaNombre" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Documento Oficial *</label>
+                            <div id="currentDocumentInfo" style="display: none;"></div>
+                            <input type="file" class="form-control" id="personaDocumento" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required>
+                            <div class="form-text">Subir carta oficial que avale a la persona como responsable (PDF, DOC, DOCX, JPG, PNG)</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Cargo</label>
+                            <input type="text" class="form-control" id="personaCargo">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="personaEmail">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Teléfono</label>
+                            <input type="tel" class="form-control" id="personaTelefono">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Estado</label>
+                            <select class="form-control" id="personaActivo">
+                                <option value="true">Activo</option>
+                                <option value="false">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="personaEsPrincipal">
+                                <label class="form-check-label" for="personaEsPrincipal">
+                                    Es persona principal
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Observaciones</label>
+                            <textarea class="form-control" id="personaObservaciones" rows="2" placeholder="Observaciones adicionales sobre el documento"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="savePersonaBtn">Guardar Persona</button>
+            </div>
+        </div>
+    </div>
+</div>

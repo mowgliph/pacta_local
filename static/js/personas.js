@@ -32,6 +32,7 @@ function generatePersonaAvatar(nombre) {
 // Inicialización cuando se carga la página
 document.addEventListener('DOMContentLoaded', function() {
     loadPersonas();
+    loadPersonasMetrics();
     initializeEventListeners();
 });
 
@@ -63,7 +64,7 @@ function initializeEventListeners() {
 
 // Cargar personas desde el servidor
 function loadPersonas() {
-    fetch('/personas/api/all')
+    fetch('/api/personas')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -78,6 +79,63 @@ function loadPersonas() {
             console.error('Error:', error);
             showError('Error al cargar personas');
         });
+}
+
+// Función para cargar métricas dinámicamente
+function loadPersonasMetrics() {
+    $.ajax({
+        url: '/api/personas/estadisticas',
+        method: 'GET',
+        success: function(response) {
+            if (response.success) {
+                updateMetricCards(response.estadisticas);
+            } else {
+                console.error('Error al cargar estadísticas:', response.error);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error al cargar estadísticas de personas:', error);
+        }
+    });
+}
+
+// Función para actualizar las tarjetas de métricas
+function updateMetricCards(estadisticas) {
+    // Actualizar total de personas
+    const totalElement = document.querySelector('[data-metric="total-personas"] .metric-value');
+    if (totalElement) {
+        totalElement.textContent = estadisticas.total_personas;
+    }
+    
+    // Actualizar personas activas
+    const activasElement = document.querySelector('[data-metric="personas-activas"] .metric-value');
+    if (activasElement) {
+        activasElement.textContent = estadisticas.personas_activas;
+    }
+    
+    // Actualizar porcentaje de activas
+    const porcentajeActivasElement = document.querySelector('[data-metric="personas-activas"] .metric-change');
+    if (porcentajeActivasElement) {
+        porcentajeActivasElement.textContent = `${estadisticas.porcentaje_activas}% del total`;
+    }
+    
+    // Actualizar personas principales
+    const principalesElement = document.querySelector('[data-metric="personas-principales"] .metric-value');
+    if (principalesElement) {
+        principalesElement.textContent = estadisticas.personas_principales;
+    }
+    
+    // Actualizar porcentaje de principales
+    const porcentajePrincipalesElement = document.querySelector('[data-metric="personas-principales"] .metric-change');
+    if (porcentajePrincipalesElement) {
+        porcentajePrincipalesElement.textContent = `${estadisticas.porcentaje_principales}% del total`;
+    }
+    
+    // Actualizar clientes con personas
+    const clientesElement = document.querySelector('[data-metric="clientes-con-personas"] .metric-value');
+    if (clientesElement) {
+        clientesElement.textContent = estadisticas.clientes_con_personas;
+    }
 }
 
 // Renderizar tabla de personas
@@ -262,6 +320,7 @@ function savePersona() {
             showSuccess(data.message || (personaId ? 'Persona actualizada correctamente' : 'Persona creada correctamente'));
             bootstrap.Modal.getInstance(document.getElementById('addPersonaModal')).hide();
             loadPersonas(); // Recargar la lista
+            loadPersonasMetrics(); // Actualizar métricas
         } else {
             showError(data.message || 'Error al guardar la persona');
         }
@@ -316,6 +375,7 @@ function deletePersona(personaId) {
                 if (data.success) {
                     showSuccess(data.message);
                     loadPersonas(); // Recargar la lista
+                    loadPersonasMetrics(); // Actualizar métricas
                 } else {
                     showError(data.message || 'Error al eliminar la persona');
                 }

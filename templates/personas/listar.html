@@ -114,142 +114,34 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Separador -->
+            <div style="margin: 32px 0;"></div>
+            
+            <!-- Gestión de Proveedores y Clientes -->
+            {% set providers_api_url = "/api/providers-summary" %}
+            {% set clients_api_url = "/api/clients-summary" %}
+            {% set data_max_items = "3" %}
+            {% set data_title = "Proveedores y Clientes Principales" %}
+            {% set data_subtitle = "Vista rápida de los principales proveedores y clientes del sistema" %}
+            {% set data_providers_manage_url = "/proveedores" %}
+            {% set data_clients_manage_url = "/clientes" %}
+            {% set component_id = "providers-clients-main" %}
+            {% include 'components/partials/providers-clients-block.html' with context %}
 
         </div>
     </div>
     
-    <!-- Add Persona Modal -->
-    <div class="modal fade" id="addPersonaModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-plus" style="color: #3b82f6; margin-right: 8px;"></i>
-                        Añadir Nueva Persona Responsable
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addPersonaForm">
-                        <input type="hidden" id="personaId">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Nombre Completo *</label>
-                                <input type="text" class="form-control" id="personaNombre" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Documento Oficial *</label>
-                                <div id="currentDocumentInfo" style="display: none;"></div>
-                                <input type="file" class="form-control" id="personaDocumento" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required>
-                                <div class="form-text">Subir carta oficial que avale a la persona como responsable (PDF, DOC, DOCX, JPG, PNG)</div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Cargo</label>
-                                <input type="text" class="form-control" id="personaCargo">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-control" id="personaEmail">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Teléfono</label>
-                                <input type="tel" class="form-control" id="personaTelefono">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Estado</label>
-                                <select class="form-control" id="personaActivo">
-                                    <option value="true">Activo</option>
-                                    <option value="false">Inactivo</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="personaEsPrincipal">
-                                    <label class="form-check-label" for="personaEsPrincipal">
-                                        Es persona principal
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Observaciones</label>
-                                <textarea class="form-control" id="personaObservaciones" rows="2" placeholder="Observaciones adicionales sobre el documento"></textarea>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="savePersonaBtn">Guardar Persona</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Include Persona Modal Component -->
+    {% include 'components/modals/persona_modal.html' %}
 
 {% endblock %}
 
 {% block extra_css %}
-<style>
-    .persona-tag {
-        display: inline-block;
-        background: #e0f2fe;
-        color: #0277bd;
-        padding: 4px 8px;
-        border-radius: 4px;
-        margin: 2px;
-        font-size: 12px;
-        border: 1px solid #b3e5fc;
-    }
-    
-    .persona-tag .remove-persona {
-        margin-left: 6px;
-        cursor: pointer;
-        font-weight: bold;
-        color: #d32f2f;
-    }
-    
-    .persona-tag .remove-persona:hover {
-        color: #b71c1c;
-    }
-    
-    .dropdown-menu {
-        border: 1px solid #e2e8f0;
-        border-radius: 6px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-    
-    .dropdown-item {
-        padding: 8px 12px;
-        cursor: pointer;
-        border-bottom: 1px solid #f1f5f9;
-    }
-    
-    .dropdown-item:hover {
-        background-color: #f8fafc;
-    }
-    
-    .dropdown-item:last-child {
-        border-bottom: none;
-    }
-    
-    .persona-info .persona-name {
-        font-weight: 500;
-        color: #1e293b;
-    }
-    
-    .persona-info .persona-details {
-        font-size: 12px;
-        color: #64748b;
-        margin-top: 2px;
-    }
-</style>
+
 {% endblock %}
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/personas.js') }}"></script>
+<script src="{{ url_for('static', filename='js/providers-clients-block.js') }}"></script>
 {% endblock %}

@@ -1,53 +1,12 @@
 from flask import Blueprint, render_template, jsonify, request, flash, session, redirect, url_for
-from functools import wraps
 from datetime import datetime, timedelta
 from database.models import Usuario, ActividadSistema, Contrato, Notificacion
 from services.system_metrics import get_system_metrics
 from services.user_stats import get_user_personal_stats
+from .decorators import login_required, admin_required, api_login_required
+from .utils import get_notificaciones_count, get_current_user_id, create_success_response, create_error_response
 
 users_bp = Blueprint('users', __name__)
-
-# Función helper para obtener contador de notificaciones
-def get_notificaciones_count():
-    """Obtiene el número de notificaciones no leídas del usuario actual"""
-    if 'user_id' in session:
-        return Notificacion.get_unread_count(session['user_id'])
-    return 0
-
-# Decorador para requerir login
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            return redirect(url_for('auth.login'))
-        return f(*args, **kwargs)
-    return decorated_function
-
-# Decorador para requerir admin
-def admin_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            return redirect(url_for('auth.login'))
-        usuario = Usuario.get_by_id(session['user_id'])
-        if not usuario or not usuario.es_admin:
-            flash('Acceso denegado. Se requieren permisos de administrador.', 'error')
-            return redirect(url_for('main.dashboard'))
-        return f(*args, **kwargs)
-    return decorated_function
-
-# Decorador para rutas API que requieren login
-def api_login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            return jsonify({
-                'success': False, 
-                'message': 'No autenticado',
-                'redirect': url_for('auth.login')
-            }), 401
-        return f(*args, **kwargs)
-    return decorated_function
 
 @users_bp.route('/usuario')
 @login_required

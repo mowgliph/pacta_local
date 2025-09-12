@@ -12,7 +12,7 @@ $(document).ready(function() {
     loadProveedores();
     loadEstadisticas();
     initializeEventListeners();
-    
+    loadPersonasRecientes();
 
 });
 
@@ -349,6 +349,16 @@ function saveProvider() {
                 $('#addProviderModal').modal('hide');
                 showAlert(response.message, 'success');
                 loadProveedores();
+                // Recargar personas recientes si hay personas seleccionadas
+                if (selectedPersonas && selectedPersonas.length > 0) {
+                    setTimeout(() => {
+                        loadPersonasRecientes();
+                        // Actualizar métricas de personas si existe la función
+                        if (typeof loadPersonasMetrics === 'function') {
+                            loadPersonasMetrics();
+                        }
+                    }, 500);
+                }
             } else {
                 showAlert('Error: ' + response.message, 'error');
             }
@@ -455,24 +465,34 @@ function deleteProvider(providerId) {
         return;
     }
     
-    if (confirm(`¿Está seguro que desea eliminar el proveedor "${proveedor.nombre}"?\n\nEsta acción marcará el proveedor como inactivo.`)) {
-        $.ajax({
-            url: `/api/proveedores/${providerId}`,
-            method: 'DELETE',
-            success: function(response) {
-                if (response.success) {
-                    showAlert(response.message, 'success');
-                    loadProveedores();
-                    loadEstadisticas();
-                } else {
-                    showAlert('Error: ' + response.message, 'error');
+    // Usar el modal de confirmación para eliminación
+    showDeleteConfirmModal(
+        `proveedor "${proveedor.nombre}"`,
+        function() {
+            // Función de confirmación
+            $.ajax({
+                url: `/api/proveedores/${providerId}`,
+                method: 'DELETE',
+                success: function(response) {
+                    if (response.success) {
+                        loadProveedores();
+                        loadEstadisticas();
+                        showSuccess(response.message || 'Proveedor eliminado exitosamente');
+                    } else {
+                        showError('Error al eliminar el proveedor: ' + (response.message || 'Error desconocido'));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    showError('Error de conexión al eliminar proveedor');
                 }
-            },
-            error: function(xhr, status, error) {
-                showAlert('Error de conexión al eliminar proveedor', 'error');
-            }
-        });
-    }
+            });
+        },
+        function() {
+            // Función de cancelación (opcional)
+            showInfo('Eliminación cancelada');
+        }
+    );
 }
 
 
@@ -518,7 +538,7 @@ function filterProviders(searchTerm) {
 // Función para buscar personas responsables
 function searchPersonas(searchTerm) {
     $.ajax({
-        url: '/personas/api/search',
+        url: '/api/personas/search',
         method: 'GET',
         data: { q: searchTerm },
         success: function(response) {
@@ -655,7 +675,7 @@ function loadPersonasForEdit(personaIds) {
     if (!personaIds || personaIds.length === 0) return;
     
     $.ajax({
-        url: '/personas/api/get_by_ids',
+        url: '/api/personas/get_by_ids',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ ids: personaIds }),
@@ -703,4 +723,309 @@ function showAlert(message, type = 'info') {
     setTimeout(() => {
         $('.alert').fadeOut();
     }, 5000);
+}
+
+// Función para cargar personas responsables recientes
+function loadPersonasRecientes() {
+    $.ajax({
+        url: '/api/proveedores/personas-recientes',
+        method: 'GET',
+        success: function(response) {
+            if (response.success) {
+                renderPersonasRecientes(response.data);
+            } else {
+                console.error('Error al cargar personas recientes:', response.message);
+                showPersonasError('Error al cargar las personas responsables');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error en la petición:', error);
+            showPersonasError('Error de conexión al cargar las personas responsables');
+        }
+    });
+}
+
+// Función para renderizar las personas responsables recientes
+function renderPersonasRecientes(personas) {
+    const container = $('#personasRecentesList');
+    
+    if (!personas || personas.length === 0) {
+        container.html(`
+            <div class="empty-message" style="text-align: center; padding: 40px; color: #6b7280;">
+                <i class="fas fa-users" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+                <p style="margin: 0; font-size: 16px;">No hay personas responsables registradas</p>
+                <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.7;">Las personas aparecerán aquí cuando se asignen a proveedores</p>
+            </div>
+        `);
+        return;
+    }
+    
+    let html = '';
+    personas.forEach((persona, index) => {
+        const avatar = generatePersonaAvatar(persona.nombre, index);
+        const fechaFormateada = persona.fecha_creacion ? 
+            new Date(persona.fecha_creacion).toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: '2-digit', 
+                year: 'numeric'
+            }) : 'Fecha no disponible';
+        
+        html += `
+            <div class="persona-item" style="display: flex; align-items: center; padding: 16px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; transition: all 0.2s ease;" 
+                 onmouseover="this.style.backgroundColor='#f3f4f6'; this.style.borderColor='#d1d5db'" 
+                 onmouseout="this.style.backgroundColor='#f9fafb'; this.style.borderColor='#e5e7eb'">
+                
+                <div class="persona-avatar" style="margin-right: 16px;">
+                    ${avatar}
+                </div>
+                
+                <div class="persona-info" style="flex: 1; min-width: 0;">
+                    <div class="persona-name" style="font-weight: 600; color: #374151; font-size: 16px; margin-bottom: 4px;">
+                        ${persona.nombre}
+                    </div>
+                    <div class="persona-details" style="display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; color: #6b7280;">
+                        <span style="display: flex; align-items: center;">
+                            <i class="fas fa-envelope" style="margin-right: 6px; color: #8b5cf6;"></i>
+                            ${persona.email || 'Sin email'}
+                        </span>
+                        <span style="display: flex; align-items: center;">
+                            <i class="fas fa-phone" style="margin-right: 6px; color: #8b5cf6;"></i>
+                            ${persona.telefono || 'Sin teléfono'}
+                        </span>
+                        <span style="display: flex; align-items: center;">
+                            <i class="fas fa-building" style="margin-right: 6px; color: #8b5cf6;"></i>
+                            ${persona.proveedor_nombre || 'Sin proveedor'}
+                        </span>
+                        <span style="display: flex; align-items: center;">
+                            <i class="fas fa-calendar" style="margin-right: 6px; color: #8b5cf6;"></i>
+                            ${fechaFormateada}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="persona-actions" style="display: flex; gap: 8px;">
+                    <button class="btn btn-sm btn-outline-primary" onclick="viewPersonaDetails(${persona.id})" 
+                            style="padding: 6px 12px; font-size: 12px;" title="Ver detalles">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.html(html);
+}
+
+// Función para generar avatar de persona
+function generatePersonaAvatar(nombre, index) {
+    const colors = [
+        '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', 
+        '#ef4444', '#8b5cf6', '#06b6d4', '#10b981'
+    ];
+    const color = colors[index % colors.length];
+    const initials = nombre ? nombre.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '??';
+    
+    return `
+        <div class="avatar-circle" style="
+            width: 48px; 
+            height: 48px; 
+            border-radius: 50%; 
+            background-color: ${color}; 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 600; 
+            font-size: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        ">
+            ${initials}
+        </div>
+    `;
+}
+
+// Función para mostrar error en personas
+function showPersonasError(message) {
+    const container = $('#personasRecentesList');
+    container.html(`
+        <div class="error-message" style="text-align: center; padding: 40px; color: #dc2626;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+            <p style="margin: 0; font-size: 16px;">${message}</p>
+            <button class="btn btn-sm btn-outline-primary" onclick="loadPersonasRecientes()" style="margin-top: 16px;">
+                <i class="fas fa-redo"></i> Reintentar
+            </button>
+        </div>
+    `);
+}
+
+// Función para ver detalles de persona (placeholder)
+function viewPersonaDetails(personaId) {
+    // Obtener datos de la persona desde el backend
+    $.ajax({
+        url: `/api/personas/${personaId}`,
+        method: 'GET',
+        success: function(response) {
+            if (response.success) {
+                showPersonaDetailsModal(response.persona);
+            } else {
+                showAlert('Error al cargar los detalles de la persona: ' + response.message, 'error');
+            }
+        },
+        error: function(xhr, status, error) {
+            showAlert('Error de conexión al cargar los detalles de la persona', 'error');
+        }
+    });
+}
+
+// Función para mostrar el modal de detalles de persona
+function showPersonaDetailsModal(persona) {
+    const fechaFormateada = persona.fecha_creacion ? 
+        new Date(persona.fecha_creacion).toLocaleDateString('es-ES', {
+            day: '2-digit',
+            month: '2-digit', 
+            year: 'numeric'
+        }) : 'Fecha no disponible';
+    
+    const modalHtml = `
+        <div class="modal fade" id="viewPersonaDetailsModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header" style="background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); color: white;">
+                        <h5 class="modal-title">
+                            <i class="fas fa-eye" style="margin-right: 8px;"></i>
+                            Detalles de Persona Responsable
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <!-- Información Personal -->
+                            <div class="col-md-6">
+                                <div class="card h-100" style="border: 1px solid #e2e8f0; border-radius: 12px;">
+                                    <div class="card-header" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-bottom: 1px solid #e2e8f0;">
+                                        <h6 class="mb-0" style="color: #1e293b; font-weight: 600;">
+                                            <i class="fas fa-user me-2" style="color: #8b5cf6;"></i>Información Personal
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="me-3">
+                                                ${generatePersonaAvatar(persona.nombre, 0)}
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-1" style="color: #1e293b; font-weight: 600;">${persona.nombre}</h6>
+                                                <small class="text-muted">${persona.cargo || 'Sin cargo especificado'}</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="persona-detail-item mb-3">
+                                            <label class="form-label" style="font-weight: 600; color: #374151; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Email</label>
+                                            <div style="padding: 8px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
+                                                ${persona.email ? `<a href="mailto:${persona.email}" style="color: #8b5cf6; text-decoration: none;">${persona.email}</a>` : '<span class="text-muted">No especificado</span>'}
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="persona-detail-item mb-3">
+                                            <label class="form-label" style="font-weight: 600; color: #374151; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Teléfono</label>
+                                            <div style="padding: 8px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
+                                                ${persona.telefono ? `<a href="tel:${persona.telefono}" style="color: #8b5cf6; text-decoration: none;">${persona.telefono}</a>` : '<span class="text-muted">No especificado</span>'}
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="persona-detail-item">
+                                            <label class="form-label" style="font-weight: 600; color: #374151; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Tipo de Persona</label>
+                                            <div style="padding: 8px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
+                                                <span class="persona-badge ${persona.es_principal ? 'principal' : 'secundaria'}" style="padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">
+                                                    <i class="fas ${persona.es_principal ? 'fa-star' : 'fa-user'}" style="margin-right: 4px;"></i>
+                                                    ${persona.es_principal ? 'Principal' : 'Secundaria'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Información Adicional -->
+                            <div class="col-md-6">
+                                <div class="card h-100" style="border: 1px solid #e2e8f0; border-radius: 12px;">
+                                    <div class="card-header" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-bottom: 1px solid #e2e8f0;">
+                                        <h6 class="mb-0" style="color: #1e293b; font-weight: 600;">
+                                            <i class="fas fa-info-circle me-2" style="color: #8b5cf6;"></i>Información Adicional
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="persona-detail-item mb-3">
+                                            <label class="form-label" style="font-weight: 600; color: #374151; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Estado</label>
+                                            <div style="padding: 8px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
+                                                <span class="persona-badge ${persona.activo ? 'activo' : 'inactivo'}" style="padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">
+                                                    <i class="fas ${persona.activo ? 'fa-check-circle' : 'fa-times-circle'}" style="margin-right: 4px;"></i>
+                                                    ${persona.activo ? 'Activo' : 'Inactivo'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="persona-detail-item mb-3">
+                                            <label class="form-label" style="font-weight: 600; color: #374151; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Fecha de Registro</label>
+                                            <div style="padding: 8px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
+                                                <span style="color: #64748b;">
+                                                    <i class="fas fa-calendar" style="margin-right: 6px; color: #8b5cf6;"></i>
+                                                    ${fechaFormateada}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        ${persona.observaciones ? `
+                                        <div class="persona-detail-item">
+                                            <label class="form-label" style="font-weight: 600; color: #374151; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Observaciones</label>
+                                            <div style="padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; max-height: 120px; overflow-y: auto;">
+                                                <p style="margin: 0; color: #64748b; font-size: 14px; line-height: 1.5;">${persona.observaciones}</p>
+                                            </div>
+                                        </div>
+                                        ` : ''}
+                                        
+                                        ${persona.documento_path ? `
+                                        <div class="persona-detail-item mt-3">
+                                            <label class="form-label" style="font-weight: 600; color: #374151; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Documento</label>
+                                            <div style="padding: 8px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
+                                                <a href="/uploads/personas/${persona.documento_path}" target="_blank" class="btn btn-sm btn-outline-primary" style="font-size: 12px;">
+                                                    <i class="fas fa-file-alt me-1"></i>Ver Documento
+                                                </a>
+                                            </div>
+                                        </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="background: #f8fafc; border-top: 1px solid #e2e8f0;">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-1"></i>Cerrar
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="window.location.href='/personas?highlight=${persona.id}'" style="background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); border: none;">
+                            <i class="fas fa-external-link-alt me-1"></i>Ir a Gestión de Personas
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remover modal existente si existe
+    const existingModal = document.getElementById('viewPersonaDetailsModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Agregar modal al DOM
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    // Mostrar modal
+    const modal = new bootstrap.Modal(document.getElementById('viewPersonaDetailsModal'));
+    modal.show();
+    
+    // Limpiar modal cuando se cierre
+    document.getElementById('viewPersonaDetailsModal').addEventListener('hidden.bs.modal', function() {
+        this.remove();
+    });
 }

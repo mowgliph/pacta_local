@@ -1,34 +1,16 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, send_file, current_app, session
-from functools import wraps
 from werkzeug.utils import secure_filename
 from database.models import Contrato, Cliente, PersonaResponsable, DocumentoContrato, Suplemento, Usuario, Proveedor, Notificacion
+from .decorators import login_required
+from .utils import get_notificaciones_count, allowed_file, get_current_user_id, create_success_response, create_error_response
 from datetime import datetime
 import os
 
-# Decorador para requerir login (simplificado)
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            return redirect(url_for('auth.login'))
-        return f(*args, **kwargs)
-    return decorated_function
-
 contratos_bp = Blueprint('contratos', __name__, url_prefix='/contratos')
-
-# Función helper para obtener contador de notificaciones
-def get_notificaciones_count():
-    """Obtiene el número de notificaciones no leídas del usuario actual"""
-    if 'user_id' in session:
-        return Notificacion.get_unread_count(session['user_id'])
-    return 0
 
 # Configuración para subida de archivos
 UPLOAD_FOLDER = 'uploads/contratos'
 ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx'}
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @contratos_bp.route('/')
 @login_required
@@ -352,20 +334,7 @@ def eliminar(id):
     except Exception as e:
         return jsonify({'success': False, 'message': f'Error al eliminar el contrato: {str(e)}'})
 
-@contratos_bp.route('/api/personas-por-cliente/<int:cliente_id>')
-@login_required
-def api_personas_por_cliente(cliente_id):
-    """API para obtener personas responsables por cliente"""
-    personas = PersonaResponsable.get_by_cliente(cliente_id, activos_solo=True)
-    return jsonify([
-        {
-            'id': persona.id,
-            'nombre': persona.nombre,
-            'cargo': persona.cargo,
-            'es_principal': persona.es_principal
-        }
-        for persona in personas
-    ])
+# Ruta movida a api_personas_bp en personas.py para mantener consistencia
 
 @contratos_bp.route('/<int:id>/subir_documento', methods=['POST'])
 @login_required

@@ -1,0 +1,255 @@
+<!-- Providers and Clients Management Block Component -->
+<!-- Parameters:
+     - title: Block title (default: "Gestión de Proveedores y Clientes")
+     - subtitle: Block subtitle (default: "Información de proveedores y clientes con mayor actividad contractual")
+     - providers_title: Providers column title (default: "Proveedores Principales")
+     - providers_subtitle: Providers column subtitle (default: "Top proveedores por número de contratos")
+     - clients_title: Clients column title (default: "Clientes Principales")
+     - clients_subtitle: Clients column subtitle (default: "Top clientes por número de contratos")
+     - providers_manage_url: URL for providers management (default: "/proveedores")
+     - clients_manage_url: URL for clients management (default: "/clientes")
+     - show_manage_buttons: Show management buttons (default: true)
+     - data_source: API endpoint for data (required)
+     - component_id: Unique ID for the component (required for multiple instances)
+-->
+
+{% set title = title or "Gestión de Proveedores y Clientes" %}
+{% set subtitle = subtitle or "Información de proveedores y clientes con mayor actividad contractual" %}
+{% set providers_title = providers_title or "Proveedores Principales" %}
+{% set providers_subtitle = providers_subtitle or "Top proveedores por número de contratos" %}
+{% set clients_title = clients_title or "Clientes Principales" %}
+{% set clients_subtitle = clients_subtitle or "Top clientes por número de contratos" %}
+{% set providers_manage_url = providers_manage_url or "/proveedores" %}
+{% set clients_manage_url = clients_manage_url or "/clientes" %}
+{% set show_manage_buttons = show_manage_buttons if show_manage_buttons is defined else true %}
+{% set component_id = component_id or "providers-clients-block" %}
+
+<div class="block-section providers-clients-block" id="{{ component_id }}">
+    <div class="block-header">
+        <div class="block-title-section">
+            <h3 class="block-title">
+                <i class="fas fa-users" style="color: #3b82f6; margin-right: 8px;"></i>
+                {{ title }}
+            </h3>
+            <p class="block-subtitle">{{ subtitle }}</p>
+        </div>
+    </div>
+    <div class="block-content">
+        <!-- Loading State -->
+        <div class="loading-state" id="{{ component_id }}-loading" style="display: flex; justify-content: center; align-items: center; padding: 60px; color: #6b7280;">
+            <i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i>
+            Cargando información...
+        </div>
+        
+        <!-- Error State -->
+        <div class="error-state" id="{{ component_id }}-error" style="display: none; text-align: center; padding: 60px; color: #ef4444;">
+            <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
+            <span class="error-message">Error al cargar la información</span>
+            <button class="btn btn-sm btn-outline-primary" onclick="window.location.reload()" style="margin-left: 12px;">
+                <i class="fas fa-redo"></i> Reintentar
+            </button>
+        </div>
+        
+        <!-- Content -->
+        <div class="providers-clients-content" id="{{ component_id }}-content" style="display: none;">
+            <!-- Two Column Layout -->
+            <div class="providers-clients-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                
+                <!-- Providers Column -->
+                <div class="providers-column" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <div class="column-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f3f4f6;">
+                        <div>
+                            <h4 style="font-size: 18px; font-weight: 600; color: #374151; margin: 0; display: flex; align-items: center;">
+                                <i class="fas fa-building" style="color: #3b82f6; margin-right: 8px;"></i>
+                                {{ providers_title }}
+                            </h4>
+                            <p style="font-size: 14px; color: #6b7280; margin: 4px 0 0 0;">{{ providers_subtitle }}</p>
+                        </div>
+                        {% if show_manage_buttons %}
+                        <button class="btn btn-primary btn-sm d-flex align-items-center gap-2" onclick="window.location.href='{{ providers_manage_url }}'">
+                            <i class="fas fa-cog"></i>
+                            Gestionar Proveedor
+                        </button>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="providers-list" id="{{ component_id }}-providers-list" style="display: flex; flex-direction: column; gap: 16px;">
+                        <!-- Dynamic content will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Clients Column -->
+                <div class="clients-column" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <div class="column-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f3f4f6;">
+                        <div>
+                            <h4 style="font-size: 18px; font-weight: 600; color: #374151; margin: 0; display: flex; align-items: center;">
+                                <i class="fas fa-handshake" style="color: #10b981; margin-right: 8px;"></i>
+                                {{ clients_title }}
+                            </h4>
+                            <p style="font-size: 14px; color: #6b7280; margin: 4px 0 0 0;">{{ clients_subtitle }}</p>
+                        </div>
+                        {% if show_manage_buttons %}
+                        <button class="btn btn-success btn-sm d-flex align-items-center gap-2" onclick="window.location.href='{{ clients_manage_url }}'">
+                            <i class="fas fa-cog"></i>
+                            Gestionar Cliente
+                        </button>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="clients-list" id="{{ component_id }}-clients-list" style="display: flex; flex-direction: column; gap: 16px;">
+                        <!-- Dynamic content will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load providers and clients data for this component instance
+function loadProvidersClientsData(componentId, providersUrl, clientsUrl) {
+    const loadingEl = document.getElementById(componentId + '-loading');
+    const errorEl = document.getElementById(componentId + '-error');
+    const contentEl = document.getElementById(componentId + '-content');
+    
+    // Show loading state
+    loadingEl.style.display = 'flex';
+    errorEl.style.display = 'none';
+    contentEl.style.display = 'none';
+    
+    // Fetch both providers and clients data
+     Promise.all([
+         fetch(providersUrl).then(response => {
+             if (!response.ok) {
+                 throw new Error('Providers network response was not ok');
+             }
+             return response.json();
+         }),
+         fetch(clientsUrl).then(response => {
+             if (!response.ok) {
+                 throw new Error('Clients network response was not ok');
+             }
+             return response.json();
+         })
+     ])
+         .then(([providersResponse, clientsResponse]) => {
+             const combinedData = {
+                 providers: providersResponse.success ? providersResponse.providers : [],
+                 clients: clientsResponse.success ? clientsResponse.clients : []
+             };
+             renderProvidersClientsData(componentId, combinedData);
+            
+            // Show content
+            loadingEl.style.display = 'none';
+            errorEl.style.display = 'none';
+            contentEl.style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Error loading providers and clients data:', error);
+            
+            // Show error state
+            loadingEl.style.display = 'none';
+            errorEl.style.display = 'block';
+            contentEl.style.display = 'none';
+        });
+}
+
+// Render providers and clients data
+function renderProvidersClientsData(componentId, data) {
+    const providersListEl = document.getElementById(componentId + '-providers-list');
+    const clientsListEl = document.getElementById(componentId + '-clients-list');
+    
+    // Clear existing content
+    providersListEl.innerHTML = '';
+    clientsListEl.innerHTML = '';
+    
+    // Render providers
+    if (data.providers && data.providers.length > 0) {
+        data.providers.forEach((provider, index) => {
+            const providerEl = createProviderClientItem(provider, 'provider', index);
+            providersListEl.appendChild(providerEl);
+        });
+    } else {
+        providersListEl.innerHTML = '<div style="text-align: center; color: #6b7280; padding: 20px;">No hay proveedores disponibles</div>';
+    }
+    
+    // Render clients
+    if (data.clients && data.clients.length > 0) {
+        data.clients.forEach((client, index) => {
+            const clientEl = createProviderClientItem(client, 'client', index);
+            clientsListEl.appendChild(clientEl);
+        });
+    } else {
+        clientsListEl.innerHTML = '<div style="text-align: center; color: #6b7280; padding: 20px;">No hay clientes disponibles</div>';
+    }
+}
+
+// Create provider or client item element
+function createProviderClientItem(item, type, index) {
+    const colors = {
+        provider: ['#3b82f6', '#1d4ed8', '#10b981', '#047857', '#f59e0b', '#d97706'],
+        client: ['#10b981', '#047857', '#3b82f6', '#1d4ed8', '#8b5cf6', '#7c3aed']
+    };
+    
+    const bgColors = {
+        provider: '#f8fafc',
+        client: '#f0fdf4'
+    };
+    
+    const color = colors[type][index % colors[type].length];
+    const bgColor = bgColors[type];
+    
+    const div = document.createElement('div');
+    div.className = type + '-item';
+    div.style.cssText = `display: flex; align-items: center; padding: 16px; background: ${bgColor}; border-radius: 8px; border-left: 4px solid ${color};`;
+    
+    // Generate initials from name
+    const initials = item.nombre ? item.nombre.split(' ').map(word => word.charAt(0)).join('').substring(0, 2).toUpperCase() : '??';
+    
+    div.innerHTML = `
+        <div class="${type}-avatar" style="width: 48px; height: 48px; background: linear-gradient(135deg, ${color}, ${color}dd); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; margin-right: 12px;">
+            ${initials}
+        </div>
+        <div class="${type}-details" style="flex: 1;">
+            <h5 style="font-size: 16px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">${item.nombre || 'Sin nombre'}</h5>
+            <p style="font-size: 13px; color: #6b7280; margin: 0 0 8px 0;">${item.industria || item.sector || 'Sin categoría'}</p>
+            <div style="display: flex; gap: 16px; font-size: 12px;">
+                <span style="color: #3b82f6; font-weight: 600;">${item.contratos_count || 0} Contratos</span>
+                <span style="color: #10b981; font-weight: 600;">$${formatCurrency(item.total_value || 0)}</span>
+            </div>
+        </div>
+        <div class="${type}-actions" style="display: flex; flex-direction: column; gap: 4px;">
+            <button class="btn-icon" style="width: 32px; height: 32px; background: #f3f4f6; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Ver detalles" onclick="view${type.charAt(0).toUpperCase() + type.slice(1)}Details(${item.id})">
+                <i class="fas fa-eye" style="color: #6b7280; font-size: 14px;"></i>
+            </button>
+        </div>
+    `;
+    
+    return div;
+}
+
+// Format currency helper
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('es-MX', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(amount);
+}
+
+// Placeholder functions for viewing details (to be implemented by each page)
+function viewProviderDetails(id) {
+    console.log('View provider details:', id);
+    // This function should be implemented by the page using this component
+}
+
+function viewClientDetails(id) {
+    console.log('View client details:', id);
+    // This function should be implemented by the page using this component
+}
+
+// Auto-initialize the component when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // This component will be initialized by the main providers-clients-block.js script
+    // which looks for elements with data-providers-clients-block attribute
+});
+</script>

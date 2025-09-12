@@ -92,6 +92,14 @@ class Proveedor:
             ))
         return proveedores
     
+    def delete(self):
+        """Elimina físicamente el proveedor de la base de datos"""
+        if self.id:
+            query = "DELETE FROM proveedores WHERE id = ?"
+            db_manager.execute_update(query, (self.id,))
+            return True
+        return False
+    
     @classmethod
     def get_all(cls, activos_solo=True):
         """Obtiene todos los proveedores"""

@@ -1,44 +1,13 @@
 from flask import Blueprint, render_template, redirect, url_for, session, flash, jsonify
-from functools import wraps
 from datetime import datetime, timedelta
 import random
 from database.models import Usuario, Cliente, Contrato, Suplemento, ActividadSistema, Notificacion
 from services.system_metrics import get_system_metrics
 from services.config_metrics import get_config_metrics
+from .decorators import login_required, admin_required
+from .utils import get_notificaciones_count, get_current_user_id
 
 main_bp = Blueprint('main', __name__)
-
-# Función helper para obtener contador de notificaciones
-def get_notificaciones_count():
-    """Obtiene el contador de notificaciones no leídas del usuario actual"""
-    if 'user_id' not in session:
-        return 0
-    try:
-        return Notificacion.get_unread_count(session['user_id'])
-    except Exception:
-        return 0
-
-# Decorador para requerir login
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            return redirect(url_for('auth.login'))
-        return f(*args, **kwargs)
-    return decorated_function
-
-# Decorador para requerir admin
-def admin_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            return redirect(url_for('auth.login'))
-        usuario = Usuario.get_by_id(session['user_id'])
-        if not usuario or not usuario.es_admin:
-            flash('Acceso denegado. Se requieren permisos de administrador.', 'error')
-            return redirect(url_for('main.dashboard'))
-        return f(*args, **kwargs)
-    return decorated_function
 
 def obtener_estadisticas_contratos():
     """Obtiene estadísticas de contratos desde la base de datos"""

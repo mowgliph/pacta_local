@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, session
-from functools import wraps
 from database.models import PersonaResponsable, Cliente, Notificacion, Usuario
 from database.database import DatabaseManager
+from .decorators import login_required, api_login_required
+from .utils import get_notificaciones_count, get_current_user_id, create_success_response, create_error_response
 import logging
 import os
 from werkzeug.utils import secure_filename
@@ -15,22 +16,7 @@ db_manager = DatabaseManager()
 
 # Crear blueprint para personas responsables
 personas_bp = Blueprint('personas', __name__, url_prefix='/personas')
-
-# Función helper para obtener contador de notificaciones
-def get_notificaciones_count():
-    """Obtiene el número de notificaciones no leídas del usuario actual"""
-    if 'user_id' in session:
-        return Notificacion.get_unread_count(session['user_id'])
-    return 0
-
-# Decorador para requerir login
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            return redirect(url_for('auth.login'))
-        return f(*args, **kwargs)
-    return decorated_function
+api_personas_bp = Blueprint('api_personas', __name__)
 
 @personas_bp.route('/')
 @login_required
@@ -310,8 +296,43 @@ def personas_por_cliente(cliente_id):
         logger.error(f"Error al obtener personas por cliente: {e}")
         return jsonify({'error': 'Error al obtener personas'}), 500
 
-@personas_bp.route('/api/search')
-@login_required
+@api_personas_bp.route('/api/personas/estadisticas')
+@api_login_required
+def api_get_estadisticas_personas():
+    """API para obtener estadísticas de personas responsables"""
+    try:
+        # Obtener todas las personas responsables
+        personas = PersonaResponsable.get_all(activos_solo=False)
+        
+        # Calcular estadísticas
+        total_personas = len(personas)
+        personas_activas = len([p for p in personas if p.activo])
+        personas_principales = len([p for p in personas if p.es_principal])
+        clientes_con_personas = len(set([p.cliente_id for p in personas if p.cliente_id is not None]))
+        
+        estadisticas = {
+            'total_personas': total_personas,
+            'personas_activas': personas_activas,
+            'personas_principales': personas_principales,
+            'clientes_con_personas': clientes_con_personas,
+            'porcentaje_activas': round((personas_activas / total_personas * 100) if total_personas > 0 else 0, 1),
+            'porcentaje_principales': round((personas_principales / total_personas * 100) if total_personas > 0 else 0, 1)
+        }
+        
+        return jsonify({
+            'success': True,
+            'estadisticas': estadisticas
+        })
+        
+    except Exception as e:
+        logger.error(f"Error al obtener estadísticas de personas: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Error al obtener estadísticas'
+        }), 500
+
+@api_personas_bp.route('/api/personas/search')
+@api_login_required
 def search_personas():
     """Buscar personas responsables por nombre, cargo o email"""
     try:
@@ -338,8 +359,8 @@ def search_personas():
         logger.error(f"Error al buscar personas: {e}")
         return jsonify({'error': 'Error en la búsqueda'}), 500
 
-@personas_bp.route('/api/get_by_ids', methods=['POST'])
-@login_required
+@api_personas_bp.route('/api/personas/get_by_ids', methods=['POST'])
+@api_login_required
 def get_personas_by_ids():
     """Obtener personas responsables por lista de IDs"""
     try:
@@ -370,8 +391,8 @@ def get_personas_by_ids():
         logger.error(f"Error al obtener personas por IDs: {e}")
         return jsonify({'success': False, 'error': 'Error al obtener personas'}), 500
 
-@personas_bp.route('/api/all')
-@login_required
+@api_personas_bp.route('/api/personas')
+@api_login_required
 def get_all_personas():
     """API endpoint para obtener todas las personas responsables con información de clientes"""
     try:
@@ -412,3 +433,68 @@ def get_all_personas():
     except Exception as e:
         logger.error(f"Error al obtener todas las personas: {str(e)}")
         return jsonify({'success': False, 'error': 'Error al obtener personas'}), 500
+
+@api_personas_bp.route('/api/personas/<int:persona_id>')
+@api_login_required
+def api_get_persona_by_id(persona_id):
+    """API para obtener una persona responsable por ID"""
+    try:
+        persona = PersonaResponsable.get_by_id(persona_id)
+        
+        if not persona:
+            return jsonify({
+                'success': False,
+                'message': 'Persona no encontrada'
+            }), 404
+        
+        # Obtener información del cliente si existe
+        cliente_nombre = None
+        if persona.cliente_id:
+            cliente = Cliente.get_by_id(persona.cliente_id)
+            if cliente:
+                cliente_nombre = cliente.nombre
+        
+        persona_data = {
+            'id': persona.id,
+            'cliente_id': persona.cliente_id,
+            'cliente_nombre': cliente_nombre,
+            'nombre': persona.nombre,
+            'cargo': persona.cargo,
+            'telefono': persona.telefono,
+            'email': persona.email,
+            'es_principal': persona.es_principal,
+            'fecha_creacion': persona.fecha_creacion.isoformat() if hasattr(persona.fecha_creacion, 'isoformat') and persona.fecha_creacion else (persona.fecha_creacion if isinstance(persona.fecha_creacion, str) else None),
+            'activo': persona.activo,
+            'documento_path': persona.documento_path,
+            'observaciones': persona.observaciones
+        }
+        
+        return jsonify({
+            'success': True,
+            'persona': persona_data
+        })
+    except Exception as e:
+        logger.error(f"Error al obtener persona {persona_id}: {e}")
+        return jsonify({
+            'success': False,
+            'message': f'Error al obtener persona: {str(e)}'
+        }), 500
+
+@api_personas_bp.route('/api/personas/por-cliente/<int:cliente_id>')
+@api_login_required
+def api_personas_por_cliente(cliente_id):
+    """API para obtener personas responsables por cliente"""
+    try:
+        personas = PersonaResponsable.get_by_cliente(cliente_id, activos_solo=True)
+        return jsonify([
+            {
+                'id': persona.id,
+                'nombre': persona.nombre,
+                'cargo': persona.cargo,
+                'es_principal': persona.es_principal
+            }
+            for persona in personas
+        ])
+    except Exception as e:
+        logger.error(f"Error al obtener personas por cliente: {e}")
+        return jsonify({'error': 'Error al obtener personas'}), 500
