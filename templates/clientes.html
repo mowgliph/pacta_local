@@ -145,112 +145,16 @@
 </div>
 
 <!-- Modal para agregar/editar cliente -->
-<div class="modal fade" id="clientModal" tabindex="-1" aria-labelledby="clientModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="clientModalLabel">Agregar Cliente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="clientForm">
-                    <input type="hidden" id="clientId">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="clientName" class="form-label">Nombre *</label>
-                                <input type="text" class="form-control" id="clientName" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="clientEmail" class="form-label">Email *</label>
-                                <input type="email" class="form-control" id="clientEmail" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="clientPhone" class="form-label">Teléfono</label>
-                                <input type="text" class="form-control" id="clientPhone">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="clientType" class="form-label">Tipo de Cliente</label>
-                                <select class="form-select" id="clientType">
-                                    <option value="cliente">Cliente</option>
-                                    <option value="prospecto">Prospecto</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="clientAddress" class="form-label">Dirección</label>
-                        <textarea class="form-control" id="clientAddress" rows="3"></textarea>
-                    </div>
-                    
-                    <!-- Sección de personas de contacto -->
-                    <div class="mb-3">
-                        <label class="form-label">Personas de Contacto</label>
-                        <div class="input-group mb-2">
-                            <input type="text" class="form-control" id="personaSearch" placeholder="Buscar persona por nombre...">
-                            <button class="btn btn-outline-secondary" type="button" id="clearPersonaSearch">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        <div id="personaResults" class="list-group mb-2" style="display: none;"></div>
-                        <div id="selectedPersonas"></div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="saveClientBtn">Guardar</button>
-            </div>
-        </div>
-    </div>
-</div>
+{% include 'components/modals/clientes/client_modal.html' %}
 
 <!-- Modal para ver detalles del cliente -->
-<div class="modal fade" id="viewClientModal" tabindex="-1" aria-labelledby="viewClientModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="viewClientModalLabel">Detalles del Cliente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="viewClientContent">
-                <!-- El contenido se cargará dinámicamente -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal para ver detalles de persona -->
-<div class="modal fade" id="personaDetailsModal" tabindex="-1" aria-labelledby="personaDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="personaDetailsModalLabel">Detalles de la Persona</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="personaDetailsContent">
-                <!-- El contenido se cargará dinámicamente -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
+{% include 'components/modals/clientes/view_client_modal.html' %}
 
         </div> <!-- /main-content -->
     </div> <!-- /dashboard-container -->
+{% endblock %}
+
+{% block extra_css %}
 {% endblock %}
 
 {% block extra_js %}

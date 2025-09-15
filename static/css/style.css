@@ -34,6 +34,7 @@
 @import url('./components/modals/user_modal.css');
 @import url('./components/user_tools.css');
 @import url('./components/quick_actions.css');
+@import url('./components/persona_tags.css');
 
 /* 7. Estilos específicos por página - Más específicos */
 @import url('./pages/dashboard.css');

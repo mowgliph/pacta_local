@@ -56,47 +56,51 @@
             <div class="providers-clients-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                 
                 <!-- Providers Column -->
-                <div class="providers-column" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                    <div class="column-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f3f4f6;">
+                <div class="providers-column" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #e1e8ed; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+                    <div class="column-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 2px solid #f1f5f9; position: relative;">
                         <div>
-                            <h4 style="font-size: 18px; font-weight: 600; color: #374151; margin: 0; display: flex; align-items: center;">
-                                <i class="fas fa-building" style="color: #3b82f6; margin-right: 8px;"></i>
+                            <h4 style="font-size: 20px; font-weight: 700; color: #1e293b; margin: 0; display: flex; align-items: center; letter-spacing: -0.025em;">
+                                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 12px; box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);">
+                                    <i class="fas fa-building" style="color: white; font-size: 16px;"></i>
+                                </div>
                                 {{ providers_title }}
                             </h4>
-                            <p style="font-size: 14px; color: #6b7280; margin: 4px 0 0 0;">{{ providers_subtitle }}</p>
+                            <p style="font-size: 14px; color: #64748b; margin: 8px 0 0 52px; font-weight: 500;">{{ providers_subtitle }}</p>
                         </div>
                         {% if show_manage_buttons %}
-                        <button class="btn btn-primary btn-sm d-flex align-items-center gap-2" onclick="window.location.href='{{ providers_manage_url }}'">
+                        <button class="btn btn-primary btn-sm d-flex align-items-center gap-2" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: none; padding: 10px 16px; border-radius: 10px; font-weight: 600; box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(59, 130, 246, 0.4)'" onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 4px 8px rgba(59, 130, 246, 0.3)'" onclick="window.location.href='{{ providers_manage_url }}'">
                             <i class="fas fa-cog"></i>
                             Gestionar Proveedor
                         </button>
                         {% endif %}
                     </div>
                     
-                    <div class="providers-list" id="{{ component_id }}-providers-list" style="display: flex; flex-direction: column; gap: 16px;">
+                    <div class="providers-list" id="{{ component_id }}-providers-list" style="display: flex; flex-direction: column; gap: 8px;">
                         <!-- Dynamic content will be loaded here -->
                     </div>
                 </div>
                 
                 <!-- Clients Column -->
-                <div class="clients-column" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                    <div class="column-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f3f4f6;">
+                <div class="clients-column" style="background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%); border: 1px solid #d1fae5; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+                    <div class="column-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 2px solid #ecfdf5; position: relative;">
                         <div>
-                            <h4 style="font-size: 18px; font-weight: 600; color: #374151; margin: 0; display: flex; align-items: center;">
-                                <i class="fas fa-handshake" style="color: #10b981; margin-right: 8px;"></i>
+                            <h4 style="font-size: 20px; font-weight: 700; color: #1e293b; margin: 0; display: flex; align-items: center; letter-spacing: -0.025em;">
+                                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #10b981, #047857); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 12px; box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);">
+                                    <i class="fas fa-handshake" style="color: white; font-size: 16px;"></i>
+                                </div>
                                 {{ clients_title }}
                             </h4>
-                            <p style="font-size: 14px; color: #6b7280; margin: 4px 0 0 0;">{{ clients_subtitle }}</p>
+                            <p style="font-size: 14px; color: #64748b; margin: 8px 0 0 52px; font-weight: 500;">{{ clients_subtitle }}</p>
                         </div>
                         {% if show_manage_buttons %}
-                        <button class="btn btn-success btn-sm d-flex align-items-center gap-2" onclick="window.location.href='{{ clients_manage_url }}'">
+                        <button class="btn btn-success btn-sm d-flex align-items-center gap-2" style="background: linear-gradient(135deg, #10b981, #047857); border: none; padding: 10px 16px; border-radius: 10px; font-weight: 600; box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(16, 185, 129, 0.4)'" onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 4px 8px rgba(16, 185, 129, 0.3)'" onclick="window.location.href='{{ clients_manage_url }}'">
                             <i class="fas fa-cog"></i>
                             Gestionar Cliente
                         </button>
                         {% endif %}
                     </div>
                     
-                    <div class="clients-list" id="{{ component_id }}-clients-list" style="display: flex; flex-direction: column; gap: 16px;">
+                    <div class="clients-list" id="{{ component_id }}-clients-list" style="display: flex; flex-direction: column; gap: 8px;">
                         <!-- Dynamic content will be loaded here -->
                     </div>
                 </div>
@@ -170,7 +174,35 @@ function renderProvidersClientsData(componentId, data) {
             providersListEl.appendChild(providerEl);
         });
     } else {
-        providersListEl.innerHTML = '<div style="text-align: center; color: #6b7280; padding: 20px;">No hay proveedores disponibles</div>';
+        providersListEl.innerHTML = `
+            <div style="
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+                justify-content: center; 
+                padding: 40px 20px; 
+                background: rgba(248, 250, 252, 0.5); 
+                border: 2px dashed #cbd5e1; 
+                border-radius: 12px; 
+                color: #64748b;
+                text-align: center;
+            ">
+                <div style="
+                    width: 48px; 
+                    height: 48px; 
+                    background: linear-gradient(135deg, #e2e8f0, #cbd5e1); 
+                    border-radius: 50%; 
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: center; 
+                    margin-bottom: 12px;
+                ">
+                    <i class="fas fa-building" style="color: #94a3b8; font-size: 20px;"></i>
+                </div>
+                <p style="font-size: 14px; font-weight: 600; margin: 0 0 4px 0;">No hay proveedores disponibles</p>
+                <p style="font-size: 12px; margin: 0; opacity: 0.8;">Los proveedores aparecerán aquí cuando se registren</p>
+            </div>
+        `;
     }
     
     // Render clients
@@ -180,7 +212,35 @@ function renderProvidersClientsData(componentId, data) {
             clientsListEl.appendChild(clientEl);
         });
     } else {
-        clientsListEl.innerHTML = '<div style="text-align: center; color: #6b7280; padding: 20px;">No hay clientes disponibles</div>';
+        clientsListEl.innerHTML = `
+            <div style="
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+                justify-content: center; 
+                padding: 40px 20px; 
+                background: rgba(240, 253, 244, 0.5); 
+                border: 2px dashed #a7f3d0; 
+                border-radius: 12px; 
+                color: #64748b;
+                text-align: center;
+            ">
+                <div style="
+                    width: 48px; 
+                    height: 48px; 
+                    background: linear-gradient(135deg, #d1fae5, #a7f3d0); 
+                    border-radius: 50%; 
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: center; 
+                    margin-bottom: 12px;
+                ">
+                    <i class="fas fa-handshake" style="color: #6ee7b7; font-size: 20px;"></i>
+                </div>
+                <p style="font-size: 14px; font-weight: 600; margin: 0 0 4px 0;">No hay clientes disponibles</p>
+                <p style="font-size: 12px; margin: 0; opacity: 0.8;">Los clientes aparecerán aquí cuando se registren</p>
+            </div>
+        `;
     }
 }
 
@@ -191,39 +251,84 @@ function createProviderClientItem(item, type, index) {
         client: ['#10b981', '#047857', '#3b82f6', '#1d4ed8', '#8b5cf6', '#7c3aed']
     };
     
-    const bgColors = {
-        provider: '#f8fafc',
-        client: '#f0fdf4'
-    };
-    
     const color = colors[type][index % colors[type].length];
-    const bgColor = bgColors[type];
     
     const div = document.createElement('div');
     div.className = type + '-item';
-    div.style.cssText = `display: flex; align-items: center; padding: 16px; background: ${bgColor}; border-radius: 8px; border-left: 4px solid ${color};`;
+    div.style.cssText = `
+        display: flex; 
+        align-items: center; 
+        padding: 16px 20px; 
+        background: rgba(255, 255, 255, 0.8); 
+        border: 1px solid rgba(226, 232, 240, 0.8); 
+        border-radius: 12px; 
+        margin-bottom: 2px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+    `;
+    
+    // Add hover effects
+    div.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateX(8px)';
+        this.style.background = 'rgba(255, 255, 255, 0.95)';
+        this.style.borderColor = color;
+        this.style.boxShadow = `0 8px 25px rgba(0, 0, 0, 0.1), 0 0 0 1px ${color}20`;
+    });
+    
+    div.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateX(0px)';
+        this.style.background = 'rgba(255, 255, 255, 0.8)';
+        this.style.borderColor = 'rgba(226, 232, 240, 0.8)';
+        this.style.boxShadow = 'none';
+    });
     
     // Generate initials from name
     const initials = item.nombre ? item.nombre.split(' ').map(word => word.charAt(0)).join('').substring(0, 2).toUpperCase() : '??';
     
     div.innerHTML = `
-        <div class="${type}-avatar" style="width: 48px; height: 48px; background: linear-gradient(135deg, ${color}, ${color}dd); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; margin-right: 12px;">
+        <div class="${type}-status-indicator" style="position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, ${color}, ${color}aa); border-radius: 0 4px 4px 0;"></div>
+        <div class="${type}-avatar" style="width: 44px; height: 44px; background: linear-gradient(135deg, ${color}, ${color}dd); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 15px; margin-right: 16px; box-shadow: 0 4px 12px ${color}30; flex-shrink: 0;">
             ${initials}
         </div>
-        <div class="${type}-details" style="flex: 1;">
-            <h5 style="font-size: 16px; font-weight: 600; color: #374151; margin: 0 0 4px 0;">${item.nombre || 'Sin nombre'}</h5>
-            <p style="font-size: 13px; color: #6b7280; margin: 0 0 8px 0;">${item.industria || item.sector || 'Sin categoría'}</p>
-            <div style="display: flex; gap: 16px; font-size: 12px;">
-                <span style="color: #3b82f6; font-weight: 600;">${item.contratos_count || 0} Contratos</span>
-                <span style="color: #10b981; font-weight: 600;">$${formatCurrency(item.total_value || 0)}</span>
+        <div class="${type}-details" style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                <h5 style="font-size: 15px; font-weight: 600; color: #1e293b; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">${item.nombre || 'Sin nombre'}</h5>
+                <div class="${type}-actions" style="display: flex; gap: 6px; opacity: 0.7; transition: opacity 0.3s ease;">
+                    <button class="btn-icon" style="width: 28px; height: 28px; background: ${color}15; border: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;" title="Ver detalles" onclick="view${type.charAt(0).toUpperCase() + type.slice(1)}Details(${item.id})" onmouseover="this.style.background='${color}25'; this.style.transform='scale(1.1)'" onmouseout="this.style.background='${color}15'; this.style.transform='scale(1)'">
+                        <i class="fas fa-eye" style="color: ${color}; font-size: 12px;"></i>
+                    </button>
+                    <button class="btn-icon" style="width: 28px; height: 28px; background: ${color}15; border: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;" title="Más opciones" onmouseover="this.style.background='${color}25'; this.style.transform='scale(1.1)'" onmouseout="this.style.background='${color}15'; this.style.transform='scale(1)'">
+                        <i class="fas fa-ellipsis-h" style="color: ${color}; font-size: 12px;"></i>
+                    </button>
+                </div>
+            </div>
+            <p style="font-size: 12px; color: #64748b; margin: 0 0 8px 0; font-weight: 500;">${item.industria || item.sector || 'Sin categoría'}</p>
+            <div style="display: flex; gap: 20px; font-size: 11px;">
+                <div style="display: flex; align-items: center; gap: 4px;">
+                    <div style="width: 6px; height: 6px; background: #3b82f6; border-radius: 50%;"></div>
+                    <span style="color: #475569; font-weight: 600;">${item.contratos_count || 0} Contratos</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                    <div style="width: 6px; height: 6px; background: #10b981; border-radius: 50%;"></div>
+                    <span style="color: #475569; font-weight: 600;">$${formatCurrency(item.total_value || 0)}</span>
+                </div>
             </div>
         </div>
-        <div class="${type}-actions" style="display: flex; flex-direction: column; gap: 4px;">
-            <button class="btn-icon" style="width: 32px; height: 32px; background: #f3f4f6; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Ver detalles" onclick="view${type.charAt(0).toUpperCase() + type.slice(1)}Details(${item.id})">
-                <i class="fas fa-eye" style="color: #6b7280; font-size: 14px;"></i>
-            </button>
-        </div>
     `;
+    
+    // Add hover effect for actions
+    div.addEventListener('mouseenter', function() {
+        const actions = this.querySelector(`.${type}-actions`);
+        if (actions) actions.style.opacity = '1';
+    });
+    
+    div.addEventListener('mouseleave', function() {
+        const actions = this.querySelector(`.${type}-actions`);
+        if (actions) actions.style.opacity = '0.7';
+    });
     
     return div;
 }

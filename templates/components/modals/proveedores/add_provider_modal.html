@@ -1,0 +1,80 @@
+<!-- Add Provider Modal -->
+<div class="modal fade" id="addProviderModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus" style="color: #3b82f6; margin-right: 8px;"></i>
+                    Añadir Nuevo Proveedor
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addProviderForm">
+                    <input type="hidden" id="providerId">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nombre de la Empresa *</label>
+                            <input type="text" class="form-control" id="providerName" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tipo de Proveedor *</label>
+                            <select class="form-control" id="providerType" required>
+                                <option value="">Seleccionar tipo</option>
+                                <option value="servicio">Servicios</option>
+                                <option value="producto">Productos</option>
+                                <option value="mixto">Mixto</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">RFC</label>
+                            <input type="text" class="form-control" id="providerRfc" maxlength="13">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email de Contacto *</label>
+                            <input type="email" class="form-control" id="providerEmail" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Teléfono</label>
+                            <input type="tel" class="form-control" id="providerPhone">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Personas de Contacto</label>
+                            <div class="position-relative">
+                                <input type="text" class="form-control" id="personaSearch" placeholder="Buscar persona responsable..." autocomplete="off">
+                                <div id="personaSearchResults" class="dropdown-menu" style="display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 1000; max-height: 200px; overflow-y: auto;"></div>
+                            </div>
+                            <div id="selectedPersonas" class="mt-2">
+                                <!-- Aquí se mostrarán las personas seleccionadas -->
+                            </div>
+                            <input type="hidden" id="providerContact" name="personas_contacto">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Dirección</label>
+                            <textarea class="form-control" id="providerAddress" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Estado</label>
+                            <select class="form-control" id="providerStatus">
+                                <option value="true">Activo</option>
+                                <option value="false">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="saveProvider()">Guardar Proveedor</button>
+            </div>
+        </div>
+    </div>
+</div>

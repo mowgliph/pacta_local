@@ -1,0 +1,97 @@
+<!-- Modal para agregar/editar cliente -->
+<div class="modal fade" id="clientModal" tabindex="-1" aria-labelledby="clientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="clientModalLabel">
+                    <i class="fas fa-plus" style="color: #10b981; margin-right: 8px;"></i>
+                    Añadir Nuevo Cliente
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="clientForm">
+                    <input type="hidden" id="clientId">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nombre de la Empresa/Cliente *</label>
+                            <input type="text" class="form-control" id="clientName" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tipo de Cliente *</label>
+                            <select class="form-control" id="clientType" required>
+                                <option value="">Seleccionar tipo</option>
+                                <option value="empresa">Empresa</option>
+                                <option value="persona_fisica">Persona Física</option>
+                                <option value="gobierno">Gobierno</option>
+                                <option value="ong">ONG</option>
+                                <option value="prospecto">Prospecto</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">RFC</label>
+                            <input type="text" class="form-control" id="clientRfc" maxlength="13" placeholder="RFC del cliente">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email de Contacto *</label>
+                            <input type="email" class="form-control" id="clientEmail" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Teléfono</label>
+                            <input type="tel" class="form-control" id="clientPhone">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Personas de Contacto</label>
+                            <div class="position-relative">
+                                <input type="text" class="form-control" id="personaSearch" placeholder="Buscar persona responsable..." autocomplete="off">
+                                <div id="personaSearchResults" class="dropdown-menu" style="display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 1000; max-height: 200px; overflow-y: auto;"></div>
+                            </div>
+                            <div id="selectedPersonas" class="mt-2">
+                                <!-- Aquí se mostrarán las personas seleccionadas -->
+                            </div>
+                            <input type="hidden" id="clientContact" name="personas_contacto">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Dirección</label>
+                            <textarea class="form-control" id="clientAddress" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Estado</label>
+                            <select class="form-control" id="clientStatus">
+                                <option value="true">Activo</option>
+                                <option value="false">Inactivo</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Sector Industrial</label>
+                            <select class="form-control" id="clientSector">
+                                <option value="">Seleccionar sector</option>
+                                <option value="tecnologia">Tecnología</option>
+                                <option value="manufactura">Manufactura</option>
+                                <option value="servicios">Servicios</option>
+                                <option value="comercio">Comercio</option>
+                                <option value="construccion">Construcción</option>
+                                <option value="salud">Salud</option>
+                                <option value="educacion">Educación</option>
+                                <option value="financiero">Financiero</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveClientBtn">Guardar Cliente</button>
+            </div>
+        </div>
+    </div>
+</div>

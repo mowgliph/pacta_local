@@ -247,7 +247,17 @@ function renderClientesTable() {
 
 // Obtener badge de tipo
 function getTipoBadge(tipo) {
-    return `<span class="cliente-badge tipo">${tipo || 'N/A'}</span>`;
+    const tipoMap = {
+        'empresa': { text: 'Empresa', class: 'empresa' },
+        'persona_fisica': { text: 'Persona Física', class: 'persona-fisica' },
+        'gobierno': { text: 'Gobierno', class: 'gobierno' },
+        'ong': { text: 'ONG', class: 'ong' },
+        'prospecto': { text: 'Prospecto', class: 'prospecto' },
+        'cliente': { text: 'Cliente', class: 'cliente' }
+    };
+    
+    const tipoInfo = tipoMap[tipo] || { text: tipo || 'N/A', class: 'default' };
+    return `<span class="cliente-badge ${tipoInfo.class}">${tipoInfo.text}</span>`;
 }
 
 // Abrir modal de cliente
@@ -278,6 +288,9 @@ function loadClientData(clientId) {
         $('#clientEmail').val(cliente.email);
         $('#clientPhone').val(cliente.telefono);
         $('#clientType').val(cliente.tipo_cliente);
+        $('#clientRfc').val(cliente.rfc || '');
+        $('#clientSector').val(cliente.sector_industrial || '');
+        $('#clientStatus').val(cliente.estado ? 'true' : 'false');
         $('#clientAddress').val(cliente.direccion);
         
         // Cargar personas de contacto si existen
@@ -294,6 +307,9 @@ function saveClient() {
         email: $('#clientEmail').val().trim(),
         telefono: $('#clientPhone').val().trim(),
         tipo_cliente: $('#clientType').val(),
+        rfc: $('#clientRfc').val().trim(),
+        sector_industrial: $('#clientSector').val(),
+        estado: $('#clientStatus').val() === 'true',
         direccion: $('#clientAddress').val().trim(),
         contacto_principal: selectedPersonas.length > 0 ? JSON.stringify(selectedPersonas.map(p => p.id)) : null
     };
