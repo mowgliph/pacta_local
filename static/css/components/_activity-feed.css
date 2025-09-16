@@ -1,0 +1,215 @@
+/* ===================================================================
+   Componente: Activity Feed
+   Archivo: _activity-feed.css
+   Descripción: Estilos para el feed de actividad y notificaciones
+   Versión: 1.0.0
+   Última actualización: 2025-09-17
+=================================================================== */
+
+/* ===== ELEMENTOS DEL FEED DE ACTIVIDAD ===== */
+
+/**
+ * Elemento individual de actividad
+ * 1. Diseño flexible para alinear el avatar y el contenido
+ * 2. Espaciado consistente entre elementos
+ * 3. Transición suave para efectos hover
+ */
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem; /* 12px */
+  padding: 0.75rem; /* 12px */
+  background-color: var(--bg-card, #f8fafc);
+  border-radius: 0.5rem; /* 8px */
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  margin-bottom: 0.75rem; /* 12px */
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.activity-item:last-child {
+  margin-bottom: 0;
+}
+
+.activity-item:hover {
+  background-color: var(--bg-hover, #f1f5f9);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Avatar del usuario */
+.activity-avatar {
+  width: 2.5rem; /* 40px */
+  height: 2.5rem; /* 40px */
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid var(--border-color, #e2e8f0);
+}
+
+/* Contenedor del contenido */
+.activity-content {
+  flex: 1;
+  min-width: 0; /* Evita que el contenido se desborde */
+}
+
+/* Encabezado de la actividad */
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+/* Nombre del usuario */
+.activity-user {
+  font-weight: 600;
+  color: var(--text-primary, #1e293b);
+  margin-right: 0.25rem;
+}
+
+/* Tiempo de la actividad */
+.activity-time {
+  font-size: 0.75rem; /* 12px */
+  color: var(--text-muted, #64748b);
+  white-space: nowrap;
+  margin-left: auto;
+  padding-left: 0.5rem;
+}
+
+/* Mensaje de la actividad */
+.activity-message {
+  font-size: 0.875rem; /* 14px */
+  color: var(--text-secondary, #475569);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* Indicador de actividad no leída */
+.activity-item.unread {
+  background-color: var(--color-primary-light, #e0f2fe);
+  border-left: 3px solid var(--color-primary, #0ea5e9);
+  padding-left: 0.75rem;
+}
+
+/* Acciones de la actividad */
+.activity-actions {
+  display: flex;
+  gap: 0.75rem; /* 12px */
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--border-color, #e2e8f0);
+}
+
+/* Estilos para diferentes tipos de actividad */
+.activity-item.comment {
+  border-left: 3px solid var(--color-info, #0ea5e9);
+}
+
+.activity-item.update {
+  border-left: 3px solid var(--color-success, #10b981);
+}
+
+.activity-item.warning {
+  border-left: 3px solid var(--color-warning, #f59e0b);
+}
+
+.activity-item.error {
+  border-left: 3px solid var(--color-error, #ef4444);
+}
+
+/* ===== FEED DE ACTIVIDAD LATERAL ===== */
+
+.activity-sidebar {
+  position: sticky;
+  top: 1.5rem;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.activity-sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+}
+
+.activity-sidebar-title {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 600;
+  color: var(--text-primary, #1e293b);
+  margin: 0;
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .activity-item {
+    background-color: var(--dark-bg-card, #1e293b);
+    border-color: var(--dark-border-color, #334155);
+  }
+  
+  .activity-item:hover {
+    background-color: var(--dark-bg-hover, #1e40af);
+  }
+  
+  .activity-user {
+    color: var(--dark-text-primary, #f1f5f9);
+  }
+  
+  .activity-message {
+    color: var(--dark-text-secondary, #94a3b8);
+  }
+  
+  .activity-time {
+    color: var(--dark-text-muted, #64748b);
+  }
+  
+  .activity-item.unread {
+    background-color: var(--dark-color-primary-light, #1e3a8a);
+    border-left-color: var(--color-primary, #60a5fa);
+  }
+  
+  .activity-actions {
+    border-top-color: var(--dark-border-color, #334155);
+  }
+  
+  .activity-sidebar-header {
+    border-bottom-color: var(--dark-border-color, #334155);
+  }
+  
+  .activity-sidebar-title {
+    color: var(--dark-text-primary, #f1f5f9);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .activity-sidebar {
+    position: static;
+    max-height: none;
+    margin-top: 2rem;
+  }
+  
+  .activity-item {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .activity-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .activity-time {
+    margin-left: 0;
+    padding-left: 0;
+  }
+  
+  .activity-actions {
+    flex-wrap: wrap;
+  }
+}

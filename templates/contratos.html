@@ -137,7 +137,7 @@
                     <!-- Providers and Clients Management Section - Dynamic Component -->
                     {% set providers_api_url = "/api/providers-summary" %}
                     {% set clients_api_url = "/api/clients-summary" %}
-                    {% set data_max_items = "3" %}
+                    {% set data_max_items = "5" %}
                     {% set data_title = "Proveedores y Clientes Principales" %}
                     {% set data_subtitle = "Vista rápida de los principales proveedores y clientes del sistema" %}
                     {% set data_providers_manage_url = "/proveedores" %}
@@ -153,94 +153,140 @@
                         <p class="block-subtitle">Gestión completa de todos los contratos activos</p>
                     </div>
                     <div class="block-content">
-                        {% set table_headers = [
-                            {'title': 'Contrato', 'sortable': true, 'class': ''},
-                            {'title': 'Cliente', 'sortable': true, 'class': ''},
-                            {'title': 'Fecha Inicio', 'sortable': true, 'class': ''},
-                            {'title': 'Valor', 'sortable': true, 'class': 'text-end'},
-                            {'title': 'Estado', 'sortable': true, 'class': 'text-center'},
-                            {'title': 'Vencimiento', 'sortable': true, 'class': ''},
-                            {'title': 'Acciones', 'sortable': false, 'class': 'text-center col-actions'}
-                        ] %}
+                        <!-- Tabla de Contratos -->
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped contratos-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="sortable">Contrato <span class="sort-icon"></span></th>
+                                        <th scope="col" class="sortable">Cliente <span class="sort-icon"></span></th>
+                                        <th scope="col" class="sortable">Fecha Inicio <span class="sort-icon"></span></th>
+                                        <th scope="col" class="sortable text-end">Valor <span class="sort-icon"></span></th>
+                                        <th scope="col" class="sortable text-center">Estado <span class="sort-icon"></span></th>
+                                        <th scope="col" class="sortable">Vencimiento <span class="sort-icon"></span></th>
+                                        <th scope="col" class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contractsTableBody">
+                                    <!-- Contrato 1 -->
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-file-contract text-primary me-2"></i>
+                                                <div>
+                                                    <div class="fw-semibold">CONT-2025-003</div>
+                                                    <small class="text-muted">Servicios de Consultoría</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-building text-success me-2"></i>
+                                                <div>
+                                                    <div class="fw-semibold">TechCorp S.A.</div>
+                                                    <small class="text-muted">Tecnología</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>15 Ene 2025</td>
+                                        <td class="text-end"><span class="fw-semibold text-success">$125,000</span></td>
+                                        <td class="text-center"><span class="badge bg-success">Activo</span></td>
+                                        <td>15 Ene 2026</td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <button type="button" class="btn btn-outline-primary" onclick="viewContract('CONT-2025-003')" title="Ver contrato">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary" onclick="editContract('CONT-2025-003')" title="Editar contrato">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Contrato 2 -->
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-file-contract text-primary me-2"></i>
+                                                <div>
+                                                    <div class="fw-semibold">CONT-2025-002</div>
+                                                    <small class="text-muted">Desarrollo de Software</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-building text-success me-2"></i>
+                                                <div>
+                                                    <div class="fw-semibold">InnovaSoft Ltd.</div>
+                                                    <small class="text-muted">Software</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>10 Ene 2025</td>
+                                        <td class="text-end"><span class="fw-semibold text-success">$89,500</span></td>
+                                        <td class="text-center"><span class="badge bg-success">Activo</span></td>
+                                        <td>10 Ene 2026</td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <button type="button" class="btn btn-outline-primary" onclick="viewContract('CONT-2025-002')" title="Ver contrato">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary" onclick="editContract('CONT-2025-002')" title="Editar contrato">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Contrato 3 -->
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-file-contract text-primary me-2"></i>
+                                                <div>
+                                                    <div class="fw-semibold">CONT-2025-001</div>
+                                                    <small class="text-muted">Mantenimiento de Sistemas</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-building text-success me-2"></i>
+                                                <div>
+                                                    <div class="fw-semibold">SysTech Solutions</div>
+                                                    <small class="text-muted">Soporte TI</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>05 Ene 2025</td>
+                                        <td class="text-end"><span class="fw-semibold text-success">$45,000</span></td>
+                                        <td class="text-center"><span class="badge bg-warning">Pendiente</span></td>
+                                        <td>05 Jul 2025</td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <button type="button" class="btn btn-outline-primary" onclick="viewContract('CONT-2025-001')" title="Ver contrato">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary" onclick="editContract('CONT-2025-001')" title="Editar contrato">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         
-                        {% set table_data = [
-                            {
-                                'cells': [
-                                    {
-                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-file-contract text-primary me-2"></i><div><div class="fw-semibold">CONT-2025-003</div><small class="text-muted">Servicios de Consultoría</small></div></div>',
-                                        'class': ''
-                                    },
-                                    {
-                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-building text-success me-2"></i><div><div class="fw-semibold">TechCorp S.A.</div><small class="text-muted">Tecnología</small></div></div>',
-                                        'class': ''
-                                    },
-                                    {'value': '15 Ene 2025', 'class': ''},
-                                    {'value': '<span class="fw-semibold text-success">$125,000</span>', 'class': 'text-end'},
-                                    {'type': 'badge', 'value': 'Activo', 'variant': 'success', 'class': 'text-center'},
-                                    {'value': '15 Ene 2026', 'class': ''},
-                                    {
-                                        'type': 'actions',
-                                        'actions': [
-                                            {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewContract("CONT-2025-003")', 'tooltip': 'Ver contrato'},
-                                            {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editContract("CONT-2025-003")', 'tooltip': 'Editar contrato'}
-                                        ],
-                                        'class': 'text-center'
-                                    }
-                                ]
-                            },
-                            {
-                                'cells': [
-                                    {
-                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-file-contract text-primary me-2"></i><div><div class="fw-semibold">CONT-2025-002</div><small class="text-muted">Desarrollo de Software</small></div></div>',
-                                        'class': ''
-                                    },
-                                    {
-                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-building text-success me-2"></i><div><div class="fw-semibold">InnovaSoft Ltd.</div><small class="text-muted">Software</small></div></div>',
-                                        'class': ''
-                                    },
-                                    {'value': '10 Ene 2025', 'class': ''},
-                                    {'value': '<span class="fw-semibold text-success">$85,000</span>', 'class': 'text-end'},
-                                    {'type': 'badge', 'value': 'Pendiente', 'variant': 'warning', 'class': 'text-center'},
-                                    {'value': '10 Jul 2025', 'class': ''},
-                                    {
-                                        'type': 'actions',
-                                        'actions': [
-                                            {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewContract("CONT-2025-002")', 'tooltip': 'Ver contrato'},
-                                            {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editContract("CONT-2025-002")', 'tooltip': 'Editar contrato'}
-                                        ],
-                                        'class': 'text-center'
-                                    }
-                                ]
-                            },
-                            {
-                                'cells': [
-                                    {
-                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-file-contract text-primary me-2"></i><div><div class="fw-semibold">CONT-2025-001</div><small class="text-muted">Mantenimiento de Sistemas</small></div></div>',
-                                        'class': ''
-                                    },
-                                    {
-                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-building text-success me-2"></i><div><div class="fw-semibold">GlobalTech Inc.</div><small class="text-muted">Tecnología</small></div></div>',
-                                        'class': ''
-                                    },
-                                    {'value': '05 Ene 2025', 'class': ''},
-                                    {'value': '<span class="fw-semibold text-success">$65,000</span>', 'class': 'text-end'},
-                                    {'type': 'badge', 'value': 'Activo', 'variant': 'success', 'class': 'text-center'},
-                                    {'value': '05 Dic 2025', 'class': ''},
-                                    {
-                                        'type': 'actions',
-                                        'actions': [
-                                            {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewContract("CONT-2025-001")', 'tooltip': 'Ver contrato'},
-                                            {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editContract("CONT-2025-001")', 'tooltip': 'Editar contrato'}
-                                        ],
-                                        'class': 'text-center'
-                                    }
-                                ]
-                            }
-                        ] %}
-                        
-                        {% set empty_message = 'No hay contratos disponibles' %}
-                        
-                        {% include 'components/partials/consistent_table.html' %}
+                        <!-- Mensaje cuando no hay contratos -->
+                        <div id="noContractsMessage" class="d-none">
+                            <div class="text-center text-muted py-5">
+                                <i class="fas fa-inbox fa-3x mb-3 d-block" style="opacity: 0.5;"></i>
+                                <h5>No hay contratos disponibles</h5>
+                                <p class="mb-0">Utiliza el botón "Nuevo Contrato" para comenzar</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

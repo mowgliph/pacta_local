@@ -187,38 +187,64 @@ def api_get_estadisticas_proveedores():
 def proveedores():
     """Página de gestión de proveedores"""
     try:
-        # Obtener usuario actual
+        # Obtener usuario actual (el decorador @login_required ya valida la sesión)
         usuario_actual = Usuario.get_by_id(session['user_id'])
         
-        # Obtener todos los proveedores
-        proveedores = Proveedor.get_all()
+        # Obtener solo proveedores activos
+        try:
+            proveedores_db = Proveedor.get_all()
+            proveedores = [p for p in proveedores_db if p.activo]
+            print(f"Proveedores activos encontrados: {len(proveedores)}")
+        except Exception as e:
+            print(f"Error al obtener proveedores: {str(e)}")
+            proveedores = []
+            flash('Error al cargar la lista de proveedores', 'error')
         
         # Obtener contratos para estadísticas
-        contratos = Contrato.get_all()
+        try:
+            contratos = Contrato.get_all()
+            # Filtrar contratos activos relacionados con proveedores
+            contratos_proveedores = [
+                c for c in contratos 
+                if hasattr(c, 'proveedor_id') and c.proveedor_id is not None
+                and hasattr(c, 'estado') and c.estado == 'activo'
+            ]
+            print(f"Contratos de proveedores activos encontrados: {len(contratos_proveedores)}")
+        except Exception as e:
+            print(f"Error al obtener contratos: {str(e)}")
+            contratos_proveedores = []
         
-        # Calcular estadísticas de proveedores
+        # Calcular estadísticas
         total_proveedores = len(proveedores)
-        proveedores_activos = len([p for p in proveedores if p.activo])
-        contratos_proveedores = [c for c in contratos if any(p.id == c.proveedor_id for p in proveedores) if hasattr(c, 'proveedor_id')]
-        valor_total_proveedores = sum([c.monto_actual for c in contratos_proveedores if c.estado == 'activo'])
+        valor_total_proveedores = sum(
+            c.monto_actual for c in contratos_proveedores 
+            if hasattr(c, 'monto_actual') and c.monto_actual is not None
+        )
         
         estadisticas = {
             'total_proveedores': total_proveedores,
-            'proveedores_activos': proveedores_activos,
+            'proveedores_activos': total_proveedores,  # Ya filtramos solo activos
             'contratos_totales': len(contratos_proveedores),
-            'valor_promedio': int(valor_total_proveedores / len(contratos_proveedores)) if contratos_proveedores else 0
+            'valor_promedio': int(valor_total_proveedores / len(contratos_proveedores)) if contratos_proveedores else 0,
+            'cambio_proveedores': 0,  # Valor temporal, se puede mejorar con histórico
+            'porcentaje_activos': 100 if total_proveedores > 0 else 0,  # Todos están activos
+            'valor_total': int(valor_total_proveedores)  # Añadido para consistencia con clientes
         }
         
         # Obtener contador de notificaciones
         notificaciones_count = get_notificaciones_count()
         
         return render_template('proveedores.html', 
-                             proveedores=proveedores,
-                             estadisticas=estadisticas,
-                             usuario=usuario_actual,
-                             notificaciones_count=notificaciones_count)
+                            proveedores=proveedores,
+                            estadisticas=estadisticas,
+                            usuario=usuario_actual,
+                            notificaciones_count=notificaciones_count)
+                            
     except Exception as e:
-        flash(f'Error al cargar proveedores: {str(e)}', 'error')
+        import traceback
+        error_msg = f"Error en la página de proveedores: {str(e)}\n{traceback.format_exc()}"
+        print(error_msg)
+        flash('Error al cargar la página de proveedores. Por favor, intente de nuevo más tarde.', 'error')
         return redirect(url_for('main.dashboard'))
 
 # ===== RUTAS API PARA PROVEEDORES =====
@@ -228,163 +254,264 @@ def proveedores():
 def api_get_proveedores():
     """API para obtener lista de proveedores"""
     try:
-        proveedores = Proveedor.get_all(activos_solo=False)
+        # Obtener solo proveedores activos para mantener consistencia con clientes
+        proveedores = Proveedor.get_all(activos_solo=True)
         
         proveedores_data = []
         for proveedor in proveedores:
-            # Manejar fecha_creacion que puede ser string o datetime
-            fecha_creacion = None
-            if proveedor.fecha_creacion:
-                if isinstance(proveedor.fecha_creacion, str):
-                    try:
-                        fecha_creacion = datetime.fromisoformat(proveedor.fecha_creacion.replace('Z', '+00:00')).isoformat()
-                    except:
-                        fecha_creacion = proveedor.fecha_creacion
-                else:
-                    fecha_creacion = proveedor.fecha_creacion.isoformat()
+            # Formato consistente de fecha
+            fecha_creacion = proveedor.fecha_creacion.isoformat() if proveedor.fecha_creacion else None
             
             proveedores_data.append({
                 'id': proveedor.id,
                 'nombre': proveedor.nombre,
                 'tipo_proveedor': proveedor.tipo_proveedor,
-                'rfc': proveedor.rfc,
-                'email': proveedor.email,
-                'telefono': proveedor.telefono,
-                'direccion': proveedor.direccion,
-                'contacto_principal': proveedor.contacto_principal,
-                'activo': proveedor.activo,
+                'rfc': proveedor.rfc or '',
+                'email': proveedor.email or '',
+                'telefono': proveedor.telefono or '',
+                'direccion': proveedor.direccion or '',
+                'contacto_principal': proveedor.contacto_principal or '',
+                'activo': bool(proveedor.activo),
                 'fecha_creacion': fecha_creacion
             })
         
+        # Estructura de respuesta consistente con api_get_clientes
         return jsonify({
             'success': True,
-            'proveedores': proveedores_data
+            'data': {
+                'proveedores': proveedores_data,
+                'total': len(proveedores_data),
+                'activos': len(proveedores_data)  # Ya están filtrados solo activos
+            }
         })
+        
     except Exception as e:
-        print(f"Error en api_get_proveedores: {str(e)}")
-        import traceback
-        traceback.print_exc()
+        # Manejo de errores consistente
+        error_msg = f'Error al obtener proveedores: {str(e)}'
         return jsonify({
             'success': False,
-            'message': f'Error al obtener proveedores: {str(e)}'
+            'error': {
+                'code': 'PROVIDERS_FETCH_ERROR',
+                'message': error_msg
+            }
         }), 500
 
 @providers_bp.route('/api/proveedores', methods=['POST'])
 @api_login_required
 def api_create_proveedor():
-    """API para crear un nuevo proveedor"""
+    """API para crear un nuevo proveedor
+    
+    Parámetros (JSON):
+    - nombre (obligatorio): Nombre del proveedor
+    - tipo_proveedor: Tipo de proveedor (default: 'servicio')
+    - rfc: RFC del proveedor
+    - email: Correo electrónico
+    - telefono: Número de teléfono
+    - direccion: Dirección física
+    - contacto_principal: ID o JSON de contacto principal
+    - activo: Estado del proveedor (default: True)
+    
+    Returns:
+        JSON con el resultado de la operación
+    """
     try:
-        data = request.get_json()
+        data = request.get_json() or {}
         
         # Validar datos requeridos
         if not data.get('nombre'):
             return jsonify({
                 'success': False,
-                'message': 'El nombre es requerido'
+                'error': {
+                    'code': 'MISSING_REQUIRED_FIELD',
+                    'message': 'El campo nombre es obligatorio',
+                    'field': 'nombre'
+                }
             }), 400
         
-        # Crear nuevo proveedor
+        # Crear nuevo proveedor con valores por defecto
         proveedor = Proveedor(
-            nombre=data.get('nombre'),
+            nombre=data['nombre'],
             tipo_proveedor=data.get('tipo_proveedor', 'servicio'),
             rfc=data.get('rfc', ''),
-            direccion=data.get('direccion', ''),
-            telefono=data.get('telefono', ''),
             email=data.get('email', ''),
+            telefono=data.get('telefono', ''),
+            direccion=data.get('direccion', ''),
             contacto_principal=data.get('contacto_principal', ''),
-            activo=data.get('activo', True)
+            activo=bool(data.get('activo', True))
         )
         
+        # Guardar en la base de datos
         proveedor.save()
         
+        # Estructura de respuesta consistente
         return jsonify({
             'success': True,
-            'message': 'Proveedor creado exitosamente',
-            'proveedor_id': proveedor.id
-        })
+            'data': {
+                'message': 'Proveedor creado exitosamente',
+                'proveedor_id': proveedor.id
+            }
+        }), 201  # 201 Created
+        
     except Exception as e:
+        # Manejo de errores consistente
+        error_msg = f'Error al crear proveedor: {str(e)}'
         return jsonify({
             'success': False,
-            'message': f'Error al crear proveedor: {str(e)}'
+            'error': {
+                'code': 'PROVIDER_CREATION_ERROR',
+                'message': error_msg
+            }
         }), 500
 
 @providers_bp.route('/api/proveedores/<int:proveedor_id>', methods=['PUT'])
 @api_login_required
 def api_update_proveedor(proveedor_id):
-    """API para actualizar un proveedor"""
+    """API para actualizar un proveedor existente
+    
+    Parámetros (JSON):
+    - nombre: Nuevo nombre del proveedor
+    - tipo_proveedor: Tipo de proveedor
+    - rfc: RFC del proveedor
+    - email: Correo electrónico
+    - telefono: Número de teléfono
+    - direccion: Dirección física
+    - contacto_principal: ID o JSON de contacto principal
+    - activo: Estado del proveedor
+    
+    Returns:
+        JSON con el resultado de la operación
+    """
     try:
-        data = request.get_json()
+        data = request.get_json() or {}
         proveedor = Proveedor.get_by_id(proveedor_id)
         
         if not proveedor:
             return jsonify({
                 'success': False,
-                'message': 'Proveedor no encontrado'
+                'error': {
+                    'code': 'PROVIDER_NOT_FOUND',
+                    'message': 'No se encontró el proveedor especificado'
+                }
             }), 404
         
-        # Actualizar campos
-        if 'nombre' in data:
-            proveedor.nombre = data['nombre']
-        if 'tipo_proveedor' in data:
-            proveedor.tipo_proveedor = data['tipo_proveedor']
-        if 'rfc' in data:
-            proveedor.rfc = data['rfc']
-        if 'email' in data:
-            proveedor.email = data['email']
-        if 'telefono' in data:
-            proveedor.telefono = data['telefono']
-        if 'direccion' in data:
-            proveedor.direccion = data['direccion']
-        if 'contacto_principal' in data:
-            proveedor.contacto_principal = data['contacto_principal']
-        if 'activo' in data:
-            proveedor.activo = data['activo']
+        # Lista de campos actualizables
+        campos_actualizables = [
+            'nombre', 'tipo_proveedor', 'rfc', 'email', 
+            'telefono', 'direccion', 'contacto_principal', 'activo'
+        ]
         
-        proveedor.save()
+        # Actualizar solo los campos que vienen en la petición
+        actualizaciones = {}
+        for campo in campos_actualizables:
+            if campo in data:
+                setattr(proveedor, campo, data[campo])
+                actualizaciones[campo] = data[campo]
+        
+        # Guardar cambios si hay actualizaciones
+        if actualizaciones:
+            proveedor.save()
+            
+        # Obtener datos actualizados para la respuesta
+        fecha_creacion = proveedor.fecha_creacion.isoformat() if proveedor.fecha_creacion else None
         
         return jsonify({
             'success': True,
-            'message': 'Proveedor actualizado exitosamente'
+            'data': {
+                'message': 'Proveedor actualizado exitosamente',
+                'proveedor': {
+                    'id': proveedor.id,
+                    'nombre': proveedor.nombre,
+                    'tipo_proveedor': proveedor.tipo_proveedor,
+                    'rfc': proveedor.rfc or '',
+                    'email': proveedor.email or '',
+                    'telefono': proveedor.telefono or '',
+                    'direccion': proveedor.direccion or '',
+                    'contacto_principal': proveedor.contacto_principal or '',
+                    'activo': bool(proveedor.activo),
+                    'fecha_creacion': fecha_creacion
+                },
+                'campos_actualizados': list(actualizaciones.keys())
+            }
         })
+        
     except Exception as e:
+        error_msg = f'Error al actualizar proveedor: {str(e)}'
         return jsonify({
             'success': False,
-            'message': f'Error al actualizar proveedor: {str(e)}'
+            'error': {
+                'code': 'PROVIDER_UPDATE_ERROR',
+                'message': error_msg
+            }
         }), 500
 
 @providers_bp.route('/api/proveedores/<int:proveedor_id>', methods=['DELETE'])
 @api_login_required
 def api_delete_proveedor(proveedor_id):
-    """API para eliminar un proveedor"""
-    try:
-        proveedor = Proveedor.get_by_id(proveedor_id)
+    """API para eliminar un proveedor
+    
+    Args:
+        proveedor_id (int): ID del proveedor a eliminar
         
+    Returns:
+        JSON con el resultado de la operación
+    """
+    try:
+        # Verificar si el proveedor existe
+        proveedor = Proveedor.get_by_id(proveedor_id)
         if not proveedor:
             return jsonify({
                 'success': False,
-                'message': 'Proveedor no encontrado'
+                'error': {
+                    'code': 'PROVIDER_NOT_FOUND',
+                    'message': 'No se encontró el proveedor especificado'
+                }
             }), 404
         
         # Verificar si el proveedor tiene contratos activos
         contratos = Contrato.get_all()
-        contratos_activos = [c for c in contratos if hasattr(c, 'proveedor_id') and c.proveedor_id == proveedor_id and c.estado == 'activo']
+        contratos_activos = [
+            c for c in contratos 
+            if hasattr(c, 'proveedor_id') and c.proveedor_id == proveedor_id 
+            and hasattr(c, 'estado') and c.estado == 'activo'
+        ]
         
         if contratos_activos:
             return jsonify({
                 'success': False,
-                'message': 'No se puede eliminar el proveedor porque tiene contratos activos'
-            }), 400
+                'error': {
+                    'code': 'ACTIVE_CONTRACTS_EXIST',
+                    'message': 'No se puede eliminar el proveedor porque tiene contratos activos',
+                    'contratos_activos': len(contratos_activos)
+                }
+            }), 409  # 409 Conflict
         
+        # Guardar datos del proveedor para la respuesta
+        datos_proveedor = {
+            'id': proveedor.id,
+            'nombre': proveedor.nombre,
+            'tipo_proveedor': proveedor.tipo_proveedor
+        }
+        
+        # Eliminar el proveedor
         proveedor.delete()
         
         return jsonify({
             'success': True,
-            'message': 'Proveedor eliminado exitosamente'
+            'data': {
+                'message': 'Proveedor eliminado exitosamente',
+                'proveedor': datos_proveedor,
+                'fecha_eliminacion': datetime.now().isoformat()
+            }
         })
+        
     except Exception as e:
+        error_msg = f'Error al eliminar proveedor: {str(e)}'
         return jsonify({
             'success': False,
-            'message': f'Error al eliminar proveedor: {str(e)}'
+            'error': {
+                'code': 'PROVIDER_DELETION_ERROR',
+                'message': error_msg
+            }
         }), 500
 
 # ===== API PARA RESUMEN DE PROVEEDORES =====
@@ -392,38 +519,81 @@ def api_delete_proveedor(proveedor_id):
 @providers_bp.route('/api/providers-summary', methods=['GET'])
 @api_login_required
 def api_get_providers_summary():
-    """API para obtener resumen de proveedores para el componente providers-clients-block"""
+    """API para obtener un resumen de proveedores
+    
+    Returns:
+        JSON con estadísticas y lista resumida de proveedores
+    """
     try:
-        # Obtener proveedores
-        proveedores = Proveedor.get_all()
+        # Obtener solo proveedores activos
+        proveedores = Proveedor.get_all(activos_solo=True)
         
         # Obtener contratos para estadísticas
         contratos = Contrato.get_all()
         
-        # Preparar datos de proveedores con estadísticas
-        providers_data = []
-        for proveedor in proveedores[:10]:  # Limitar a 10 proveedores principales
-            # Contar contratos relacionados (simulado ya que no hay relación directa)
-            contratos_count = len([c for c in contratos if hasattr(c, 'proveedor_id') and c.proveedor_id == proveedor.id])
+        # Filtrar contratos activos de proveedores
+        contratos_activos = [
+            c for c in contratos 
+            if hasattr(c, 'proveedor_id') and c.proveedor_id is not None
+            and hasattr(c, 'estado') and c.estado == 'activo'
+        ]
+        
+        # Calcular estadísticas generales
+        total_proveedores = len(proveedores)
+        total_contratos = len(contratos_activos)
+        valor_total = sum(c.monto_actual for c in contratos_activos if hasattr(c, 'monto_actual') and c.monto_actual is not None)
+        
+        # Preparar lista de proveedores con estadísticas (máximo 10)
+        proveedores_data = []
+        for proveedor in proveedores[:10]:
+            # Contratos del proveedor
+            contratos_proveedor = [
+                c for c in contratos_activos 
+                if hasattr(c, 'proveedor_id') and c.proveedor_id == proveedor.id
+            ]
             
-            # Calcular valor total (simulado)
-            total_value = sum([c.monto_actual for c in contratos if hasattr(c, 'proveedor_id') and c.proveedor_id == proveedor.id and c.estado == 'activo'])
+            # Calcular valor total de contratos del proveedor
+            valor_proveedor = sum(
+                c.monto_actual for c in contratos_proveedor 
+                if hasattr(c, 'monto_actual') and c.monto_actual is not None
+            )
             
-            providers_data.append({
+            proveedores_data.append({
                 'id': proveedor.id,
                 'nombre': proveedor.nombre,
-                'industria': proveedor.tipo_proveedor,
-                'contratos_count': contratos_count,
-                'total_value': total_value,
-                'activo': proveedor.activo
+                'tipo': proveedor.tipo_proveedor,
+                'contratos': len(contratos_proveedor),
+                'valor_total': valor_proveedor,
+                'ultima_actualizacion': datetime.now().isoformat()
             })
         
+        # Ordenar proveedores por valor total (mayor a menor)
+        proveedores_data.sort(key=lambda x: x['valor_total'], reverse=True)
+        
+        # Estructura de respuesta consistente
         return jsonify({
             'success': True,
-            'providers': providers_data
+            'data': {
+                'estadisticas': {
+                    'total_proveedores': total_proveedores,
+                    'total_contratos': total_contratos,
+                    'valor_total_contratos': valor_total,
+                    'promedio_por_proveedor': valor_total / total_proveedores if total_proveedores > 0 else 0
+                },
+                'proveedores': proveedores_data,
+                'metadata': {
+                    'total': len(proveedores_data),
+                    'timestamp': datetime.now().isoformat()
+                }
+            }
         })
+        
     except Exception as e:
+        error_msg = f'Error al obtener resumen de proveedores: {str(e)}'
         return jsonify({
             'success': False,
-            'message': f'Error al obtener resumen de proveedores: {str(e)}'
+            'error': {
+                'code': 'PROVIDERS_SUMMARY_ERROR',
+                'message': error_msg
+            }
         }), 500

@@ -1,0 +1,184 @@
+/* ===================================================================
+   Utilidades: Optimizaciones de Pantalla
+   Archivo: _display-optimizations.css
+   Descripción: Optimizaciones para diferentes tipos de pantallas y densidades de píxeles
+   Versión: 1.0.0
+   Última actualización: 2025-09-17
+=================================================================== */
+
+/* ===== PANTALLAS DE ALTA DENSIDAD (RETINA/HI-DPI) ===== */
+
+/**
+ * Optimizaciones para pantallas de alta densidad de píxeles (Retina, Hi-DPI)
+ * 1. Mejora la nitidez de los iconos y elementos de interfaz
+ * 2. Asegura que los elementos se vean nítidos en pantallas de alta resolución
+ */
+
+/* Optimización general para pantallas Hi-DPI */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Logotipos e iconos */
+  .logo-icon {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+  
+  /* Imágenes */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+  
+  /* Bordes finos */
+  .thin-border {
+    border-width: 0.5px;
+  }
+  
+  /* Mejora de fuentes */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* ===== PANTALLAS TÁCTILES ===== */
+
+/**
+ * Mejoras para dispositivos táctiles
+ * 1. Aumenta el tamaño de los objetivos táctiles para mejor usabilidad
+ * 2. Mejora la retroalimentación táctil
+ */
+
+/* Tamaño mínimo para objetivos táctiles */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Retroalimentación táctil */
+.touch-feedback:active {
+  opacity: 0.7;
+  transform: scale(0.98);
+  transition: opacity 0.1s, transform 0.1s;
+}
+
+/* Deshabilitar resaltado al tocar en iOS */
+.tap-highlight-none {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ===== PANTALLAS DE BAJA CALIDAD ===== */
+
+/**
+ * Optimizaciones para pantallas de baja calidad o conexiones lentas
+ * 1. Reducir animaciones y efectos
+ * 2. Priorizar la legibilidad sobre los elementos decorativos
+ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .skeleton-loader {
+    display: none;
+  }
+}
+
+/* ===== MODO DE ALTO CONTRASTE ===== */
+
+/**
+ * Mejoras para el modo de alto contraste en Windows
+ * 1. Asegurar que los textos sean legibles en modo de alto contraste
+ * 2. Mantener la usabilidad cuando se desactivan los estilos
+ */
+
+@media (-ms-high-contrast: active) {
+  /* Asegurar que los textos sean visibles en modo de alto contraste */
+  a, button, input, select, textarea, [role="button"], [role="tab"] {
+    border: 1px solid currentColor !important;
+  }
+  
+  /* Mejorar la visibilidad de los enlaces */
+  a:not([class]) {
+    text-decoration: underline !important;
+  }
+}
+
+/* ===== IMPRESIÓN ===== */
+
+/**
+ * Estilos específicos para impresión
+ * 1. Ocultar elementos innecesarios
+ * 2. Asegurar que el contenido sea legible en papel
+ */
+
+@media print {
+  /* Ocultar elementos no esenciales */
+  .no-print, .header, .footer, .sidebar, .actions, .btn, .nav-tabs {
+    display: none !important;
+  }
+  
+  /* Asegurar que el contenido ocupe todo el ancho */
+  .container, .container-fluid {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Mejorar la legibilidad del texto */
+  body {
+    font-size: 12pt;
+    line-height: 1.3;
+    color: #000;
+    background: #fff;
+  }
+  
+  /* Evitar cortes de página dentro de elementos */
+  .no-break {
+    page-break-inside: avoid;
+  }
+  
+  /* Añadir márgenes de página */
+  @page {
+    margin: 2cm;
+  }
+}
+
+/* ===== PANTALLAS PEQUEÑAS Y GRANDES ===== */
+
+/* Pantallas muy pequeñas */
+@media (max-width: 320px) {
+  .container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  h1, .h1 { font-size: 1.5rem; }
+  h2, .h2 { font-size: 1.3rem; }
+  h3, .h3 { font-size: 1.1rem; }
+}
+
+/* Pantallas muy grandes */
+@media (min-width: 1920px) {
+  .container {
+    max-width: 1600px;
+  }
+  
+  /* Aumentar el tamaño de fuente base para mejor legibilidad */
+  html {
+    font-size: 18px;
+  }
+}

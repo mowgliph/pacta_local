@@ -6,12 +6,74 @@
 
 /* ===== ESTILOS BASE DE FORMULARIOS ===== */
 
+:root {
+  --form-control-bg: #ffffff;
+  --form-control-border: #d1d5db;
+  --form-control-focus-border: #3b82f6;
+  --form-control-focus-ring: rgba(59, 130, 246, 0.1);
+  --form-control-text: #1f2937;
+  --form-control-placeholder: #9ca3af;
+  --form-control-disabled-bg: #f3f4f6;
+  --form-control-disabled-text: #9ca3af;
+  --form-control-disabled-border: #e5e7eb;
+}
+
+/* Estilos responsivos para formularios */
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .form-actions .btn {
+    width: 100%;
+  }
+}
+
+/* Estilos para controles de formulario en móviles */
+.form-control {
+  font-size: 1rem; /* 16px - Previene el zoom en iOS */
+  min-height: 2.75rem; /* 44px - Tamaño mínimo táctil */
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --form-control-bg: #1f2937;
+    --form-control-border: #374151;
+    --form-control-focus-border: #60a5fa;
+    --form-control-focus-ring: rgba(96, 165, 250, 0.2);
+    --form-control-text: #f9fafb;
+    --form-control-placeholder: #6b7280;
+    --form-control-disabled-bg: #374151;
+    --form-control-disabled-text: #6b7280;
+    --form-control-disabled-border: #4b5563;
+  }
+}
+
 .form {
   width: 100%;
 }
 
 .form-group {
-  margin-bottom: var(--spacing-4);
+  margin-bottom: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
 }
 
 .form-group:last-child {
@@ -36,8 +98,10 @@
 }
 
 .form-label-inline {
-  display: inline-block;
-  margin-bottom: 0;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
   margin-right: var(--spacing-3);
 }
 

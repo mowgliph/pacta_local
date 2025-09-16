@@ -1,0 +1,282 @@
+/* ===================================================================
+   Base: Estilos de Enfoque (Focus)
+   Archivo: _focus.css
+   Descripción: Estilos para mejorar la accesibilidad y la experiencia de usuario
+   con teclado, asegurando que los elementos enfocados sean claramente visibles.
+   Versión: 1.0.0
+   Última actualización: 2025-09-17
+   Compatibilidad: Navegadores modernos con soporte para :focus-visible
+=================================================================== */
+
+/**
+ * 1. Estilos de enfoque accesibles
+ * 2. Soporte para navegadores antiguos con :focus
+ * 3. Soporte moderno con :focus-visible
+ * 4. Estilos específicos para diferentes componentes
+ */
+
+:root {
+  --focus-ring-color: var(--primary-500, #3b82f6);
+  --focus-ring-offset: 2px;
+  --focus-ring-width: 3px;
+  --focus-ring-opacity: 0.5;
+}
+
+/* Reset de estilos de enfoque por defecto */
+*:focus {
+  outline: none;
+}
+
+/* Estilos de anillo de enfoque para teclado */
+.focus-visible,
+:focus-visible {
+  outline: none;
+  box-shadow: 
+    0 0 0 var(--focus-ring-width) 
+    color-mix(in srgb, var(--focus-ring-color) var(--focus-ring-opacity), transparent);
+  position: relative;
+  z-index: 10;
+}
+
+/* Estilos específicos para botones */
+.btn:focus-visible {
+  --focus-ring-offset: 3px;
+  box-shadow: 
+    0 0 0 var(--focus-ring-offset) white,
+    0 0 0 calc(var(--focus-ring-offset) + 2px) var(--focus-ring-color);
+}
+
+/* Estilos para enlaces */
+a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--focus-ring-color);
+}
+
+/* Estilos para inputs y textareas */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="textbox"]:focus-visible,
+[contenteditable]:focus-visible {
+  border-color: var(--focus-ring-color);
+  box-shadow: 0 0 0 1px var(--focus-ring-color);
+}
+
+/* Estilos para elementos personalizados */
+.custom-control-input:focus-visible + .custom-control-label::before {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus-ring-color) 25%, transparent);
+}
+
+/* Estilos para pestañas y navegación */
+[role="tab"]:focus-visible {
+  border-radius: 0.25rem;
+  box-shadow: 0 0 0 2px var(--focus-ring-color);
+}
+
+/* Estilos para modales y diálogos */
+[role="dialog"]:focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: 2px;
+}
+
+/* Estilos para elementos deshabilitados */
+:disabled:focus-visible,
+[disabled]:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Soporte para navegadores que no soportan :focus-visible */
+@supports not selector(:focus-visible) {
+  *:focus {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+  }
+  
+  /* Mejorar contraste en modo oscuro */
+  @media (prefers-color-scheme: dark) {
+    *:focus {
+      outline-color: color-mix(in srgb, var(--focus-ring-color) 80%, white);
+    }
+  }
+}
+
+/* Estilos para modo de alto contraste */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 3px solid transparent;
+    outline-offset: 2px;
+    forced-color-adjust: none;
+    background-color: Highlight !important;
+    color: HighlightText !important;
+  }
+  
+  /* Asegurar que el texto siga siendo legible */
+  :focus-visible * {
+    color: inherit !important;
+  }
+}
+
+/* Clases de utilidad para enfoque */
+.focus-ring {
+  --focus-ring-offset: 2px;
+  --focus-ring-width: 2px;
+  --focus-ring-opacity: 0.5;
+  
+  &:focus-visible {
+    outline: none;
+    box-shadow: 
+      0 0 0 var(--focus-ring-width) 
+      color-mix(in srgb, var(--focus-ring-color) var(--focus-ring-opacity), transparent);
+  }
+}
+
+/* Estilos específicos para la aplicación */
+.btn-icon:focus-visible {
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--focus-ring-color);
+}
+
+/* Mejoras para elementos interactivos */
+[role="button"]:focus-visible,
+button:not(:disabled):focus-visible,
+[tabindex="0"]:focus-visible {
+  position: relative;
+  z-index: 10;
+}
+
+/* Ajustes para navegación por teclado */
+.skip-to-content:focus-visible {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.75rem 1.5rem;
+  background: var(--focus-ring-color);
+  color: white;
+  border-radius: 0.25rem;
+  text-decoration: none;
+}
+
+/* Mejoras para grupos de botones */
+.btn-group .btn:focus-visible {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ajustes para elementos de formulario personalizados */
+.custom-select:focus-visible,
+.form-control:focus-visible,
+.form-select:focus-visible,
+.form-check-input:focus-visible {
+  border-color: var(--focus-ring-color);
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--focus-ring-color) 25%, transparent);
+}
+
+/* Mejoras para elementos de navegación */
+.nav-link:focus-visible {
+  border-radius: 0.25rem;
+}
+
+/* Ajustes para elementos con pestañas */
+[role="tab"]:focus-visible {
+  border-bottom-color: transparent;
+}
+
+[role="tabpanel"]:focus-visible {
+  border-color: var(--focus-ring-color);
+  border-top-color: transparent;
+}
+
+/* Mejoras para elementos desplegables */
+.dropdown-item:focus-visible {
+  background-color: var(--focus-ring-color);
+  color: white;
+}
+
+/* Ajustes para modales */
+.modal:focus-visible {
+  outline: none;
+}
+
+.modal-content:focus-visible {
+  box-shadow: 0 0 0 3px var(--focus-ring-color);
+}
+
+/* Mejoras para tooltips y popovers */
+.tooltip:focus-visible,
+.popover:focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: 2px;
+}
+
+/* Ajustes para acordeones */
+.accordion-button:focus-visible {
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--focus-ring-color) 25%, transparent);
+}
+
+/* Mejoras para elementos de navegación con pestañas */
+.nav-tabs .nav-link:focus-visible {
+  border-color: var(--focus-ring-color) var(--focus-ring-color) var(--border-color);
+}
+
+/* Ajustes para elementos de navegación con píldoras */
+.nav-pills .nav-link:focus-visible {
+  background-color: color-mix(in srgb, var(--focus-ring-color) 25%, transparent);
+}
+
+/* Mejoras para elementos de navegación con fichas */
+.nav-fill .nav-item .nav-link:focus-visible,
+.nav-justified .nav-item .nav-link:focus-visible {
+  border-color: var(--focus-ring-color);
+}
+
+/* Ajustes para elementos de navegación con pestañas verticales */
+.flex-column.nav-tabs .nav-link:focus-visible {
+  border-color: var(--focus-ring-color) transparent var(--focus-ring-color) var(--focus-ring-color);
+}
+
+/* Mejoras para elementos de navegación con pestañas rellenas */
+.nav-tabs .nav-link:focus-visible {
+  border-color: var(--focus-ring-color) var(--focus-ring-color) var(--border-color);
+}
+
+/* Ajustes para elementos de navegación con pestañas rellenas y justificadas */
+.nav-tabs.nav-fill .nav-link:focus-visible,
+.nav-tabs.nav-justified .nav-link:focus-visible {
+  border-bottom-color: var(--focus-ring-color);
+}
+
+/* Mejoras para elementos de navegación con pestañas rellenas verticales */
+.flex-column.nav-tabs.nav-fill .nav-link:focus-visible,
+.flex-column.nav-tabs.nav-justified .nav-link:focus-visible {
+  border-right-color: var(--focus-ring-color);
+}
+
+/* Ajustes para elementos de navegación con pestañas rellenas y justificadas verticales */
+.flex-column.nav-tabs.nav-fill .nav-link:focus-visible,
+.flex-column.nav-tabs.nav-justified .nav-link:focus-visible {
+  border-bottom-color: var(--focus-ring-color);
+  border-right-color: var(--focus-ring-color);
+}
+
+/* Mejoras para elementos de navegación con pestañas rellenas y justificadas horizontales */
+.nav-tabs.nav-fill .nav-item .nav-link:focus-visible,
+.nav-tabs.nav-justified .nav-item .nav-link:focus-visible {
+  border-bottom-color: var(--focus-ring-color);
+}
+
+/* Ajustes para elementos de navegación con pestañas rellenas y justificadas verticales */
+.flex-column.nav-tabs.nav-fill .nav-item .nav-link:focus-visible,
+.flex-column.nav-tabs.nav-justified .nav-item .nav-link:focus-visible {
+  border-right-color: var(--focus-ring-color);
+}
+
+/* Mejoras para elementos de navegación con pestañas rellenas y justificadas horizontales y verticales */
+.nav-tabs.nav-fill.flex-column .nav-item .nav-link:focus-visible,
+.nav-tabs.nav-justified.flex-column .nav-item .nav-link:focus-visible {
+  border-bottom-color: var(--focus-ring-color);
+  border-right-color: var(--focus-ring-color);
+}

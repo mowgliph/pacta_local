@@ -12,6 +12,219 @@
   min-height: 100vh;
 }
 
+/* ===== TABLA DE BACKUPS ===== */
+
+.backup-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.backup-table thead th {
+  background-color: #f9fafb;
+  color: #4b5563;
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  position: relative;
+  user-select: none;
+}
+
+/* Estilo para encabezados ordenables */
+.backup-table thead th.sortable {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.backup-table thead th.sortable:hover {
+  background-color: #f3f4f6;
+}
+
+/* Icono de ordenación */
+.backup-table .sort-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
+  position: relative;
+  vertical-align: middle;
+}
+
+.backup-table .sort-icon::before,
+.backup-table .sort-icon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  opacity: 0.3;
+}
+
+.backup-table .sort-icon::before {
+  top: 1px;
+  border-bottom: 4px solid #4b5563;
+}
+
+.backup-table .sort-icon::after {
+  bottom: 1px;
+  border-top: 4px solid #4b5563;
+}
+
+/* Estados de ordenación */
+.backup-table thead th.sort-asc .sort-icon::before,
+.backup-table thead th.sort-desc .sort-icon::after {
+  opacity: 1;
+}
+
+.backup-table thead th.sort-asc .sort-icon::after,
+.backup-table thead th.sort-desc .sort-icon::before {
+  opacity: 0.3;
+}
+
+.backup-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+}
+
+.backup-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.backup-table tbody tr {
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.backup-table tbody tr:hover {
+  background-color: #f8fafc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  transform: translateY(-1px);
+  z-index: 1;
+}
+
+.backup-table tbody tr:hover td {
+  border-color: #e2e8f0;
+}
+
+.backup-table tbody tr:hover td:first-child {
+  border-left: 2px solid #3b82f6;
+  padding-left: 14px; /* Compensate for the border */
+}
+
+/* Smooth transition for all interactive elements */
+.backup-table tbody td {
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* Subtle highlight for the type cell */
+.backup-table tbody td:nth-child(2) {
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.backup-table tbody tr:hover td:nth-child(2) {
+  background-color: rgba(59, 130, 246, 0.05);
+  color: #1e40af;
+}
+
+.backup-table td {
+  padding: 16px;
+  vertical-align: middle;
+}
+
+/* Estilos para los badges de tipo */
+.badge {
+  display: inline-block;
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+}
+
+.bg-blue-100 { background-color: #dbeafe; }
+.text-blue-800 { color: #1e40af; }
+.bg-purple-100 { background-color: #f3e8ff; }
+.text-purple-800 { color: #5b21b6; }
+
+/* Botones de acción */
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background-color: #f3f4f6;
+  transform: translateY(-1px);
+}
+
+.action-btn i {
+  font-size: 14px;
+}
+
+/* Estado de carga */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Estado vacío */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: #9ca3af;
+  margin-bottom: 1rem;
+}
+
+.empty-state h4 {
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+  max-width: 400px;
+}
+
 .backup-header {
   display: flex;
   justify-content: space-between;

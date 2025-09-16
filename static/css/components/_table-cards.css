@@ -1,0 +1,212 @@
+/* ===================================================================
+   Componente: Tarjetas de Tabla
+   Archivo: _table-cards.css
+   Descripción: Estilos para tarjetas que contienen tablas
+   Versión: 1.0.0
+   Última actualización: 2025-09-17
+=================================================================== */
+
+/**
+ * 1. Tarjeta base que contiene la tabla
+ * 2. Sombra suave para dar profundidad
+ * 3. Bordes redondeados para un aspecto más suave
+ * 4. Fondo blanco para mejor contraste
+ */
+.table-card {
+  background: var(--bg-card, #ffffff);
+  border-radius: var(--radius-lg, 0.75rem);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.1));
+  overflow: hidden;
+  margin-bottom: var(--spacing-6, 1.5rem);
+  border: 1px solid var(--border-color, #e2e8f0);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.table-card:hover {
+  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06));
+  transform: translateY(-1px);
+}
+
+/**
+ * 1. Encabezado de la tarjeta de tabla
+ * 2. Alineación vertical de los elementos internos
+ * 3. Borde inferior para separación visual
+ */
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  background-color: var(--bg-card-header, #f8fafc);
+}
+
+.table-header h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-heading, #1e293b);
+  margin: 0;
+  line-height: 1.375;
+}
+
+/**
+ * Contenido de la tabla
+ * 1. Asegura que la tabla ocupe todo el ancho disponible
+ */
+.table-content {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/**
+ * Pie de la tarjeta de tabla
+ * 1. Alineación de la paginación y elementos de control
+ */
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-color, #e2e8f0);
+  background-color: var(--bg-card-footer, #f8fafc);
+}
+
+/**
+ * Variantes de tarjetas de tabla
+ */
+
+/* Tarjeta de tabla sin borde */
+.table-card.borderless {
+  border: none;
+  box-shadow: none;
+}
+
+/* Tarjeta de tabla compacta */
+.table-card.compact .table-header,
+.table-card.compact .table-footer {
+  padding: 0.75rem 1rem;
+}
+
+/* Tarjeta de tabla con encabezado acentuado */
+.table-card.accent-header .table-header {
+  background-color: var(--color-primary, #3b82f6);
+  color: white;
+}
+
+.table-card.accent-header .table-header h3 {
+  color: white;
+}
+
+/* Tarjeta de tabla con scroll */
+.table-card.scrollable {
+  display: flex;
+  flex-direction: column;
+  max-height: 600px;
+}
+
+.table-card.scrollable .table-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/**
+ * Elementos de acción en el encabezado
+ */
+.table-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/**
+ * Información de la tabla
+ * 1. Muestra información como el número de filas
+ */
+.table-info {
+  font-size: 0.875rem;
+  color: var(--text-muted, #64748b);
+}
+
+/**
+ * Control de densidad
+ */
+.table-density {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/**
+ * Responsive
+ */
+@media (max-width: 768px) {
+  .table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  
+  .table-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .table-footer {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  
+  .table-pagination {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/**
+ * Estados
+ */
+.table-card.loading {
+  position: relative;
+  min-height: 200px;
+}
+
+.table-card.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/**
+ * Modo oscuro
+ */
+@media (prefers-color-scheme: dark) {
+  .table-card {
+    background-color: var(--dark-bg-card, #1e293b);
+    border-color: var(--dark-border-color, #334155);
+  }
+  
+  .table-header,
+  .table-footer {
+    background-color: var(--dark-bg-card-header, #0f172a);
+    border-color: var(--dark-border-color, #334155);
+  }
+  
+  .table-header h3 {
+    color: var(--dark-text-heading, #f8fafc);
+  }
+  
+  .table-info {
+    color: var(--dark-text-muted, #94a3b8);
+  }
+}

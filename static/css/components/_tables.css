@@ -1,8 +1,152 @@
 /* ===================================================================
    PACTA - Componente Tablas
    Archivo: _tables.css
-   Descripción: Estilos para tablas y elementos relacionados
+   Descripción: Estilos base para tablas y tablas responsivas
+   Versión: 1.0.0
+   Última actualización: 2025-09-17
 =================================================================== */
+
+/* Estilos base para tablas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-primary, #1e293b);
+  background-color: var(--bg-primary, #ffffff);
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+}
+
+th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary, #64748b);
+  background-color: var(--bg-secondary, #f8fafc);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Variantes de tablas */
+.table-bordered {
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--bg-secondary, #f8fafc);
+}
+
+.table-hover tbody tr:hover {
+  background-color: var(--bg-hover, #f1f5f9);
+}
+
+/* Tabla responsiva */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1.5rem;
+}
+
+/* Estilos para tablas en móviles */
+@media (max-width: 768px) {
+  /* Estilos para tablas genéricas en móviles */
+  .table-responsive table:not(.orders-table) {
+    border: 0;
+  }
+  
+  .table-responsive thead:not(.orders-table thead) {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  
+  .table-responsive tr:not(.orders-table tr) {
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
+    display: block;
+    margin-bottom: 1rem;
+  }
+  
+  .table-responsive td:not(.orders-table td) {
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
+    display: flex;
+    justify-content: space-between;
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+  
+  .table-responsive td:not(.orders-table td)::before {
+    content: attr(data-label);
+    font-weight: 600;
+    left: 1rem;
+    position: absolute;
+    text-align: left;
+    text-transform: uppercase;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    width: 45%;
+    color: var(--text-secondary, #64748b);
+  }
+  
+  .table-responsive td:not(.orders-table td):last-child {
+    border-bottom: 0;
+  }
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+  table {
+    color: var(--dark-text-primary, #f1f5f9);
+    background-color: var(--dark-bg-primary, #0f172a);
+  }
+  
+  th, td {
+    border-bottom-color: var(--dark-border-color, #334155);
+  }
+  
+  th {
+    color: var(--dark-text-secondary, #94a3b8);
+    background-color: var(--dark-bg-secondary, #1e293b);
+  }
+  
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--dark-bg-secondary, #1e293b);
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: var(--dark-bg-hover, #1e40af);
+  }
+  
+  .table-responsive tr:not(.orders-table tr) {
+    border-bottom-color: var(--dark-border-color, #334155);
+  }
+  
+  .table-responsive td:not(.orders-table td) {
+    border-bottom-color: var(--dark-border-color, #334155);
+  }
+  
+  .table-responsive td:not(.orders-table td)::before {
+    color: var(--dark-text-secondary, #94a3b8);
+  }
+}
 
 /* ===== TABLA BASE ===== */
 

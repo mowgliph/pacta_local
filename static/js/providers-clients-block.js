@@ -1,269 +1,183 @@
 /**
- * Funciones JavaScript para el componente providers-clients-block
- * Maneja la carga de datos dinámicos y la funcionalidad del bloque
+ * Componente de Bloque de Proveedores y Clientes
+ * Maneja la visualización de los últimos proveedores y clientes en un bloque del panel
  */
 
-class ProvidersClientsBlock {
-    constructor(containerId, config = {}) {
-        this.containerId = containerId;
-        this.container = document.getElementById(containerId);
-        this.config = {
-            providersApiUrl: config.providersApiUrl || '/api/providers-summary',
-            clientsApiUrl: config.clientsApiUrl || '/api/clients-summary',
-            showProviders: config.showProviders !== false,
-            showClients: config.showClients !== false,
-            maxItems: config.maxItems || 3,
-            ...config
-        };
-        
-        if (!this.container) {
-            console.error(`Container with ID '${containerId}' not found`);
-            return;
-        }
-        
-        this.init();
-    }
-    
-    init() {
-        this.loadData();
-    }
-    
-    async loadData() {
-        try {
-            this.showLoading();
-            
-            // Fetch both providers and clients data separately
-            const [providersResponse, clientsResponse] = await Promise.all([
-                fetch(this.config.providersApiUrl, {
-                    method: 'GET',
-                    credentials: 'same-origin',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }),
-                fetch(this.config.clientsApiUrl, {
-                    method: 'GET',
-                    credentials: 'same-origin',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-            ]);
-            
-            // Check for authentication errors
-            if (!providersResponse.ok || !clientsResponse.ok) {
-                if (providersResponse.status === 401 || clientsResponse.status === 401) {
-                    this.showError('Sesión expirada. Por favor, inicia sesión nuevamente.');
-                    return;
-                }
-                throw new Error(`HTTP error! Providers: ${providersResponse.status}, Clients: ${clientsResponse.status}`);
-            }
-            
-            const providersData = await providersResponse.json();
-            const clientsData = await clientsResponse.json();
-            
-            // Check for API-level errors
-            if (!providersData.success && providersData.redirect) {
-                this.showError('Sesión expirada. Por favor, inicia sesión nuevamente.');
-                return;
-            }
-            if (!clientsData.success && clientsData.redirect) {
-                this.showError('Sesión expirada. Por favor, inicia sesión nuevamente.');
-                return;
-            }
-            
-            // Combine the data
-            const combinedData = {
-                success: true,
-                providers: providersData.success ? providersData.providers : [],
-                clients: clientsData.success ? clientsData.clients : []
-            };
-            
-            this.renderData(combinedData);
-        } catch (error) {
-            console.error('Error loading providers-clients data:', error);
-            this.showError('Error de conexión al cargar los datos');
-        }
-    }
-    
-    showLoading() {
-        const loadingElement = this.container.querySelector('.loading-state');
-        const errorElement = this.container.querySelector('.error-state');
-        const contentElement = this.container.querySelector('.providers-clients-content');
-        
-        if (loadingElement) loadingElement.style.display = 'block';
-        if (errorElement) errorElement.style.display = 'none';
-        if (contentElement) contentElement.style.display = 'none';
-    }
-    
-    showError(message) {
-        const loadingElement = this.container.querySelector('.loading-state');
-        const errorElement = this.container.querySelector('.error-state');
-        const contentElement = this.container.querySelector('.providers-clients-content');
-        
-        if (loadingElement) loadingElement.style.display = 'none';
-        if (errorElement) {
-            errorElement.style.display = 'block';
-            const errorMessage = errorElement.querySelector('.error-message');
-            if (errorMessage) errorMessage.textContent = message;
-        }
-        if (contentElement) contentElement.style.display = 'none';
-    }
-    
-    renderData(data) {
-        const loadingElement = this.container.querySelector('.loading-state');
-        const errorElement = this.container.querySelector('.error-state');
-        const contentElement = this.container.querySelector('.providers-clients-content');
-        
-        if (loadingElement) loadingElement.style.display = 'none';
-        if (errorElement) errorElement.style.display = 'none';
-        if (contentElement) contentElement.style.display = 'block';
-        
-        // Renderizar proveedores
-        if (this.config.showProviders && data.providers) {
-            this.renderProviders(data.providers);
-        }
-        
-        // Renderizar clientes
-        if (this.config.showClients && data.clients) {
-            this.renderClients(data.clients);
-        }
-    }
-    
-    renderProviders(providers) {
-        const providersContainer = this.container.querySelector(`#${this.containerId}-providers-list`);
-        if (!providersContainer) {
-            console.error(`Providers container not found: #${this.containerId}-providers-list`);
-            return;
-        }
-        
-        providersContainer.innerHTML = '';
-        
-        if (providers.length === 0) {
-            providersContainer.innerHTML = '<p class="text-muted">No hay proveedores disponibles</p>';
-            return;
-        }
-        
-        providers.slice(0, this.config.maxItems).forEach(provider => {
-            const providerCard = this.createProviderCard(provider);
-            providersContainer.appendChild(providerCard);
-        });
-    }
-    
-    renderClients(clients) {
-        const clientsContainer = this.container.querySelector(`#${this.containerId}-clients-list`);
-        if (!clientsContainer) {
-            console.error(`Clients container not found: #${this.containerId}-clients-list`);
-            return;
-        }
-        
-        clientsContainer.innerHTML = '';
-        
-        if (clients.length === 0) {
-            clientsContainer.innerHTML = '<p class="text-muted">No hay clientes disponibles</p>';
-            return;
-        }
-        
-        clients.slice(0, this.config.maxItems).forEach(client => {
-            const clientCard = this.createClientCard(client);
-            clientsContainer.appendChild(clientCard);
-        });
-    }
-    
-    createProviderCard(provider) {
-        const card = document.createElement('div');
-        card.className = 'col-md-4 mb-3';
-        
-        const formattedValue = this.formatCurrency(provider.total_value);
-        
-        card.innerHTML = `
-            <div class="card h-100">
-                <div class="card-body">
-                    <h6 class="card-title text-truncate" title="${provider.nombre}">${provider.nombre}</h6>
-                    <p class="card-text small text-muted mb-2">${provider.industria}</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">${provider.contratos_count} contrato(s)</small>
-                        <small class="text-success font-weight-bold">${formattedValue}</small>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        return card;
-    }
-    
-    createClientCard(client) {
-        const card = document.createElement('div');
-        card.className = 'col-md-4 mb-3';
-        
-        const formattedValue = this.formatCurrency(client.total_value);
-        
-        card.innerHTML = `
-            <div class="card h-100">
-                <div class="card-body">
-                    <h6 class="card-title text-truncate" title="${client.nombre}">${client.nombre}</h6>
-                    <p class="card-text small text-muted mb-2">${client.sector}</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">${client.contratos_count} contrato(s)</small>
-                        <small class="text-success font-weight-bold">${formattedValue}</small>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        return card;
-    }
-    
-    formatCurrency(amount) {
-        if (!amount || amount === 0) return '$0';
-        return new Intl.NumberFormat('es-MX', {
-            style: 'currency',
-            currency: 'MXN',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-        }).format(amount);
-    }
-    
-    refresh() {
-        this.loadData();
-    }
-}
-
-// Función global para inicializar el componente
-function initProvidersClientsBlock(containerId, config = {}) {
-    return new ProvidersClientsBlock(containerId, config);
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize providers-clients blocks
-    const providersClientsMain = document.getElementById('providers-clients-main');
-    if (providersClientsMain) {
-        const config = {
-            providersApiUrl: '/api/providers-summary',
-            clientsApiUrl: '/api/clients-summary',
-            showProviders: true,
-            showClients: true,
-            maxItems: 3
-        };
-        const block = new ProvidersClientsBlock('providers-clients-main', config);
-        block.init();
-    }
-    
-    const providersClientsContratos = document.getElementById('providers-clients-contratos');
-    if (providersClientsContratos) {
-        const config = {
-            providersApiUrl: '/api/providers-summary',
-            clientsApiUrl: '/api/clients-summary',
-            showProviders: true,
-            showClients: true,
-            maxItems: 3
-        };
-        const block = new ProvidersClientsBlock('providers-clients-contratos', config);
-        block.init();
-    }
-});
+    // Inicializar todos los bloques de proveedores-clientes en la página
+    document.querySelectorAll('.providers-clients-block').forEach(bloque => {
+        const idComponente = bloque.id;
+        const urlApiProveedores = bloque.dataset.providersApi;
+        const urlApiClientes = bloque.dataset.clientsApi;
 
-// Exportar para uso en módulos
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { ProvidersClientsBlock, initProvidersClientsBlock };
-}
+        // Obtener elementos del DOM
+        const elementoCarga = document.getElementById(`${idComponente}-loading`);
+        const elementoError = document.getElementById(`${idComponente}-error`);
+        const elementoContenido = document.getElementById(`${idComponente}-content`);
+        const listaProveedores = document.getElementById(`${idComponente}-providers-list`);
+        const listaClientes = document.getElementById(`${idComponente}-clients-list`);
+        const botonReintentar = elementoError ? elementoError.querySelector('.btn-retry') : null;
+
+        // Mostrar estado de carga
+        function mostrarCargando() {
+            if (elementoCarga) elementoCarga.style.display = 'flex';
+            if (elementoError) elementoError.style.display = 'none';
+            if (elementoContenido) elementoContenido.style.display = 'none';
+        }
+
+        // Mostrar estado de error
+        function mostrarError() {
+            if (elementoCarga) elementoCarga.style.display = 'none';
+            if (elementoError) elementoError.style.display = 'flex';
+            if (elementoContenido) elementoContenido.style.display = 'none';
+        }
+
+        // Mostrar contenido
+        function mostrarContenido() {
+            if (elementoCarga) elementoCarga.style.display = 'none';
+            if (elementoError) elementoError.style.display = 'none';
+            if (elementoContenido) elementoContenido.style.display = 'block';
+        }
+
+        // Formatear número con separador de miles
+        function formatearNumero(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        // Crear HTML de un elemento de la lista
+        function crearElementoLista(item, tipo) {
+            const icono = tipo === 'provider' ? 'building' : 'user-tie';
+            const cantidad = item.total_contracts || item.contracts_count || 0;
+            const cantidadFormateada = formatearNumero(cantidad);
+            
+            return `
+                <div class="list-item">
+                    <div class="item-icon">
+                        <i class="fas fa-${icono}"></i>
+                    </div>
+                    <div class="item-details">
+                        <h4 class="item-title">${item.nombre || item.razon_social || 'Sin nombre'}</h4>
+                        <p class="item-subtitle">${cantidadFormateada} contrato${cantidad !== 1 ? 's' : ''}</p>
+                    </div>
+                    <div class="item-actions">
+                        <a href="/${tipo === 'provider' ? 'proveedores' : 'clientes'}/${item.id}" 
+                           class="btn btn-sm btn-link" 
+                           title="Ver detalles">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Mostrar datos en la interfaz
+        function mostrarDatos(proveedores, clientes) {
+            try {
+                // Mostrar proveedores
+                if (listaProveedores) {
+                    listaProveedores.innerHTML = '';
+                    const topProveedores = Array.isArray(proveedores) ? proveedores.slice(0, 5) : [];
+                    
+                    if (topProveedores.length > 0) {
+                        topProveedores.forEach(proveedor => {
+                            listaProveedores.insertAdjacentHTML('beforeend', crearElementoLista(proveedor, 'provider'));
+                        });
+                    } else {
+                        listaProveedores.innerHTML = '<div class="no-items">No hay proveedores disponibles</div>';
+                    }
+                }
+
+                // Mostrar clientes
+                if (listaClientes) {
+                    listaClientes.innerHTML = '';
+                    const topClientes = Array.isArray(clientes) ? clientes.slice(0, 5) : [];
+                    
+                    if (topClientes.length > 0) {
+                        topClientes.forEach(cliente => {
+                            listaClientes.insertAdjacentHTML('beforeend', crearElementoLista(cliente, 'client'));
+                        });
+                    } else {
+                        listaClientes.innerHTML = '<div class="no-items">No hay clientes disponibles</div>';
+                    }
+                }
+                
+                console.log('Datos cargados correctamente:', { proveedores, clientes });
+            } catch (error) {
+                console.error('Error al mostrar los datos:', error);
+                mostrarError();
+            }
+        }
+
+        // Obtener datos de la API
+        async function obtenerDatos() {
+            mostrarCargando();
+
+            try {
+                // Obtener datos de proveedores y clientes en paralelo
+                const [respuestaProveedores, respuestaClientes] = await Promise.all([
+                    fetch(urlApiProveedores),
+                    fetch(urlApiClientes)
+                ]);
+
+                if (!respuestaProveedores.ok || !respuestaClientes.ok) {
+                    throw new Error('Error al cargar los datos');
+                }
+
+                const [datosProveedores, datosClientes] = await Promise.all([
+                    respuestaProveedores.json(),
+                    respuestaClientes.json()
+                ]);
+
+                // Función para extraer datos de la respuesta de la API
+                function extraerDatos(respuesta, claveDatos) {
+                    // Si la respuesta ya es un array, devolverlo directamente
+                    if (Array.isArray(respuesta)) {
+                        return respuesta;
+                    }
+                    
+                    // Intentar extraer datos de la estructura anidada
+                    if (respuesta && respuesta.data) {
+                        // Estructura: { data: { [claveDatos]: [...] } }
+                        if (respuesta.data[claveDatos]) {
+                            return respuesta.data[claveDatos];
+                        }
+                        // Estructura: { data: [...] }
+                        if (Array.isArray(respuesta.data)) {
+                            return respuesta.data;
+                        }
+                    }
+                    
+                    // Estructura antigua: { [claveDatos]: [...] }
+                    return respuesta[claveDatos] || [];
+                }
+
+                // Procesar y mostrar los datos
+                try {
+                    const proveedores = extraerDatos(datosProveedores, 'proveedores');
+                    const clientes = extraerDatos(datosClientes, 'clientes');
+                    mostrarDatos(proveedores, clientes);
+                    mostrarContenido();
+                } catch (error) {
+                    console.error('Error al procesar los datos:', error);
+                    mostrarError();
+                }
+            } catch (error) {
+                console.error('Error al obtener datos:', error);
+                mostrarError();
+            }
+        }
+
+        // Manejadores de eventos
+        if (botonReintentar) {
+            botonReintentar.addEventListener('click', obtenerDatos);
+        }
+
+        // Carga inicial de datos
+        if (urlApiProveedores && urlApiClientes) {
+            obtenerDatos();
+        } else {
+            console.error('Faltan URLs de API para el bloque de proveedores-clientes');
+            mostrarError();
+        }
+    });
+});

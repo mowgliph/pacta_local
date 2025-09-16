@@ -734,22 +734,29 @@ function updateBackupMetrics(metrics) {
     }
 }
 
-// Función para actualizar lista de backups (ya existente, mantenida para compatibilidad)
+// Función para actualizar lista de backups
 function updateBackupList(backups) {
     const container = document.getElementById('backupList');
     const emptyState = document.getElementById('emptyState');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    
+    // Hide loading spinner
+    if (loadingSpinner) {
+        loadingSpinner.style.display = 'none';
+    }
     
     if (!backups || backups.length === 0) {
         container.innerHTML = '';
-        emptyState.style.display = 'block';
+        if (emptyState) emptyState.style.display = 'flex';
         return;
     }
     
-    emptyState.style.display = 'none';
+    if (emptyState) emptyState.style.display = 'none';
     
     container.innerHTML = backups.map(backup => {
-        const typeClass = backup.type === 'automatic' ? 'backup-type-auto' : 'backup-type-manual';
-        const typeText = backup.type === 'automatic' ? 'Automático' : 'Manual';
+        const typeClass = backup.type === 'automatic' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800';
+        const typeText = backup.type === 'automatic' ? 'Automático' : 
+                        backup.type === 'manual' ? 'Manual' : 'Importado';
         
         // Formatear fecha
         const formattedDate = backup.created_at ? 
@@ -762,27 +769,47 @@ function updateBackupList(backups) {
             }) : 'Fecha desconocida';
         
         // Formatear tamaño
-        const formattedSize = backup.size_mb ? `${backup.size_mb} MB` : 'Tamaño desconocido';
+        const sizeInMB = backup.size_mb ? parseFloat(backup.size_mb) : 0;
+        let formattedSize = '0 MB';
+        
+        if (sizeInMB > 1024) {
+            formattedSize = `${(sizeInMB / 1024).toFixed(2)} GB`;
+        } else {
+            formattedSize = `${sizeInMB.toFixed(2)} MB`;
+        }
         
         return `
-            <tr>
-                <td>
-                    <div class="backup-name">${backup.name}</div>
-                    <small class="text-muted">${formattedDate}</small>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 16px;">
+                    <div style="font-weight: 500; color: #1f2937; margin-bottom: 4px;">${backup.name || 'Backup sin nombre'}</div>
+                    <div style="font-size: 13px; color: #6b7280;">${formattedDate}</div>
                 </td>
-                <td>
-                    <span class="badge ${typeClass}">${typeText}</span>
+                <td style="padding: 16px;">
+                    <span class="text-xs font-medium px-2.5 py-0.5 rounded-full ${typeClass}">
+                        ${typeText}
+                    </span>
                 </td>
-                <td>${formattedSize}</td>
-                <td>
-                    <div class="btn-group btn-group-sm" role="group">
-                        <button class="btn btn-outline-primary" onclick="downloadBackup('${backup.type}', '${backup.name}')" title="Descargar">
+                <td style="padding: 16px; color: #4b5563; font-weight: 500;">
+                    ${formattedSize}
+                </td>
+                <td style="padding: 16px; text-align: right;">
+                    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                        <button onclick="downloadBackup('${backup.type}', '${backup.name}')" 
+                                class="action-btn" 
+                                style="color: #3b82f6;"
+                                title="Descargar">
                             <i class="fas fa-download"></i>
                         </button>
-                        <button class="btn btn-outline-success" onclick="prepareRestore('${backup.type}', '${backup.name}')" title="Restaurar">
+                        <button onclick="prepareRestore('${backup.type}', '${backup.name}')" 
+                                class="action-btn" 
+                                style="color: #10b981;"
+                                title="Restaurar">
                             <i class="fas fa-undo"></i>
                         </button>
-                        <button class="btn btn-outline-danger" onclick="deleteBackup('${backup.type}', '${backup.name}')" title="Eliminar">
+                        <button onclick="deleteBackup('${backup.type}', '${backup.name}')" 
+                                class="action-btn" 
+                                style="color: #ef4444;"
+                                title="Eliminar">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>

@@ -1,0 +1,135 @@
+/* ===================================================================
+   PACTA - Componente Media
+   Archivo: _media.css
+   Descripción: Estilos para imágenes, videos y otros elementos multimedia
+   Versión: 1.0.0
+   Última actualización: 2025-09-17
+=================================================================== */
+
+/* ===== ELEMENTOS MULTIMEDIA RESPONSIVOS ===== */
+
+/**
+ * Asegura que los elementos multimedia sean responsivos
+ * 1. Hace que los elementos ocupen el ancho máximo de su contenedor
+ * 2. Mantiene la proporción de aspecto original
+ */
+img,
+video,
+iframe {
+  max-width: 100%;  /* 1 */
+  height: auto;     /* 2 */
+  vertical-align: middle; /* Elimina el espacio debajo de las imágenes */
+}
+
+/* Clase utilitaria para imágenes responsivas */
+.img-responsive {
+  display: block;
+  max-width: 100%;  /* 1 */
+  height: auto;     /* 2 */
+}
+
+/* Imágenes redondeadas */
+.img-rounded {
+  border-radius: 0.5rem;
+}
+
+/* Imágenes circulares */
+.img-circle {
+  border-radius: 50%;
+  object-fit: cover;
+  aspect-ratio: 1/1;
+}
+
+/* Contenedor de relación de aspecto para videos/iframes embebidos */
+.aspect-ratio {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* Relación de aspecto 16:9 (altura/ancho) */
+  overflow: hidden;
+}
+
+.aspect-ratio > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Variantes de relación de aspecto */
+.aspect-ratio--16x9 { padding-top: 56.25%; }  /* 16:9 */
+.aspect-ratio--4x3  { padding-top: 75%; }     /* 4:3 */
+.aspect-ratio--1x1  { padding-top: 100%; }    /* 1:1 */
+
+/* Estilos para figuras */
+figure {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+figure img {
+  margin-bottom: 0.5rem;
+}
+
+figcaption {
+  font-size: 0.875rem;
+  color: var(--text-secondary, #64748b);
+  font-style: italic;
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+  figcaption {
+    color: var(--dark-text-secondary, #94a3b8);
+  }
+}
+
+/* Optimización para imágenes de fondo */
+.bg-image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Imágenes con efecto de zoom suave al hacer hover */
+.img-zoom {
+  transition: transform 0.3s ease;
+  overflow: hidden;
+}
+
+.img-zoom:hover {
+  transform: scale(1.03);
+}
+
+/* Estilos para galerías de imágenes */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.gallery img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 0.375rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery img:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive para galerías */
+@media (max-width: 768px) {
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  .gallery img {
+    height: 150px;
+  }
+}

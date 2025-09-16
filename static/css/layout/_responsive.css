@@ -2,22 +2,34 @@
    PACTA - Sistema de Layout Responsive
    Archivo: _responsive.css
    Descripción: Sistema de grid, breakpoints y utilidades responsive
+   Versión: 2.0.0
+   Última actualización: 2025-09-16
+   Refactorizado para eliminar duplicados y optimizar rendimiento
 =================================================================== */
 
-/* ===== BREAKPOINTS ESTANDARIZADOS ===== */
+/* ===== VARIABLES Y MIXINS ===== */
+:root {
+  /* Breakpoints */
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 768px;
+  --breakpoint-md: 992px;
+  --breakpoint-lg: 1200px;
+  --breakpoint-xl: 1400px;
+  --breakpoint-xxl: 1600px;
+  
+  /* Espaciado base */
+  --grid-gutter: var(--spacing-3, 1rem);
+}
 
-/* Los breakpoints están definidos en _variables.css:
-   --breakpoint-xs: 480px
-   --breakpoint-sm: 768px
-   --breakpoint-md: 992px
-   --breakpoint-lg: 1200px
-   --breakpoint-xl: 1400px
-   --breakpoint-xxl: 1600px
-*/
+/* ===== CONTENEDORES ===== */
 
-/* ===== CONTENEDORES RESPONSIVE ===== */
-
-.container {
+/* Contenedor base */
+.container,
+.container-fluid,
+.container-sm,
+.container-md,
+.container-lg,
+.container-xl {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -25,95 +37,55 @@
   padding-right: var(--spacing-4);
 }
 
-.container-fluid {
-  width: 100%;
-  padding-left: var(--spacing-4);
-  padding-right: var(--spacing-4);
-}
+/* Contenedores con ancho máximo */
+.container { max-width: 100%; }
 
-/* Contenedores con anchos máximos */
+/* Breakpoints */
 @media (min-width: 576px) {
-  .container {
-    max-width: 540px;
-    padding-left: var(--spacing-5);
-    padding-right: var(--spacing-5);
-  }
+  .container { max-width: 540px; }
+  .container-sm { max-width: 540px; }
 }
 
 @media (min-width: 768px) {
-  .container {
-    max-width: 720px;
-    padding-left: var(--spacing-6);
-    padding-right: var(--spacing-6);
-  }
+  .container { max-width: 720px; }
+  .container-sm,
+  .container-md { max-width: 720px; }
 }
 
 @media (min-width: 992px) {
-  .container {
-    max-width: 960px;
-  }
+  .container { max-width: 960px; }
+  .container-sm,
+  .container-md,
+  .container-lg { max-width: 960px; }
 }
 
 @media (min-width: 1200px) {
-  .container {
-    max-width: 1140px;
-  }
+  .container { max-width: 1140px; }
+  .container-sm,
+  .container-md,
+  .container-lg,
+  .container-xl { max-width: 1140px; }
 }
 
 @media (min-width: 1400px) {
-  .container {
-    max-width: 1320px;
-  }
+  .container { max-width: 1320px; }
 }
 
 @media (min-width: 1600px) {
-  .container {
-    max-width: 1500px;
-  }
+  .container { max-width: 1500px; }
 }
 
-/* Contenedores con anchos específicos */
-.container-sm {
-  max-width: 540px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: var(--spacing-4);
-  padding-right: var(--spacing-4);
-}
+/* ===== SISTEMA DE GRID ===== */
 
-.container-md {
-  max-width: 720px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: var(--spacing-4);
-  padding-right: var(--spacing-4);
-}
-
-.container-lg {
-  max-width: 960px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: var(--spacing-4);
-  padding-right: var(--spacing-4);
-}
-
-.container-xl {
-  max-width: 1140px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: var(--spacing-4);
-  padding-right: var(--spacing-4);
-}
-
-/* ===== SISTEMA DE GRID FLEXBOX ===== */
-
+/* Fila base */
 .row {
   display: flex;
   flex-wrap: wrap;
-  margin-left: calc(-1 * var(--spacing-3));
-  margin-right: calc(-1 * var(--spacing-3));
+  margin-left: calc(-1 * var(--grid-gutter));
+  margin-right: calc(-1 * var(--grid-gutter));
 }
 
+/* Filas sin espaciado */
 .row.no-gutters {
   margin-left: 0;
   margin-right: 0;
@@ -126,62 +98,46 @@
 }
 
 /* Alineación de filas */
-.row.align-items-start {
-  align-items: flex-start;
+.row.align-items-start { align-items: flex-start; }
+.row.align-items-center { align-items: center; }
+.row.align-items-end { align-items: flex-end; }
+.row.align-items-stretch { align-items: stretch; }
+
+/* Justificación de contenido */
+.row.justify-content-start { justify-content: flex-start; }
+.row.justify-content-center { justify-content: center; }
+.row.justify-content-end { justify-content: flex-end; }
+.row.justify-content-between { justify-content: space-between; }
+.row.justify-content-around { justify-content: space-around; }
+.row.justify-content-evenly { justify-content: space-evenly; }
+
+/* ===== COLUMNAS ===== */
+
+/* Columnas base */
+.col,
+[class*="col-"] {
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+  padding-left: var(--grid-gutter);
+  padding-right: var(--grid-gutter);
 }
 
-.row.align-items-center {
-  align-items: center;
-}
-
-.row.align-items-end {
-  align-items: flex-end;
-}
-
-.row.align-items-stretch {
-  align-items: stretch;
-}
-
-.row.justify-content-start {
-  justify-content: flex-start;
-}
-
-.row.justify-content-center {
-  justify-content: center;
-}
-
-.row.justify-content-end {
-  justify-content: flex-end;
-}
-
-.row.justify-content-between {
-  justify-content: space-between;
-}
-
-.row.justify-content-around {
-  justify-content: space-around;
-}
-
-.row.justify-content-evenly {
-  justify-content: space-evenly;
-}
-
-/* ===== COLUMNAS BASE ===== */
-
+/* Columna flexible */
 .col {
-  flex: 1 0 0%;
-  padding-left: var(--spacing-3);
-  padding-right: var(--spacing-3);
+  flex-basis: 0;
+  flex-grow: 1;
+  max-width: 100%;
 }
 
+/* Columna automática */
 .col-auto {
   flex: 0 0 auto;
   width: auto;
-  padding-left: var(--spacing-3);
-  padding-right: var(--spacing-3);
+  max-width: none;
 }
 
-/* Columnas con tamaños específicos */
+/* Columnas con tamaño fijo */
 .col-1 { flex: 0 0 8.333333%; max-width: 8.333333%; }
 .col-2 { flex: 0 0 16.666667%; max-width: 16.666667%; }
 .col-3 { flex: 0 0 25%; max-width: 25%; }
@@ -193,12 +149,9 @@
 .col-9 { flex: 0 0 75%; max-width: 75%; }
 .col-10 { flex: 0 0 83.333333%; max-width: 83.333333%; }
 .col-11 { flex: 0 0 91.666667%; max-width: 91.666667%; }
-.col-12 { flex: 0 0 100%; max-width: 100%; }
-
-/* Aplicar padding a todas las columnas */
-[class*="col-"] {
-  padding-left: var(--spacing-3);
-  padding-right: var(--spacing-3);
+.col-12 { 
+  flex: 0 0 100%; 
+  max-width: 100%; 
 }
 
 /* ===== COLUMNAS RESPONSIVE ===== */

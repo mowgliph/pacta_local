@@ -1,0 +1,193 @@
+/* ===================================================================
+   Utilidades: Orientación
+   Archivo: _orientation.css
+   Descripción: Utilidades para manejar diferentes orientaciones de pantalla
+   Versión: 1.0.0
+   Última actualización: 2025-09-17
+=================================================================== */
+
+/* ===== ESTILOS PARA MODO PAISAJE ===== */
+
+/**
+ * Ajustes específicos para dispositivos móviles en modo paisaje
+ * 1. Altura reducida para mejor visualización en móviles en horizontal
+ * 2. Ajustes de navegación para pantallas anchas y cortas
+ */
+
+/* Ajustes generales para modo paisaje en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+  /* Ocultar barra lateral para ganar espacio */
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  /* Ajustar el contenido principal */
+  .main-content {
+    margin-left: 0;
+    padding: 0.75rem;
+  }
+  
+  /* Ajustar altura de la barra de navegación */
+  .navbar {
+    min-height: 3rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  /* Reducir el tamaño de la fuente en tablas */
+  .table-responsive {
+    font-size: 0.8125rem; /* 13px */
+  }
+  
+  /* Ajustar altura de filas de tabla */
+  .table tbody tr {
+    height: 2.5rem;
+  }
+  
+  /* Ocultar elementos no críticos */
+  .hide-on-landscape {
+    display: none !important;
+  }
+  
+  /* Ajustar contenedores de gráficos */
+  .chart-container {
+    height: 200px !important;
+  }
+  
+  /* Ajustar formularios */
+  .form-group {
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-control {
+    height: 2rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8125rem;
+  }
+  
+  .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8125rem;
+    min-height: 2rem;
+  }
+}
+
+/* Ajustes específicos para dispositivos con pantalla muy corta */
+@media (max-height: 400px) and (orientation: landscape) {
+  /* Reducir aún más el espaciado */
+  .container, .container-fluid {
+    padding: 0.25rem;
+  }
+  
+  /* Reducir márgenes */
+  .mb-3, .mb-4, .mb-5 {
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .mt-3, .mt-4, .mt-5 {
+    margin-top: 0.5rem !important;
+  }
+  
+  /* Ajustar encabezados */
+  h1, .h1 { font-size: 1.5rem; }
+  h2, .h2 { font-size: 1.25rem; }
+  h3, .h3 { font-size: 1.1rem; }
+  h4, .h4 { font-size: 1rem; }
+  h5, .h5 { font-size: 0.9rem; }
+  h6, .h6 { font-size: 0.8rem; }
+}
+
+/* ===== UTILIDADES DE ORIENTACIÓN ===== */
+
+/* Forzar orientación vertical */
+.force-portrait {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+/* Forzar orientación horizontal */
+.force-landscape {
+  writing-mode: horizontal-tb;
+  transform: none;
+}
+
+/* Ocultar en orientación vertical */
+.hide-portrait {
+  display: none;
+}
+
+@media (orientation: landscape) {
+  .hide-portrait {
+    display: block;
+  }
+}
+
+/* Ocultar en orientación horizontal */
+.hide-landscape {
+  display: none;
+}
+
+@media (orientation: portrait) {
+  .hide-landscape {
+    display: block;
+  }
+}
+
+/* Ajustar el ancho máximo en modo paisaje */
+.max-w-landscape {
+  max-width: 100%;
+}
+
+@media (orientation: landscape) {
+  .max-w-landscape {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Ajustar el tamaño de fuente en modo paisaje */
+.text-landscape-sm {
+  font-size: 0.875rem;
+}
+
+@media (orientation: landscape) {
+  .text-landscape-sm {
+    font-size: 0.75rem;
+  }
+}
+
+/* Ajustar el espaciado en modo paisaje */
+.landscape-px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (orientation: landscape) {
+  .landscape-px-4 {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Ajustar la altura de los elementos en modo paisaje */
+.landscape-h-auto {
+  height: auto;
+}
+
+@media (orientation: landscape) {
+  .landscape-h-auto {
+    height: 100%;
+  }
+}
+
+/* Ajustar el desbordamiento en modo paisaje */
+.landscape-overflow-y-auto {
+  overflow-y: hidden;
+}
+
+@media (orientation: landscape) {
+  .landscape-overflow-y-auto {
+    overflow-y: auto;
+  }
+}

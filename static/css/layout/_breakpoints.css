@@ -1,0 +1,362 @@
+/* ===================================================================
+   Layout: Breakpoints y Media Queries
+   Archivo: _breakpoints.css
+   Descripción: Puntos de interrupción y estilos responsivos
+   Versión: 1.0.0
+   Última actualización: 2025-09-17
+=================================================================== */
+
+/**
+ * Puntos de interrupción estándar:
+ * - sm: 640px (teléfonos en orientación vertical)
+ * - md: 768px (tablets en orientación vertical)
+ * - lg: 1024px (tablets en orientación horizontal/pequeñas laptops)
+ * - xl: 1280px (laptops/escritorios)
+ * - 2xl: 1536px (pantallas grandes)
+ * - 3xl: 1920px (pantallas extra grandes)
+ */
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.dashboard-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* ===== PANTALLAS PEQUEÑAS (sm: 640px y superiores) ===== */
+@media (min-width: 40rem) {
+  .dashboard-container {
+    padding: 0 1.5rem;
+  }
+}
+
+/* ===== TABLETS (md: 768px y superiores) ===== */
+@media (min-width: 48rem) {
+  .dashboard-container {
+    padding: 0 2rem;
+  }
+  
+  /* Ajustes específicos para tablet */
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* ===== PANTALLAS GRANDES (lg: 1024px y superiores) ===== */
+@media (min-width: 64rem) {
+  .dashboard-container {
+    max-width: 1024px;
+    padding: 0 2.5rem;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  /* Ajustes de diseño para escritorio */
+  .main-content {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 2rem;
+  }
+}
+
+/* ===== ESCRITORIOS (xl: 1280px y superiores) ===== */
+@media (min-width: 80rem) {
+  .dashboard-container {
+    max-width: 1280px;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .main-content {
+    grid-template-columns: 280px 1fr;
+  }
+}
+
+/* ===== PANTALLAS MUY GRANDES (2xl: 1536px y superiores) ===== */
+@media (min-width: 96rem) {
+  .dashboard-container {
+    max-width: 1536px;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+/* ===== LARGE SCREENS - DESKTOP (1024px - 1439px) ===== */
+@media (min-width: 64rem) and (max-width: 89.9375rem) {
+  .content-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+  }
+  
+  .page-title {
+    font-size: clamp(1.75rem, 3.5vw, 2rem);
+  }
+  
+  .chart-container {
+    height: 350px;
+  }
+}
+
+/* ===== MEDIUM SCREENS - TABLETS (768px - 1023px) ===== */
+@media (min-width: 48rem) and (max-width: 63.9375rem) {
+  .content-row {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  
+  .donut-charts {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .page-title {
+    font-size: clamp(1.5rem, 4vw, 1.75rem);
+  }
+  
+  .chart-container {
+    height: 300px;
+  }
+  
+  /* Touch-friendly buttons */
+  .btn-icon {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.75rem;
+  }
+}
+
+/* ===== SMALL SCREENS - MOBILE LANDSCAPE & SMALL TABLETS (481px - 767px) ===== */
+@media (min-width: 30.0625rem) and (max-width: 47.9375rem) {
+  .content-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem;
+  }
+  
+  .donut-charts {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .page-title {
+    font-size: clamp(1.375rem, 5vw, 1.625rem);
+  }
+  
+  .metric-value {
+    font-size: clamp(1.25rem, 4vw, 1.5rem);
+  }
+  
+  .chart-container {
+    height: 280px;
+  }
+  
+  .btn-icon {
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0.875rem;
+  }
+}
+
+/* ===== EXTRA SMALL SCREENS - MOBILE PORTRAIT (up to 480px) ===== */
+@media (max-width: 30rem) {
+  .content-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .donut-charts {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .page-title {
+    font-size: clamp(1.25rem, 6vw, 1.5rem);
+    line-height: 1.2;
+  }
+  
+  .metric-value {
+    font-size: clamp(1.125rem, 5vw, 1.375rem);
+  }
+  
+  .chart-container {
+    height: 250px;
+  }
+  
+  .btn-icon {
+    min-width: 52px;
+    min-height: 52px;
+    padding: 1rem;
+  }
+  
+  /* Improved spacing for small screens */
+  .metric-card,
+  .chart-card,
+  .table-card {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* ===== PANTALLAS EXTRA GRANDES (3xl: 1920px y superiores) ===== */
+@media (min-width: 120rem) {
+  .dashboard-container {
+    max-width: 1920px;
+  }
+  
+  .metrics-grid {
+    gap: 2rem;
+  }
+}
+
+/* ===== AJUSTES ESPECÍFICOS ===== */
+
+/* Diseño de cuadrícula para métricas */
+.metrics-grid {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Ajustes para el menú lateral */
+@media (max-width: 1023px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .sidebar.active {
+    transform: translateX(0);
+  }
+}
+
+/* Ajustes para tablas en dispositivos móviles */
+@media (max-width: 767px) {
+  .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .table-responsive table {
+    min-width: 600px;
+  }
+}
+
+/* Ajustes para formularios en dispositivos móviles */
+@media (max-width: 639px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .form-actions .btn {
+    width: 100%;
+  }
+}
+
+/* Ajustes para tarjetas en dispositivos móviles */
+@media (max-width: 479px) {
+  .card {
+    border-radius: 0;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    width: calc(100% + 2rem);
+  }
+}
+
+/* ===== UTILIDADES RESPONSIVAS ===== */
+
+/* Clases de utilidad para mostrar/ocultar elementos según el breakpoint */
+.hide-on-mobile {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hide-on-mobile {
+    display: block;
+  }
+  
+  .hide-on-desktop {
+    display: none;
+  }
+}
+
+/* Clases para espaciado responsivo */
+:root {
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --spacing-sm: 0.75rem;
+    --spacing-md: 1.25rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    --spacing-2xl: 4rem;
+    --spacing-3xl: 6rem;
+  }
+}
+
+/* ===== IMPRESIÓN ===== */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    padding: 0.5in;
+    font-size: 12pt;
+    line-height: 1.3;
+  }
+  
+  .dashboard-container {
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  .card {
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
+    page-break-inside: avoid;
+  }
+}

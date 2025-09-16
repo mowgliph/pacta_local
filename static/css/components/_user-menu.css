@@ -1,0 +1,225 @@
+/* ===================================================================
+   Componente: Menú de Usuario
+   Archivo: _user-menu.css
+   Descripción: Estilos para el menú desplegable de usuario
+   Versión: 1.2.0
+   Última actualización: 2025-09-17
+=================================================================== */
+
+/* Menú de usuario */
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: var(--radius-full);
+    transition: all 0.2s ease;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    line-height: 1.2;
+}
+
+.user-menu:hover {
+    background-color: var(--bg-hover);
+}
+
+/* Avatar de usuario */
+.user-avatar,
+.user-avatar-small {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+}
+
+.user-avatar-small {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.75rem;
+}
+
+.user-avatar.avatar-generated,
+.user-avatar-small.avatar-generated {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: white;
+    border: none;
+}
+
+/* Información del usuario */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.user-name,
+.user-name-small {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    line-height: 1.2;
+}
+
+.user-name-small {
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.user-role {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    line-height: 1.2;
+}
+
+/* Menú desplegable */
+.user-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+    margin-top: 8px;
+}
+
+.user-menu:hover .user-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Encabezado del menú desplegable */
+.user-dropdown-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+}
+
+/* Cuerpo del menú desplegable */
+.user-dropdown-body {
+    padding: 0.5rem 0;
+}
+
+/* Pie del menú desplegable */
+.user-dropdown-footer {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+}
+
+/* Elementos del menú */
+.user-dropdown-item,
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    gap: 0.75rem;
+    cursor: pointer;
+}
+
+.user-dropdown-item i,
+.dropdown-item i {
+    width: 1.25rem;
+    text-align: center;
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.user-dropdown-item:hover,
+.dropdown-item:hover {
+    background-color: #f1f5f9;
+    color: #334155;
+    text-decoration: none;
+}
+
+.user-dropdown-item:hover i,
+.dropdown-item:hover i {
+    color: var(--color-primary);
+}
+
+/* Separador */
+.dropdown-divider {
+    height: 1px;
+    background-color: #e2e8f0;
+    margin: 8px 0;
+    border: none;
+}
+
+/* Elemento de cierre de sesión */
+.logout-item,
+.logout-btn {
+    color: #ef4444 !important;
+}
+
+.logout-item:hover,
+.logout-btn:hover {
+    background-color: #fef2f2 !important;
+    color: #dc2626 !important;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .user-info {
+        display: none;
+    }
+    
+    .user-avatar,
+    .user-avatar-small {
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+    
+    .user-dropdown {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        border-radius: 8px 8px 0 0;
+        margin: 0;
+        transform: translateY(100%);
+    }
+    
+    .user-menu:hover .user-dropdown {
+        transform: translateY(0);
+    }
+}
+
+/* Variante pequeña */
+.user-menu-sm .user-avatar {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.75rem;
+}
+
+.user-menu-sm .user-name {
+    font-size: 0.875rem;
+}
+
+.user-menu-sm .user-role {
+    font-size: 0.6875rem;
+}

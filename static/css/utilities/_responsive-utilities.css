@@ -1,0 +1,242 @@
+/* ===================================================================
+   Utilidades: Responsive
+   Archivo: _responsive-utilities.css
+   Descripción: Utilidades para el diseño responsivo
+   Versión: 1.0.0
+   Última actualización: 2025-09-17
+=================================================================== */
+
+/* ===== VISIBILIDAD RESPONSIVA ===== */
+
+/**
+ * Utilidades para mostrar/ocultar elementos según el tamaño de pantalla
+ * Basado en el enfoque mobile-first
+ */
+
+/* Ocultar en móviles */
+.hide-mobile {
+  display: none !important;
+}
+
+/* Mostrar en móviles */
+.show-mobile {
+  display: block !important;
+}
+
+/* A partir de tablet (768px) */
+@media (min-width: 768px) {
+  .hide-mobile {
+    display: block !important;
+  }
+  
+  .show-mobile {
+    display: none !important;
+  }
+  
+  .hide-tablet {
+    display: none !important;
+  }
+  
+  .show-tablet {
+    display: block !important;
+  }
+}
+
+/* A partir de escritorio (1024px) */
+@media (min-width: 1024px) {
+  .hide-desktop {
+    display: none !important;
+  }
+  
+  .show-desktop {
+    display: block !important;
+  }
+}
+
+/* ===== ESPACIADO RESPONSIVO ===== */
+
+/**
+ * Utilidades de espaciado responsivo
+ * Se pueden combinar con clases como p-4 md:p-6 lg:p-8
+ */
+
+/* Ajustes de padding en móviles */
+@media (max-width: 767px) {
+  .px-mobile-4 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .py-mobile-4 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+}
+
+/* ===== TAMAÑOS DE TEXTO RESPONSIVOS ===== */
+
+.text-mobile-sm {
+  font-size: 0.75rem !important; /* 12px */
+  line-height: 1rem !important;
+}
+
+.text-mobile-base {
+  font-size: 0.875rem !important; /* 14px */
+  line-height: 1.25rem !important;
+}
+
+@screen md {
+  .text-mobile-sm {
+    font-size: 0.875rem !important; /* 14px */
+    line-height: 1.25rem !important;
+  }
+  
+  .text-mobile-base {
+    font-size: 1rem !important; /* 16px */
+    line-height: 1.5rem !important;
+  }
+}
+
+/* ===== UTILIDADES DE DISEÑO FLEXBOX/GRID ===== */
+
+/* Cambiar dirección de flex en móviles */
+.flex-col-mobile {
+  flex-direction: column;
+}
+
+@screen md {
+  .flex-col-mobile {
+    flex-direction: row;
+  }
+}
+
+/* Cambiar número de columnas en grid */
+.grid-cols-mobile-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+
+@screen md {
+  .grid-cols-mobile-1 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* ===== UTILIDADES DE ANCHO Y ALTO ===== */
+
+/* Ancho completo en móviles, ancho automático en pantallas más grandes */
+.w-full-mobile {
+  width: 100% !important;
+}
+
+@screen md {
+  .w-full-mobile {
+    width: auto !important;
+  }
+}
+
+/* ===== UTILIDADES DE MÁRGENES ===== */
+
+/* Eliminar márgenes en móviles */
+.mobile-m-0 {
+  margin: 0 !important;
+}
+
+@screen md {
+  .mobile-m-0 {
+    margin: revert !important;
+  }
+}
+
+/* ===== UTILIDADES DE TEXTO ===== */
+
+/* Centrar texto solo en móviles */
+.text-center-mobile {
+  text-align: center !important;
+}
+
+@screen md {
+  .text-center-mobile {
+    text-align: left !important;
+  }
+}
+
+/* ===== UTILIDADES DE BORDE ===== */
+
+/* Eliminar bordes en móviles */
+.border-0-mobile {
+  border-width: 0 !important;
+}
+
+@screen md {
+  .border-0-mobile {
+    border-width: 1px !important;
+  }
+}
+
+/* ===== UTILIDADES DE SOMBRA ===== */
+
+/* Eliminar sombras en móviles para mejor rendimiento */
+.shadow-none-mobile {
+  box-shadow: none !important;
+}
+
+@screen md {
+  .shadow-none-mobile {
+    box-shadow: var(--shadow-sm) !important;
+  }
+}
+
+/* ===== UTILIDADES DE POSICIONAMIENTO ===== */
+
+/* Posicionamiento estático en móviles, relativo en pantallas más grandes */
+.static-mobile {
+  position: static !important;
+}
+
+@screen md {
+  .static-mobile {
+    position: relative !important;
+  }
+}
+
+/* ===== UTILIDADES DE OVERFLOW ===== */
+
+/* Habilitar scroll horizontal solo cuando sea necesario en móviles */
+.overflow-x-auto-mobile {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+@screen md {
+  .overflow-x-auto-mobile {
+    overflow-x: visible !important;
+  }
+}
+
+/* ===== UTILIDADES DE VISIBILIDAD ===== */
+
+/* Ocultar elementos en modo impresión */
+@media print {
+  .hide-print {
+    display: none !important;
+  }
+  
+  .show-print {
+    display: block !important;
+  }
+  
+  /* Evitar saltos de página dentro de elementos */
+  .break-inside-avoid {
+    break-inside: avoid;
+  }
+  
+  /* Forzar saltos de página antes */
+  .break-before-page {
+    break-before: page;
+  }
+  
+  /* Forzar saltos de página después */
+  .break-after-page {
+    break-after: page;
+  }
+}
