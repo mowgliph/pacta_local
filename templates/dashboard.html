@@ -92,22 +92,22 @@
                     </div>
                     <div class="block-content">
                         <div class="contract-actions d-flex flex-nowrap gap-3">
-                            <button class="btn btn-primary flex-fill d-flex align-items-center gap-2" style="min-width: 150px;" onclick="window.location.href='{{ url_for('contratos.listar') }}'">
+                            <a href="{{ url_for('contratos.listar') }}" class="btn btn-primary flex-fill d-flex align-items-center gap-2 min-w-150">
                                 <i class="fas fa-file-contract"></i>
                                 Gestionar Contratos
-                            </button>
-                            <button class="btn btn-success flex-fill d-flex align-items-center gap-2" style="min-width: 150px;" onclick="window.location.href='{{ url_for('main.reportes') }}'">
+                            </a>
+                            <a href="{{ url_for('main.reportes') }}" class="btn btn-success flex-fill d-flex align-items-center gap-2 min-w-150">
                                 <i class="fas fa-chart-bar"></i>
                                 Ver Reportes
-                            </button>
-                            <button class="btn btn-warning flex-fill d-flex align-items-center gap-2" style="min-width: 150px;" onclick="window.location.href='{{ url_for('users.usuario') }}'">
+                            </a>
+                            <a href="{{ url_for('users.usuario') }}" class="btn btn-warning flex-fill d-flex align-items-center gap-2 min-w-150">
                                 <i class="fas fa-user"></i>
                                 Perfil de Usuario
-                            </button>
-                            <button class="btn btn-purple flex-fill d-flex align-items-center gap-2" style="min-width: 150px;" onclick="window.location.href='{{ url_for('main.configuracion') }}'">
+                            </a>
+                            <a href="{{ url_for('main.configuracion') }}" class="btn btn-purple flex-fill d-flex align-items-center gap-2 min-w-150">
                                 <i class="fas fa-cog"></i>
                                 Configuración
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -256,36 +256,36 @@
                         <p class="block-subtitle">Últimas acciones y eventos importantes</p>
                     </div>
                     <div class="block-content">
-                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div>
                             <div class="activity-item">
-                                <div class="activity-dot" style="background: #10b981;"></div>
+                                <span class="status-dot status-dot-sm status-color-success"></span>
                                 <div class="activity-content">
-                                    <div class="activity-title">Sistema actualizado</div>
-                                    <div class="activity-subtitle">Versión 2.1.0 instalada correctamente</div>
+                                    <div class="activity-message"><strong>Sistema actualizado</strong></div>
+                                    <div class="activity-message">Versión 2.1.0 instalada correctamente</div>
                                     <div class="activity-time">Hace 1 hora</div>
                                 </div>
                             </div>
                             <div class="activity-item">
-                                <div class="activity-dot" style="background: #3b82f6;"></div>
+                                <span class="status-dot status-dot-sm status-color-primary"></span>
                                 <div class="activity-content">
-                                    <div class="activity-title">Nuevo reporte generado</div>
-                                    <div class="activity-subtitle">Reporte mensual de contratos completado</div>
+                                    <div class="activity-message"><strong>Nuevo reporte generado</strong></div>
+                                    <div class="activity-message">Reporte mensual de contratos completado</div>
                                     <div class="activity-time">Hace 3 horas</div>
                                 </div>
                             </div>
                             <div class="activity-item">
-                                <div class="activity-dot" style="background: #f59e0b;"></div>
+                                <span class="status-dot status-dot-sm status-color-warning"></span>
                                 <div class="activity-content">
-                                    <div class="activity-title">Backup programado</div>
-                                    <div class="activity-subtitle">Copia de seguridad completada exitosamente</div>
+                                    <div class="activity-message"><strong>Backup programado</strong></div>
+                                    <div class="activity-message">Copia de seguridad completada exitosamente</div>
                                     <div class="activity-time">Hace 6 horas</div>
                                 </div>
                             </div>
                             <div class="activity-item">
-                                <div class="activity-dot" style="background: #8b5cf6;"></div>
+                                <span class="status-dot status-dot-sm status-color-purple"></span>
                                 <div class="activity-content">
-                                    <div class="activity-title">Usuario conectado</div>
-                                    <div class="activity-subtitle">Ana Martínez inició sesión</div>
+                                    <div class="activity-message"><strong>Usuario conectado</strong></div>
+                                    <div class="activity-message">Ana Martínez inició sesión</div>
                                     <div class="activity-time">Hace 8 horas</div>
                                 </div>
                             </div>
@@ -304,13 +304,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             try {
                 // Validar que las estadísticas existan y sean números válidos
-                const estadisticas = {
-                    contratos_activos: {{ estadisticas.contratos_activos if estadisticas.contratos_activos is not none else 0 }},
-                    contratos_por_vencer: {{ estadisticas.contratos_por_vencer if estadisticas.contratos_por_vencer is not none else 0 }},
-                    total_contratos: {{ estadisticas.total_contratos if estadisticas.total_contratos is not none else 0 }},
-                    reportes_mes: {{ estadisticas.reportes_mes if estadisticas.reportes_mes is not none else 0 }},
-                    total_reportes: {{ estadisticas.total_reportes if estadisticas.total_reportes is not none else 0 }}
-                };
+                const estadisticas = {{ (estadisticas or {}) | tojson }};
                 
                 // Validar que Chart.js esté cargado
                 if (typeof Chart === 'undefined') {

@@ -43,17 +43,10 @@ ol[role='list'] {
   list-style: none;
 }
 
-/* Set core body defaults */
+/* Set core body defaults (evitar solapamiento con _document.css) */
 body {
   min-height: 100vh;
-  line-height: var(--line-height-normal);
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-base);
-  color: var(--text-primary);
-  background-color: var(--bg-secondary);
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Set shorter line heights on headings and interactive elements */
@@ -212,7 +205,7 @@ blockquote {
 code,
 pre {
   font-family: var(--font-family-mono);
-  font-size: 0.875em;
+  font-size: var(--font-size-sm);
 }
 
 code {
@@ -237,50 +230,11 @@ pre code {
 }
 
 /* ===== UTILIDADES DE ACCESIBILIDAD ===== */
+/* Nota: .sr-only y variantes se definen en base/_utilities.css para evitar duplicaciones. */
 
-/* Screen reader only content */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
+/* Nota: Estilos de foco centralizados en base/_focus.css */
 
-/* Focus styles */
-:focus {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-:focus:not(:focus-visible) {
-  outline: none;
-}
-
-:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-/* Reduce motion for users who prefer it */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-  
-  html {
-    scroll-behavior: auto;
-  }
-}
+/* Nota: Reduced motion centralizado en base/_animations.css */
 
 /* ===== MEJORAS DE RENDIMIENTO ===== */
 
@@ -304,34 +258,7 @@ pre code {
   perspective: 1000px;
 }
 
-/* ===== SCROLLBAR PERSONALIZADO ===== */
-
-/* Webkit scrollbars */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
-  border-radius: var(--radius-full);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-gray-400);
-  border-radius: var(--radius-full);
-  transition: var(--transition-colors);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-500);
-}
-
-/* Firefox scrollbars */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-gray-400) var(--bg-tertiary);
-}
+/* Nota: Scrollbar personalizado se gestiona en base/_scrollbar.css */
 
 /* ===== SELECCIÓN DE TEXTO ===== */
 

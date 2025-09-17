@@ -1,8 +1,8 @@
 /* ===================================================================
-   Utilidades: Responsive
+   PACTA - Utilidades: Responsive
    Archivo: _responsive-utilities.css
    Descripción: Utilidades para el diseño responsivo
-   Versión: 1.0.0
+   Versión: 1.1.0
    Última actualización: 2025-09-17
 =================================================================== */
 
@@ -24,7 +24,7 @@
 }
 
 /* A partir de tablet (768px) */
-@media (min-width: 768px) {
+@media (min-width: 48rem) {
   .hide-mobile {
     display: block !important;
   }
@@ -43,7 +43,7 @@
 }
 
 /* A partir de escritorio (1024px) */
-@media (min-width: 1024px) {
+@media (min-width: 64rem) {
   .hide-desktop {
     display: none !important;
   }
@@ -61,43 +61,85 @@
  */
 
 /* Ajustes de padding en móviles */
-@media (max-width: 767px) {
+@media (max-width: 47.9375rem) {
   .px-mobile-4 {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
+    padding-left: var(--spacing-4) !important;
+    padding-right: var(--spacing-4) !important;
   }
   
   .py-mobile-4 {
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
+    padding-top: var(--spacing-4) !important;
+    padding-bottom: var(--spacing-4) !important;
   }
 }
 
 /* ===== TAMAÑOS DE TEXTO RESPONSIVOS ===== */
 
 .text-mobile-sm {
-  font-size: 0.75rem !important; /* 12px */
-  line-height: 1rem !important;
+  font-size: var(--font-size-xs) !important;
+  line-height: var(--line-height-tight) !important;
 }
 
 .text-mobile-base {
-  font-size: 0.875rem !important; /* 14px */
-  line-height: 1.25rem !important;
+  font-size: var(--font-size-sm) !important;
+  line-height: var(--line-height-normal) !important;
 }
 
-@screen md {
+@media (min-width: 48rem) {
   .text-mobile-sm {
-    font-size: 0.875rem !important; /* 14px */
-    line-height: 1.25rem !important;
+    font-size: var(--font-size-sm) !important;
+    line-height: var(--line-height-normal) !important;
   }
   
   .text-mobile-base {
-    font-size: 1rem !important; /* 16px */
-    line-height: 1.5rem !important;
+    font-size: var(--font-size-base) !important;
+    line-height: var(--line-height-relaxed) !important;
   }
 }
 
 /* ===== UTILIDADES DE DISEÑO FLEXBOX/GRID ===== */
+
+/* Utilidades Flexbox */
+.flex-responsive {
+  display: block;
+}
+
+@media (min-width: 48rem) {
+  .flex-responsive {
+    display: flex;
+  }
+}
+
+/* Utilidades Grid */
+.grid-responsive {
+  display: block;
+}
+
+@media (min-width: 48rem) {
+  .grid-responsive {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-4);
+  }
+}
+
+/* Utilidades de orden responsivo */
+@media (max-width: 47.9375rem) {
+  .order-mobile-1 { order: 1; }
+  .order-mobile-2 { order: 2; }
+  .order-mobile-3 { order: 3; }
+}
+
+/* Utilidades de espaciado responsivo */
+@media (max-width: 47.9375rem) {
+  .gap-mobile-2 { gap: var(--spacing-2); }
+  .gap-mobile-4 { gap: var(--spacing-4); }
+}
+
+@media (min-width: 48rem) {
+  .gap-tablet-4 { gap: var(--spacing-4); }
+  .gap-tablet-6 { gap: var(--spacing-6); }
+}
 
 /* Cambiar dirección de flex en móviles */
 .flex-col-mobile {

@@ -278,11 +278,9 @@ def api_get_proveedores():
         # Estructura de respuesta consistente con api_get_clientes
         return jsonify({
             'success': True,
-            'data': {
-                'proveedores': proveedores_data,
-                'total': len(proveedores_data),
-                'activos': len(proveedores_data)  # Ya están filtrados solo activos
-            }
+            'proveedores': proveedores_data,
+            'total': len(proveedores_data),
+            'activos': len(proveedores_data)  # Ya están filtrados solo activos
         })
         
     except Exception as e:
@@ -290,10 +288,7 @@ def api_get_proveedores():
         error_msg = f'Error al obtener proveedores: {str(e)}'
         return jsonify({
             'success': False,
-            'error': {
-                'code': 'PROVIDERS_FETCH_ERROR',
-                'message': error_msg
-            }
+            'message': error_msg
         }), 500
 
 @providers_bp.route('/api/proveedores', methods=['POST'])
@@ -321,11 +316,7 @@ def api_create_proveedor():
         if not data.get('nombre'):
             return jsonify({
                 'success': False,
-                'error': {
-                    'code': 'MISSING_REQUIRED_FIELD',
-                    'message': 'El campo nombre es obligatorio',
-                    'field': 'nombre'
-                }
+                'message': 'El nombre es requerido'
             }), 400
         
         # Crear nuevo proveedor con valores por defecto
@@ -346,10 +337,8 @@ def api_create_proveedor():
         # Estructura de respuesta consistente
         return jsonify({
             'success': True,
-            'data': {
-                'message': 'Proveedor creado exitosamente',
-                'proveedor_id': proveedor.id
-            }
+            'message': 'Proveedor creado exitosamente',
+            'proveedor_id': proveedor.id
         }), 201  # 201 Created
         
     except Exception as e:
@@ -357,10 +346,7 @@ def api_create_proveedor():
         error_msg = f'Error al crear proveedor: {str(e)}'
         return jsonify({
             'success': False,
-            'error': {
-                'code': 'PROVIDER_CREATION_ERROR',
-                'message': error_msg
-            }
+            'message': error_msg
         }), 500
 
 @providers_bp.route('/api/proveedores/<int:proveedor_id>', methods=['PUT'])
@@ -388,10 +374,7 @@ def api_update_proveedor(proveedor_id):
         if not proveedor:
             return jsonify({
                 'success': False,
-                'error': {
-                    'code': 'PROVIDER_NOT_FOUND',
-                    'message': 'No se encontró el proveedor especificado'
-                }
+                'message': 'No se encontró el proveedor especificado'
             }), 404
         
         # Lista de campos actualizables
@@ -411,37 +394,16 @@ def api_update_proveedor(proveedor_id):
         if actualizaciones:
             proveedor.save()
             
-        # Obtener datos actualizados para la respuesta
-        fecha_creacion = proveedor.fecha_creacion.isoformat() if proveedor.fecha_creacion else None
-        
         return jsonify({
             'success': True,
-            'data': {
-                'message': 'Proveedor actualizado exitosamente',
-                'proveedor': {
-                    'id': proveedor.id,
-                    'nombre': proveedor.nombre,
-                    'tipo_proveedor': proveedor.tipo_proveedor,
-                    'rfc': proveedor.rfc or '',
-                    'email': proveedor.email or '',
-                    'telefono': proveedor.telefono or '',
-                    'direccion': proveedor.direccion or '',
-                    'contacto_principal': proveedor.contacto_principal or '',
-                    'activo': bool(proveedor.activo),
-                    'fecha_creacion': fecha_creacion
-                },
-                'campos_actualizados': list(actualizaciones.keys())
-            }
+            'message': 'Proveedor actualizado exitosamente'
         })
         
     except Exception as e:
         error_msg = f'Error al actualizar proveedor: {str(e)}'
         return jsonify({
             'success': False,
-            'error': {
-                'code': 'PROVIDER_UPDATE_ERROR',
-                'message': error_msg
-            }
+            'message': error_msg
         }), 500
 
 @providers_bp.route('/api/proveedores/<int:proveedor_id>', methods=['DELETE'])
@@ -461,10 +423,7 @@ def api_delete_proveedor(proveedor_id):
         if not proveedor:
             return jsonify({
                 'success': False,
-                'error': {
-                    'code': 'PROVIDER_NOT_FOUND',
-                    'message': 'No se encontró el proveedor especificado'
-                }
+                'message': 'No se encontró el proveedor especificado'
             }), 404
         
         # Verificar si el proveedor tiene contratos activos
@@ -478,40 +437,22 @@ def api_delete_proveedor(proveedor_id):
         if contratos_activos:
             return jsonify({
                 'success': False,
-                'error': {
-                    'code': 'ACTIVE_CONTRACTS_EXIST',
-                    'message': 'No se puede eliminar el proveedor porque tiene contratos activos',
-                    'contratos_activos': len(contratos_activos)
-                }
+                'message': 'No se puede eliminar el proveedor porque tiene contratos activos'
             }), 409  # 409 Conflict
-        
-        # Guardar datos del proveedor para la respuesta
-        datos_proveedor = {
-            'id': proveedor.id,
-            'nombre': proveedor.nombre,
-            'tipo_proveedor': proveedor.tipo_proveedor
-        }
         
         # Eliminar el proveedor
         proveedor.delete()
         
         return jsonify({
             'success': True,
-            'data': {
-                'message': 'Proveedor eliminado exitosamente',
-                'proveedor': datos_proveedor,
-                'fecha_eliminacion': datetime.now().isoformat()
-            }
+            'message': 'Proveedor eliminado exitosamente'
         })
         
     except Exception as e:
         error_msg = f'Error al eliminar proveedor: {str(e)}'
         return jsonify({
             'success': False,
-            'error': {
-                'code': 'PROVIDER_DELETION_ERROR',
-                'message': error_msg
-            }
+            'message': error_msg
         }), 500
 
 # ===== API PARA RESUMEN DE PROVEEDORES =====

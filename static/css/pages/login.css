@@ -11,17 +11,17 @@ body.login-page {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    background: linear-gradient(135deg, var(--color-gray-50) 0%, var(--color-gray-200) 100%);
     font-family: var(--font-family-primary);
 }
 
 /* ===== CONTENEDOR DEL LOGIN ===== */
 .login-container {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    padding: 3rem;
+    background: var(--bg-primary);
+    border: var(--border-width-1) solid var(--border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: var(--spacing-12);
     width: 100%;
     max-width: 450px;
 }
@@ -29,111 +29,109 @@ body.login-page {
 /* ===== HEADER DEL LOGIN ===== */
 .login-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: var(--spacing-8);
 }
 
 .login-header h1 {
-    margin-bottom: 0.5rem;
-    font-size: 1.875rem;
-    color: #1e293b;
-    font-weight: 600;
+    margin-bottom: var(--spacing-2);
+    font-size: var(--font-size-2xl);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-semibold);
 }
 
 .login-header p {
-    color: #64748b;
-    font-weight: 500;
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-medium);
 }
 
 /* ===== LOGOS ===== */
 .logo-container {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: var(--spacing-8);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: var(--spacing-4);
 }
-
-
 
 .logo-text {
     width: 180px;
     height: auto;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+    filter: drop-shadow(var(--shadow-sm));
 }
 
 /* ===== FORMULARIO ===== */
 .form-floating {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-6);
     position: relative;
 }
 
 .form-floating .form-control {
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
-    color: #1e293b;
+    background-color: var(--bg-secondary);
+    border: var(--border-width-1) solid var(--border-light);
+    color: var(--text-primary);
 }
 
 .form-floating .form-control:focus {
-    background-color: #ffffff;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
-    color: #1e293b;
+    background-color: var(--bg-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 var(--spacing-1) var(--color-primary-200);
+    color: var(--text-primary);
 }
 
 .form-floating label {
-    color: #64748b;
+    color: var(--text-secondary);
 }
 
 .btn-login {
     width: 100%;
-    margin-bottom: 1rem;
-    background-color: #3b82f6;
-    border-color: #3b82f6;
+    margin-bottom: var(--spacing-4);
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
 }
 
 .btn-login:hover {
-    background-color: #2563eb;
-    border-color: #2563eb;
+    background-color: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
 }
 
 /* ===== TOGGLE DE CONTRASEÑA ===== */
 .password-toggle {
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: var(--transition-colors);
 }
 
 .password-toggle:hover {
-    color: #334155 !important;
+    color: var(--text-primary) !important;
 }
 
 /* ===== ICONOS DE INFORMACIÓN ===== */
 .info-icon {
     cursor: help;
-    transition: color 0.2s ease;
+    transition: var(--transition-colors);
 }
 
 .info-icon:hover {
-    color: #0d6efd !important;
+    color: var(--color-info-dark) !important;
 }
 
 /* ===== TOOLTIPS ===== */
 .tooltip {
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm);
 }
 
 .tooltip-inner {
     max-width: 250px;
-    padding: 8px 12px;
-    background-color: #212529;
-    border-radius: 6px;
+    padding: var(--spacing-2) var(--spacing-3);
+    background-color: var(--color-gray-900);
+    border-radius: var(--radius-sm);
 }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 576px) {
     .login-container {
-        padding: 2rem 1.5rem;
-        margin: 1rem;
+        padding: var(--spacing-8) var(--spacing-6);
+        margin: var(--spacing-4);
     }
     
     .logo-icon {
@@ -145,6 +143,6 @@ body.login-page {
     }
     
     .login-header h1 {
-        font-size: 1.5rem;
+        font-size: var(--font-size-xl);
     }
 }

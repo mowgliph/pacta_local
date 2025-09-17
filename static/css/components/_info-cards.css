@@ -18,11 +18,11 @@
 /* ===== TARJETA BASE ===== */
 
 .info-card {
-    color: white;
+    color: var(--text-on-primary);
     border-radius: 0.75rem;
     padding: 1.25rem;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: var(--transition-all);
+    box-shadow: var(--shadow-sm);
     position: relative;
     overflow: hidden;
 }
@@ -40,41 +40,41 @@
 
 .info-card:hover {
     transform: translateY(-0.25rem);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-md);
 }
 
 /* ===== VARIANTES DE COLOR ===== */
 
 .info-card-blue {
-    background: linear-gradient(135deg, var(--color-primary, #3b82f6) 0%, var(--color-primary-dark, #1d4ed8) 100%);
+    background: var(--gradient-primary);
 }
 
 .info-card-blue:hover {
-    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    box-shadow: var(--shadow-primary);
 }
 
 .info-card-green {
-    background: linear-gradient(135deg, var(--color-success, #10b981) 0%, var(--color-success-dark, #047857) 100%);
+    background: var(--gradient-success);
 }
 
 .info-card-green:hover {
-    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+    box-shadow: var(--shadow-success);
 }
 
 .info-card-orange {
-    background: linear-gradient(135deg, var(--color-warning, #f59e0b) 0%, var(--color-warning-dark, #d97706) 100%);
+    background: var(--gradient-warning);
 }
 
 .info-card-orange:hover {
-    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+    box-shadow: var(--shadow-warning);
 }
 
 .info-card-purple {
-    background: linear-gradient(135deg, var(--color-purple, #8b5cf6) 0%, var(--color-purple-dark, #7c3aed) 100%);
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-dark) 100%);
 }
 
 .info-card-purple:hover {
-    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+    box-shadow: var(--shadow-secondary);
 }
 
 /* ===== ESTRUCTURA DE LA TARJETA ===== */
@@ -162,33 +162,4 @@
 
 /* ===== MODO OSCURO ===== */
 
-@media (prefers-color-scheme: dark) {
-    .info-card {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-    
-    .info-card:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    }
-    
-    .info-card-blue:hover {
-        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.5);
-    }
-    
-    .info-card-green:hover {
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.5);
-    }
-    
-    .info-card-orange:hover {
-        box-shadow: 0 8px 20px rgba(245, 158, 11, 0.5);
-    }
-    
-    .info-card-purple:hover {
-        box-shadow: 0 8px 20px rgba(139, 92, 246, 0.5);
-    }
-    
-    .info-text .info-label,
-    .info-description {
-        opacity: 0.9;
-    }
-}
+/* Nota: Modo oscuro gestionado por tokens de tema */

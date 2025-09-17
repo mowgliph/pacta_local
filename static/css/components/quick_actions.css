@@ -6,46 +6,46 @@
 
 /* ===== CONTENEDOR PRINCIPAL ===== */
 .actions-block {
-    background: var(--bg-primary, #ffffff);
-    border-radius: var(--radius-lg, 12px);
-    border: 1px solid var(--border-light, #e5e7eb);
-    box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.1));
-    transition: var(--transition-base, all 0.2s ease);
-    margin-bottom: var(--spacing-6, 24px);
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-all);
+    margin-bottom: var(--spacing-6);
 }
 
 .actions-block:hover {
-    box-shadow: var(--shadow-md, 0 4px 6px rgba(0, 0, 0, 0.1));
+    box-shadow: var(--shadow-md);
     transform: translateY(-1px);
 }
 
 /* ===== HEADER DEL BLOQUE ===== */
 .actions-block .block-header {
-    padding: var(--spacing-6, 24px) var(--spacing-6, 24px) var(--spacing-4, 16px);
-    border-bottom: 1px solid var(--border-light, #e5e7eb);
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border-radius: var(--radius-lg, 12px) var(--radius-lg, 12px) 0 0;
+    padding: var(--spacing-6) var(--spacing-6) var(--spacing-4);
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .actions-block .block-title {
-    font-size: var(--font-size-xl, 1.25rem);
-    font-weight: var(--font-weight-bold, 700);
-    color: var(--text-primary, #1f2937);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
     margin: 0;
     display: flex;
     align-items: center;
 }
 
 .actions-block .block-subtitle {
-    font-size: var(--font-size-sm, 0.875rem);
-    color: var(--text-secondary, #6b7280);
-    margin: var(--spacing-2, 8px) 0 0;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin: var(--spacing-2) 0 0;
     line-height: 1.4;
 }
 
 /* ===== CONTENIDO DEL BLOQUE ===== */
 .actions-block .block-content {
-    padding: var(--spacing-6, 24px);
+    padding: var(--spacing-6);
 }
 
 .contract-actions {
@@ -58,11 +58,11 @@
 /* ===== BOTONES DE ACCIÓN ===== */
 .contract-actions .btn {
     position: relative;
-    font-weight: var(--font-weight-medium, 500);
-    font-size: var(--font-size-sm, 0.875rem);
-    padding: var(--spacing-3, 12px) var(--spacing-4, 16px);
-    border-radius: var(--radius-md, 8px);
-    transition: all 0.3s ease;
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-3) var(--spacing-4);
+    border-radius: var(--radius-md);
+    transition: var(--transition-all);
     text-decoration: none;
     border: 2px solid transparent;
     overflow: hidden;
@@ -76,7 +76,7 @@
     width: 100%;
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s ease;
+    transition: left var(--duration-slow) var(--ease-out);
 }
 
 .contract-actions .btn:hover::before {
@@ -85,17 +85,17 @@
 
 .contract-actions .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-lg);
 }
 
 .contract-actions .btn:active {
     transform: translateY(0);
-    transition: transform 0.1s ease;
+    transition: transform var(--duration-fast) var(--ease-out);
 }
 
 .contract-actions .btn i {
-    font-size: var(--font-size-base, 1rem);
-    transition: transform 0.3s ease;
+    font-size: var(--font-size-base);
+    transition: var(--transition-transform);
 }
 
 .contract-actions .btn:hover i {
@@ -104,65 +104,78 @@
 
 /* ===== VARIANTES DE COLORES ===== */
 .contract-actions .btn-primary {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    border-color: #3b82f6;
+    background: var(--gradient-info);
+    border-color: var(--color-primary);
+    color: var(--text-on-primary);
 }
 
 .contract-actions .btn-primary:hover {
-    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-    border-color: #1d4ed8;
+    background: var(--gradient-primary-hover);
+    border-color: var(--color-primary-dark);
+    color: var(--text-on-primary);
 }
 
 .contract-actions .btn-success {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    border-color: #10b981;
+    background: var(--gradient-success);
+    border-color: var(--color-success);
+    color: var(--text-on-primary);
 }
 
 .contract-actions .btn-success:hover {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
-    border-color: #059669;
+    background: var(--gradient-success);
+    filter: brightness(0.98);
+    border-color: var(--color-success-dark);
+    color: var(--text-on-primary);
 }
 
 .contract-actions .btn-warning {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-    border-color: #f59e0b;
+    background: var(--gradient-warning);
+    border-color: var(--color-warning);
+    color: var(--text-on-primary);
 }
 
 .contract-actions .btn-warning:hover {
-    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-    border-color: #d97706;
+    background: var(--gradient-warning);
+    filter: brightness(0.98);
+    border-color: var(--color-warning-dark);
+    color: var(--text-on-primary);
 }
 
 .contract-actions .btn-danger {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    border-color: #ef4444;
+    background: linear-gradient(135deg, var(--color-error) 0%, var(--color-error-dark) 100%);
+    border-color: var(--color-error);
+    color: var(--text-on-primary);
 }
 
 .contract-actions .btn-danger:hover {
-    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-    border-color: #dc2626;
+    background: linear-gradient(135deg, var(--color-error-dark) 0%, var(--color-error-darker) 100%);
+    border-color: var(--color-error-dark);
+    color: var(--text-on-primary);
 }
 
 .contract-actions .btn-info {
-    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-    border-color: #06b6d4;
+    background: var(--gradient-info);
+    border-color: var(--color-info);
+    color: var(--text-on-primary);
 }
 
 .contract-actions .btn-info:hover {
-    background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
-    border-color: #0891b2;
+    background: var(--gradient-info);
+    filter: brightness(0.98);
+    border-color: var(--color-info-dark);
+    color: var(--text-on-primary);
 }
 
 .contract-actions .btn-purple {
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-    border-color: #8b5cf6;
-    color: white;
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-dark) 100%);
+    border-color: var(--color-secondary);
+    color: var(--text-on-primary);
 }
 
 .contract-actions .btn-purple:hover {
-    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-    border-color: #7c3aed;
-    color: white;
+    background: linear-gradient(135deg, var(--color-secondary-dark) 0%, var(--color-secondary-darker) 100%);
+    border-color: var(--color-secondary-dark);
+    color: var(--text-on-primary);
 }
 
 /* ===== BOTONES DESHABILITADOS ===== */
@@ -183,23 +196,23 @@
 
 /* ===== FOOTER DEL BLOQUE ===== */
 .actions-block .block-content .mt-3 {
-    border-top: 1px solid var(--border-light, #e5e7eb);
-    padding-top: var(--spacing-4, 16px);
-    margin-top: var(--spacing-6, 24px) !important;
+    border-top: 1px solid var(--border-light);
+    padding-top: var(--spacing-4);
+    margin-top: var(--spacing-6) !important;
 }
 
 .actions-block .btn-outline-primary {
-    border: 2px solid var(--color-primary, #3b82f6);
-    color: var(--color-primary, #3b82f6);
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
     background: transparent;
-    transition: all 0.3s ease;
+    transition: var(--transition-all);
 }
 
 .actions-block .btn-outline-primary:hover {
-    background: var(--color-primary, #3b82f6);
-    color: white;
+    background: var(--color-primary);
+    color: var(--color-white);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    box-shadow: var(--shadow-primary);
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
@@ -241,23 +254,13 @@
 }
 
 /* ===== ANIMACIONES ===== */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
+/* Nota: se usa animación fadeInUp desde base/_animations.css */
 .actions-block {
-    animation: fadeInUp 0.6s ease-out;
+    animation: fadeInUp var(--duration-slower) var(--ease-out);
 }
 
 .contract-actions .btn {
-    animation: fadeInUp 0.6s ease-out;
+    animation: fadeInUp var(--duration-slower) var(--ease-out);
 }
 
 .contract-actions .btn:nth-child(1) { animation-delay: 0.1s; }
@@ -267,33 +270,3 @@
 .contract-actions .btn:nth-child(5) { animation-delay: 0.5s; }
 .contract-actions .btn:nth-child(6) { animation-delay: 0.6s; }
 
-/* ===== ACCESIBILIDAD ===== */
-.contract-actions .btn:focus {
-    outline: 2px solid var(--color-primary, #3b82f6);
-    outline-offset: 2px;
-}
-
-.contract-actions .btn:focus:not(:focus-visible) {
-    outline: none;
-}
-
-/* ===== MODO OSCURO (si se implementa) ===== */
-@media (prefers-color-scheme: dark) {
-    .actions-block {
-        background: var(--bg-primary-dark, #1f2937);
-        border-color: var(--border-dark, #374151);
-    }
-    
-    .actions-block .block-header {
-        background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
-        border-color: var(--border-dark, #374151);
-    }
-    
-    .actions-block .block-title {
-        color: var(--text-primary-dark, #f9fafb);
-    }
-    
-    .actions-block .block-subtitle {
-        color: var(--text-secondary-dark, #d1d5db);
-    }
-}

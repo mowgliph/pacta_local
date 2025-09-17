@@ -19,11 +19,11 @@
   align-items: flex-start;
   gap: 0.75rem; /* 12px */
   padding: 0.75rem; /* 12px */
-  background-color: var(--bg-card, #f8fafc);
+  background-color: var(--bg-card);
   border-radius: 0.5rem; /* 8px */
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: var(--transition-colors), var(--transition-transform), var(--transition-shadow);
   margin-bottom: 0.75rem; /* 12px */
-  border: 1px solid var(--border-color, #e2e8f0);
+  border: 1px solid var(--border-color);
 }
 
 .activity-item:last-child {
@@ -31,9 +31,9 @@
 }
 
 .activity-item:hover {
-  background-color: var(--bg-hover, #f1f5f9);
+  background-color: var(--bg-tertiary);
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Avatar del usuario */
@@ -43,7 +43,7 @@
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-  border: 2px solid var(--border-color, #e2e8f0);
+  border: 2px solid var(--border-color);
 }
 
 /* Contenedor del contenido */
@@ -62,15 +62,15 @@
 
 /* Nombre del usuario */
 .activity-user {
-  font-weight: 600;
-  color: var(--text-primary, #1e293b);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
   margin-right: 0.25rem;
 }
 
 /* Tiempo de la actividad */
 .activity-time {
   font-size: 0.75rem; /* 12px */
-  color: var(--text-muted, #64748b);
+  color: var(--text-muted);
   white-space: nowrap;
   margin-left: auto;
   padding-left: 0.5rem;
@@ -79,15 +79,15 @@
 /* Mensaje de la actividad */
 .activity-message {
   font-size: 0.875rem; /* 14px */
-  color: var(--text-secondary, #475569);
+  color: var(--text-secondary);
   line-height: 1.4;
   word-break: break-word;
 }
 
 /* Indicador de actividad no leída */
 .activity-item.unread {
-  background-color: var(--color-primary-light, #e0f2fe);
-  border-left: 3px solid var(--color-primary, #0ea5e9);
+  background-color: var(--color-primary-light);
+  border-left: 3px solid var(--color-primary);
   padding-left: 0.75rem;
 }
 
@@ -97,24 +97,24 @@
   gap: 0.75rem; /* 12px */
   margin-top: 0.5rem;
   padding-top: 0.5rem;
-  border-top: 1px dashed var(--border-color, #e2e8f0);
+  border-top: 1px dashed var(--border-color);
 }
 
 /* Estilos para diferentes tipos de actividad */
 .activity-item.comment {
-  border-left: 3px solid var(--color-info, #0ea5e9);
+  border-left: 3px solid var(--color-info);
 }
 
 .activity-item.update {
-  border-left: 3px solid var(--color-success, #10b981);
+  border-left: 3px solid var(--color-success);
 }
 
 .activity-item.warning {
-  border-left: 3px solid var(--color-warning, #f59e0b);
+  border-left: 3px solid var(--color-warning);
 }
 
 .activity-item.error {
-  border-left: 3px solid var(--color-error, #ef4444);
+  border-left: 3px solid var(--color-error);
 }
 
 /* ===== FEED DE ACTIVIDAD LATERAL ===== */
@@ -133,56 +133,17 @@
   align-items: center;
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .activity-sidebar-title {
   font-size: 1.125rem; /* 18px */
-  font-weight: 600;
-  color: var(--text-primary, #1e293b);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
   margin: 0;
 }
 
-/* Modo oscuro */
-@media (prefers-color-scheme: dark) {
-  .activity-item {
-    background-color: var(--dark-bg-card, #1e293b);
-    border-color: var(--dark-border-color, #334155);
-  }
-  
-  .activity-item:hover {
-    background-color: var(--dark-bg-hover, #1e40af);
-  }
-  
-  .activity-user {
-    color: var(--dark-text-primary, #f1f5f9);
-  }
-  
-  .activity-message {
-    color: var(--dark-text-secondary, #94a3b8);
-  }
-  
-  .activity-time {
-    color: var(--dark-text-muted, #64748b);
-  }
-  
-  .activity-item.unread {
-    background-color: var(--dark-color-primary-light, #1e3a8a);
-    border-left-color: var(--color-primary, #60a5fa);
-  }
-  
-  .activity-actions {
-    border-top-color: var(--dark-border-color, #334155);
-  }
-  
-  .activity-sidebar-header {
-    border-bottom-color: var(--dark-border-color, #334155);
-  }
-  
-  .activity-sidebar-title {
-    color: var(--dark-text-primary, #f1f5f9);
-  }
-}
+/* Nota: Modo oscuro centralizado mediante tokens del tema */
 
 /* Responsive */
 @media (max-width: 1024px) {
@@ -197,7 +158,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 480px) {
   .activity-header {
     flex-direction: column;
     align-items: flex-start;

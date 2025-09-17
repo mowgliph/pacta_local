@@ -1,0 +1,171 @@
+/* ===================================================================
+   PACTA - Bootstrap Overrides
+   Archivo: _bootstrap-overrides.css
+   Descripción: Sobrescribe estilos de Bootstrap que causan conflictos
+   Versión: 1.0.0
+   Fecha: 2025-09-18
+=================================================================== */
+
+/* ===== RESET DE CONFLICTOS BOOTSTRAP ===== */
+
+/* Prevenir que Bootstrap interfiera con nuestro layout principal */
+.dashboard-container {
+    display: flex !important;
+    min-height: 100vh !important;
+    position: relative !important;
+    box-sizing: border-box !important;
+}
+
+/* Asegurar que el sidebar mantenga su posicionamiento */
+.sidebar {
+    position: fixed !important;
+    height: 100vh !important;
+    z-index: 1000 !important;
+    flex-shrink: 0 !important;
+}
+
+/* Prevenir que Bootstrap interfiera con el main-content */
+.main-content {
+    flex: 1 !important;
+    margin-left: var(--width-sidebar) !important;
+    width: calc(100% - var(--width-sidebar)) !important;
+    box-sizing: border-box !important;
+    min-height: 100vh !important;
+}
+
+/* ===== OVERRIDE DE CLASES BOOTSTRAP PROBLEMÁTICAS ===== */
+
+/* Prevenir que las utilidades de Bootstrap interfieran con nuestros componentes */
+.metrics-grid,
+.vertical-blocks,
+.content-row {
+    display: flex !important;
+}
+
+/* Asegurar que los componentes mantengan su comportamiento responsive */
+.block-section {
+    position: relative !important;
+    overflow: visible !important;
+}
+
+/* ===== MOBILE RESPONSIVE OVERRIDES ===== */
+
+@media (max-width: 768px) {
+    /* Ocultar sidebar en móviles por defecto */
+    .sidebar {
+        transform: translateX(-100%) !important;
+        width: var(--width-sidebar-mobile) !important;
+        max-width: 90vw !important;
+    }
+    
+    .sidebar.mobile-open {
+        transform: translateX(0) !important;
+    }
+    
+    /* Ajustar main-content para móviles */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 16px !important;
+    }
+    
+    /* Mostrar botón de menú móvil */
+    .mobile-menu-toggle {
+        display: flex !important;
+    }
+}
+
+/* ===== UTILITIES OVERRIDES ===== */
+
+/* Prevenir que las utilidades de display de Bootstrap interfieran */
+.d-flex {
+    display: flex !important;
+}
+
+.flex-column {
+    flex-direction: column !important;
+}
+
+.flex-row {
+    flex-direction: row !important;
+}
+
+/* ===== Z-INDEX FIXES ===== */
+
+/* Asegurar el orden correcto de capas */
+.mobile-overlay {
+    z-index: 999 !important;
+}
+
+.sidebar {
+    z-index: 1000 !important;
+}
+
+.mobile-menu-toggle {
+    z-index: 1001 !important;
+}
+
+/* Modal de Bootstrap debe estar por encima */
+.modal {
+    z-index: 1050 !important;
+}
+
+.modal-backdrop {
+    z-index: 1040 !important;
+}
+
+/* ===== POSITION FIXES ===== */
+
+/* Prevenir que Bootstrap interfiera con posicionamiento */
+.position-relative {
+    position: relative !important;
+}
+
+.position-absolute {
+    position: absolute !important;
+}
+
+.position-fixed {
+    position: fixed !important;
+}
+
+/* ===== CONTAINER OVERRIDES ===== */
+
+/* Asegurar que los contenedores de Bootstrap no interfieran */
+.container,
+.container-fluid {
+    max-width: none !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* ===== FORM OVERRIDES ===== */
+
+/* Mantener consistencia en formularios */
+.form-control {
+    border-radius: var(--radius-md) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.form-control:focus {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 0.2rem var(--color-primary-200) !important;
+}
+
+/* ===== BUTTON OVERRIDES ===== */
+
+/* Mantener consistencia en botones cuando se usan clases Bootstrap */
+.btn {
+    border-radius: var(--radius-md) !important;
+    transition: var(--transition-all) !important;
+}
+
+.btn-primary {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark) !important;
+    border-color: var(--color-primary-dark) !important;
+}

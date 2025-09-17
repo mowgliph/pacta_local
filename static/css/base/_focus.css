@@ -15,12 +15,7 @@
  * 4. Estilos específicos para diferentes componentes
  */
 
-:root {
-  --focus-ring-color: var(--primary-500, #3b82f6);
-  --focus-ring-offset: 2px;
-  --focus-ring-width: 3px;
-  --focus-ring-opacity: 0.5;
-}
+/* Variables centralizadas en _variables.css */
 
 /* Reset de estilos de enfoque por defecto */
 *:focus {
@@ -42,15 +37,15 @@
 .btn:focus-visible {
   --focus-ring-offset: 3px;
   box-shadow: 
-    0 0 0 var(--focus-ring-offset) white,
+    0 0 0 var(--focus-ring-offset) var(--bg-primary),
     0 0 0 calc(var(--focus-ring-offset) + 2px) var(--focus-ring-color);
 }
 
 /* Estilos para enlaces */
 a:focus-visible {
   text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 2px;
+  text-decoration-thickness: var(--border-width-2);
+  text-underline-offset: var(--border-width-2);
   text-decoration-color: var(--focus-ring-color);
 }
 
@@ -61,24 +56,25 @@ textarea:focus-visible,
 [role="textbox"]:focus-visible,
 [contenteditable]:focus-visible {
   border-color: var(--focus-ring-color);
-  box-shadow: 0 0 0 1px var(--focus-ring-color);
+  box-shadow: 0 0 0 var(--border-width-1) var(--focus-ring-color);
 }
 
 /* Estilos para elementos personalizados */
 .custom-control-input:focus-visible + .custom-control-label::before {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus-ring-color) 25%, transparent);
+  box-shadow: 0 0 0 var(--focus-ring-offset) color-mix(in srgb, var(--focus-ring-color) 25%, transparent);
 }
 
 /* Estilos para pestañas y navegación */
 [role="tab"]:focus-visible {
-  border-radius: 0.25rem;
-  box-shadow: 0 0 0 2px var(--focus-ring-color);
+  border-radius: var(--border-radius-sm);
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  border-bottom-color: transparent;
 }
 
 /* Estilos para modales y diálogos */
 [role="dialog"]:focus-visible {
-  outline: 2px solid var(--focus-ring-color);
-  outline-offset: 2px;
+  outline: var(--border-width-2) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
 }
 
 /* Estilos para elementos deshabilitados */
@@ -91,8 +87,8 @@ textarea:focus-visible,
 /* Soporte para navegadores que no soportan :focus-visible */
 @supports not selector(:focus-visible) {
   *:focus {
-    outline: 2px solid var(--focus-ring-color);
-    outline-offset: 2px;
+    outline: var(--border-width-2) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
   }
   
   /* Mejorar contraste en modo oscuro */
@@ -106,8 +102,8 @@ textarea:focus-visible,
 /* Estilos para modo de alto contraste */
 @media (forced-colors: active) {
   :focus-visible {
-    outline: 3px solid transparent;
-    outline-offset: 2px;
+    outline: var(--border-width-3) solid transparent;
+    outline-offset: var(--focus-ring-offset);
     forced-color-adjust: none;
     background-color: Highlight !important;
     color: HighlightText !important;
@@ -124,19 +120,19 @@ textarea:focus-visible,
   --focus-ring-offset: 2px;
   --focus-ring-width: 2px;
   --focus-ring-opacity: 0.5;
-  
-  &:focus-visible {
-    outline: none;
-    box-shadow: 
-      0 0 0 var(--focus-ring-width) 
-      color-mix(in srgb, var(--focus-ring-color) var(--focus-ring-opacity), transparent);
-  }
+}
+
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 
+    0 0 0 var(--focus-ring-width) 
+    color-mix(in srgb, var(--focus-ring-color) var(--focus-ring-opacity), transparent);
 }
 
 /* Estilos específicos para la aplicación */
 .btn-icon:focus-visible {
   border-radius: 50%;
-  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--focus-ring-color);
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--color-white), 0 0 0 calc(var(--focus-ring-width) + var(--focus-ring-offset)) var(--focus-ring-color);
 }
 
 /* Mejoras para elementos interactivos */
@@ -153,10 +149,10 @@ button:not(:disabled):focus-visible,
   top: 1rem;
   left: 1rem;
   z-index: 9999;
-  padding: 0.75rem 1.5rem;
+  padding: var(--spacing-3) var(--spacing-6);
   background: var(--focus-ring-color);
   color: white;
-  border-radius: 0.25rem;
+  border-radius: var(--border-radius-sm);
   text-decoration: none;
 }
 
@@ -172,18 +168,16 @@ button:not(:disabled):focus-visible,
 .form-select:focus-visible,
 .form-check-input:focus-visible {
   border-color: var(--focus-ring-color);
-  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--focus-ring-color) 25%, transparent);
+  box-shadow: 0 0 0 var(--focus-ring-offset) color-mix(in srgb, var(--focus-ring-color) 25%, transparent);
 }
 
 /* Mejoras para elementos de navegación */
 .nav-link:focus-visible {
-  border-radius: 0.25rem;
+  border-radius: var(--border-radius-sm);
 }
 
 /* Ajustes para elementos con pestañas */
-[role="tab"]:focus-visible {
-  border-bottom-color: transparent;
-}
+
 
 [role="tabpanel"]:focus-visible {
   border-color: var(--focus-ring-color);
@@ -208,8 +202,8 @@ button:not(:disabled):focus-visible,
 /* Mejoras para tooltips y popovers */
 .tooltip:focus-visible,
 .popover:focus-visible {
-  outline: 2px solid var(--focus-ring-color);
-  outline-offset: 2px;
+  outline: var(--border-width-2) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
 }
 
 /* Ajustes para acordeones */

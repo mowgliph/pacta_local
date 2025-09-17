@@ -250,7 +250,7 @@
 @media (max-width: 1023px) {
   .sidebar {
     transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
+    transition: var(--transition-transform);
   }
   
   .sidebar.active {
@@ -317,25 +317,7 @@
 }
 
 /* Clases para espaciado responsivo */
-:root {
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
-  --spacing-3xl: 4rem;
-}
-
-@media (min-width: 768px) {
-  :root {
-    --spacing-sm: 0.75rem;
-    --spacing-md: 1.25rem;
-    --spacing-lg: 2rem;
-    --spacing-xl: 3rem;
-    --spacing-2xl: 4rem;
-    --spacing-3xl: 6rem;
-  }
-}
+/* Nota: El espaciado responsivo se gestiona en base/_variables.css. Evitamos redefinir :root aquí. */
 
 /* ===== IMPRESIÓN ===== */
 @media print {
@@ -356,7 +338,7 @@
   
   .card {
     box-shadow: none;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border-light);
     page-break-inside: avoid;
   }
 }

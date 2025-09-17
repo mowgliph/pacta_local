@@ -8,23 +8,23 @@
 .persona-tag {
     display: inline-flex;
     align-items: center;
-    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-    border: 1px solid #10b981;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
     border-radius: 20px;
     padding: 6px 12px;
     margin: 3px;
     font-size: 12px;
-    color: #059669;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    box-shadow: 0 1px 3px rgba(16, 185, 129, 0.1);
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-medium);
+    transition: var(--transition-all);
+    box-shadow: var(--shadow-sm);
 }
 
 .persona-tag:hover {
-    background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%);
-    border-color: #059669;
+    background: var(--bg-tertiary);
+    border-color: var(--border-medium);
     transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);
+    box-shadow: var(--shadow-md);
 }
 
 .persona-tag .remove-persona {
@@ -32,46 +32,46 @@
     cursor: pointer;
     color: #059669;
     font-weight: bold;
-    transition: color 0.2s ease;
+    transition: var(--transition-colors);
 }
 
 .persona-tag .remove-persona:hover {
-    color: #dc2626;
+    color: var(--color-error);
 }
 
 /* ===== VARIANTE PARA PROVEEDORES ===== */
 .proveedores-page .persona-tag {
-    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-    border-color: #8b5cf6;
-    color: #6b46c1;
-    box-shadow: 0 1px 3px rgba(139, 92, 246, 0.1);
+    background: var(--bg-secondary);
+    border-color: var(--border-light);
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-sm);
 }
 
 .proveedores-page .persona-tag:hover {
-    background: linear-gradient(135deg, #ddd6fe 0%, #e9d5ff 100%);
-    border-color: #7c3aed;
-    box-shadow: 0 2px 6px rgba(139, 92, 246, 0.2);
+    background: var(--bg-tertiary);
+    border-color: var(--border-medium);
+    box-shadow: var(--shadow-md);
 }
 
 .proveedores-page .persona-tag .remove-persona {
     margin-left: 8px;
-    color: #ef4444;
+    color: var(--color-error);
     padding: 2px 4px;
     border-radius: 50%;
 }
 
 .proveedores-page .persona-tag .remove-persona:hover {
-    color: #dc2626;
-    background: rgba(239, 68, 68, 0.1);
+    color: var(--color-error-dark);
+    background: color-mix(in srgb, var(--color-error) 10%, transparent);
 }
 
 /* ===== ESTILOS PARA PERSONAS RECIENTES ===== */
 .persona-item {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
     padding: 16px;
-    transition: all 0.3s ease;
+    transition: var(--transition-all);
     position: relative;
     overflow: hidden;
 }
@@ -83,15 +83,15 @@
     left: 0;
     width: 4px;
     height: 100%;
-    background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
-    transition: width 0.3s ease;
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+    transition: width var(--duration-normal) var(--ease-in-out);
 }
 
 .persona-item:hover {
-    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-    border-color: #8b5cf6;
+    background: var(--bg-secondary);
+    border-color: var(--border-medium);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+    box-shadow: var(--shadow-lg);
 }
 
 .persona-item:hover::before {
@@ -110,15 +110,15 @@
 }
 
 .persona-name {
-    font-weight: 600;
-    color: #1e293b;
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
     font-size: 16px;
     margin-bottom: 4px;
     transition: color 0.2s ease;
 }
 
 .persona-item:hover .persona-name {
-    color: #8b5cf6;
+    color: var(--color-secondary);
 }
 
 .persona-details {
@@ -126,7 +126,7 @@
     flex-wrap: wrap;
     gap: 16px;
     font-size: 14px;
-    color: #64748b;
+    color: var(--text-muted);
 }
 
 .persona-details span {
@@ -137,8 +137,8 @@
 
 .persona-details span i {
     margin-right: 6px;
-    color: #8b5cf6;
-    transition: transform 0.2s ease;
+    color: var(--color-secondary);
+    transition: transform var(--duration-fast) var(--ease-out);
 }
 
 .persona-item:hover .persona-details span i {
@@ -152,24 +152,25 @@
 }
 
 .persona-action-btn {
-    background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
     border: none;
-    color: white;
+    color: var(--text-on-primary);
     padding: 8px 12px;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     font-size: 12px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: var(--transition-all);
     display: flex;
     align-items: center;
     gap: 4px;
-    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.2);
+    box-shadow: var(--shadow-sm);
 }
 
 .persona-action-btn:hover {
-    background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+    background: linear-gradient(135deg, var(--color-secondary-dark) 0%, var(--color-primary-dark) 100%);
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(139, 92, 246, 0.3);
+    box-shadow: var(--shadow-md);
+    color: var(--text-on-primary);
 }
 
 .persona-action-btn i {
@@ -179,16 +180,16 @@
 /* ===== DROPDOWN MENUS ===== */
 .dropdown-menu.show {
     display: block !important;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    background: white;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    background: var(--bg-primary);
 }
 
 .dropdown-item {
     padding: 10px 16px;
-    transition: all 0.2s ease;
-    border-bottom: 1px solid #f1f5f9;
+    transition: var(--transition-all);
+    border-bottom: 1px solid var(--border-light);
 }
 
 .dropdown-item:last-child {
@@ -196,8 +197,8 @@
 }
 
 .dropdown-item:hover {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    color: #8b5cf6;
+    background: var(--bg-secondary);
+    color: var(--color-secondary);
     cursor: pointer;
 }
 
@@ -206,8 +207,8 @@
     text-align: center;
     padding: 40px 20px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border: 2px dashed #e2e8f0;
+    background: var(--bg-secondary);
+    border: 2px dashed var(--border-light);
 }
 
 .empty-message i, .loading-message i, .error-message i {
@@ -218,22 +219,19 @@
 }
 
 .loading-message i {
-    color: #8b5cf6;
-    animation: spin 1s linear infinite;
+    color: var(--color-secondary);
+    animation: spin 1s var(--ease-linear) infinite;
 }
 
 .error-message i {
-    color: #ef4444;
+    color: var(--color-error);
 }
 
 .empty-message i {
-    color: #64748b;
+    color: var(--text-muted);
 }
 
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
+/* Nota: se usa @keyframes spin global definido en base/_animations.css */
 
 /* ===== BADGES DE PERSONA ===== */
 .persona-badge {
@@ -248,74 +246,74 @@
 }
 
 .persona-badge.principal {
-    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-    color: white;
+    background: var(--gradient-warning);
+    color: var(--text-on-primary);
 }
 
 .persona-badge.secundaria {
-    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-    color: white;
+    background: var(--gradient-slate);
+    color: var(--text-on-primary);
 }
 
 .persona-badge.activo {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
+    background: var(--gradient-success);
+    color: var(--text-on-primary);
 }
 
 .persona-badge.inactivo {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--color-error) 0%, var(--color-error-dark) 100%);
+    color: var(--text-on-primary);
 }
 
 /* ===== VARIANTES DE PERSONA TAGS ===== */
 .persona-tag.primary {
-    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-    border-color: #3b82f6;
-    color: #1d4ed8;
+    background: var(--bg-secondary);
+    border-color: var(--color-primary);
+    color: var(--color-primary-dark);
 }
 
 .persona-tag.primary:hover {
-    background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
-    border-color: #1d4ed8;
+    background: var(--bg-tertiary);
+    border-color: var(--color-primary-dark);
 }
 
 .persona-tag.secondary {
-    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-    border-color: #64748b;
-    color: #475569;
+    background: var(--bg-secondary);
+    border-color: var(--border-light);
+    color: var(--text-secondary);
 }
 
 .persona-tag.secondary:hover {
-    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
-    border-color: #475569;
+    background: var(--bg-tertiary);
+    border-color: var(--border-medium);
 }
 
 .persona-tag.success {
-    background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%);
-    border-color: #10b981;
-    color: #059669;
+    background: var(--bg-secondary);
+    border-color: var(--color-success);
+    color: var(--color-success-dark);
 }
 
 .persona-tag.warning {
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-    border-color: #f59e0b;
-    color: #d97706;
+    background: var(--bg-secondary);
+    border-color: var(--color-warning);
+    color: var(--color-warning-dark);
 }
 
 .persona-tag.warning:hover {
-    background: linear-gradient(135deg, #fde68a 0%, #fcd34d 100%);
-    border-color: #d97706;
+    background: var(--bg-tertiary);
+    border-color: var(--color-warning-dark);
 }
 
 .persona-tag.danger {
-    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-    border-color: #ef4444;
-    color: #dc2626;
+    background: var(--bg-secondary);
+    border-color: var(--color-error);
+    color: var(--color-error-dark);
 }
 
 .persona-tag.danger:hover {
-    background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
-    border-color: #dc2626;
+    background: var(--bg-tertiary);
+    border-color: var(--color-error-dark);
 }
 
 /* ===== TAMAÑOS DE PERSONA TAGS ===== */
@@ -335,13 +333,13 @@
 .persona-tags-container {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-2, 4px);
+    gap: var(--spacing-2);
     align-items: center;
     margin-top: 8px;
     padding: 8px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    background-color: #f8fafc;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-secondary);
     min-height: 40px;
     align-content: flex-start;
 }
@@ -362,7 +360,7 @@
 .persona-tags-container.empty {
     justify-content: center;
     align-items: center;
-    color: #6b7280;
+    color: var(--text-muted);
     font-style: italic;
     font-size: 12px;
 }

@@ -37,12 +37,13 @@
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
     overflow: hidden;
-    transition: all 0.2s ease;
+    transition: var(--transition-all);
 }
 
 .block-section:hover {
     box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
+    /* Desactivar desplazamiento vertical en hover para evitar superposición */
+    transform: none;
 }
 
 /* Encabezado del bloque */
@@ -169,7 +170,7 @@
     }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .grid-cols-2,
     .grid-cols-3,
     .grid-cols-4 {
@@ -195,7 +196,7 @@
     display: none;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .hidden-sm {
         display: none !important;
     }

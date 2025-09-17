@@ -2,9 +2,9 @@
    PACTA - Archivo Principal de Estilos
    Archivo: style.css
    Descripción: Punto de entrada único que importa todos los módulos CSS
-   Versión: 4.0.0
-   Fecha: 2025-09-16
-   Última actualización: Limpieza de estilos duplicados y reorganización
+   Versión: 4.1.0
+   Fecha: 2025-09-17
+   Última actualización: Refactorización y optimización de estilos globales
    
    NOTA: Este archivo solo debe contener importaciones y estilos globales.
    Los estilos específicos de componentes deben estar en sus respectivos archivos.
@@ -18,6 +18,9 @@
 /* 2. Reset y normalización - Base para todos los elementos */
 @import url('./base/_reset.css');
 
+/* 2.1. Bootstrap overrides - Debe cargarse después del reset */
+@import url('./base/_bootstrap-overrides.css');
+
 /* 3. Documento y accesibilidad - Estilos base del documento y accesibilidad */
 @import url('./base/_document.css');
 @import url('./base/_accessibility.css');
@@ -26,13 +29,18 @@
 @import url('./base/_typography.css');
 
 /* 5. Utilidades base - Clases de ayuda generales */
-@import url('./base/_utilities.css');
+@import url('./utilities/_utilities.css');
+@import url('./utilities/_display-optimizations.css');
+@import url('./utilities/_orientation.css');
+
+@import url('./utilities/_responsive-utilities.css');
 
 /* 6. Layout - Estructura principal */
-@import url('./layout/header.css');
 @import url('./layout/sidebar.css');
 @import url('./layout/_breakpoints.css');
+@import url('./layout/_responsive.css');
 @import url('./components/_layout.css');
+@import url('./components/_mobile-navigation.css');
 
 /* 6. Componentes reutilizables - Ordenados por especificidad */
 @import url('./components/_content-blocks.css');
@@ -44,17 +52,27 @@
 @import url('./components/_table-utilities.css');
 @import url('./components/_orders-table.css');
 @import url('./components/_status-badges.css');
+@import url('./components/_contracts.css');
 @import url('./components/_contracts-mobile.css');
 @import url('./components/_tables-responsive.css');
 @import url('./components/_contracts-table.css');
 @import url('./components/_chart-cards.css');
 @import url('./components/_donut-charts.css');
+@import url('./components/_dropdowns.css');
+@import url('./components/_footer.css');
+@import url('./components/_info-cards.css');
+@import url('./components/_media.css');
 @import url('./components/_avatars.css');
 @import url('./components/_header.css');
 @import url('./components/_user-menu.css');
 @import url('./components/_metrics.css');
 @import url('./components/_blocks.css');
 @import url('./components/_charts.css');
+@import url('./components/_dropdowns.css');
+@import url('./components/_footer.css');
+@import url('./components/_info-cards.css');
+@import url('./components/_media.css');
+@import url('./components/_notifications.css');
 @import url('./components/toast.css');
 @import url('./components/modals/user_modal.css');
 @import url('./components/modals/_notifications.css');
@@ -62,6 +80,7 @@
 @import url('./components/quick_actions.css');
 @import url('./components/persona_tags.css');
 @import url('./components/providers-clients-block.css');
+@import url('./components/_activity-feed.css');
 
 /* 7. Estilos específicos por página */
 @import url('./pages/login.css');
@@ -80,16 +99,6 @@
 
 /* ===== ESTILOS GLOBALES ===== */
 
-/**
- * Estilos globales para elementos HTML básicos.
- * Los estilos específicos de componentes deben estar en sus respectivos archivos.
- */
-
-/* Document and accessibility styles have been moved to:
- * - base/_document.css
- * - base/_accessibility.css
- */
-
 :focus:not(:focus-visible) {
   outline: none;
 }
@@ -99,24 +108,12 @@
   outline-offset: 2px;
 }
 
-/* Preferencia de movimiento reducido */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
 /* Alto contraste */
 @media (prefers-contrast: high) {
   :root {
-    --border-light: #000000;
-    --border-medium: #000000;
-    --border-dark: #000000;
+    --border-light: var(--color-gray-900);
+    --border-medium: var(--color-gray-900);
+    --border-dark: var(--color-gray-900);
   }
 }
 
@@ -185,7 +182,7 @@
   padding: var(--spacing-6);
   text-align: center;
   background-color: var(--color-error-light);
-  border: 1px solid var(--color-error);
+  border: var(--border-width-1) solid var(--color-error);
   border-radius: var(--radius-lg);
   margin: var(--spacing-4);
 }
@@ -202,8 +199,8 @@
 
 /* Estilos para elementos de depuración (solo en desarrollo) */
 .debug {
-  border: 2px dashed #ff0000;
-  background-color: rgba(255, 0, 0, 0.1);
+  border: var(--border-width-2) dashed var(--color-error);
+  background-color: var(--color-error-50);
   position: relative;
 }
 
@@ -212,12 +209,12 @@
   position: absolute;
   top: -1px;
   left: -1px;
-  background: #ff0000;
-  color: white;
-  font-size: 10px;
-  padding: 2px 4px;
-  font-weight: bold;
-  line-height: 1;
+  background: var(--color-error);
+  color: var(--color-white);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-1) var(--spacing-2);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
 }
 
 /* Ocultar elementos de depuración en producción */
@@ -241,8 +238,8 @@
 }
 
 /* Clases para espaciado */
-.p-0 { padding: 0 !important; }
-.m-0 { margin: 0 !important; }
+.p-0 { padding: var(--spacing-0) !important; }
+.m-0 { margin: var(--spacing-0) !important; }
 
 /* Clases para flexbox */
 .d-flex { display: flex !important; }
@@ -275,112 +272,16 @@
   border-radius: 50%;
   border-right-color: transparent;
   border-top-color: transparent;
-  animation: spin 0.6s linear infinite;
+  animation: spin var(--duration-normal) linear infinite;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-/* ===== ESTILOS PARA IMPRESIÓN ===== */
-
-@media print {
-  /* Ocultar elementos no necesarios para impresión */
-  .no-print,
-  .btn,
-  .form-control,
-  nav,
-  .sidebar,
-  .modal,
-  .tooltip,
-  .dropdown {
-    display: none !important;
-  }
-  
-  /* Optimizar colores para impresión */
-  * {
-    color: #000 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-  }
-  
-  /* Optimizar enlaces para impresión */
-  a,
-  a:visited {
-    text-decoration: underline;
-  }
-  
-  a[href]:after {
-    content: " (" attr(href) ")";
-  }
-  
-  /* Optimizar imágenes para impresión */
-  img {
-    max-width: 100% !important;
-    height: auto !important;
-  }
-  
-  /* Optimizar tablas para impresión */
-  table {
-    border-collapse: collapse !important;
-  }
-  
-  th,
-  td {
-    border: 1px solid #000 !important;
-  }
-  
-  /* Evitar saltos de página en elementos importantes */
-  .card,
-  .table,
-  .form-group {
-    page-break-inside: avoid;
-  }
-  
-  /* Configurar márgenes de página */
-  @page {
-    margin: 2cm;
-  }
-}
-
-/* ===== ESTILOS MOVIDOS A ARCHIVOS DE COMPONENTES ===== */
-/* Dropdown and user menu styles have been moved to components/_dropdowns.css and components/_user-menu.css */
-/* All metrics styles have been moved to components/_metrics.css */
-/* Layout styles have been moved to components/_layout.css */
-/* Content blocks styles have been moved to components/_content-blocks.css */
-/* Chart cards styles have been moved to components/_chart-cards.css */
-/* Responsive design styles have been moved to layout/_breakpoints.css */
-/* Responsive tables styles have been moved to layout/_tables-responsive.css */
-
-/* Component styles have been moved to their respective files */
-/* Check the components/ and base/ directories for specific styles */
-
 .metric-card,
 .chart-card,
 .table-card,
 .donut-chart {
-    animation: fadeInUp 0.5s ease-out;
+    animation: fadeInUp var(--duration-normal) ease-out;
 }
-
-/* Form styles have been moved to components/_forms.css */
-/* Status badge styles have been moved to components/_status-badges.css */
-/* Orders table responsive styles have been moved to components/_orders-table.css */
-/* Table styles have been moved to components/_tables.css */
-/* Button styles have been moved to components/_buttons.css */
-
-
-/* Media styles have been moved to components/_media.css */
-/* Chart styles have been moved to components/_charts.css */
-/* Contract styles have been moved to components/_contracts.css */
-/* Activity feed styles have been moved to components/_activity-feed.css */
-/* Responsive utilities have been moved to utilities/_responsive-utilities.css */
-/* Orientation utilities have been moved to utilities/_orientation.css */
-/* Mobile navigation and page title styles have been moved to components/_mobile-navigation.css */
-/* Display optimizations have been moved to utilities/_display-optimizations.css */
-/* Footer styles have been moved to components/_footer.css */
-/* Print styles have been moved to utilities/_print.css */
-/* Notification styles have been moved to components/_notifications.css */
-/* Provider, stat, and responsible card styles have been moved to components/_contracts.css */
-/* Info card styles have been moved to components/_info-cards.css */
-/* Responsive styles have been moved to their respective component files */

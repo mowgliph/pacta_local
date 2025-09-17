@@ -15,8 +15,9 @@
   background: var(--bg-card);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
-  overflow: hidden;
-  transition: all 0.2s ease;
+  /* Permitimos que las sombras de los hijos no se recorten para evitar sensación de solapamiento */
+  overflow: visible;
+  transition: var(--transition-all);
   position: relative;
 }
 
@@ -26,12 +27,13 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
-  transition: all 0.2s ease;
+  transition: var(--transition-all);
 }
 
 .block-section:hover {
   box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
+  /* Evitar solapamientos al hacer hover */
+  transform: none;
 }
 
 /* Encabezado del bloque */
@@ -113,7 +115,7 @@
 
 .block-section.primary .block-header,
 .block-section.primary .block-footer {
-  background-color: rgba(var(--color-primary-rgb), 0.05);
+  background-color: var(--color-primary-50);
 }
 
 .block-section.success {
@@ -122,7 +124,7 @@
 
 .block-section.success .block-header,
 .block-section.success .block-footer {
-  background-color: rgba(var(--color-success-rgb), 0.05);
+  background-color: var(--color-success-bg);
 }
 
 .block-section.warning {
@@ -131,16 +133,16 @@
 
 .block-section.warning .block-header,
 .block-section.warning .block-footer {
-  background-color: rgba(var(--color-warning-rgb), 0.05);
+  background-color: var(--color-warning-bg);
 }
 
 .block-section.danger {
-  border-left: 4px solid var(--color-danger);
+  border-left: 4px solid var(--color-error);
 }
 
 .block-section.danger .block-header,
 .block-section.danger .block-footer {
-  background-color: rgba(var(--color-danger-rgb), 0.05);
+  background-color: var(--color-error-bg);
 }
 
 /* Bloques en horizontal */
@@ -156,25 +158,14 @@
   max-height: 400px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--color-primary-light) transparent;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
-.scrollable-block::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.scrollable-block::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.scrollable-block::-webkit-scrollbar-thumb {
-  background-color: var(--color-primary-light);
-  border-radius: 3px;
-}
-
-.scrollable-block::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-primary);
+/* Personalización de scrollbar: definir tokens a nivel de bloque */
+.scrollable-block {
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: var(--color-primary-light);
+  --scrollbar-thumb-hover: var(--color-primary);
 }
 
 /* Bloque colapsable */
@@ -193,7 +184,7 @@
   right: 1.5rem;
   top: 50%;
   transform: translateY(-50%);
-  transition: transform 0.3s ease;
+  transition: var(--transition-transform);
 }
 
 .collapsible-block.collapsed .block-header::after {
@@ -201,7 +192,7 @@
 }
 
 .collapsible-block .block-body {
-  transition: all 0.3s ease;
+  transition: var(--transition-all);
   overflow: hidden;
 }
 
@@ -368,14 +359,10 @@
   z-index: 10;
 }
 
-/* Animaciones */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+/* Nota: Animación fadeIn vive en base/_animations.css */
 
 /* Responsive */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .block-header,
   .block-body,
   .block-footer {

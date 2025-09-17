@@ -10,7 +10,7 @@
  * 1. Ajustes para tablas en dispositivos móviles
  * 2. Mejora la legibilidad en pantallas pequeñas
  */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   /* Estilos para tablas */
   .table th,
   .table td {
@@ -109,19 +109,7 @@
 /**
  * Modo oscuro para móviles
  */
-@media (prefers-color-scheme: dark) and (max-width: 767px) {
-  .activity-item {
-    background-color: var(--dark-bg-secondary, #1e293b);
-  }
-  
-  .customer-info {
-    color: var(--dark-text-primary, #f1f5f9);
-  }
-  
-  .activity-subtitle {
-    color: var(--dark-text-muted, #94a3b8);
-  }
-}
+/* Nota: Modo oscuro gestionado por tokens del tema (sin media queries locales) */
 
 /**
  * Optimizaciones para dispositivos táctiles
@@ -140,7 +128,7 @@
 /**
  * Orientación horizontal en móviles
  */
-@media (max-width: 767px) and (orientation: landscape) {
+@media (max-width: 768px) and (orientation: landscape) {
   .donut-chart {
     min-width: 6.25rem; /* 100px */
   }

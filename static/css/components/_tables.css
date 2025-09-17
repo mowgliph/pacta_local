@@ -13,14 +13,14 @@ table {
   margin-bottom: 1.5rem;
   font-size: 0.875rem;
   line-height: 1.5;
-  color: var(--text-primary, #1e293b);
-  background-color: var(--bg-primary, #ffffff);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
 }
 
 th, td {
   padding: 0.75rem 1rem;
   text-align: left;
-  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  border-bottom: 1px solid var(--border-color);
 }
 
 th {
@@ -28,8 +28,8 @@ th {
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.05em;
-  color: var(--text-secondary, #64748b);
-  background-color: var(--bg-secondary, #f8fafc);
+  color: var(--text-secondary);
+  background-color: var(--bg-secondary);
 }
 
 tbody tr:last-child td {
@@ -38,17 +38,17 @@ tbody tr:last-child td {
 
 /* Variantes de tablas */
 .table-bordered {
-  border: 1px solid var(--border-color, #e2e8f0);
+  border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   overflow: hidden;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-  background-color: var(--bg-secondary, #f8fafc);
+  background-color: var(--bg-secondary);
 }
 
 .table-hover tbody tr:hover {
-  background-color: var(--bg-hover, #f1f5f9);
+  background-color: var(--bg-tertiary);
 }
 
 /* Tabla responsiva */
@@ -78,13 +78,13 @@ tbody tr:last-child td {
   }
   
   .table-responsive tr:not(.orders-table tr) {
-    border-bottom: 1px solid var(--border-color, #e2e8f0);
+    border-bottom: 1px solid var(--border-color);
     display: block;
     margin-bottom: 1rem;
   }
   
   .table-responsive td:not(.orders-table td) {
-    border-bottom: 1px solid var(--border-color, #e2e8f0);
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
     text-align: right;
@@ -103,7 +103,7 @@ tbody tr:last-child td {
     transform: translateY(-50%);
     white-space: nowrap;
     width: 45%;
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary);
   }
   
   .table-responsive td:not(.orders-table td):last-child {
@@ -111,42 +111,7 @@ tbody tr:last-child td {
   }
 }
 
-/* Modo oscuro */
-@media (prefers-color-scheme: dark) {
-  table {
-    color: var(--dark-text-primary, #f1f5f9);
-    background-color: var(--dark-bg-primary, #0f172a);
-  }
-  
-  th, td {
-    border-bottom-color: var(--dark-border-color, #334155);
-  }
-  
-  th {
-    color: var(--dark-text-secondary, #94a3b8);
-    background-color: var(--dark-bg-secondary, #1e293b);
-  }
-  
-  .table-striped tbody tr:nth-of-type(odd) {
-    background-color: var(--dark-bg-secondary, #1e293b);
-  }
-  
-  .table-hover tbody tr:hover {
-    background-color: var(--dark-bg-hover, #1e40af);
-  }
-  
-  .table-responsive tr:not(.orders-table tr) {
-    border-bottom-color: var(--dark-border-color, #334155);
-  }
-  
-  .table-responsive td:not(.orders-table td) {
-    border-bottom-color: var(--dark-border-color, #334155);
-  }
-  
-  .table-responsive td:not(.orders-table td)::before {
-    color: var(--dark-text-secondary, #94a3b8);
-  }
-}
+/* Nota: Modo oscuro centralizado mediante tokens del tema (p. ej., .theme-dark) */
 
 /* ===== TABLA BASE ===== */
 
@@ -443,7 +408,7 @@ tbody tr:last-child td {
   overflow-x: auto;
 }
 
-@media (max-width: 575px) {
+@media (max-width: 480px) {
   .table-responsive-sm {
     overflow-x: auto;
   }
@@ -455,7 +420,7 @@ tbody tr:last-child td {
   overflow-x: auto;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .table-responsive-md {
     overflow-x: auto;
   }
@@ -467,7 +432,7 @@ tbody tr:last-child td {
   overflow-x: auto;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1024px) {
   .table-responsive-lg {
     overflow-x: auto;
   }
@@ -639,15 +604,11 @@ tbody tr:last-child td {
   border: 3px solid var(--color-primary-light);
   border-top-color: var(--color-primary);
   border-radius: 50%;
-  animation: table-spin 1s linear infinite;
+  animation: spin 1s var(--ease-linear) infinite;
   z-index: calc(var(--z-modal) + 1);
 }
 
-@keyframes table-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Nota: se usa @keyframes spin global definido en base/_animations.css */
 
 /* Tabla vacía */
 .table-empty {
@@ -760,19 +721,7 @@ tbody tr:last-child td {
 
 /* ===== MEJORAS DE ACCESIBILIDAD ===== */
 
-/* Reducir movimiento para usuarios que lo prefieren */
-@media (prefers-reduced-motion: reduce) {
-  .table-hover tbody tr,
-  .table-selectable tbody tr,
-  .table-sortable th,
-  .table-expandable .expand-toggle::before {
-    transition: none;
-  }
-  
-  .table-loading::before {
-    animation: none;
-  }
-}
+/* Nota: Manejo de prefers-reduced-motion centralizado en base/_animations.css */
 
 /* Mejoras para modo de alto contraste */
 @media (prefers-contrast: high) {
@@ -796,24 +745,7 @@ tbody tr:last-child td {
 
 /* ===== UTILIDADES ADICIONALES ===== */
 
-/* Tabla con scroll horizontal personalizado */
-.table-scroll::-webkit-scrollbar {
-  height: 8px;
-}
-
-.table-scroll::-webkit-scrollbar-track {
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-sm);
-}
-
-.table-scroll::-webkit-scrollbar-thumb {
-  background-color: var(--border-medium);
-  border-radius: var(--radius-sm);
-}
-
-.table-scroll::-webkit-scrollbar-thumb:hover {
-  background-color: var(--border-dark);
-}
+/* Nota: Personalización de scrollbar centralizada en base/_scrollbar.css */
 
 /* Tabla con altura fija */
 .table-fixed-height {

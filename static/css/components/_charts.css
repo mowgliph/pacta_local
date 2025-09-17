@@ -113,16 +113,7 @@
     }
 }
 
-/* Modo oscuro */
-@media (prefers-color-scheme: dark) {
-    .donut-chart-value {
-        color: var(--dark-text-primary, #f1f5f9);
-    }
-    
-    .donut-chart-label {
-        color: var(--dark-text-secondary, #94a3b8);
-    }
-}
+/* Nota: Modo oscuro gestionado por tokens del tema */
 
 /* Contenedor del gráfico */
 .chart-wrapper {
@@ -132,7 +123,7 @@
     padding: 1.5rem;
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border-color);
-    transition: all 0.3s ease;
+    transition: var(--transition-all);
 }
 
 .chart-wrapper:hover {

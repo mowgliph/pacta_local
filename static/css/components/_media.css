@@ -74,16 +74,11 @@ figure img {
 
 figcaption {
   font-size: 0.875rem;
-  color: var(--text-secondary, #64748b);
+  color: var(--text-secondary);
   font-style: italic;
 }
 
-/* Modo oscuro */
-@media (prefers-color-scheme: dark) {
-  figcaption {
-    color: var(--dark-text-secondary, #94a3b8);
-  }
-}
+/* Nota: Modo oscuro gestionado por tokens de tema */
 
 /* Optimización para imágenes de fondo */
 .bg-image {

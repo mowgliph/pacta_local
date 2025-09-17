@@ -597,20 +597,7 @@
 
 /* ===== MEJORAS DE ACCESIBILIDAD ===== */
 
-/* Reducir movimiento para usuarios que lo prefieren */
-@media (prefers-reduced-motion: reduce) {
-  .card,
-  .card-clickable,
-  .card-selectable {
-    transition: none;
-  }
-  
-  .card:hover,
-  .card-clickable:hover,
-  .card-clickable:active {
-    transform: none;
-  }
-}
+/* Nota: Reduced motion centralizado en base/_animations.css */
 
 /* Mejoras para modo de alto contraste */
 @media (prefers-contrast: high) {
@@ -660,15 +647,10 @@
   border: 3px solid var(--color-primary-light);
   border-top-color: var(--color-primary);
   border-radius: 50%;
-  animation: card-spin 1s linear infinite;
+  animation: spin 1s var(--ease-linear) infinite;
   z-index: 1;
 }
-
-@keyframes card-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Nota: se usa @keyframes spin definido en base/_animations.css */
 
 /* Tarjeta compacta */
 .card-compact {

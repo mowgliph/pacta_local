@@ -1,10 +1,11 @@
-/* ===================================================================
-   Utilidades: Orientación
-   Archivo: _orientation.css
-   Descripción: Utilidades para manejar diferentes orientaciones de pantalla
-   Versión: 1.0.0
-   Última actualización: 2025-09-17
-=================================================================== */
+/*
+ * Project: Pacta
+ * File: _orientation.css
+ * Version: 1.1.0
+ * Date: 2025-09-17
+ * Last Update: Refactorización y optimización de estilos de orientación.
+ * Description: Contiene estilos para manejar la orientación del dispositivo en el proyecto Pacta.
+ */
 
 /* ===== ESTILOS PARA MODO PAISAJE ===== */
 
@@ -19,29 +20,29 @@
   /* Ocultar barra lateral para ganar espacio */
   .sidebar {
     transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
+    transition: transform var(--duration-normal) var(--ease-linear);
   }
   
   /* Ajustar el contenido principal */
   .main-content {
     margin-left: 0;
-    padding: 0.75rem;
+    padding: var(--spacing-3);
   }
   
   /* Ajustar altura de la barra de navegación */
   .navbar {
-    min-height: 3rem;
-    padding: 0.5rem 1rem;
+    min-height: var(--height-navbar-sm);
+    padding: var(--spacing-2) var(--spacing-4);
   }
   
   /* Reducir el tamaño de la fuente en tablas */
   .table-responsive {
-    font-size: 0.8125rem; /* 13px */
+    font-size: var(--font-size-xs); /* Usando variable en lugar de valor fijo */
   }
   
   /* Ajustar altura de filas de tabla */
   .table tbody tr {
-    height: 2.5rem;
+    height: var(--height-table-row-sm);
   }
   
   /* Ocultar elementos no críticos */
@@ -51,24 +52,24 @@
   
   /* Ajustar contenedores de gráficos */
   .chart-container {
-    height: 200px !important;
+    height: var(--height-chart-landscape) !important;
   }
   
   /* Ajustar formularios */
   .form-group {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--spacing-2);
   }
   
   .form-control {
-    height: 2rem;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.8125rem;
+    height: var(--height-input-sm);
+    padding: var(--spacing-1) var(--spacing-2);
+    font-size: var(--font-size-xs);
   }
   
   .btn {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.8125rem;
-    min-height: 2rem;
+    padding: var(--spacing-1) var(--spacing-2);
+    font-size: var(--font-size-xs);
+    min-height: var(--height-button-sm);
   }
 }
 
@@ -76,25 +77,25 @@
 @media (max-height: 400px) and (orientation: landscape) {
   /* Reducir aún más el espaciado */
   .container, .container-fluid {
-    padding: 0.25rem;
+    padding: var(--spacing-1);
   }
   
   /* Reducir márgenes */
   .mb-3, .mb-4, .mb-5 {
-    margin-bottom: 0.5rem !important;
+    margin-bottom: var(--spacing-2) !important;
   }
   
   .mt-3, .mt-4, .mt-5 {
-    margin-top: 0.5rem !important;
+    margin-top: var(--spacing-2) !important;
   }
   
   /* Ajustar encabezados */
-  h1, .h1 { font-size: 1.5rem; }
-  h2, .h2 { font-size: 1.25rem; }
-  h3, .h3 { font-size: 1.1rem; }
-  h4, .h4 { font-size: 1rem; }
-  h5, .h5 { font-size: 0.9rem; }
-  h6, .h6 { font-size: 0.8rem; }
+  h1, .h1 { font-size: var(--font-size-2xl); }
+  h2, .h2 { font-size: var(--font-size-xl); }
+  h3, .h3 { font-size: var(--font-size-lg); }
+  h4, .h4 { font-size: var(--font-size-base); }
+  h5, .h5 { font-size: var(--font-size-sm); }
+  h6, .h6 { font-size: var(--font-size-xs); }
 }
 
 /* ===== UTILIDADES DE ORIENTACIÓN ===== */
@@ -135,12 +136,12 @@
 
 /* Ajustar el ancho máximo en modo paisaje */
 .max-w-landscape {
-  max-width: 100%;
+  max-width: var(--max-width-full);
 }
 
 @media (orientation: landscape) {
   .max-w-landscape {
-    max-width: 1200px;
+    max-width: var(--max-width-landscape);
     margin-left: auto;
     margin-right: auto;
   }
@@ -148,25 +149,25 @@
 
 /* Ajustar el tamaño de fuente en modo paisaje */
 .text-landscape-sm {
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
 }
 
 @media (orientation: landscape) {
   .text-landscape-sm {
-    font-size: 0.75rem;
+    font-size: var(--font-size-xs);
   }
 }
 
 /* Ajustar el espaciado en modo paisaje */
 .landscape-px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: var(--spacing-4);
+  padding-right: var(--spacing-4);
 }
 
 @media (orientation: landscape) {
   .landscape-px-4 {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: var(--spacing-8);
+    padding-right: var(--spacing-8);
   }
 }
 

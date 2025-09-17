@@ -60,21 +60,21 @@
                         <p class="block-subtitle">Utilidades de mantenimiento y administración</p>
                     </div>
                     <div class="block-content">
-                        <div style="padding: 24px;">
-                        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-                            <button class="btn btn-purple flex-fill d-flex align-items-center gap-2" onclick="openConfigModal()" style="min-width: 200px;">
+                        <div class="p-4">
+                        <div class="d-flex flex-wrap gap-3">
+                            <button class="btn btn-purple flex-fill d-flex align-items-center gap-2 min-w-200" data-bs-toggle="modal" data-bs-target="#configModal">
                                 <i class="fas fa-cogs"></i>
                                 Configuración General
                             </button>
-                            <button class="btn btn-primary flex-fill d-flex align-items-center gap-2" onclick="window.location.href='{{ url_for('main.backup') }}'" style="min-width: 200px;">
+                            <a href="{{ url_for('main.backup') }}" class="btn btn-primary flex-fill d-flex align-items-center gap-2 min-w-200">
                                 <i class="fas fa-database"></i>
                                 Gestionar Backups
-                            </button>
-                            <button class="btn btn-success flex-fill d-flex align-items-center gap-2" onclick="window.location.href='{{ url_for('users.usuarios_lista') }}'" style="min-width: 200px;">
+                            </a>
+                            <a href="{{ url_for('users.usuarios_lista') }}" class="btn btn-success flex-fill d-flex align-items-center gap-2 min-w-200">
                                 <i class="fas fa-users-cog"></i>
                                 Gestionar Usuarios
-                            </button>
-                            <button class="btn btn-warning flex-fill d-flex align-items-center gap-2" style="min-width: 200px;">
+                            </a>
+                            <button class="btn btn-warning flex-fill d-flex align-items-center gap-2 min-w-200">
                                 <i class="fas fa-shield-alt"></i>
                                 Configurar Seguridad
                             </button>
@@ -92,67 +92,74 @@
                     </div>
                     <div class="block-content">
                         <!-- Métricas principales del servidor -->
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
-                            <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border-left: 4px solid #3b82f6;">
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                    <i class="fas fa-microchip" style="color: #3b82f6;"></i>
-                                    <span style="font-weight: 500; color: #374151;">CPU</span>
+                        <div class="grid grid-cols-4 gap-4 mb-4">
+                            <div class="card card-sm">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <i class="fas fa-microchip text-primary"></i>
+                                        <span class="fw-semibold">CPU</span>
+                                    </div>
+                                    <div class="fs-4 fw-bold">{{ metricas_servidor.cpu.percent or 0 }}%</div>
+                                    <div class="text-muted text-small">{{ metricas_servidor.cpu.count or 0 }} núcleos @ {{ metricas_servidor.cpu.frequency or 0 }} MHz</div>
                                 </div>
-                                <div style="font-size: 24px; font-weight: 600; color: #1f2937;">{{ metricas_servidor.cpu.percent or 0 }}%</div>
-                                <div style="font-size: 12px; color: #6b7280;">{{ metricas_servidor.cpu.count or 0 }} núcleos @ {{ metricas_servidor.cpu.frequency or 0 }} MHz</div>
                             </div>
-                            
-                            <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border-left: 4px solid #10b981;">
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                    <i class="fas fa-memory" style="color: #10b981;"></i>
-                                    <span style="font-weight: 500; color: #374151;">Memoria RAM</span>
+                            <div class="card card-sm">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <i class="fas fa-memory text-success"></i>
+                                        <span class="fw-semibold">Memoria RAM</span>
+                                    </div>
+                                    <div class="fs-4 fw-bold">{{ metricas_servidor.memory.percent or 0 }}%</div>
+                                    <div class="text-muted text-small">{{ metricas_servidor.memory.used_gb or 0 }} GB / {{ metricas_servidor.memory.total_gb or 0 }} GB</div>
                                 </div>
-                                <div style="font-size: 24px; font-weight: 600; color: #1f2937;">{{ metricas_servidor.memory.percent or 0 }}%</div>
-                                <div style="font-size: 12px; color: #6b7280;">{{ metricas_servidor.memory.used_gb or 0 }} GB / {{ metricas_servidor.memory.total_gb or 0 }} GB</div>
                             </div>
-                            
-                            <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border-left: 4px solid #f59e0b;">
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                    <i class="fas fa-hdd" style="color: #f59e0b;"></i>
-                                    <span style="font-weight: 500; color: #374151;">Disco</span>
+                            <div class="card card-sm">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <i class="fas fa-hdd text-warning"></i>
+                                        <span class="fw-semibold">Disco</span>
+                                    </div>
+                                    <div class="fs-4 fw-bold">{{ metricas_servidor.disk.percent or 0 }}%</div>
+                                    <div class="text-muted text-small">{{ metricas_servidor.disk.used_gb or 0 }} GB / {{ metricas_servidor.disk.total_gb or 0 }} GB</div>
                                 </div>
-                                <div style="font-size: 24px; font-weight: 600; color: #1f2937;">{{ metricas_servidor.disk.percent or 0 }}%</div>
-                                <div style="font-size: 12px; color: #6b7280;">{{ metricas_servidor.disk.used_gb or 0 }} GB / {{ metricas_servidor.disk.total_gb or 0 }} GB</div>
                             </div>
-                            
-                            <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border-left: 4px solid #8b5cf6;">
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                    <i class="fas fa-network-wired" style="color: #8b5cf6;"></i>
-                                    <span style="font-weight: 500; color: #374151;">Red</span>
+                            <div class="card card-sm">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <i class="fas fa-network-wired text-purple"></i>
+                                        <span class="fw-semibold">Red</span>
+                                    </div>
+                                    <div class="fw-bold">↑{{ metricas_servidor.network.bytes_sent_mb or 0 }} MB</div>
+                                    <div class="text-muted text-small">↓{{ metricas_servidor.network.bytes_recv_mb or 0 }} MB recibidos</div>
                                 </div>
-                                <div style="font-size: 16px; font-weight: 600; color: #1f2937;">↑{{ metricas_servidor.network.bytes_sent_mb or 0 }} MB</div>
-                                <div style="font-size: 12px; color: #6b7280;">↓{{ metricas_servidor.network.bytes_recv_mb or 0 }} MB recibidos</div>
                             </div>
                         </div>
                         
                         <!-- Información del sistema -->
-                        <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-top: 16px;">
-                            <h4 style="color: #374151; margin-bottom: 12px; font-size: 14px; font-weight: 600;">Información del Sistema</h4>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 12px;">
-                                <div>
-                                    <span style="color: #6b7280;">Sistema Operativo:</span>
-                                    <span style="color: #374151; font-weight: 500; margin-left: 4px;">{{ metricas_servidor.system.platform or 'N/A' }}</span>
-                                </div>
-                                <div>
-                                    <span style="color: #6b7280;">Arquitectura:</span>
-                                    <span style="color: #374151; font-weight: 500; margin-left: 4px;">{{ metricas_servidor.system.architecture or 'N/A' }}</span>
-                                </div>
-                                <div>
-                                    <span style="color: #6b7280;">Tiempo Activo:</span>
-                                    <span style="color: #374151; font-weight: 500; margin-left: 4px;">{{ metricas_servidor.system.uptime_hours or 0 }} horas</span>
-                                </div>
-                                <div>
-                                    <span style="color: #6b7280;">Procesos:</span>
-                                    <span style="color: #374151; font-weight: 500; margin-left: 4px;">{{ metricas_servidor.system.process_count or 0 }}</span>
-                                </div>
-                                <div>
-                                    <span style="color: #6b7280;">Último Reinicio:</span>
-                                    <span style="color: #374151; font-weight: 500; margin-left: 4px;">{{ metricas_servidor.system.boot_time or 'N/A' }}</span>
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <h4 class="h6 mb-3">Información del Sistema</h4>
+                                <div class="grid grid-cols-4 gap-3 text-small">
+                                    <div>
+                                        <span class="text-muted">Sistema Operativo:</span>
+                                        <span class="ms-1 fw-semibold">{{ metricas_servidor.system.platform or 'N/A' }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted">Arquitectura:</span>
+                                        <span class="ms-1 fw-semibold">{{ metricas_servidor.system.architecture or 'N/A' }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted">Tiempo Activo:</span>
+                                        <span class="ms-1 fw-semibold">{{ metricas_servidor.system.uptime_hours or 0 }} horas</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted">Procesos:</span>
+                                        <span class="ms-1 fw-semibold">{{ metricas_servidor.system.process_count or 0 }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted">Último Reinicio:</span>
+                                        <span class="ms-1 fw-semibold">{{ metricas_servidor.system.boot_time or 'N/A' }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -225,7 +232,7 @@
                             </div>
 
                             <!-- Version History Card -->
-                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 20px; color: white; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;" onclick="window.location.href='{{ url_for('changelog.changelog') }}'" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3)'">
+                            <a href="{{ url_for('changelog.changelog') }}" style="display: block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 20px; color: white; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease;">
                                 <div style="display: flex; align-items: center; margin-bottom: 12px;">
                                     <i class="fas fa-code-branch" style="font-size: 24px; margin-right: 12px; opacity: 0.9;"></i>
                                     <h4 style="margin: 0; font-size: 16px; font-weight: 600;">Historial de Versiones</h4>
@@ -238,7 +245,7 @@
                                         <span>Hacer clic para ver detalles</span>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
 
 
@@ -399,5 +406,4 @@
     
     <!-- Include Configuration Modal Component -->
     {% include 'components/modals/configuracion/config_modal.html' %}
-    </script>
 {% endblock %}

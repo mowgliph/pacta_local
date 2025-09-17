@@ -17,22 +17,22 @@
   display: none; /* 1 */
   background: none;
   border: none;
-  color: var(--text-primary, #1e293b);
+  color: var(--text-primary);
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0.5rem;
   margin-right: 0.5rem;
   border-radius: 0.25rem;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: var(--transition-colors), var(--transition-background);
 }
 
 .mobile-menu-toggle:hover {
-  background-color: var(--bg-hover, #f1f5f9);
-  color: var(--color-primary, #0ea5e9);
+  background-color: var(--bg-tertiary);
+  color: var(--color-primary);
 }
 
 /* Mostrar solo en móviles */
-@media (max-width: 1023px) {
+@media (max-width: 1024px) {
   .mobile-menu-toggle {
     display: flex; /* 1 */
     align-items: center;
@@ -50,7 +50,7 @@
 .page-title {
   font-size: 1.5rem; /* 1 */
   font-weight: 600; /* 1 */
-  color: var(--text-primary, #1e293b);
+  color: var(--text-primary);
   margin: 0 0 1rem 0; /* 2 */
   line-height: 1.2;
   display: flex;
@@ -59,7 +59,7 @@
 }
 
 .page-title i {
-  color: var(--color-primary, #0ea5e9);
+  color: var(--color-primary);
   font-size: 1.75rem;
 }
 
@@ -75,7 +75,7 @@
 /* Subtítulo */
 .page-subtitle {
   font-size: 1rem;
-  color: var(--text-secondary, #475569);
+  color: var(--text-secondary);
   margin: -0.5rem 0 1.5rem 0;
   font-weight: 400;
 }
@@ -96,28 +96,10 @@
   flex-wrap: wrap;
 }
 
-/* Modo oscuro */
-@media (prefers-color-scheme: dark) {
-  .mobile-menu-toggle {
-    color: var(--dark-text-primary, #f1f5f9);
-  }
-  
-  .mobile-menu-toggle:hover {
-    background-color: var(--dark-bg-hover, #1e40af);
-    color: var(--color-primary, #60a5fa);
-  }
-  
-  .page-title {
-    color: var(--dark-text-primary, #f1f5f9);
-  }
-  
-  .page-subtitle {
-    color: var(--dark-text-secondary, #94a3b8);
-  }
-}
+/* Nota: Modo oscuro gestionado por tokens del tema */
 
 /* Responsive */
-@media (max-width: 1023px) {
+@media (max-width: 1024px) {
   .page-title {
     font-size: 1.25rem;
   }
@@ -143,7 +125,7 @@
   }
 }
 
-@media (max-width: 639px) {
+@media (max-width: 480px) {
   .page-title {
     font-size: 1.125rem;
   }

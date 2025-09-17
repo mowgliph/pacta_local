@@ -1,10 +1,11 @@
-/* ===================================================================
-   Utilidades: Optimizaciones de Pantalla
-   Archivo: _display-optimizations.css
-   Descripción: Optimizaciones para diferentes tipos de pantallas y densidades de píxeles
-   Versión: 1.0.0
-   Última actualización: 2025-09-17
-=================================================================== */
+/*
+ * Project: Pacta
+ * File: _display-optimizations.css
+ * Version: 1.1.0
+ * Date: 2025-09-17
+ * Last Update: Refactorización y optimización de estilos de visualización.
+ * Description: Contiene optimizaciones de visualización y clases de ayuda para el proyecto Pacta.
+ */
 
 /* ===== PANTALLAS DE ALTA DENSIDAD (RETINA/HI-DPI) ===== */
 
@@ -33,11 +34,12 @@
   
   /* Bordes finos */
   .thin-border {
-    border-width: 0.5px;
+    border-width: var(--border-width-0);
   }
   
   /* Mejora de fuentes */
   body {
+    font-family: var(--font-family-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -54,8 +56,8 @@
 
 /* Tamaño mínimo para objetivos táctiles */
 .touch-target {
-  min-width: 44px;
-  min-height: 44px;
+  min-width: var(--height-button);
+  min-height: var(--height-button);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,9 +65,9 @@
 
 /* Retroalimentación táctil */
 .touch-feedback:active {
-  opacity: 0.7;
-  transform: scale(0.98);
-  transition: opacity 0.1s, transform 0.1s;
+  opacity: var(--opacity-75);
+  transform: scale(var(--scale-98));
+  transition: opacity var(--transition-duration-fast), transform var(--transition-duration-fast);
 }
 
 /* Deshabilitar resaltado al tocar en iOS */
@@ -94,6 +96,11 @@
   .skeleton-loader {
     display: none;
   }
+  
+  .animated-element {
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 /* ===== MODO DE ALTO CONTRASTE ===== */
@@ -107,7 +114,7 @@
 @media (-ms-high-contrast: active) {
   /* Asegurar que los textos sean visibles en modo de alto contraste */
   a, button, input, select, textarea, [role="button"], [role="tab"] {
-    border: 1px solid currentColor !important;
+    border: var(--border-width-sm) solid currentColor !important;
   }
   
   /* Mejorar la visibilidad de los enlaces */
@@ -140,10 +147,10 @@
   
   /* Mejorar la legibilidad del texto */
   body {
-    font-size: 12pt;
-    line-height: 1.3;
-    color: #000;
-    background: #fff;
+    font-size: var(--font-size-print);
+    line-height: var(--line-height-print);
+    color: var(--color-black);
+    background: var(--color-white);
   }
   
   /* Evitar cortes de página dentro de elementos */
@@ -153,32 +160,62 @@
   
   /* Añadir márgenes de página */
   @page {
-    margin: 2cm;
+    margin: var(--margin-print);
   }
 }
 
 /* ===== PANTALLAS PEQUEÑAS Y GRANDES ===== */
 
-/* Pantallas muy pequeñas */
-@media (max-width: 320px) {
-  .container {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+/* ===== OPTIMIZACIONES PARA PANTALLAS PEQUEÑAS ===== */
+@media (max-width: var(--screen-sm-max)) {
+  .hide-on-small-screen {
+    display: none !important;
   }
-  
-  h1, .h1 { font-size: 1.5rem; }
-  h2, .h2 { font-size: 1.3rem; }
-  h3, .h3 { font-size: 1.1rem; }
+
+  .text-sm-center {
+    text-align: center !important;
+  }
+
+  .p-sm-4 {
+    padding: var(--spacing-4) !important;
+  }
+
+  h1, .h1 {
+    font-size: var(--font-size-2xl);
+  }
+
+  h2, .h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  h3, .h3 {
+    font-size: var(--font-size-lg);
+  }
 }
 
-/* Pantallas muy grandes */
-@media (min-width: 1920px) {
-  .container {
-    max-width: 1600px;
+/* ===== OPTIMIZACIONES PARA PANTALLAS GRANDES ===== */
+@media (min-width: var(--screen-lg-min)) {
+  .hide-on-large-screen {
+    display: none !important;
   }
-  
-  /* Aumentar el tamaño de fuente base para mejor legibilidad */
-  html {
-    font-size: 18px;
+
+  .text-lg-left {
+    text-align: left !important;
+  }
+
+  .p-lg-6 {
+    padding: var(--spacing-6) !important;
+  }
+
+  h1, .h1 {
+    font-size: var(--font-size-5xl);
+  }
+
+  h2, .h2 {
+    font-size: var(--font-size-4xl);
+  }
+
+  h3, .h3 {
+    font-size: var(--font-size-3xl);
   }
 }

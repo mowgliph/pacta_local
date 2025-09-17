@@ -52,16 +52,25 @@
     <div class="block-content">
         <div class="contract-actions d-flex flex-wrap gap-3">
             {% for action in actions_list %}
-            <button class="btn {{ action.color|default('btn-primary') }} flex-fill d-flex align-items-center gap-2" 
-                    style="min-width: {{ action.min_width|default('200px') }};"
-                    {% if action.onclick %}onclick="{{ action.onclick }}"{% endif %}
-                    {% if action.href %}onclick="window.location.href='{{ action.href }}'"{% endif %}
-                    {% if action.modal %}data-bs-toggle="modal" data-bs-target="{{ action.modal }}"{% endif %}
-                    {% if action.tooltip %}title="{{ action.tooltip }}" data-bs-toggle="tooltip"{% endif %}
-                    {% if action.disabled %}disabled{% endif %}>
-                <i class="{{ action.icon }}"></i>
-                {{ action.text }}
-            </button>
+                {% set minw_class = 'min-w-200' %}
+                {% if action.href %}
+                    <a href="{{ action.href }}" class="btn {{ action.color|default('btn-primary') }} flex-fill d-flex align-items-center gap-2 {{ minw_class }}{% if action.disabled %} disabled{% endif %}"
+                       {% if action.modal %}data-bs-toggle="modal" data-bs-target="{{ action.modal }}"{% endif %}
+                       {% if action.tooltip %}title="{{ action.tooltip }}" data-bs-toggle="tooltip"{% endif %}
+                       {% if action.disabled %}aria-disabled="true" tabindex="-1"{% endif %}>
+                        <i class="{{ action.icon }}"></i>
+                        {{ action.text }}
+                    </a>
+                {% else %}
+                    <button class="btn {{ action.color|default('btn-primary') }} flex-fill d-flex align-items-center gap-2 {{ minw_class }}"
+                            {% if action.onclick %}onclick="{{ action.onclick }}"{% endif %}
+                            {% if action.modal %}data-bs-toggle="modal" data-bs-target="{{ action.modal }}"{% endif %}
+                            {% if action.tooltip %}title="{{ action.tooltip }}" data-bs-toggle="tooltip"{% endif %}
+                            {% if action.disabled %}disabled{% endif %}>
+                        <i class="{{ action.icon }}"></i>
+                        {{ action.text }}
+                    </button>
+                {% endif %}
             {% endfor %}
         </div>
         

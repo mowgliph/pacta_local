@@ -1,9 +1,10 @@
 /* ===================================================================
-   Base: Documento
+   PACTA - Base: Documento
    Archivo: _document.css
    Descripción: Estilos base para el elemento html y configuración del documento
-   Versión: 1.0.0
-   Última actualización: 2025-09-17
+   Versión: 1.1.0
+   Fecha: 2025-09-17
+   Última actualización: Refactorización y optimización de estilos base del documento
 =================================================================== */
 
 /**
@@ -22,7 +23,7 @@ html {
   height: 100%; /* 5 */
   text-size-adjust: 100%; /* 1 */
   box-sizing: border-box;
-  line-height: 1.15;
+  line-height: var(--line-height-dense);
 }
 
 /**
@@ -40,10 +41,10 @@ html {
  */
 body {
   overflow-x: hidden; /* 1 */
-  min-width: 320px; /* 2 */
+  min-width: var(--min-width-body); /* 2 */
   min-height: 100%;
-  margin: 0;
-  padding: 0;
+  margin: var(--spacing-0);
+  padding: var(--spacing-0);
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-family-primary);

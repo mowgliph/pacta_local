@@ -11,17 +11,17 @@
     align-items: center;
     justify-content: center;
     font-weight: 600;
-    color: white;
+    color: var(--color-white);
     text-transform: uppercase;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
+    border: 2px solid color-mix(in srgb, var(--color-white) 20%, transparent);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-all);
     object-fit: cover;
 }
 
 .avatar:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-md);
 }
 
 /* ===== TAMAÑOS DE AVATARES ===== */
@@ -65,27 +65,27 @@
 
 /* ===== COLORES DE AVATARES ===== */
 .avatar-blue {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    background: var(--gradient-info);
 }
 
 .avatar-green {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: var(--gradient-success);
 }
 
 .avatar-purple {
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-dark) 100%);
 }
 
 .avatar-pink {
-    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+    background: linear-gradient(135deg, var(--color-info) 0%, var(--color-info-dark) 100%);
 }
 
 .avatar-yellow {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    background: var(--gradient-warning);
 }
 
 .avatar-red {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    background: linear-gradient(135deg, var(--color-error) 0%, var(--color-error-dark) 100%);
 }
 
 .avatar-indigo {
@@ -110,13 +110,13 @@
 
 /* ===== AVATAR POR DEFECTO ===== */
 .avatar-default {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient-primary);
 }
 
 /* ===== VARIANTES ESPECIALES ===== */
 .avatar-bordered {
-    border: 3px solid #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    border: 3px solid var(--color-white);
+    box-shadow: var(--shadow-sm);
 }
 
 .avatar-no-hover:hover {
@@ -156,16 +156,24 @@
 .avatar-name {
     font-size: 14px;
     font-weight: 500;
-    color: #1e293b;
+    color: var(--text-primary);
     margin: 0;
     line-height: 1.2;
 }
 
 .avatar-subtitle {
     font-size: 12px;
-    color: #64748b;
+    color: var(--text-secondary);
     margin: 0;
     line-height: 1.2;
+}
+
+.avatar-info.error-message i {
+    color: var(--color-error);
+}
+
+.empty-message i {
+    color: var(--text-muted);
 }
 
 /* ===== GRUPOS DE AVATARES ===== */
@@ -176,7 +184,7 @@
 
 .avatar-group .avatar {
     margin-left: -8px;
-    border: 2px solid #fff;
+    border: 2px solid var(--color-white);
     position: relative;
     z-index: 1;
 }
@@ -197,8 +205,8 @@
     right: 0;
     width: 25%;
     height: 25%;
-    background: #10b981;
-    border: 2px solid #fff;
+    background: var(--color-success);
+    border: 2px solid var(--color-white);
     border-radius: 50%;
 }
 
@@ -209,8 +217,8 @@
     right: 0;
     width: 25%;
     height: 25%;
-    background: #6b7280;
-    border: 2px solid #fff;
+    background: var(--color-gray-500);
+    border: 2px solid var(--color-white);
     border-radius: 50%;
 }
 
@@ -221,8 +229,8 @@
     right: 0;
     width: 25%;
     height: 25%;
-    background: #ef4444;
-    border: 2px solid #fff;
+    background: var(--color-error);
+    border: 2px solid var(--color-white);
     border-radius: 50%;
 }
 
@@ -241,52 +249,7 @@
     }
 }
 
-/* ===== COMPATIBILIDAD CON CLASES EXISTENTES ===== */
-/* Mapeo de clases existentes a las nuevas clases estandarizadas */
-.user-avatar {
-    @extend .avatar, .avatar-md, .avatar-default;
-}
-
-.user-avatar-small {
-    @extend .avatar, .avatar-sm, .avatar-default;
-}
-
-.user-avatar-large {
-    @extend .avatar, .avatar-2xl, .avatar-default, .avatar-bordered;
-}
-
-.customer-avatar {
-    @extend .avatar, .avatar-sm;
-}
-
-.provider-avatar {
-    @extend .avatar, .avatar-lg;
-}
-
-.responsible-avatar {
-    @extend .avatar, .avatar-xl;
-}
-
-.persona-avatar {
-    @extend .avatar, .avatar-md;
-}
-
-.proveedor-avatar {
-    @extend .avatar, .avatar-md;
-}
-
-.usuario-avatar {
-    @extend .avatar, .avatar-md;
-}
-
-.contract-avatar {
-    @extend .avatar, .avatar-md;
-}
-
-.dashboard-user-avatar {
-    @extend .avatar, .avatar-lg, .avatar-default;
-}
-
-.card-profile-avatar {
-    @extend .avatar, .avatar-xl, .avatar-bordered;
-}
+/* ===== NOTA SOBRE COMPATIBILIDAD ===== */
+/* Las clases de compatibilidad legacy con @extend han sido eliminadas.
+   En HTML, combina múltiples clases según necesidad, por ejemplo:
+   <div class="avatar avatar-md avatar-default"></div> */

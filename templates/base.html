@@ -33,46 +33,70 @@
             const mobileOverlay = document.getElementById('mobileOverlay');
             const sidebar = document.querySelector('.sidebar');
             
+            // Solo ejecutar en dispositivos móviles
+            function isMobile() {
+                return window.innerWidth <= 768;
+            }
+            
+            // Mostrar/ocultar elementos móviles según el tamaño de pantalla
+            function handleResize() {
+                if (isMobile()) {
+                    if (mobileToggle) mobileToggle.style.display = 'flex';
+                } else {
+                    if (mobileToggle) mobileToggle.style.display = 'none';
+                    if (sidebar) sidebar.classList.remove('mobile-open');
+                    if (mobileOverlay) {
+                        mobileOverlay.classList.remove('active');
+                        mobileOverlay.style.display = 'none';
+                    }
+                }
+            }
+            
+            // Ejecutar al cargar y al redimensionar
+            handleResize();
+            window.addEventListener('resize', handleResize);
+            
             if (mobileToggle && sidebar) {
                 // Toggle mobile menu
                 mobileToggle.addEventListener('click', function() {
+                    if (!isMobile()) return; // Solo funcionar en móviles
+                    
                     sidebar.classList.toggle('mobile-open');
-                    mobileOverlay.style.display = sidebar.classList.contains('mobile-open') ? 'block' : 'none';
-                    setTimeout(() => {
-                        mobileOverlay.classList.toggle('active', sidebar.classList.contains('mobile-open'));
-                    }, 10);
+                    const isOpen = sidebar.classList.contains('mobile-open');
+                    
+                    if (mobileOverlay) {
+                        mobileOverlay.style.display = isOpen ? 'block' : 'none';
+                        setTimeout(() => {
+                            mobileOverlay.classList.toggle('active', isOpen);
+                        }, 10);
+                    }
                 });
                 
                 // Close menu when clicking overlay
-                mobileOverlay.addEventListener('click', function() {
-                    sidebar.classList.remove('mobile-open');
-                    mobileOverlay.classList.remove('active');
-                    setTimeout(() => {
-                        mobileOverlay.style.display = 'none';
-                    }, 300);
-                });
+                if (mobileOverlay) {
+                    mobileOverlay.addEventListener('click', function() {
+                        sidebar.classList.remove('mobile-open');
+                        mobileOverlay.classList.remove('active');
+                        setTimeout(() => {
+                            mobileOverlay.style.display = 'none';
+                        }, 300);
+                    });
+                }
                 
                 // Close menu when clicking nav links on mobile
                 const navLinks = sidebar.querySelectorAll('.nav-link');
                 navLinks.forEach(link => {
                     link.addEventListener('click', function() {
-                        if (window.innerWidth <= 767) {
+                        if (isMobile()) {
                             sidebar.classList.remove('mobile-open');
-                            mobileOverlay.classList.remove('active');
-                            setTimeout(() => {
-                                mobileOverlay.style.display = 'none';
-                            }, 300);
+                            if (mobileOverlay) {
+                                mobileOverlay.classList.remove('active');
+                                setTimeout(() => {
+                                    mobileOverlay.style.display = 'none';
+                                }, 300);
+                            }
                         }
                     });
-                });
-                
-                // Handle window resize
-                window.addEventListener('resize', function() {
-                    if (window.innerWidth > 767) {
-                        sidebar.classList.remove('mobile-open');
-                        mobileOverlay.classList.remove('active');
-                        mobileOverlay.style.display = 'none';
-                    }
                 });
             }
             

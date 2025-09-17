@@ -1,8 +1,8 @@
 /* ===================================================================
-   Utilidades: Estilos de Impresión
+   PACTA - Utilidades: Estilos de Impresión
    Archivo: _print.css
    Descripción: Estilos específicos para la vista de impresión
-   Versión: 1.0.0
+   Versión: 1.1.0
    Última actualización: 2025-09-17
 =================================================================== */
 
@@ -29,31 +29,36 @@
   /* Configuración de página */
   @page {
     size: A4; /* Tamaño de papel estándar */
-    margin: 2cm; /* 3 */
+    margin: var(--spacing-12); /* Usando variable de espaciado */
   }
 
   /* Tipografía para impresión */
   body {
-    font-family: "Georgia", serif; /* 2 */
+    font-family: var(--font-family-primary); /* Usando variable de fuente */
     font-size: 12pt;
-    line-height: 1.3;
-    color: #000;
-    background: #fff;
+    line-height: var(--line-height-tight);
+    color: var(--text-primary);
+    background: var(--color-white);
   }
 
   /* Encabezados */
   h1, h2, h3, h4, h5, h6 {
     page-break-after: avoid;
     break-after: avoid-page;
+    font-weight: var(--font-weight-bold);
   }
 
   h1 { font-size: 24pt; }
   h2 { font-size: 18pt; }
   h3 { font-size: 14pt; }
+  h4 { font-size: 12pt; }
+  h5 { font-size: 11pt; }
+  h6 { font-size: 10pt; }
 
   /* Enlaces */
   a {
     text-decoration: underline !important;
+    color: var(--color-primary-dark) !important;
   }
 
   a[href^="http"]::after {
@@ -96,6 +101,21 @@
   table {
     page-break-inside: auto;
     width: 100% !important;
+    border-collapse: collapse;
+    margin-bottom: var(--spacing-4);
+  }
+  
+  /* Celdas de tabla */
+  th, td {
+    border: var(--border-width-1) solid var(--color-gray-300);
+    padding: var(--spacing-2);
+    text-align: left;
+  }
+  
+  /* Encabezados de tabla */
+  th {
+    background-color: var(--color-gray-100) !important;
+    font-weight: var(--font-weight-semibold);
   }
   
   tr {

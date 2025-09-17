@@ -13,17 +13,17 @@
  * 4. Fondo blanco para mejor contraste
  */
 .table-card {
-  background: var(--bg-card, #ffffff);
-  border-radius: var(--radius-lg, 0.75rem);
-  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.1));
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
-  margin-bottom: var(--spacing-6, 1.5rem);
-  border: 1px solid var(--border-color, #e2e8f0);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  margin-bottom: var(--spacing-6);
+  border: 1px solid var(--border-color);
+  transition: var(--transition-shadow), var(--transition-transform);
 }
 
 .table-card:hover {
-  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06));
+  box-shadow: var(--shadow-md);
   transform: translateY(-1px);
 }
 
@@ -37,14 +37,14 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--border-color, #e2e8f0);
-  background-color: var(--bg-card-header, #f8fafc);
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
 }
 
 .table-header h3 {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--text-heading, #1e293b);
+  color: var(--text-primary);
   margin: 0;
   line-height: 1.375;
 }
@@ -68,8 +68,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  border-top: 1px solid var(--border-color, #e2e8f0);
-  background-color: var(--bg-card-footer, #f8fafc);
+  border-top: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
 }
 
 /**
@@ -90,12 +90,12 @@
 
 /* Tarjeta de tabla con encabezado acentuado */
 .table-card.accent-header .table-header {
-  background-color: var(--color-primary, #3b82f6);
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--text-on-primary);
 }
 
 .table-card.accent-header .table-header h3 {
-  color: white;
+  color: var(--text-on-primary);
 }
 
 /* Tarjeta de tabla con scroll */
@@ -125,7 +125,7 @@
  */
 .table-info {
   font-size: 0.875rem;
-  color: var(--text-muted, #64748b);
+  color: var(--text-muted);
 }
 
 /**
@@ -190,23 +190,4 @@
 /**
  * Modo oscuro
  */
-@media (prefers-color-scheme: dark) {
-  .table-card {
-    background-color: var(--dark-bg-card, #1e293b);
-    border-color: var(--dark-border-color, #334155);
-  }
-  
-  .table-header,
-  .table-footer {
-    background-color: var(--dark-bg-card-header, #0f172a);
-    border-color: var(--dark-border-color, #334155);
-  }
-  
-  .table-header h3 {
-    color: var(--dark-text-heading, #f8fafc);
-  }
-  
-  .table-info {
-    color: var(--dark-text-muted, #94a3b8);
-  }
-}
+/* Nota: Modo oscuro gestionado por tokens del tema */

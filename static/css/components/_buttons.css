@@ -31,17 +31,14 @@
   cursor: pointer;
   
   /* Transiciones */
-  transition: var(--transition-colors), var(--transition-shadow);
+  transition: var(--transition-colors), var(--transition-transform), var(--transition-opacity);
   
   /* Estados */
   user-select: none;
   outline: none;
 }
 
-.btn:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
+/* Nota: el foco accesible de .btn se gestiona en base/_focus.css */
 
 .btn:disabled,
 .btn.disabled {
@@ -643,7 +640,8 @@
   border: 2px solid currentColor;
   border-top-color: transparent;
   border-radius: 50%;
-  animation: btn-spin 1s linear infinite;
+  /* Usar keyframe global y easing por variable */
+  animation: spin 1s var(--ease-linear) infinite;
 }
 
 .btn-loading.btn-sm::after {
@@ -658,11 +656,7 @@
   margin: -0.625rem 0 0 -0.625rem;
 }
 
-@keyframes btn-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Nota: se usa @keyframes spin global definido en base/_animations.css */
 
 /* Botón Activo */
 .btn.active {
@@ -737,20 +731,7 @@
 
 /* ===== MEJORAS DE ACCESIBILIDAD ===== */
 
-/* Reducir movimiento para usuarios que lo prefieren */
-@media (prefers-reduced-motion: reduce) {
-  .btn {
-    transition: none;
-  }
-  
-  .btn:hover:not(:disabled) {
-    transform: none;
-  }
-  
-  .btn-loading::after {
-    animation: none;
-  }
-}
+/* Nota: Manejo de prefers-reduced-motion centralizado en base/_animations.css */
 
 /* Mejoras para modo de alto contraste */
 @media (prefers-contrast: high) {

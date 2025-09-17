@@ -24,15 +24,15 @@
 }
 
 .backup-table thead th {
-  background-color: #f9fafb;
-  color: #4b5563;
-  font-weight: 600;
+  background-color: var(--bg-light);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-semibold);
   text-align: left;
-  padding: 12px 16px;
-  border-bottom: 1px solid #e5e7eb;
+  padding: var(--spacing-3) var(--spacing-4);
+  border-bottom: var(--border-width-1) solid var(--border-light);
   text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--letter-spacing-wide);
   position: relative;
   user-select: none;
 }
@@ -40,19 +40,19 @@
 /* Estilo para encabezados ordenables */
 .backup-table thead th.sortable {
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: var(--transition-colors);
 }
 
 .backup-table thead th.sortable:hover {
-  background-color: #f3f4f6;
+  background-color: var(--bg-hover);
 }
 
 /* Icono de ordenación */
 .backup-table .sort-icon {
   display: inline-block;
-  width: 16px;
-  height: 16px;
-  margin-left: 4px;
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+  margin-left: var(--spacing-1);
   position: relative;
   vertical-align: middle;
 }
@@ -64,19 +64,19 @@
   left: 0;
   width: 0;
   height: 0;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
+  border-left: var(--border-width-1) solid transparent;
+  border-right: var(--border-width-1) solid transparent;
   opacity: 0.3;
 }
 
 .backup-table .sort-icon::before {
-  top: 1px;
-  border-bottom: 4px solid #4b5563;
+  top: var(--spacing-px);
+  border-bottom: var(--border-width-1) solid var(--text-secondary);
 }
 
 .backup-table .sort-icon::after {
-  bottom: 1px;
-  border-top: 4px solid #4b5563;
+  bottom: var(--spacing-px);
+  border-top: var(--border-width-1) solid var(--text-secondary);
 }
 
 /* Estados de ordenación */
@@ -91,50 +91,46 @@
 }
 
 .backup-table tbody tr {
-  border-bottom: 1px solid #e5e7eb;
-  transition: background-color 0.2s ease;
+  border-bottom: var(--border-width-1) solid var(--border-light);
+  transition: var(--transition-all);
+  position: relative;
 }
 
 .backup-table tbody tr:last-child {
   border-bottom: none;
 }
 
-.backup-table tbody tr {
-  transition: all 0.2s ease;
-  position: relative;
-}
-
 .backup-table tbody tr:hover {
-  background-color: #f8fafc;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  background-color: var(--bg-hover);
+  box-shadow: var(--shadow-sm);
   transform: translateY(-1px);
   z-index: 1;
 }
 
 .backup-table tbody tr:hover td {
-  border-color: #e2e8f0;
+  border-color: var(--border-medium);
 }
 
 .backup-table tbody tr:hover td:first-child {
-  border-left: 2px solid #3b82f6;
-  padding-left: 14px; /* Compensate for the border */
+  border-left: var(--border-width-2) solid var(--color-primary);
+  padding-left: var(--spacing-3);
 }
 
 /* Smooth transition for all interactive elements */
 .backup-table tbody td {
-  transition: all 0.2s ease;
-  border-bottom: 1px solid #f1f5f9;
+  transition: var(--transition-all);
+  border-bottom: var(--border-width-1) solid var(--border-light);
 }
 
 /* Subtle highlight for the type cell */
 .backup-table tbody td:nth-child(2) {
-  color: #4b5563;
-  font-weight: 500;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
 }
 
 .backup-table tbody tr:hover td:nth-child(2) {
-  background-color: rgba(59, 130, 246, 0.05);
-  color: #1e40af;
+  background-color: var(--color-primary-50);
+  color: var(--color-primary-dark);
 }
 
 .backup-table td {
@@ -145,37 +141,37 @@
 /* Estilos para los badges de tipo */
 .badge {
   display: inline-block;
-  padding: 0.35em 0.65em;
-  font-size: 0.75em;
-  font-weight: 600;
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
   line-height: 1;
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: 0.25rem;
+  border-radius: var(--radius-sm);
 }
 
-.bg-blue-100 { background-color: #dbeafe; }
-.text-blue-800 { color: #1e40af; }
-.bg-purple-100 { background-color: #f3e8ff; }
-.text-purple-800 { color: #5b21b6; }
+.bg-blue-100 { background-color: var(--color-blue-100); }
+.text-blue-800 { color: var(--color-blue-800); }
+.bg-purple-100 { background-color: var(--color-purple-100); }
+.text-purple-800 { color: var(--color-purple-800); }
 
 /* Botones de acción */
 .action-btn {
   background: none;
   border: none;
   cursor: pointer;
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: var(--spacing-8);
+  height: var(--spacing-8);
+  border-radius: var(--radius-sm);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: var(--transition-all);
 }
 
 .action-btn:hover {
-  background-color: #f3f4f6;
+  background-color: var(--bg-hover);
   transform: translateY(-1px);
 }
 
@@ -183,16 +179,15 @@
   font-size: 14px;
 }
 
-/* Estado de carga */
 .loading-spinner {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem 1rem;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: var(--spacing-12) var(--spacing-4);
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Estado vacío */
@@ -201,28 +196,28 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem 1rem;
-  text-align: center;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: var(--spacing-12) var(--spacing-4);
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  color: var(--text-secondary);
 }
 
 .empty-state i {
-  font-size: 3rem;
-  color: #9ca3af;
-  margin-bottom: 1rem;
-}
-
-.empty-state h4 {
-  color: #374151;
-  margin-bottom: 0.5rem;
+  font-size: var(--font-size-5xl);
+  margin-bottom: var(--spacing-4);
+  color: var(--color-gray-400);
 }
 
 .empty-state p {
-  color: #6b7280;
-  margin-bottom: 1.5rem;
-  max-width: 400px;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--spacing-2);
+}
+
+.empty-state span {
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
 }
 
 .backup-header {
@@ -643,12 +638,6 @@
   color: var(--color-warning);
 }
 
-.status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: currentColor;
-}
 
 /* ===== CONFIGURACIÓN DE BACKUP ===== */
 

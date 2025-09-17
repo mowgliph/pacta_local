@@ -18,7 +18,7 @@
   align-items: flex-start;
   margin-bottom: var(--spacing-6);
   padding-bottom: var(--spacing-4);
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: var(--border-width-1) solid var(--border-light);
 }
 
 .configuracion-title {
@@ -54,7 +54,7 @@
   background-color: var(--bg-primary);
   border-radius: var(--radius-lg);
   padding: var(--spacing-6);
-  border: 1px solid var(--border-light);
+  border: var(--border-width-1) solid var(--border-light);
   box-shadow: var(--shadow-sm);
   transition: var(--transition-base);
 }
@@ -70,12 +70,12 @@
   gap: var(--spacing-3);
   margin-bottom: var(--spacing-4);
   padding-bottom: var(--spacing-3);
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: var(--border-width-1) solid var(--border-light);
 }
 
 .config-section-icon {
-  width: 40px;
-  height: 40px;
+  width: var(--spacing-10);
+  height: var(--spacing-10);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
@@ -136,7 +136,7 @@
 
 .config-form-input {
   padding: var(--spacing-3);
-  border: 1px solid var(--border-light);
+  border: var(--border-width-1) solid var(--border-light);
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
   background-color: var(--bg-primary);
@@ -147,12 +147,12 @@
 .config-form-input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-alpha);
+  box-shadow: var(--shadow-outline-primary);
 }
 
 .config-form-select {
   padding: var(--spacing-3);
-  border: 1px solid var(--border-light);
+  border: var(--border-width-1) solid var(--border-light);
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
   background-color: var(--bg-primary);
@@ -174,7 +174,7 @@
   border-radius: var(--radius-lg);
   padding: var(--spacing-6);
   margin-bottom: var(--spacing-6);
-  border: 1px solid var(--border-light);
+  border: var(--border-width-1) solid var(--border-light);
 }
 
 .system-config-header {
@@ -183,7 +183,7 @@
   justify-content: space-between;
   margin-bottom: var(--spacing-4);
   padding-bottom: var(--spacing-3);
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: var(--border-width-1) solid var(--border-light);
 }
 
 .system-config-title {
@@ -222,7 +222,7 @@
   border-radius: var(--radius-lg);
   padding: var(--spacing-6);
   margin-bottom: var(--spacing-6);
-  border: 1px solid var(--border-light);
+  border: var(--border-width-1) solid var(--border-light);
 }
 
 .security-option {
@@ -230,7 +230,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-4);
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: var(--border-width-1) solid var(--border-light);
 }
 
 .security-option:last-child {
@@ -256,8 +256,8 @@
 
 .security-toggle {
   position: relative;
-  width: 48px;
-  height: 24px;
+  width: var(--spacing-12);
+  height: var(--spacing-6);
   background-color: var(--border-light);
   border-radius: var(--radius-full);
   cursor: pointer;
@@ -271,17 +271,17 @@
 .security-toggle::after {
   content: '';
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 20px;
-  height: 20px;
+  top: var(--spacing-1);
+  left: var(--spacing-1);
+  width: var(--spacing-5);
+  height: var(--spacing-5);
   background-color: var(--color-white);
   border-radius: 50%;
   transition: var(--transition-base);
 }
 
 .security-toggle.active::after {
-  transform: translateX(24px);
+  transform: translateX(var(--spacing-6));
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
