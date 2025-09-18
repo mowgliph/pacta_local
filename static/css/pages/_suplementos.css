@@ -1,0 +1,46 @@
+/* ===================================================================
+   PACTA - Página de Suplementos
+   Archivo: _suplementos.css
+   Descripción: Estilos específicos para suplementos usando variables CSS
+   Dependencias: base/_variables.css, components, utilities
+   Orden de carga: importado por pages/_index.css
+=================================================================== */
+
+/* ===== GRID MÉTRICAS ===== */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--spacing-4);
+}
+
+@media (max-width: var(--breakpoint-xl)) {
+  .metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: var(--breakpoint-lg)) {
+  .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: var(--breakpoint-sm)) {
+  .metrics-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== CHARTS ===== */
+.charts-block .donut-chart {
+  background: var(--color-white);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow);
+}
+
+/* ===== TABLA ===== */
+.suplementos-table thead th {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-color-light);
+}
+
+.suplementos-table tbody td { vertical-align: middle; }
+
+/* ===== UTILIDADES ===== */
+.min-w-200 { min-width: 200px; }
+

@@ -1,0 +1,76 @@
+/* ===================================================================
+   PACTA - Página de Usuario
+   Archivo: _usuarios.css
+   Descripción: Estilos específicos del perfil de usuario utilizando variables CSS
+   Dependencias: base/_variables.css, components, utilities
+   Orden de carga: importado por pages/_index.css
+=================================================================== */
+
+/* ===== AVATAR ===== */
+.user-avatar-large {
+  width: 96px;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-full);
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow);
+}
+
+/* ===== TARJETA PERFIL ===== */
+.user-profile-card .card-body {
+  padding: var(--spacing-4);
+}
+
+.user-profile-card h2 {
+  font-size: var(--font-size-xl);
+  margin: 0;
+}
+
+.user-profile-card .text-secondary {
+  color: var(--text-color-light) !important;
+}
+
+/* ===== GRID MÉTRICAS REUTILIZA DASHBOARD ===== */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--spacing-4);
+}
+
+@media (max-width: var(--breakpoint-xl)) {
+  .metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: var(--breakpoint-lg)) {
+  .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: var(--breakpoint-sm)) {
+  .metrics-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== UTILIDADES DE ANCHO MÍNIMO ===== */
+.min-w-200 { min-width: 200px; }
+
+/* ===== ACTIVITY FEED (reutilizado) ===== */
+.activity-block .status-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 var(--spacing-2);
+  border-radius: var(--border-radius-full);
+  background: var(--color-gray-100);
+  color: var(--text-color);
+  font-size: var(--font-size-sm);
+  border: var(--border-width) solid var(--border-color);
+}
+
+.status-color-gray { background-color: var(--color-gray-400); }
+.status-color-error { background-color: var(--color-error-500); }
+.status-color-info { background-color: var(--color-info); }
+
