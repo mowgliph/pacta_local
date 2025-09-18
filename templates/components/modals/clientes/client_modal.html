@@ -1,10 +1,10 @@
 <!-- Modal para agregar/editar cliente -->
-<div class="modal fade" id="clientModal" tabindex="-1" aria-labelledby="clientModalLabel" aria-hidden="true">
+<div class="modal fade clientes-modal" id="clientModal" tabindex="-1" aria-labelledby="clientModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="clientModalLabel">
-                    <i class="fas fa-plus" style="color: #10b981; margin-right: 8px;"></i>
+                    <i class="fas fa-plus"></i>
                     Añadir Nuevo Cliente
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -46,11 +46,11 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Personas de Contacto</label>
-                            <div class="position-relative">
+                            <div class="persona-search-container">
                                 <input type="text" class="form-control" id="personaSearch" placeholder="Buscar persona responsable..." autocomplete="off">
-                                <div id="personaSearchResults" class="dropdown-menu" style="display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 1000; max-height: 200px; overflow-y: auto;"></div>
+                                <div id="personaSearchResults" class="persona-search-results"></div>
                             </div>
-                            <div id="selectedPersonas" class="mt-2">
+                            <div id="selectedPersonas" class="selected-personas">
                                 <!-- Aquí se mostrarán las personas seleccionadas -->
                             </div>
                             <input type="hidden" id="clientContact" name="personas_contacto">
