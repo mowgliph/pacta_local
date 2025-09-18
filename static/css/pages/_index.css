@@ -1,0 +1,25 @@
+/* ===================================================================
+   PACTA - Páginas
+   Archivo: _index.css
+   Descripción: Estilos específicos de páginas
+   Orden de carga: 5
+   
+   NOTA: Estos estilos deben ser específicos de cada página y no deben
+   contener estilos que puedan reutilizarse en otros lugares.
+=================================================================== */
+
+@import './_dashboard.css';
+@import './_login.css';
+@import './_usuarios.css';
+@import './_usuarios_lista.css';
+@import './_proveedores.css';
+@import './_clientes.css';
+@import './_reportes.css';
+@import './_suplementos.css';
+@import './_personas.css';
+@import './_backup.css';
+@import './_backup_lista.css';
+@import './_changelog.css';
+@import './_configuracion.css';
+@import './_notifications_modal.css';
+@import './_config_modal.css';

@@ -13,8 +13,10 @@ from .clients import clients_bp
 
 def register_blueprints(app):
     """Registra todos los blueprints de la aplicación"""
+    # Registrar blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
+    app.register_blueprint(providers_bp)
     app.register_blueprint(users_bp)
     app.register_blueprint(notifications_bp)
     app.register_blueprint(personas_bp)
@@ -23,5 +25,4 @@ def register_blueprints(app):
     app.register_blueprint(changelog_bp)
     app.register_blueprint(backup_bp)
     app.register_blueprint(document_bp)
-    app.register_blueprint(providers_bp)
     app.register_blueprint(clients_bp)

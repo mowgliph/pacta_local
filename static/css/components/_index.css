@@ -1,0 +1,13 @@
+/* ===================================================================
+   PACTA - Componentes
+   Archivo: _index.css
+   Descripción: Estilos para componentes reutilizables
+   Orden de carga: 3
+=================================================================== */
+
+/* Componentes base */
+@import './_buttons.css';
+@import './_cards.css';
+@import './_forms.css';
+@import './_tables.css';
+@import './_alerts.css';

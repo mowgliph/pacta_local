@@ -1,0 +1,11 @@
+/* ===================================================================
+   PACTA - Base Styles
+   Archivo: _index.css
+   Descripción: Importa todos los estilos base necesarios
+   Orden de carga: 1
+=================================================================== */
+
+@import './_variables.css';
+@import './_accessibility.css';
+@import './_scrollbar.css';
+@import './_focus.css';

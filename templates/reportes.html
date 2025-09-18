@@ -3,12 +3,12 @@
 {% block title %}Reportes - PACTA{% endblock %}
 
 {% block content %}
-    <div class="dashboard-container">
+    <div class="container-fluid">
         <!-- Include Sidebar Component -->
         {% include 'components/partials/sidebar.html' %}
         
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="row g-0">
             <!-- Include Header Component with custom content -->
             {% set page_title = 'Reportes' %}
             {% set page_subtitle = 'Generación y análisis de reportes' %}
@@ -18,7 +18,7 @@
             {% include 'components/partials/content_header.html' %}
             
             <!-- Metrics Cards -->
-            <div class="metrics-grid">
+            <div class="row g-3 mb-4">
                 <!-- Reportes Generados -->
                 {% set metric_label = "Reportes Generados" %}
                 {% set metric_value = estadisticas.reportes_generados or 89 %}
@@ -57,32 +57,37 @@
             </div>
             
             <!-- Vertical Blocks Layout -->
-            <div class="vertical-blocks">
+            <div class="row g-4">
                 <!-- Generate Reports Block -->
-                <div class="block-section actions-block">
+                <div class="col-12 col-lg-6 mb-4">
+                    <div class="card h-100">
                     <div class="block-header">
                         <h3 class="block-title">Generar Reportes</h3>
                         <p class="block-subtitle">Herramientas para crear reportes personalizados</p>
-                    </div>
+                        </div>
+                </div>
                     <div class="block-content">
                         <div class="d-flex flex-wrap gap-3">
-                            <button class="btn btn-primary flex-fill d-flex align-items-center gap-2" style="min-width: 200px;">
+                            <button class="btn btn-primary flex-fill d-flex align-items-center gap-2 min-w-200">
                                 <i class="fas fa-chart-line"></i>
                                 Reporte Financiero
                             </button>
-                            <button class="btn btn-success flex-fill d-flex align-items-center gap-2" style="min-width: 200px;">
+                            <button class="btn btn-success flex-fill d-flex align-items-center gap-2 min-w-200">
                                 <i class="fas fa-users"></i>
                                 Reporte de Personal
                             </button>
-                            <button class="btn btn-warning flex-fill d-flex align-items-center gap-2" style="min-width: 200px;">
+                            <button class="btn btn-warning flex-fill d-flex align-items-center gap-2 min-w-200">
                                 <i class="fas fa-file-contract"></i>
                                 Estado de Contratos
                             </button>
-                            <button class="btn btn-purple flex-fill d-flex align-items-center gap-2" style="min-width: 200px;">
+                            <button class="btn btn-purple flex-fill d-flex align-items-center gap-2 min-w-200">
                                 <i class="fas fa-cog"></i>
                                 Reporte Personalizado
                             </button>
+                            </div>
+                </div>
                         </div>
+                </div>
                     </div>
                 </div>
                 
@@ -91,29 +96,39 @@
                     <div class="block-header">
                         <h3 class="block-title">Distribución de Reportes</h3>
                         <p class="block-subtitle">Análisis de tipos y estado de reportes</p>
-                    </div>
+                        </div>
+                </div>
                     <div class="block-content">
                         <div class="charts-grid">
                             <div class="donut-chart">
                                 <canvas id="typeDistChart" width="120" height="120"></canvas>
                                 <div class="donut-value">67%</div>
                                 <div class="donut-label">Automáticos</div>
-                            </div>
+                                </div>
+                </div>
                             <div class="donut-chart">
                                 <canvas id="statusChart" width="120" height="120"></canvas>
                                 <div class="donut-value">94%</div>
                                 <div class="donut-label">Completados</div>
+                                </div>
+                </div>
                             </div>
+                </div>
                         </div>
+                </div>
+                        </div>
+                </div>
                     </div>
                 </div>
                 
-                <!-- Reports Table Block -->
-                <div class="block-section table-block">
+                <!-- Report List Block -->
+                <div class="col-12 mb-4">
+                    <div class="card h-100">
                     <div class="block-header">
                         <h3 class="block-title">Reportes Recientes</h3>
                         <p class="block-subtitle">Historial completo de reportes generados</p>
-                    </div>
+                        </div>
+                </div>
                     <div class="block-content">
                         <!-- Tabla Consistente de Reportes Recientes -->
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -125,8 +140,10 @@
                                 <button class="btn btn-outline-primary btn-sm" title="Exportar">
                                     <i class="fas fa-download"></i>
                                 </button>
+                                </div>
+                </div>
                             </div>
-                        </div>
+                </div>
                         
                         {% set table_headers = [
                             {'title': 'Reporte', 'sortable': true, 'class': ''},
@@ -228,44 +245,58 @@
                         {% set empty_message = 'No hay reportes disponibles' %}
                         
                         {% include 'components/partials/consistent_table.html' %}
-                    </div>
+                        </div>
+                </div>
+                        </div>
+                </div>
                     </div>
                 </div>
 
                 
                 <!-- Report Schedule Block -->
-                <div class="block-section activity-block">
+                <div class="col-12 col-lg-6">
+                    <div class="card h-100">
                     <div class="block-header">
                         <h3 class="block-title">Programación de Reportes</h3>
                         <p class="block-subtitle">Reportes automáticos programados</p>
-                    </div>
-                    <div class="block-content">
-                        <div style="display: flex; flex-direction: column; gap: 16px;">
-                            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #f8fafc; border-radius: 8px;">
-                                <div style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%;"></div>
-                                <div style="flex: 1;">
-                                    <div style="font-size: 14px; font-weight: 500;">Reporte Financiero</div>
-                                    <div style="font-size: 12px; color: #64748b;">Próximo: Mañana 09:00</div>
-                                    <div style="font-size: 11px; color: #94a3b8;">Frecuencia: Semanal</div>
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #f8fafc; border-radius: 8px;">
-                                <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></div>
-                                <div style="flex: 1;">
-                                    <div style="font-size: 14px; font-weight: 500;">Reporte Ejecutivo</div>
-                                    <div style="font-size: 12px; color: #64748b;">Próximo: Hoy 18:00</div>
-                                    <div style="font-size: 11px; color: #94a3b8;">Frecuencia: Diario</div>
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #f8fafc; border-radius: 8px;">
-                                <div style="width: 8px; height: 8px; background: #f59e0b; border-radius: 50%;"></div>
-                                <div style="flex: 1;">
-                                    <div style="font-size: 14px; font-weight: 500;">Reporte de Personal</div>
-                                    <div style="font-size: 12px; color: #64748b;">Próximo: 01/02/2025</div>
-                                    <div style="font-size: 11px; color: #94a3b8;">Frecuencia: Mensual</div>
-                                </div>
-                            </div>
                         </div>
+                </div>
+                    <div class="block-content">
+                        <div class="d-flex flex-column gap-3">
+                            <div class="activity-item">
+                                <span class="status-dot status-dot-sm status-color-primary"></span>
+                                <div class="activity-content">
+                                    <div class="activity-message"><strong>Reporte Financiero</strong></div>
+                                    <div class="activity-message">Próximo: Mañana 09:00</div>
+                                    <div class="activity-time">Frecuencia: Semanal</div>
+                                    </div>
+                </div>
+                                </div>
+                </div>
+                            <div class="activity-item">
+                                <span class="status-dot status-dot-sm status-color-success"></span>
+                                <div class="activity-content">
+                                    <div class="activity-message"><strong>Reporte Ejecutivo</strong></div>
+                                    <div class="activity-message">Próximo: Hoy 18:00</div>
+                                    <div class="activity-time">Frecuencia: Diario</div>
+                                    </div>
+                </div>
+                                </div>
+                </div>
+                            <div class="activity-item">
+                                <span class="status-dot status-dot-sm status-color-warning"></span>
+                                <div class="activity-content">
+                                    <div class="activity-message"><strong>Reporte de Personal</strong></div>
+                                    <div class="activity-message">Próximo: 01/02/2025</div>
+                                    <div class="activity-time">Frecuencia: Mensual</div>
+                                    </div>
+                </div>
+                                </div>
+                </div>
+                            </div>
+                </div>
+                        </div>
+                </div>
                     </div>
                 </div>
             </div>

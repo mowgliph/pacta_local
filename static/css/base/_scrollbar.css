@@ -1,0 +1,169 @@
+/* ===================================================================
+   SCROLLBARS - Estilos personalizados para barras de desplazamiento
+   Archivo: _scrollbar.css
+   Versión: 1.0.0
+   Fecha: 2025-09-18
+   
+   Estilos personalizados para las barras de desplazamiento en diferentes navegadores.
+   Utiliza las variables de diseño del sistema para mantener la coherencia.
+=================================================================== */
+
+/* ===== 1. SCROLLBAR PREDETERMINADA ===== */
+
+/* Estilos base para WebKit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+/* Track - Fondo de la barra de desplazamiento */
+::-webkit-scrollbar-track {
+  background: var(--color-gray-100);
+  border-radius: 6px;
+}
+
+/* Handle - Barra de desplazamiento */
+::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background-color var(--transition-duration) var(--transition-timing);
+}
+
+/* Handle al pasar el ratón */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-400);
+}
+
+/* Handle activo */
+::-webkit-scrollbar-thumb:active {
+  background: var(--color-primary-500);
+}
+
+/* ===== 2. SCROLLBAR PARA ELEMENTOS ESPECÍFICOS ===== */
+
+/* Scrollbar para contenedores con clase .custom-scroll */
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gray-300) var(--color-gray-100);
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-400);
+}
+
+/* Scrollbar para modales y paneles */
+.modal-scroll,
+.panel-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gray-400) var(--color-gray-100);
+}
+
+.modal-scroll::-webkit-scrollbar,
+.panel-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.modal-scroll::-webkit-scrollbar-thumb,
+.panel-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-gray-400);
+  border-radius: 3px;
+}
+
+/* ===== 3. ESTADOS Y VARIANTES ===== */
+
+/* Scrollbar primaria */
+.scroll-primary {
+  scrollbar-color: var(--color-primary-400) var(--color-primary-50);
+}
+
+.scroll-primary::-webkit-scrollbar-thumb {
+  background: var(--color-primary-400);
+}
+
+.scroll-primary::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-500);
+}
+
+/* Scrollbar secundaria */
+.scroll-secondary {
+  scrollbar-color: var(--color-secondary-400) var(--color-secondary-50);
+}
+
+.scroll-secondary::-webkit-scrollbar-thumb {
+  background: var(--color-secondary-400);
+}
+
+.scroll-secondary::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secondary-500);
+}
+
+/* Scrollbar fina (más delgada) */
+.scroll-thin {
+  scrollbar-width: thin;
+}
+
+.scroll-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+/* ===== 4. MODOS DE CONTRASTE ===== */
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-gray-700);
+    border: 1px solid var(--color-gray-900);
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--color-gray-100);
+  }
+}
+
+/* Reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+  ::-webkit-scrollbar-thumb {
+    transition: none;
+  }
+}
+
+/* ===== 5. NAVEGADORES FIREFOX ===== */
+@supports (scrollbar-color: auto) {
+  html {
+    scrollbar-color: var(--color-gray-300) var(--color-gray-100);
+    scrollbar-width: auto;
+  }
+  
+  .custom-scroll {
+    scrollbar-color: var(--color-gray-300) var(--color-gray-100);
+    scrollbar-width: thin;
+  }
+  
+  .modal-scroll,
+  .panel-scroll {
+    scrollbar-color: var(--color-gray-400) var(--color-gray-100);
+    scrollbar-width: thin;
+  }
+  
+  .scroll-primary {
+    scrollbar-color: var(--color-primary-400) var(--color-primary-50);
+  }
+  
+  .scroll-secondary {
+    scrollbar-color: var(--color-secondary-400) var(--color-secondary-50);
+  }
+}

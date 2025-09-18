@@ -3,12 +3,12 @@
 {% block title %}Contratos - PACTA{% endblock %}
 
 {% block content %}
-    <div class="dashboard-container">
+    <div class="container-fluid">
         <!-- Include Sidebar Component -->
         {% include 'components/partials/sidebar.html' %}
         
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="row g-0">
             <!-- Include Header Component with custom content -->
             {% set page_title = 'Contratos' %}
             {% set page_subtitle = 'Gestión y administración de contratos' %}
@@ -18,7 +18,7 @@
             {% include 'components/partials/content_header.html' %}
             
             <!-- Metrics Cards -->
-            <div class="metrics-grid">
+            <div class="metrics-grid mb-4">
                 {% set metric_label = 'Total Contratos' %}
                 {% set metric_value = contratos_stats.total|default(24) %}
                 {% set metric_icon = 'fas fa-file-contract' %}
@@ -45,89 +45,91 @@
             </div>
             
             <!-- Vertical Blocks Layout -->
-            <div class="vertical-blocks">
+            <div class="row g-4">
                 <!-- Contract Tools Block -->
-                <div class="block-section actions-block">
-                    <div class="block-header">
-                        <h3 class="block-title">Herramientas de los Contratos</h3>
-                        <p class="block-subtitle">Herramientas para gestión eficiente de contratos</p>
-                    </div>
-                    <div class="block-content">
-                        <div class="contract-actions d-flex flex-wrap gap-3">
-                            <button class="btn btn-primary flex-fill d-flex align-items-center gap-2" style="min-width: 200px;" data-bs-toggle="modal" data-bs-target="#crearContratoModal">
-                                <i class="fas fa-plus"></i>
-                                Nuevo Contrato
-                            </button>
-                            <button class="btn btn-success flex-fill d-flex align-items-center gap-2" style="min-width: 200px;" onclick="window.location.href='/suplementos'">
-                                <i class="fas fa-file-contract"></i>
-                                Gestionar Suplementos
-                            </button>
-                            <button class="btn btn-warning flex-fill d-flex align-items-center gap-2" onclick="window.location.href='/contratos-vencidos'" style="min-width: 200px;">
-                                <i class="fas fa-clock"></i>
-                                Revisar Vencimientos
-                            </button>
-                            <button class="btn btn-purple flex-fill d-flex align-items-center gap-2" style="min-width: 200px;">
-                                <i class="fas fa-file-export"></i>
-                                Exportar Reporte
-                            </button>
+                <div class="col-12 col-lg-6 mb-4">
+                    <div class="card h-100 block-section">
+                        <div class="block-header">
+                            <h3 class="block-title">Herramientas de los Contratos</h3>
+                            <p class="block-subtitle">Herramientas para gestión eficiente de contratos</p>
+                        </div>
+                        <div class="block-content">
+                            <div class="contract-actions d-flex flex-wrap" style="gap: var(--spacing-3);">
+                                <button class="btn btn-primary flex-fill d-flex align-items-center gap-2 min-w-200" data-bs-toggle="modal" data-bs-target="#crearContratoModal">
+                                    <i class="fas fa-plus"></i>
+                                    Nuevo Contrato
+                                </button>
+                                <a href="/suplementos" class="btn btn-success flex-fill d-flex align-items-center gap-2 min-w-200">
+                                    <i class="fas fa-file-contract"></i>
+                                    Gestionar Suplementos
+                                </a>
+                                <a href="/contratos-vencidos" class="btn btn-warning flex-fill d-flex align-items-center gap-2 min-w-200">
+                                    <i class="fas fa-clock"></i>
+                                    Revisar Vencimientos
+                                </a>
+                                <button class="btn btn-purple flex-fill d-flex align-items-center gap-2 min-w-200">
+                                    <i class="fas fa-file-export"></i>
+                                    Exportar Reporte
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Advanced Search Block -->
-                <div class="block-section search-block">
-                    <div class="block-header">
-                        <h3 class="block-title">
-                            <i class="fas fa-search" style="color: #10b981; margin-right: 8px;"></i>
-                            Búsqueda Avanzada de Contratos
-                        </h3>
-                        <p class="block-subtitle">Filtrar y encontrar contratos específicos por criterios avanzados</p>
-                    </div>
-                    <div class="block-content">
-                        <div class="search-container" style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb;">
-                            <!-- Search Input -->
-                            <div class="search-input-group" style="margin-bottom: 16px;">
-                                <div style="position: relative;">
-                                    <input type="text" id="contractSearchInput" placeholder="Buscar por nombre, número de contrato, descripción..." 
-                                           style="width: 100%; padding: 12px 16px 12px 44px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; background: white;">
-                                    <i class="fas fa-search" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #6b7280;"></i>
+                <!-- Search Block -->
+                <div class="col-12 col-lg-6 mb-4">
+                    <div class="card h-100 block-section">
+                        <div class="block-header">
+                            <h3 class="block-title">
+                                <i class="fas fa-search text-success me-2"></i>
+                                Búsqueda Avanzada de Contratos
+                            </h3>
+                            <p class="block-subtitle">Filtrar y encontrar contratos específicos por criterios avanzados</p>
+                        </div>
+                        <div class="block-content">
+                        <div class="search-container card card-sm">
+                            <div class="card-body">
+                                <!-- Search Input -->
+                                <div class="search-input-group mb-3">
+                                    <div class="form-search">
+                                        <input type="text" id="contractSearchInput" placeholder="Buscar por nombre, número de contrato, descripción..." class="form-control">
+                                        <i class="fas fa-search form-search-icon"></i>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <!-- Filter Options -->
-                            <div class="filter-options" style="display: flex; gap: 16px; align-items: center; margin-bottom: 16px;">
-                                <label style="font-size: 14px; font-weight: 500; color: #374151;">Filtrar por tipo:</label>
-                                <div class="filter-buttons" style="display: flex; gap: 8px;">
-                                    <button id="filterAll" class="filter-btn active" data-filter="all" 
-                                            style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 6px; background: #3b82f6; color: white; font-size: 13px; cursor: pointer; transition: all 0.2s;">
-                                        <i class="fas fa-list" style="margin-right: 4px;"></i>
-                                        Todos
+                                
+                                <!-- Filter Options -->
+                                <div class="filter-options d-flex align-items-center gap-3 mb-3">
+                                    <label class="form-label mb-0">Filtrar por tipo:</label>
+                                    <div class="filter-buttons d-flex gap-2">
+                                        <button id="filterAll" class="btn btn-primary filter-btn active" data-filter="all">
+                                            <i class="fas fa-list me-1"></i>
+                                            Todos
+                                        </button>
+                                        <button id="filterCliente" class="btn btn-outline-secondary filter-btn" data-filter="cliente">
+                                            <i class="fas fa-user me-1"></i>
+                                            Cliente
+                                        </button>
+                                        <button id="filterProveedor" class="btn btn-outline-secondary filter-btn" data-filter="proveedor">
+                                            <i class="fas fa-building me-1"></i>
+                                            Proveedor
+                                        </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Search Actions -->
+                                <div class="search-actions d-flex gap-2 justify-content-end">
+                                    <button id="clearSearch" class="btn btn-outline-secondary">
+                                        <i class="fas fa-times me-1"></i>
+                                        Limpiar
                                     </button>
-                                    <button id="filterCliente" class="filter-btn" data-filter="cliente" 
-                                            style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 6px; background: white; color: #374151; font-size: 13px; cursor: pointer; transition: all 0.2s;">
-                                        <i class="fas fa-user" style="margin-right: 4px;"></i>
-                                        Cliente
-                                    </button>
-                                    <button id="filterProveedor" class="filter-btn" data-filter="proveedor" 
-                                            style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 6px; background: white; color: #374151; font-size: 13px; cursor: pointer; transition: all 0.2s;">
-                                        <i class="fas fa-building" style="margin-right: 4px;"></i>
-                                        Proveedor
+                                    <button id="applySearch" class="btn btn-success">
+                                        <i class="fas fa-search me-1"></i>
+                                        Buscar
                                     </button>
                                 </div>
-                            </div>
-                            
-                            <!-- Search Actions -->
-                            <div class="search-actions" style="display: flex; gap: 12px; justify-content: flex-end;">
-                                <button id="clearSearch" class="btn-secondary" 
-                                        style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 6px; background: white; color: #6b7280; font-size: 13px; cursor: pointer;">
-                                    <i class="fas fa-times" style="margin-right: 4px;"></i>
-                                    Limpiar
-                                </button>
-                                <button id="applySearch" class="btn-primary" 
-                                        style="padding: 8px 16px; border: none; border-radius: 6px; background: #10b981; color: white; font-size: 13px; cursor: pointer;">
-                                    <i class="fas fa-search" style="margin-right: 4px;"></i>
-                                    Buscar
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -137,151 +139,209 @@
                     <!-- Providers and Clients Management Section - Dynamic Component -->
                     {% set providers_api_url = "/api/providers-summary" %}
                     {% set clients_api_url = "/api/clients-summary" %}
-                    {% set data_max_items = "3" %}
+                    {% set data_max_items = "5" %}
                     {% set data_title = "Proveedores y Clientes Principales" %}
                     {% set data_subtitle = "Vista rápida de los principales proveedores y clientes del sistema" %}
                     {% set data_providers_manage_url = "/proveedores" %}
                     {% set data_clients_manage_url = "/clientes" %}
                     {% set component_id = "providers-clients-contratos" %}
-                    {% include 'components/partials/providers-clients-block.html' with context %}
+                    <div class="card h-100 block-section">
+                        {% include 'components/partials/providers-clients-block.html' with context %}
+                    </div>
                 </div>
 
                 <!-- Contracts Table Block -->
-                <div class="block-section table-block">
-                    <div class="block-header">
-                        <h3 class="block-title">Lista de Contratos</h3>
-                        <p class="block-subtitle">Gestión completa de todos los contratos activos</p>
-                    </div>
-                    <div class="block-content">
-                        {% set table_headers = [
-                            {'title': 'Contrato', 'sortable': true, 'class': ''},
-                            {'title': 'Cliente', 'sortable': true, 'class': ''},
-                            {'title': 'Fecha Inicio', 'sortable': true, 'class': ''},
-                            {'title': 'Valor', 'sortable': true, 'class': 'text-end'},
-                            {'title': 'Estado', 'sortable': true, 'class': 'text-center'},
-                            {'title': 'Vencimiento', 'sortable': true, 'class': ''},
-                            {'title': 'Acciones', 'sortable': false, 'class': 'text-center col-actions'}
-                        ] %}
+                <div class="col-12 mb-4">
+                    <div class="card h-100 block-section">
+                        <div class="block-header">
+                            <h3 class="block-title">Lista de Contratos</h3>
+                            <p class="block-subtitle">Gestión completa de todos los contratos activos</p>
+                        </div>
+                        <div class="block-content">
+                        <!-- Tabla de Contratos -->
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped contratos-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="sortable">Contrato <span class="sort-icon"></span></th>
+                                        <th scope="col" class="sortable">Cliente <span class="sort-icon"></span></th>
+                                        <th scope="col" class="sortable">Fecha Inicio <span class="sort-icon"></span></th>
+                                        <th scope="col" class="sortable text-end">Valor <span class="sort-icon"></span></th>
+                                        <th scope="col" class="sortable text-center">Estado <span class="sort-icon"></span></th>
+                                        <th scope="col" class="sortable">Vencimiento <span class="sort-icon"></span></th>
+                                        <th scope="col" class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contractsTableBody">
+                                    <!-- Contrato 1 -->
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-file-contract text-primary me-2"></i>
+                                                <div>
+                                                    <div class="fw-semibold">CONT-2025-003</div>
+                                                    <small class="text-muted">Servicios de Consultoría</small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-building text-success me-2"></i>
+                                                <div>
+                                                    <div class="fw-semibold">TechCorp S.A.</div>
+                                                    <small class="text-muted">Tecnología</small>
+                                            </div>
+                                        </td>
+                                        <td>15 Ene 2025</td>
+                                        <td class="text-end"><span class="fw-semibold text-success">$125,000</span></td>
+                                        <td class="text-center"><span class="badge bg-success">Activo</span></td>
+                                        <td>15 Ene 2026</td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <button type="button" class="btn btn-outline-primary" onclick="viewContract('CONT-2025-003')" title="Ver contrato">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary" onclick="editContract('CONT-2025-003')" title="Editar contrato">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                </div>
+                </div>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Contrato 2 -->
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-file-contract text-primary me-2"></i>
+                                                <div>
+                                                    <div class="fw-semibold">CONT-2025-002</div>
+                                                    <small class="text-muted">Desarrollo de Software</small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-building text-success me-2"></i>
+                                                <div>
+                                                    <div class="fw-semibold">InnovaSoft Ltd.</div>
+                                                    <small class="text-muted">Software</small>
+                                                    </div>
+                </div>
+                                                </div>
+                </div>
+                                        </td>
+                                        <td>10 Ene 2025</td>
+                                        <td class="text-end"><span class="fw-semibold text-success">$89,500</span></td>
+                                        <td class="text-center"><span class="badge bg-success">Activo</span></td>
+                                        <td>10 Ene 2026</td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <button type="button" class="btn btn-outline-primary" onclick="viewContract('CONT-2025-002')" title="Ver contrato">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary" onclick="editContract('CONT-2025-002')" title="Editar contrato">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                </div>
+                </div>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Contrato 3 -->
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-file-contract text-primary me-2"></i>
+                                                <div>
+                                                    <div class="fw-semibold">CONT-2025-001</div>
+                                                    <small class="text-muted">Mantenimiento de Sistemas</small>
+                                                    </div>
+                </div>
+                                                </div>
+                </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-building text-success me-2"></i>
+                                                <div>
+                                                    <div class="fw-semibold">SysTech Solutions</div>
+                                                    <small class="text-muted">Soporte TI</small>
+                                                    </div>
+                </div>
+                                                </div>
+                </div>
+                                        </td>
+                                        <td>05 Ene 2025</td>
+                                        <td class="text-end"><span class="fw-semibold text-success">$45,000</span></td>
+                                        <td class="text-center"><span class="badge bg-warning">Pendiente</span></td>
+                                        <td>05 Jul 2025</td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <button type="button" class="btn btn-outline-primary" onclick="viewContract('CONT-2025-001')" title="Ver contrato">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary" onclick="editContract('CONT-2025-001')" title="Editar contrato">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                </div>
+                </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
                         
-                        {% set table_data = [
-                            {
-                                'cells': [
-                                    {
-                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-file-contract text-primary me-2"></i><div><div class="fw-semibold">CONT-2025-003</div><small class="text-muted">Servicios de Consultoría</small></div></div>',
-                                        'class': ''
-                                    },
-                                    {
-                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-building text-success me-2"></i><div><div class="fw-semibold">TechCorp S.A.</div><small class="text-muted">Tecnología</small></div></div>',
-                                        'class': ''
-                                    },
-                                    {'value': '15 Ene 2025', 'class': ''},
-                                    {'value': '<span class="fw-semibold text-success">$125,000</span>', 'class': 'text-end'},
-                                    {'type': 'badge', 'value': 'Activo', 'variant': 'success', 'class': 'text-center'},
-                                    {'value': '15 Ene 2026', 'class': ''},
-                                    {
-                                        'type': 'actions',
-                                        'actions': [
-                                            {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewContract("CONT-2025-003")', 'tooltip': 'Ver contrato'},
-                                            {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editContract("CONT-2025-003")', 'tooltip': 'Editar contrato'}
-                                        ],
-                                        'class': 'text-center'
-                                    }
-                                ]
-                            },
-                            {
-                                'cells': [
-                                    {
-                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-file-contract text-primary me-2"></i><div><div class="fw-semibold">CONT-2025-002</div><small class="text-muted">Desarrollo de Software</small></div></div>',
-                                        'class': ''
-                                    },
-                                    {
-                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-building text-success me-2"></i><div><div class="fw-semibold">InnovaSoft Ltd.</div><small class="text-muted">Software</small></div></div>',
-                                        'class': ''
-                                    },
-                                    {'value': '10 Ene 2025', 'class': ''},
-                                    {'value': '<span class="fw-semibold text-success">$85,000</span>', 'class': 'text-end'},
-                                    {'type': 'badge', 'value': 'Pendiente', 'variant': 'warning', 'class': 'text-center'},
-                                    {'value': '10 Jul 2025', 'class': ''},
-                                    {
-                                        'type': 'actions',
-                                        'actions': [
-                                            {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewContract("CONT-2025-002")', 'tooltip': 'Ver contrato'},
-                                            {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editContract("CONT-2025-002")', 'tooltip': 'Editar contrato'}
-                                        ],
-                                        'class': 'text-center'
-                                    }
-                                ]
-                            },
-                            {
-                                'cells': [
-                                    {
-                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-file-contract text-primary me-2"></i><div><div class="fw-semibold">CONT-2025-001</div><small class="text-muted">Mantenimiento de Sistemas</small></div></div>',
-                                        'class': ''
-                                    },
-                                    {
-                                        'value': '<div class="d-flex align-items-center"><i class="fas fa-building text-success me-2"></i><div><div class="fw-semibold">GlobalTech Inc.</div><small class="text-muted">Tecnología</small></div></div>',
-                                        'class': ''
-                                    },
-                                    {'value': '05 Ene 2025', 'class': ''},
-                                    {'value': '<span class="fw-semibold text-success">$65,000</span>', 'class': 'text-end'},
-                                    {'type': 'badge', 'value': 'Activo', 'variant': 'success', 'class': 'text-center'},
-                                    {'value': '05 Dic 2025', 'class': ''},
-                                    {
-                                        'type': 'actions',
-                                        'actions': [
-                                            {'icon': 'fas fa-eye', 'variant': 'outline-primary', 'onclick': 'viewContract("CONT-2025-001")', 'tooltip': 'Ver contrato'},
-                                            {'icon': 'fas fa-edit', 'variant': 'outline-secondary', 'onclick': 'editContract("CONT-2025-001")', 'tooltip': 'Editar contrato'}
-                                        ],
-                                        'class': 'text-center'
-                                    }
-                                ]
-                            }
-                        ] %}
-                        
-                        {% set empty_message = 'No hay contratos disponibles' %}
-                        
-                        {% include 'components/partials/consistent_table.html' %}
+                        <!-- Mensaje cuando no hay contratos -->
+                        <div id="noContractsMessage" class="d-none">
+                            <div class="text-center text-muted py-5">
+                                <i class="fas fa-inbox fa-3x mb-3 d-block opacity-50"></i>
+                                <h5>No hay contratos disponibles</h5>
+                                <p class="mb-0">Utiliza el botón "Nuevo Contrato" para comenzar</p>
+                            </div>
+                        </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Recent Activity Block -->
-                <div class="block-section activity-block">
-                    <div class="block-header">
-                        <h3 class="block-title">Actividad Reciente</h3>
-                        <p class="block-subtitle">Últimas acciones y cambios en contratos</p>
-                    </div>
-                    <div class="block-content">
-                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div class="col-12 col-lg-6">
+                    <div class="card h-100 block-section">
+                        <div class="block-header">
+                            <h3 class="block-title">Actividad Reciente</h3>
+                            <p class="block-subtitle">Últimas acciones y cambios en contratos</p>
+                        </div>
+                        <div class="block-content">
+                            <div class="d-flex flex-column" style="gap: var(--spacing-3);">
                             <div class="activity-item">
-                                <div class="activity-dot" style="background: #10b981;"></div>
+                                <span class="status-dot status-dot-sm status-color-success"></span>
                                 <div class="activity-content">
-                                    <div class="activity-title">Contrato firmado</div>
-                                    <div class="activity-subtitle">CONT-2025-003 - Servicios de Consultoría</div>
+                                    <div class="activity-message"><strong>Contrato firmado</strong></div>
+                                    <div class="activity-message">CONT-2025-003 - Servicios de Consultoría</div>
                                     <div class="activity-time">Hace 2 horas</div>
+                                    </div>
                                 </div>
-                            </div>
                             <div class="activity-item">
-                                <div class="activity-dot" style="background: #3b82f6;"></div>
+                                <span class="status-dot status-dot-sm status-color-primary"></span>
                                 <div class="activity-content">
-                                    <div class="activity-title">Nuevo contrato creado</div>
-                                    <div class="activity-subtitle">CONT-2025-004 - Desarrollo de Aplicación</div>
+                                    <div class="activity-message"><strong>Nuevo contrato creado</strong></div>
+                                    <div class="activity-message">CONT-2025-004 - Desarrollo de Aplicación</div>
                                     <div class="activity-time">Hace 4 horas</div>
+                                    </div>
                                 </div>
-                            </div>
                             <div class="activity-item">
-                                <div class="activity-dot" style="background: #f59e0b;"></div>
+                                <span class="status-dot status-dot-sm status-color-warning"></span>
                                 <div class="activity-content">
-                                    <div class="activity-title">Contrato próximo a vencer</div>
-                                    <div class="activity-subtitle">CONT-2024-089 - Mantenimiento de Sistemas</div>
+                                    <div class="activity-message"><strong>Contrato próximo a vencer</strong></div>
+                                    <div class="activity-message">CONT-2024-089 - Mantenimiento de Sistemas</div>
                                     <div class="activity-time">Hace 6 horas</div>
+                                    </div>
                                 </div>
-                            </div>
                             <div class="activity-item">
-                                <div class="activity-dot" style="background: #8b5cf6;"></div>
+                                <span class="status-dot status-dot-sm status-color-purple"></span>
                                 <div class="activity-content">
-                                    <div class="activity-title">Documentos actualizados</div>
-                                    <div class="activity-subtitle">CONT-2025-001 - Anexos técnicos</div>
+                                    <div class="activity-message"><strong>Documentos actualizados</strong></div>
+                                    <div class="activity-message">CONT-2025-001 - Anexos técnicos</div>
                                     <div class="activity-time">Hace 1 día</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -1,0 +1,225 @@
+/* ===================================================================
+   CONTAINER - Contenedores y wrappers
+   Archivo: _container.css
+   Versión: 1.0.0
+   Fecha: 2025-09-18
+   
+   Sistema de contenedores responsivos que se integra con:
+   - El sistema de cuadrícula existente
+   - Las variables de diseño definidas en _variables.css
+   - Los breakpoints estándar del proyecto
+=================================================================== */
+
+/* ===== 1. CONTENEDOR BASE ===== */
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: var(--spacing-4);
+  padding-left: var(--spacing-4);
+}
+
+/* ===== 2. TAMAÑOS DE CONTENEDOR ===== */
+
+/* Contenedor fluido (ancho completo) */
+.container-fluid {
+  max-width: 100%;
+}
+
+/* Contenedores con ancho máximo */
+.container-sm {
+  max-width: var(--breakpoint-sm);
+}
+
+.container-md {
+  max-width: var(--breakpoint-md);
+}
+
+.container-lg {
+  max-width: var(--breakpoint-lg);
+}
+
+.container-xl {
+  max-width: var(--breakpoint-xl);
+}
+
+.container-xxl {
+  max-width: var(--breakpoint-xxl);
+}
+
+/* ===== 3. CONTENEDORES ESPECIALES ===== */
+
+/* Contenedor con relleno reducido */
+.container-tight {
+  padding-right: var(--spacing-2);
+  padding-left: var(--spacing-2);
+}
+
+/* Contenedor sin relleno */
+.container-flush {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+/* Contenedor con borde */
+.container-bordered {
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+}
+
+/* Contenedor con sombra */
+.container-shadow {
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--border-radius-md);
+  background-color: var(--color-white);
+}
+
+/* Contenedor con fondo */
+.container-bg {
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-md);
+}
+
+/* ===== 4. ALINEACIÓN DE CONTENIDO ===== */
+
+/* Alineación horizontal */
+.container-center {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Alineación a la izquierda */
+.container-start {
+  margin-right: auto;
+  margin-left: 0;
+}
+
+/* Alineación a la derecha */
+.container-end {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+/* ===== 5. UTILIDADES DE ESPACIADO ===== */
+
+/* Espaciado superior */
+.container-mt-0 { margin-top: 0; }
+.container-mt-1 { margin-top: var(--spacing-1); }
+.container-mt-2 { margin-top: var(--spacing-2); }
+.container-mt-3 { margin-top: var(--spacing-3); }
+.container-mt-4 { margin-top: var(--spacing-4); }
+.container-mt-5 { margin-top: var(--spacing-5); }
+.container-mt-6 { margin-top: var(--spacing-6); }
+.container-mt-8 { margin-top: var(--spacing-8); }
+
+/* Espaciado inferior */
+.container-mb-0 { margin-bottom: 0; }
+.container-mb-1 { margin-bottom: var(--spacing-1); }
+.container-mb-2 { margin-bottom: var(--spacing-2); }
+.container-mb-3 { margin-bottom: var(--spacing-3); }
+.container-mb-4 { margin-bottom: var(--spacing-4); }
+.container-mb-5 { margin-bottom: var(--spacing-5); }
+.container-mb-6 { margin-bottom: var(--spacing-6); }
+.container-mb-8 { margin-bottom: var(--spacing-8); }
+
+/* ===== 6. RESPONSIVE ===== */
+
+/* Pequeño (sm) - ≥ 576px */
+@media (min-width: var(--breakpoint-sm)) {
+  .container {
+    padding-right: var(--spacing-6);
+    padding-left: var(--spacing-6);
+  }
+  
+  .container-tight {
+    padding-right: var(--spacing-4);
+    padding-left: var(--spacing-4);
+  }
+}
+
+/* Mediano (md) - ≥ 768px */
+@media (min-width: var(--breakpoint-md)) {
+  .container {
+    padding-right: var(--spacing-8);
+    padding-left: var(--spacing-8);
+  }
+  
+  .container-tight {
+    padding-right: var(--spacing-6);
+    padding-left: var(--spacing-6);
+  }
+}
+
+/* Grande (lg) - ≥ 992px */
+@media (min-width: var(--breakpoint-lg)) {
+  .container {
+    padding-right: var(--spacing-10);
+    padding-left: var(--spacing-10);
+  }
+  
+  .container-tight {
+    padding-right: var(--spacing-8);
+    padding-left: var(--spacing-8);
+  }
+}
+
+/* Extra grande (xl) - ≥ 1200px */
+@media (min-width: var(--breakpoint-xl)) {
+  .container {
+    max-width: var(--breakpoint-xl);
+  }
+}
+
+/* 2XL - ≥ 1400px */
+@media (min-width: var(--breakpoint-xxl)) {
+  .container {
+    max-width: var(--breakpoint-xxl);
+  }
+}
+
+/* ===== 7. UTILIDADES DE VISIBILIDAD ===== */
+
+/* Ocultar en ciertos breakpoints */
+.hide-sm { display: none; }
+.hide-md { display: none; }
+.hide-lg { display: none; }
+
+@media (min-width: var(--breakpoint-sm)) { .hide-sm { display: block; } }
+@media (min-width: var(--breakpoint-md)) { .hide-md { display: block; } }
+@media (min-width: var(--breakpoint-lg)) { .hide-lg { display: block; } }
+
+/* Mostrar solo en ciertos breakpoints */
+.show-sm-only { display: block; }
+.show-md-only { display: none; }
+.show-lg-only { display: none; }
+
+@media (min-width: var(--breakpoint-sm)) { 
+  .show-sm-only { display: none; }
+  .show-md-only { display: block; }
+}
+
+@media (min-width: var(--breakpoint-md)) { 
+  .show-md-only { display: none; }
+  .show-lg-only { display: block; }
+}
+
+/* ===== 8. ACCESIBILIDAD ===== */
+
+/* Asegurar contraste suficiente en modo alto contraste */
+@media (prefers-contrast: high) {
+  .container-bordered {
+    border: 2px solid var(--color-gray-900);
+  }
+  
+  .container-shadow {
+    box-shadow: 0 0 0 2px var(--color-gray-900);
+  }
+}
+
+/* Reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .container {
+    transition: none;
+  }
+}

@@ -1,882 +1,289 @@
 /* ===================================================================
-   PACTA - Componente Tablas
+   PACTA - Componente: Tablas
    Archivo: _tables.css
-   Descripción: Estilos para tablas y elementos relacionados
+   Descripción: Estilos para tablas de datos
+   Dependencias: base/_variables.css
 =================================================================== */
 
-/* ===== TABLA BASE ===== */
-
+/* Estilo base para tablas */
 .table {
   width: 100%;
-  margin-bottom: var(--spacing-6);
-  background-color: var(--bg-primary);
+  margin-bottom: var(--spacing-5);
+  color: var(--text-color);
+  vertical-align: top;
+  border-color: var(--color-gray-300);
   border-collapse: collapse;
-  border-spacing: 0;
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-normal);
 }
 
-.table th,
+/* Cabeceras de tabla */
+.table th {
+  padding: var(--spacing-3) var(--spacing-4);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-700);
+  background-color: var(--color-gray-50);
+  border-bottom: calc(var(--border-width) * 2) solid var(--color-gray-200);
+  text-align: left;
+}
+
+/* Celdas de tabla */
 .table td {
   padding: var(--spacing-3) var(--spacing-4);
-  text-align: left;
-  vertical-align: top;
-  border-bottom: 1px solid var(--border-light);
+  vertical-align: middle;
+  border-top: var(--border-width) solid var(--color-gray-200);
 }
 
-.table th {
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-primary);
-  background-color: var(--bg-secondary);
-  border-bottom: 2px solid var(--border-medium);
-  position: relative;
+/* Filas con hover */
+.table-hover tbody tr:hover {
+  background-color: var(--color-gray-50);
 }
-
-.table td {
-  color: var(--text-primary);
-}
-
-/* ===== ENCABEZADOS ===== */
-
-.table thead th {
-  vertical-align: bottom;
-  border-bottom: 2px solid var(--border-medium);
-  background-color: var(--bg-secondary);
-  position: sticky;
-  top: 0;
-  z-index: var(--z-sticky);
-}
-
-.table tbody + tbody {
-  border-top: 2px solid var(--border-medium);
-}
-
-.table tfoot th,
-.table tfoot td {
-  border-top: 2px solid var(--border-medium);
-  background-color: var(--bg-secondary);
-  font-weight: var(--font-weight-medium);
-}
-
-/* ===== VARIANTES DE ESTILO ===== */
 
 /* Tabla con bordes */
 .table-bordered {
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
+  border: var(--border-width) solid var(--color-gray-300);
 }
 
 .table-bordered th,
 .table-bordered td {
-  border: 1px solid var(--border-light);
+  border: var(--border-width) solid var(--color-gray-300);
 }
 
-.table-bordered thead th {
-  border-bottom: 2px solid var(--border-medium);
+.table-bordered thead th,
+.table-bordered thead td {
+  border-bottom-width: calc(var(--border-width) * 2);
 }
 
-/* Tabla sin bordes */
-.table-borderless th,
-.table-borderless td,
-.table-borderless thead th {
-  border: none;
-}
-
-/* Tabla con filas rayadas */
+/* Tabla rayada */
 .table-striped tbody tr:nth-of-type(odd) {
-  background-color: var(--bg-secondary);
-}
-
-/* Tabla con hover */
-.table-hover tbody tr:hover {
-  background-color: var(--bg-tertiary);
-  transition: var(--transition-colors);
+  background-color: var(--color-gray-50);
 }
 
 /* Tabla compacta */
 .table-sm th,
 .table-sm td {
   padding: var(--spacing-2) var(--spacing-3);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
 }
 
-/* Tabla grande */
-.table-lg th,
-.table-lg td {
-  padding: var(--spacing-4) var(--spacing-6);
-  font-size: var(--font-size-base);
-}
-
-/* ===== VARIANTES DE COLOR ===== */
-
-/* Tabla primaria */
-.table-primary {
-  background-color: var(--color-primary-light);
-}
-
-.table-primary th {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  border-color: var(--color-primary-dark);
-}
-
-.table-primary td {
-  color: var(--color-primary-darker);
-}
-
-/* Tabla secundaria */
-.table-secondary {
-  background-color: var(--color-secondary-light);
-}
-
-.table-secondary th {
-  background-color: var(--color-secondary);
-  color: var(--color-white);
-  border-color: var(--color-secondary-dark);
-}
-
-.table-secondary td {
-  color: var(--color-secondary-darker);
-}
-
-/* Tabla de éxito */
-.table-success {
-  background-color: var(--color-success-light);
-}
-
-.table-success th {
-  background-color: var(--color-success);
-  color: var(--color-white);
-  border-color: var(--color-success-dark);
-}
-
-.table-success td {
-  color: var(--color-success-darker);
-}
-
-/* Tabla de advertencia */
-.table-warning {
-  background-color: var(--color-warning-light);
-}
-
-.table-warning th {
-  background-color: var(--color-warning);
-  color: var(--color-white);
-  border-color: var(--color-warning-dark);
-}
-
-.table-warning td {
-  color: var(--color-warning-darker);
-}
-
-/* Tabla de error */
-.table-error {
-  background-color: var(--color-error-light);
-}
-
-.table-error th {
-  background-color: var(--color-error);
-  color: var(--color-white);
-  border-color: var(--color-error-dark);
-}
-
-.table-error td {
-  color: var(--color-error-darker);
-}
-
-/* ===== ESTADOS DE FILA ===== */
-
-.table tbody tr.table-active {
-  background-color: var(--color-primary-light);
-  color: var(--color-primary-darker);
-}
-
-.table tbody tr.table-success {
-  background-color: var(--color-success-light);
-  color: var(--color-success-darker);
-}
-
-.table tbody tr.table-warning {
-  background-color: var(--color-warning-light);
-  color: var(--color-warning-darker);
-}
-
-.table tbody tr.table-error {
-  background-color: var(--color-error-light);
-  color: var(--color-error-darker);
-}
-
-.table tbody tr.table-info {
-  background-color: var(--color-info-light);
-  color: var(--color-info-darker);
-}
-
-/* ===== ALINEACIÓN ===== */
-
-.table .text-center {
-  text-align: center;
-}
-
-.table .text-right {
-  text-align: right;
-}
-
-.table .text-left {
-  text-align: left;
-}
-
-.table .align-top {
-  vertical-align: top;
-}
-
-.table .align-middle {
-  vertical-align: middle;
-}
-
-.table .align-bottom {
-  vertical-align: bottom;
-}
-
-/* ===== COLUMNAS ESPECIALES ===== */
-
-/* Columna de acciones */
-.table .col-actions {
-  width: 1%;
-  white-space: nowrap;
-  text-align: center;
-}
-
-.table .col-actions .btn {
-  margin: 0 var(--spacing-1);
-}
-
-/* Columna de checkbox */
-.table .col-checkbox {
-  width: 1%;
-  text-align: center;
-  padding: var(--spacing-2);
-}
-
-.table .col-checkbox input[type="checkbox"] {
-  margin: 0;
-}
-
-/* Columna numérica */
-.table .col-numeric {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-  font-family: var(--font-family-mono);
-}
-
-/* Columna de estado */
-.table .col-status {
-  text-align: center;
-  width: 1%;
-  white-space: nowrap;
-}
-
-/* ===== CONTENEDOR RESPONSIVE ===== */
-
+/* Tabla responsive */
 .table-responsive {
   display: block;
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
 }
 
-.table-responsive .table {
-  margin-bottom: 0;
-  min-width: 600px;
+/* Variantes de color para filas */
+.table-primary,
+.table-primary > th,
+.table-primary > td {
+  background-color: rgba(var(--color-primary-rgb), 0.1);
 }
 
-/* Breakpoints específicos */
-.table-responsive-sm {
-  display: block;
-  width: 100%;
-  overflow-x: auto;
+.table-secondary,
+.table-secondary > th,
+.table-secondary > td {
+  background-color: rgba(var(--color-secondary-rgb), 0.1);
 }
 
-@media (max-width: 575px) {
-  .table-responsive-sm {
-    overflow-x: auto;
-  }
+.table-success,
+.table-success > th,
+.table-success > td {
+  background-color: rgba(var(--color-success-rgb), 0.1);
 }
 
-.table-responsive-md {
-  display: block;
-  width: 100%;
-  overflow-x: auto;
+.table-danger,
+.table-danger > th,
+.table-danger > td {
+  background-color: rgba(var(--color-danger-rgb), 0.1);
 }
 
-@media (max-width: 767px) {
-  .table-responsive-md {
-    overflow-x: auto;
-  }
+.table-warning,
+.table-warning > th,
+.table-warning > td {
+  background-color: rgba(var(--color-warning-rgb), 0.1);
 }
 
-.table-responsive-lg {
-  display: block;
-  width: 100%;
-  overflow-x: auto;
+.table-info,
+.table-info > th,
+.table-info > td {
+  background-color: rgba(var(--color-info-rgb), 0.1);
 }
 
-@media (max-width: 991px) {
-  .table-responsive-lg {
-    overflow-x: auto;
-  }
-}
-
-/* ===== TABLA CON ORDENAMIENTO ===== */
-
-.table-sortable th {
-  cursor: pointer;
-  user-select: none;
-  position: relative;
-  padding-right: calc(var(--spacing-4) + 1rem);
-}
-
-.table-sortable th:hover {
-  background-color: var(--bg-tertiary);
-}
-
-.table-sortable th::after {
-  content: '';
-  position: absolute;
-  right: var(--spacing-3);
-  top: 50%;
-  transform: translateY(-50%);
-  width: 0;
-  height: 0;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-bottom: 4px solid var(--text-muted);
-  opacity: 0.3;
-}
-
-.table-sortable th.sort-asc::after {
-  border-bottom: 4px solid var(--color-primary);
-  border-top: none;
-  opacity: 1;
-}
-
-.table-sortable th.sort-desc::after {
-  border-top: 4px solid var(--color-primary);
-  border-bottom: none;
-  opacity: 1;
-}
-
-/* ===== TABLA CON FILTROS ===== */
-
-.table-filters {
-  display: flex;
-  gap: var(--spacing-3);
-  margin-bottom: var(--spacing-4);
-  padding: var(--spacing-4);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-  flex-wrap: wrap;
-}
-
-.table-filters .form-control {
-  min-width: 200px;
-}
-
-.table-filters .btn {
-  white-space: nowrap;
-}
-
-/* ===== PAGINACIÓN DE TABLA ===== */
-
-.table-pagination {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: var(--spacing-4);
-  padding: var(--spacing-4);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-}
-
-.table-pagination-info {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
-}
-
-.table-pagination-controls {
-  display: flex;
-  gap: var(--spacing-2);
-  align-items: center;
-}
-
-/* ===== TABLA EXPANDIBLE ===== */
-
-.table-expandable .expand-toggle {
-  cursor: pointer;
-  user-select: none;
-  color: var(--color-primary);
-  font-weight: var(--font-weight-medium);
-}
-
-.table-expandable .expand-toggle::before {
-  content: '▶';
-  display: inline-block;
-  margin-right: var(--spacing-2);
-  transition: var(--transition-transform);
-}
-
-.table-expandable .expand-toggle.expanded::before {
-  transform: rotate(90deg);
-}
-
-.table-expandable .expand-content {
-  display: none;
-  padding: var(--spacing-4);
-  background-color: var(--bg-tertiary);
-  border-left: 3px solid var(--color-primary);
-}
-
-.table-expandable .expand-content.show {
-  display: block;
-}
-
-/* ===== TABLA CON SELECCIÓN ===== */
-
-.table-selectable tbody tr {
-  cursor: pointer;
-  transition: var(--transition-colors);
-}
-
-.table-selectable tbody tr:hover {
-  background-color: var(--bg-tertiary);
-}
-
-.table-selectable tbody tr.selected {
-  background-color: var(--color-primary-light);
-  color: var(--color-primary-darker);
-}
-
-.table-selectable tbody tr.selected:hover {
-  background-color: var(--color-primary);
+/* Estilos para tablas oscuras */
+.table-dark {
   color: var(--color-white);
+  background-color: var(--color-gray-800);
 }
 
-/* ===== ESTADOS DE CARGA ===== */
-
-.table-loading {
-  position: relative;
-  pointer-events: none;
+.table-dark th,
+.table-dark td,
+.table-dark thead th {
+  border-color: var(--color-gray-700);
 }
 
-.table-loading::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(255, 255, 255, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: var(--z-modal);
+.table-dark.table-bordered {
+  border: 0;
 }
 
-.table-loading::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 2rem;
-  height: 2rem;
-  margin: -1rem 0 0 -1rem;
-  border: 3px solid var(--color-primary-light);
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-  animation: table-spin 1s linear infinite;
-  z-index: calc(var(--z-modal) + 1);
+.table-dark.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
-@keyframes table-spin {
-  to {
-    transform: rotate(360deg);
-  }
+.table-dark.table-hover tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.075);
 }
 
-/* Tabla vacía */
-.table-empty {
+/* Alineación de texto en celdas */
+.table th.text-center,
+.table td.text-center {
   text-align: center;
-  padding: var(--spacing-8);
-  color: var(--text-muted);
 }
 
-.table-empty-icon {
-  font-size: var(--font-size-3xl);
-  margin-bottom: var(--spacing-4);
-  opacity: 0.5;
+.table th.text-right,
+.table td.text-right {
+  text-align: right;
 }
 
-.table-empty-message {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-medium);
-  margin-bottom: var(--spacing-2);
+.table th.text-left,
+.table td.text-left {
+  text-align: left;
 }
 
-.table-empty-description {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+/* Tabla con acciones */
+.table-actions {
+  white-space: nowrap;
+  width: 1%;
 }
 
-/* ===== RESPONSIVE MOBILE ===== */
-
-@media (max-width: 768px) {
-  .table-mobile-stack {
-    border: none;
-  }
-  
-  .table-mobile-stack thead {
-    display: none;
-  }
-  
-  .table-mobile-stack tbody,
-  .table-mobile-stack tr,
-  .table-mobile-stack td {
-    display: block;
-    width: 100%;
-  }
-  
-  .table-mobile-stack tr {
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--spacing-4);
-    padding: var(--spacing-4);
-    background-color: var(--bg-primary);
-    box-shadow: var(--shadow-sm);
-  }
-  
-  .table-mobile-stack td {
-    border: none;
-    padding: var(--spacing-2) 0;
-    text-align: left;
-    position: relative;
-    padding-left: 40%;
-  }
-  
-  .table-mobile-stack td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 0;
-    top: var(--spacing-2);
-    width: 35%;
-    font-weight: var(--font-weight-semibold);
-    color: var(--text-secondary);
-    font-size: var(--font-size-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  
-  .table-filters {
-    flex-direction: column;
-  }
-  
-  .table-filters .form-control {
-    min-width: auto;
-    width: 100%;
-  }
-  
-  .table-pagination {
-    flex-direction: column;
-    gap: var(--spacing-3);
-    text-align: center;
-  }
+.table-actions .btn {
+  margin: 0 var(--spacing-1);
 }
 
-@media (max-width: 480px) {
-  .table th,
-  .table td {
-    padding: var(--spacing-2) var(--spacing-3);
-    font-size: var(--font-size-xs);
-  }
-  
-  .table-sm th,
-  .table-sm td {
-    padding: var(--spacing-1) var(--spacing-2);
-  }
-  
-  .table-mobile-stack td {
-    padding-left: 45%;
-  }
-  
-  .table-mobile-stack td::before {
-    width: 40%;
-  }
+/* Tabla con checkboxes */
+.table-checkbox {
+  width: 1%;
+  white-space: nowrap;
+  padding-right: 0 !important;
 }
 
-/* ===== MEJORAS DE ACCESIBILIDAD ===== */
-
-/* Reducir movimiento para usuarios que lo prefieren */
-@media (prefers-reduced-motion: reduce) {
-  .table-hover tbody tr,
-  .table-selectable tbody tr,
-  .table-sortable th,
-  .table-expandable .expand-toggle::before {
-    transition: none;
-  }
-  
-  .table-loading::before {
-    animation: none;
-  }
-}
-
-/* Mejoras para modo de alto contraste */
-@media (prefers-contrast: high) {
-  .table,
-  .table-bordered {
-    border-width: 2px;
-  }
-  
-  .table th,
-  .table td,
-  .table-bordered th,
-  .table-bordered td {
-    border-width: 1px;
-  }
-  
-  .table thead th,
-  .table-bordered thead th {
-    border-bottom-width: 3px;
-  }
-}
-
-/* ===== UTILIDADES ADICIONALES ===== */
-
-/* Tabla con scroll horizontal personalizado */
-.table-scroll::-webkit-scrollbar {
-  height: 8px;
-}
-
-.table-scroll::-webkit-scrollbar-track {
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-sm);
-}
-
-.table-scroll::-webkit-scrollbar-thumb {
-  background-color: var(--border-medium);
-  border-radius: var(--radius-sm);
-}
-
-.table-scroll::-webkit-scrollbar-thumb:hover {
-  background-color: var(--border-dark);
-}
-
-/* Tabla con altura fija */
-.table-fixed-height {
-  height: 400px;
-  overflow-y: auto;
-}
-
-.table-fixed-height .table {
-  margin-bottom: 0;
-}
-
-/* Resaltado de búsqueda */
-.table .search-highlight {
-  background-color: var(--color-warning-light);
-  color: var(--color-warning-darker);
-  padding: 1px 2px;
-  border-radius: var(--radius-sm);
-  font-weight: var(--font-weight-medium);
-}
-
-/* Indicadores de estado */
-.table .status-indicator {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
+/* Tabla con avatar */
+.table-avatar {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   margin-right: var(--spacing-2);
 }
 
-.table .status-indicator.active {
-  background-color: var(--color-success);
-}
-
-.table .status-indicator.inactive {
-  background-color: var(--color-error);
-}
-
-.table .status-indicator.pending {
-  background-color: var(--color-warning);
-}
-
-.table .status-indicator.unknown {
-  background-color: var(--color-gray-400);
-}
-
-/* ===== TABLA CONSISTENTE ===== */
-
-/* Estilos específicos para la plantilla de tabla consistente */
-.table-responsive {
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-  margin-bottom: var(--spacing-6);
-}
-
-.table.table-hover.table-striped {
-  margin-bottom: 0;
-  background-color: var(--bg-primary);
-}
-
-.table.table-hover.table-striped thead th {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  font-weight: var(--font-weight-semibold);
-  border: none;
-  padding: var(--spacing-4);
-  position: relative;
-}
-
-.table.table-hover.table-striped thead th.sortable {
-  cursor: pointer;
-  user-select: none;
-  transition: var(--transition-colors);
-}
-
-.table.table-hover.table-striped thead th.sortable:hover {
-  background-color: var(--color-primary-dark);
-}
-
-.table.table-hover.table-striped thead th .sort-icon {
-  position: absolute;
-  right: var(--spacing-3);
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 0.6;
-}
-
-.table.table-hover.table-striped thead th .sort-icon::before {
-  content: '\f0dc';
-  font-family: 'Font Awesome 6 Free';
-  font-weight: 900;
+/* Tabla con estado */
+.status-badge {
+  display: inline-block;
+  padding: var(--spacing-1) var(--spacing-2);
   font-size: var(--font-size-sm);
-}
-
-.table.table-hover.table-striped thead th.sorted-asc .sort-icon::before {
-  content: '\f0de';
-  opacity: 1;
-}
-
-.table.table-hover.table-striped thead th.sorted-desc .sort-icon::before {
-  content: '\f0dd';
-  opacity: 1;
-}
-
-.table.table-hover.table-striped tbody tr {
-  transition: var(--transition-colors);
-}
-
-.table.table-hover.table-striped tbody tr:hover {
-  background-color: var(--color-primary-light) !important;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
-}
-
-.table.table-hover.table-striped tbody tr:nth-of-type(odd) {
-  background-color: var(--bg-secondary);
-}
-
-.table.table-hover.table-striped tbody td {
-  padding: var(--spacing-3) var(--spacing-4);
-  vertical-align: middle;
-  border-bottom: 1px solid var(--border-light);
-}
-
-/* Estado vacío */
-.table.table-hover.table-striped tbody td.text-center.text-muted {
-  padding: var(--spacing-8) var(--spacing-4);
-  background-color: var(--bg-secondary);
-}
-
-/* Botones en tabla */
-.table .btn-group-sm .btn {
-  padding: var(--spacing-1) var(--spacing-2);
-  font-size: var(--font-size-xs);
-  border-radius: var(--radius-sm);
-  margin-right: var(--spacing-1);
-}
-
-.table .btn-group-sm .btn:last-child {
-  margin-right: 0;
-}
-
-/* Badges en tabla */
-.table .badge {
-  font-size: var(--font-size-xs);
-  padding: var(--spacing-1) var(--spacing-2);
-  border-radius: var(--radius-full);
-}
-
-/* Enlaces en tabla */
-.table a.text-decoration-none {
-  color: var(--color-primary);
   font-weight: var(--font-weight-medium);
-  transition: var(--transition-colors);
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: var(--border-radius);
 }
 
-.table a.text-decoration-none:hover {
-  color: var(--color-primary-dark);
-  text-decoration: underline !important;
+.status-active {
+  color: var(--color-success);
+  background-color: rgba(var(--color-success-rgb), 0.1);
 }
 
-/* Paginación */
-.pagination {
-  margin-top: var(--spacing-6);
-  margin-bottom: 0;
+.status-inactive {
+  color: var(--color-gray-600);
+  background-color: var(--color-gray-200);
 }
 
-.pagination .page-link {
-  color: var(--color-primary);
-  border-color: var(--border-medium);
-  padding: var(--spacing-2) var(--spacing-3);
-  transition: var(--transition-colors);
+.status-pending {
+  color: var(--color-warning);
+  background-color: rgba(var(--color-warning-rgb), 0.1);
 }
 
-.pagination .page-link:hover {
-  color: var(--color-primary-dark);
-  background-color: var(--color-primary-light);
-  border-color: var(--color-primary);
+.status-blocked {
+  color: var(--color-danger);
+  background-color: rgba(var(--color-danger-rgb), 0.1);
 }
 
-.pagination .page-item.active .page-link {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
+/* Tabla con acciones flotantes */
+.table-actions-float {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+tr:hover .table-actions-float {
+  opacity: 1;
+}
+
+/* Tabla con scroll horizontal */
+.table-scroll {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+/* Tabla con encabezado fijo */
+.table-fixed {
+  table-layout: fixed;
+}
+
+/* Tabla con filas seleccionables */
+.table tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.table tbody tr.selected {
+  background-color: rgba(var(--color-primary-rgb), 0.1);
+}
+
+/* Tabla con borde en la cabecera */
+.table-header-border thead th {
+  border-bottom: 2px solid var(--color-primary);
+}
+
+/* Tabla con sombra */
+.table-shadow {
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+/* Tabla con filas alternas */
+.table-alternate tbody tr:nth-child(even) {
+  background-color: var(--color-gray-50);
+}
+
+/* Tabla con borde redondeado */
+.table-rounded {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+/* Tabla con encabezado pegajoso */
+.table-sticky thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--color-white);
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Tabla con encabezado oscuro */
+.table-dark-header thead th {
+  background-color: var(--color-gray-800);
   color: var(--color-white);
 }
 
-.pagination .page-item.disabled .page-link {
-  color: var(--text-muted);
-  background-color: var(--bg-secondary);
-  border-color: var(--border-light);
+/* Tabla con borde entre filas */
+.table-row-bordered tbody tr {
+  border-bottom: var(--border-width) solid var(--color-gray-200);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .table.table-hover.table-striped thead th,
-  .table.table-hover.table-striped tbody td {
-    padding: var(--spacing-2) var(--spacing-3);
-    font-size: var(--font-size-sm);
-  }
-  
-  .table .btn-group-sm .btn {
-    padding: var(--spacing-1);
-    font-size: var(--font-size-xs);
-  }
-  
-  .table .badge {
-    font-size: 10px;
-    padding: 2px var(--spacing-1);
-  }
+.table-row-bordered tbody tr:last-child {
+  border-bottom: none;
 }

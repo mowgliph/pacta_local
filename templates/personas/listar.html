@@ -3,12 +3,12 @@
 {% block title %}Gestión de Personas Responsables - PACTA{% endblock %}
 
 {% block content %}
-    <div class="dashboard-container">
+    <div class="container-fluid">
         <!-- Include Sidebar Component -->
         {% include 'components/partials/sidebar.html' %}
         
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="row g-0">
             <!-- Content Header -->
             {% set page_title = "Gestión de Personas Responsables" %}
             {% set page_subtitle = "Administra todas las personas responsables del sistema" %}
@@ -18,7 +18,7 @@
             {% include 'components/partials/content_header.html' %}
 
             <!-- Personas Statistics Cards -->
-            <div class="metrics-grid" style="margin-bottom: 32px;">
+            <div class="row g-3 mb-4">
                 <!-- Total Personas -->
                 {% set metric_label = "Total Personas" %}
                 {% set metric_value = estadisticas.total_personas if estadisticas and estadisticas.total_personas else "0" %}
@@ -71,24 +71,29 @@
             </div>
             
             <!-- Tabla de Personas Responsables -->
-            <div class="block-section">
-                <div class="block-header">
-                    <h3 class="block-title">Personas Responsables del Sistema</h3>
-                    <p class="block-subtitle">Lista completa de personas responsables registradas</p>
+            <div class="card mb-4">
+                <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h3 class="h4 mb-1">Personas Responsables del Sistema</h3>
+                        <p class="text-muted mb-0">Lista completa de personas responsables registradas</p>
+                    </div>
                 </div>
-                <div class="block-content" style="padding: 0;">
+                <div class="mt-4">
                     <!-- Barra de acciones -->
-                    <div class="action-bar" style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
-                        <div style="display: flex; gap: 8px;">
-                            <button id="btnAddPersona" class="btn-icon-action" title="Añadir Persona Responsable" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #3b82f6; border: none; border-radius: 6px; color: white; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
-                                <i class="fas fa-plus"></i>
+                    <div class="d-flex justify-content-between align-items-center p-4 bg-light border-bottom">
+                        <div class="d-flex gap-2">
+                            <button id="btnAddPersona" class="btn btn-primary" title="Añadir Persona Responsable">
+                                <i class="fas fa-plus me-2"></i>
+                                Añadir Persona Responsable
                             </button>
-                            <button id="btnSearchPersona" class="btn-icon-action" title="Buscar Personas" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #10b981; border: none; border-radius: 6px; color: white; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">
-                                <i class="fas fa-search"></i>
+                            <button id="btnSearchPersona" class="btn btn-secondary" title="Buscar Personas">
+                                <i class="fas fa-search me-2"></i>
+                                Buscar Personas
                             </button>
                         </div>
-                        <div id="searchContainer" style="display: none; flex: 1; max-width: 300px; margin-left: 16px;">
-                            <input type="text" id="searchInput" placeholder="Buscar personas..." style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                        <div id="searchContainer" class="d-none d-md-block">
+                            <input type="text" id="searchInput" placeholder="Buscar personas..." class="form-control">
                         </div>
                     </div>
                     
@@ -111,6 +116,7 @@
                                 <!-- Los datos se cargarán dinámicamente -->
                             </tbody>
                         </table>
+                    </div>
                     </div>
                 </div>
             </div>

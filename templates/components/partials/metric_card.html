@@ -1,13 +1,28 @@
 <!-- Metric Card Component -->
-<!-- Usage: Set variables before include: metric_label, metric_value, metric_icon, metric_color, metric_change, change_type -->
+<!-- 
+  Required variables:
+    - metric_label: The label/title of the metric
+    - metric_value: The main value to display
+    - metric_icon: The icon class (e.g., 'fas fa-archive')
+    - metric_color: The color class for the icon (e.g., 'primary', 'success', 'warning')
+    
+  Optional variables:
+    - metric_change: Text to show in the change indicator
+    - change_type: Type of change ('positive', 'negative', 'neutral')
+    - metric_id: ID for the metric value element (for JavaScript updates)
+    - change_id: ID for the change indicator element (for JavaScript updates)
+    - metric_subtitle: Additional subtitle text
+-->
 <div class="metric-card">
     <div class="metric-header">
         <span class="metric-label">{{ metric_label }}</span>
         <i class="{{ metric_icon }} metric-icon {{ metric_color }}"></i>
     </div>
-    <div class="metric-value">{{ metric_value }}</div>
-    {% if metric_change %}
-    <div class="metric-change {{ change_type }}">{{ metric_change }}</div>
+    <div class="metric-value" {% if metric_id %}id="{{ metric_id }}"{% endif %}>{{ metric_value }}</div>
+    {% if metric_change or change_id %}
+    <div class="metric-change {{ change_type }}" {% if change_id %}id="{{ change_id }}"{% endif %}>
+        {{ metric_change if metric_change else '' }}
+    </div>
     {% endif %}
     {% if metric_subtitle %}
     <div class="metric-subtitle">{{ metric_subtitle }}</div>

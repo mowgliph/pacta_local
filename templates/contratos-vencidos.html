@@ -7,12 +7,12 @@
 {% endblock %}
 
 {% block content %}
-    <div class="dashboard-container">
+    <div class="container-fluid">
         <!-- Include Sidebar Component -->
         {% include 'components/partials/sidebar.html' %}
         
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="row g-0">
             <!-- Include Header Component with custom content -->
             {% set page_title = "Contratos Vencidos" %}
             {% set page_subtitle = "Gestión de contratos que han expirado" %}
@@ -22,52 +22,52 @@
             {% include 'components/partials/content_header.html' %}
             
             <!-- Additional Header Actions -->
-            <div class="additional-header-actions" style="margin-bottom: 16px;">
-                <button class="btn btn-secondary" title="Volver a Contratos" onclick="window.location.href='/contratos'">
-                    <i class="fas fa-arrow-left"></i>
+            <div class="mb-3">
+                <a class="btn btn-outline-secondary" href="/contratos">
+                    <i class="fas fa-arrow-left me-2"></i>
                     Volver a Contratos
-                </button>
+                </a>
             </div>
             
             <!-- Alert Section -->
-            <div class="alert alert-warning" style="margin-bottom: 24px; padding: 16px; background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; display: flex; align-items: center; gap: 12px;">
-                <i class="fas fa-exclamation-triangle" style="color: #f59e0b; font-size: 20px;"></i>
+            <div class="alert alert-warning d-flex align-items-center mb-4">
+                <i class="fas fa-exclamation-triangle me-3 fs-4"></i>
                 <div>
                     <strong>Atención:</strong> Los siguientes contratos han vencido y requieren revisión inmediata.
                 </div>
             </div>
 
             <!-- Filters Section -->
-            <div class="card" style="margin-bottom: 24px;">
+            <div class="card mb-4">
                 <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-filter"></i>
+                    <h5 class="mb-0">
+                        <i class="fas fa-filter me-2"></i>
                         Filtros de Búsqueda
-                    </h3>
+                    </h5>
                 </div>
                 <div class="card-body">
-                    <div class="filters-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
-                        <div class="form-group">
-                            <label for="filterProveedor">Proveedor</label>
-                            <select id="filterProveedor" class="form-control">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label for="filterProveedor" class="form-label">Proveedor</label>
+                            <select id="filterProveedor" class="form-select">
                                 <option value="">Todos los proveedores</option>
                                 {% for proveedor in proveedores %}
                                 <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="filterCliente">Cliente</label>
-                            <select id="filterCliente" class="form-control">
+                        <div class="col-md-3">
+                            <label for="filterCliente" class="form-label">Cliente</label>
+                            <select id="filterCliente" class="form-select">
                                 <option value="">Todos los clientes</option>
                                 {% for cliente in clientes %}
                                 <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="filterDiasVencido">Días vencido</label>
-                            <select id="filterDiasVencido" class="form-control">
+                        <div class="col-md-3">
+                            <label for="filterDiasVencido" class="form-label">Días vencido</label>
+                            <select id="filterDiasVencido" class="form-select">
                                 <option value="">Todos</option>
                                 <option value="1-30">1-30 días</option>
                                 <option value="31-60">31-60 días</option>
@@ -75,13 +75,13 @@
                                 <option value="90+">Más de 90 días</option>
                             </select>
                         </div>
-                        <div class="form-group" style="display: flex; align-items: end; gap: 8px;">
+                        <div class="col-md-3 d-flex align-items-end gap-2">
                             <button class="btn btn-primary" onclick="applyFilters()">
-                                <i class="fas fa-search"></i>
+                                <i class="fas fa-search me-1"></i>
                                 Buscar
                             </button>
-                            <button class="btn btn-secondary" onclick="clearFilters()">
-                                <i class="fas fa-times"></i>
+                            <button class="btn btn-outline-secondary" onclick="clearFilters()">
+                                <i class="fas fa-times me-1"></i>
                                 Limpiar
                             </button>
                         </div>
@@ -91,14 +91,12 @@
 
             <!-- Expired Contracts Table -->
             <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-clock text-warning"></i>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clock text-warning me-2"></i>
                         Contratos Vencidos
-                    </h3>
-                    <div class="card-actions">
-                        <span class="badge badge-warning" id="expiredCount">{{ contratos_vencidos|length }} contratos vencidos</span>
-                    </div>
+                    </h5>
+                    <span class="badge bg-warning text-dark" id="expiredCount">{{ contratos_vencidos|length }} contratos vencidos</span>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -178,14 +176,14 @@
                     </div>
                     
                     {% if not contratos_vencidos %}
-                    <div class="empty-state" style="text-align: center; padding: 40px; color: #6b7280;">
-                        <i class="fas fa-check-circle" style="font-size: 48px; color: #10b981; margin-bottom: 16px;"></i>
+                    <div class="text-center py-5 text-muted">
+                        <i class="fas fa-check-circle fs-1 text-success mb-3"></i>
                         <h3>¡Excelente!</h3>
                         <p>No hay contratos vencidos en este momento.</p>
-                        <button class="btn btn-primary" onclick="window.location.href='/contratos'">
+                        <a class="btn btn-primary" href="/contratos">
                             <i class="fas fa-arrow-left"></i>
                             Volver a Contratos
-                        </button>
+                        </a>
                     </div>
                     {% endif %}
                 </div>
@@ -193,7 +191,7 @@
 
             <!-- Quick Actions -->
             {% if contratos_vencidos %}
-            <div class="card" style="margin-top: 24px;">
+            <div class="card mt-4">
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-bolt"></i>

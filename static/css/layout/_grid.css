@@ -1,0 +1,282 @@
+/* ===================================================================
+   GRID - Sistema de cuadrícula flexible
+   Archivo: _grid.css
+   Versión: 1.0.0
+   Fecha: 2025-09-18
+   
+   Sistema de cuadrícula basado en CSS Grid con soporte para:
+   - Diseño responsive
+   - Espaciado consistente
+   - Alineación flexible
+   - Integración con variables de diseño
+   
+   Basado en CSS puro sin dependencias de preprocesadores
+=================================================================== */
+
+/* ===== 1. VARIABLES DE CUADRÍCULA ===== */
+:root {
+  /* Tamaño de columnas */
+  --grid-columns: 12;
+  
+  /* Espaciado entre columnas (gutter) */
+  --grid-gap: var(--spacing-4);  /* 1rem = 16px por defecto */
+  --grid-gap-sm: var(--spacing-3);  /* 0.75rem = 12px */
+  --grid-gap-md: var(--spacing-5);  /* 1.25rem = 20px */
+  --grid-gap-lg: var(--spacing-6);  /* 1.5rem = 24px */
+}
+
+/* ===== 2. CONTENEDOR DE CUADRÍCULA ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns, 12), 1fr);
+  gap: var(--grid-gap);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--spacing-4);
+  max-width: var(--container-max-width, 100%);
+}
+
+/* ===== 3. CLASES DE COLUMNAS ===== */
+
+/* Columnas base (mobile-first) */
+[class*="col-"] {
+  grid-column: span var(--grid-columns);
+  width: 100%;
+  min-width: 0; /* Evita desbordamiento */
+}
+
+/* Columnas específicas - Versión CSS puro */
+.col-1 { --grid-columns: 1; grid-column: span 1; }
+.col-2 { --grid-columns: 2; grid-column: span 2; }
+.col-3 { --grid-columns: 3; grid-column: span 3; }
+.col-4 { --grid-columns: 4; grid-column: span 4; }
+.col-5 { --grid-columns: 5; grid-column: span 5; }
+.col-6 { --grid-columns: 6; grid-column: span 6; }
+.col-7 { --grid-columns: 7; grid-column: span 7; }
+.col-8 { --grid-columns: 8; grid-column: span 8; }
+.col-9 { --grid-columns: 9; grid-column: span 9; }
+.col-10 { --grid-columns: 10; grid-column: span 10; }
+.col-11 { --grid-columns: 11; grid-column: span 11; }
+.col-12 { --grid-columns: 12; grid-column: span 12; }
+
+/* ===== 4. RESPONSIVE ===== */
+
+/* Pequeño (sm) - ≥ 576px */
+@media (min-width: var(--breakpoint-sm)) {
+  .sm\:col-1 { --grid-columns: 1; grid-column: span 1; }
+  .sm\:col-2 { --grid-columns: 2; grid-column: span 2; }
+  .sm\:col-3 { --grid-columns: 3; grid-column: span 3; }
+  .sm\:col-4 { --grid-columns: 4; grid-column: span 4; }
+  .sm\:col-5 { --grid-columns: 5; grid-column: span 5; }
+  .sm\:col-6 { --grid-columns: 6; grid-column: span 6; }
+  .sm\:col-7 { --grid-columns: 7; grid-column: span 7; }
+  .sm\:col-8 { --grid-columns: 8; grid-column: span 8; }
+  .sm\:col-9 { --grid-columns: 9; grid-column: span 9; }
+  .sm\:col-10 { --grid-columns: 10; grid-column: span 10; }
+  .sm\:col-11 { --grid-columns: 11; grid-column: span 11; }
+  .sm\:col-12 { --grid-columns: 12; grid-column: span 12; }
+}
+
+/* Mediano (md) - ≥ 768px */
+@media (min-width: var(--breakpoint-md)) {
+  .grid {
+    --grid-gap: var(--grid-gap-md);
+  }
+  
+  .md\:col-1 { --grid-columns: 1; grid-column: span 1; }
+  .md\:col-2 { --grid-columns: 2; grid-column: span 2; }
+  .md\:col-3 { --grid-columns: 3; grid-column: span 3; }
+  .md\:col-4 { --grid-columns: 4; grid-column: span 4; }
+  .md\:col-5 { --grid-columns: 5; grid-column: span 5; }
+  .md\:col-6 { --grid-columns: 6; grid-column: span 6; }
+  .md\:col-7 { --grid-columns: 7; grid-column: span 7; }
+  .md\:col-8 { --grid-columns: 8; grid-column: span 8; }
+  .md\:col-9 { --grid-columns: 9; grid-column: span 9; }
+  .md\:col-10 { --grid-columns: 10; grid-column: span 10; }
+  .md\:col-11 { --grid-columns: 11; grid-column: span 11; }
+  .md\:col-12 { --grid-columns: 12; grid-column: span 12; }
+}
+
+/* Grande (lg) - ≥ 992px */
+@media (min-width: var(--breakpoint-lg)) {
+  .grid {
+    --grid-gap: var(--grid-gap-lg);
+    padding: 0 var(--spacing-6);
+  }
+  
+  .lg\:col-1 { --grid-columns: 1; grid-column: span 1; }
+  .lg\:col-2 { --grid-columns: 2; grid-column: span 2; }
+  .lg\:col-3 { --grid-columns: 3; grid-column: span 3; }
+  .lg\:col-4 { --grid-columns: 4; grid-column: span 4; }
+  .lg\:col-5 { --grid-columns: 5; grid-column: span 5; }
+  .lg\:col-6 { --grid-columns: 6; grid-column: span 6; }
+  .lg\:col-7 { --grid-columns: 7; grid-column: span 7; }
+  .lg\:col-8 { --grid-columns: 8; grid-column: span 8; }
+  .lg\:col-9 { --grid-columns: 9; grid-column: span 9; }
+  .lg\:col-10 { --grid-columns: 10; grid-column: span 10; }
+  .lg\:col-11 { --grid-columns: 11; grid-column: span 11; }
+  .lg\:col-12 { --grid-columns: 12; grid-column: span 12; }
+}
+
+/* Extra grande (xl) - ≥ 1200px */
+@media (min-width: var(--breakpoint-xl)) {
+  .grid {
+    max-width: var(--breakpoint-xl);
+  }
+  
+  .xl\:col-1 { --grid-columns: 1; grid-column: span 1; }
+  .xl\:col-2 { --grid-columns: 2; grid-column: span 2; }
+  .xl\:col-3 { --grid-columns: 3; grid-column: span 3; }
+  .xl\:col-4 { --grid-columns: 4; grid-column: span 4; }
+  .xl\:col-5 { --grid-columns: 5; grid-column: span 5; }
+  .xl\:col-6 { --grid-columns: 6; grid-column: span 6; }
+  .xl\:col-7 { --grid-columns: 7; grid-column: span 7; }
+  .xl\:col-8 { --grid-columns: 8; grid-column: span 8; }
+  .xl\:col-9 { --grid-columns: 9; grid-column: span 9; }
+  .xl\:col-10 { --grid-columns: 10; grid-column: span 10; }
+  .xl\:col-11 { --grid-columns: 11; grid-column: span 11; }
+  .xl\:col-12 { --grid-columns: 12; grid-column: span 12; }
+}
+
+/* 2XL - ≥ 1400px */
+@media (min-width: var(--breakpoint-xxl)) {
+  .grid {
+    max-width: var(--breakpoint-xxl);
+  }
+  
+  .\32xl\:col-1 { --grid-columns: 1; grid-column: span 1; }
+  .\32xl\:col-2 { --grid-columns: 2; grid-column: span 2; }
+  .\32xl\:col-3 { --grid-columns: 3; grid-column: span 3; }
+  .\32xl\:col-4 { --grid-columns: 4; grid-column: span 4; }
+  .\32xl\:col-5 { --grid-columns: 5; grid-column: span 5; }
+  .\32xl\:col-6 { --grid-columns: 6; grid-column: span 6; }
+  .\32xl\:col-7 { --grid-columns: 7; grid-column: span 7; }
+  .\32xl\:col-8 { --grid-columns: 8; grid-column: span 8; }
+  .\32xl\:col-9 { --grid-columns: 9; grid-column: span 9; }
+  .\32xl\:col-10 { --grid-columns: 10; grid-column: span 10; }
+  .\32xl\:col-11 { --grid-columns: 11; grid-column: span 11; }
+  .\32xl\:col-12 { --grid-columns: 12; grid-column: span 12; }
+}
+
+/* ===== 5. UTILIDADES DE CUADRÍCULA ===== */
+
+/* Alineación vertical */
+.items-start {
+  align-items: start;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-end {
+  align-items: end;
+}
+
+/* Alineación horizontal */
+.justify-start {
+  justify-content: start;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-end {
+  justify-content: end;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-around {
+  justify-content: space-around;
+}
+
+/* Espaciado entre filas */
+.gap-y-0 { row-gap: 0; }
+.gap-y-1 { row-gap: var(--spacing-1); }
+.gap-y-2 { row-gap: var(--spacing-2); }
+.gap-y-3 { row-gap: var(--spacing-3); }
+.gap-y-4 { row-gap: var(--spacing-4); }
+.gap-y-5 { row-gap: var(--spacing-5); }
+.gap-y-6 { row-gap: var(--spacing-6); }
+.gap-y-8 { row-gap: var(--spacing-8); }
+.gap-y-10 { row-gap: var(--spacing-10); }
+
+/* Espaciado entre columnas */
+.gap-x-0 { column-gap: 0; }
+.gap-x-1 { column-gap: var(--spacing-1); }
+.gap-x-2 { column-gap: var(--spacing-2); }
+.gap-x-3 { column-gap: var(--spacing-3); }
+.gap-x-4 { column-gap: var(--spacing-4); }
+.gap-x-5 { column-gap: var(--spacing-5); }
+.gap-x-6 { column-gap: var(--spacing-6); }
+.gap-x-8 { column-gap: var(--spacing-8); }
+.gap-x-10 { column-gap: var(--spacing-10); }
+
+/* ===== 6. LAYOUTS ESPECÍFICOS ===== */
+
+/* Grid de 2 columnas */
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Grid de 3 columnas */
+.grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* Grid de 4 columnas */
+.grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Grid con sidebar */
+.grid-with-sidebar {
+  grid-template-columns: 250px 1fr;
+  gap: var(--spacing-6);
+}
+
+@media (max-width: 768px) {
+  .grid-with-sidebar {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== 7. MODIFICADORES ===== */
+
+/* Sin relleno */
+.grid--no-padding {
+  padding: 0;
+}
+
+/* Sin espacio entre columnas */
+.grid--no-gap {
+  gap: 0;
+}
+
+/* Cuadrícula apretada */
+.grid--tight {
+  --grid-gap: var(--spacing-2);
+}
+
+/* Cuadrícula suelta */
+.grid--loose {
+  --grid-gap: var(--spacing-6);
+}
+
+/* ===== 8. ACCESIBILIDAD ===== */
+
+/* Asegurar que los elementos de la cuadrícula sean accesibles */
+[class*="grid"] > * {
+  min-width: 0; /* Evita desbordamiento en elementos flexibles */
+}
+
+/* Reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .grid {
+    transition: none;
+  }
+}

@@ -196,17 +196,30 @@ def api_get_clientes():
         
         clientes_data = []
         for cliente in clientes:
-            clientes_data.append({
-                'id': cliente.id,
-                'nombre': cliente.nombre,
-                'rfc': cliente.rfc,
-                'email': cliente.email,
-                'telefono': cliente.telefono,
-                'direccion': cliente.direccion,
-                'contacto_principal': cliente.contacto_principal,
-                'activo': cliente.activo,
-                'fecha_creacion': cliente.fecha_creacion.isoformat() if cliente.fecha_creacion else None
-            })
+            try:
+                cliente_data = {
+                    'id': getattr(cliente, 'id', None),
+                    'nombre': getattr(cliente, 'nombre', 'Sin nombre'),
+                    'rfc': getattr(cliente, 'rfc', ''),
+                    'email': getattr(cliente, 'email', ''),
+                    'telefono': getattr(cliente, 'telefono', ''),
+                    'direccion': getattr(cliente, 'direccion', ''),
+                    'contacto_principal': getattr(cliente, 'contacto_principal', ''),
+                    'activo': getattr(cliente, 'activo', True)
+                }
+                
+                # Manejar fecha_creacion de manera segura
+                fecha_creacion = getattr(cliente, 'fecha_creacion', None)
+                if hasattr(fecha_creacion, 'isoformat'):
+                    cliente_data['fecha_creacion'] = fecha_creacion.isoformat()
+                else:
+                    cliente_data['fecha_creacion'] = None
+                    
+                clientes_data.append(cliente_data)
+                
+            except Exception as e:
+                print(f"Error procesando cliente {getattr(cliente, 'id', 'desconocido')}: {str(e)}")
+                continue
         
         return jsonify({
             'success': True,
@@ -341,6 +354,8 @@ def api_delete_cliente(cliente_id):
 def api_get_clients_summary():
     """API para obtener resumen de clientes para el componente providers-clients-block"""
     try:
+        from datetime import datetime
+        
         # Obtener clientes
         clientes_db = Cliente.get_all()
         clientes = [c for c in clientes_db if c.tipo_cliente == 'cliente']
@@ -350,26 +365,80 @@ def api_get_clients_summary():
         
         # Preparar datos de clientes con estadísticas
         clients_data = []
-        for cliente in clientes[:10]:  # Limitar a 10 clientes principales
-            # Contar contratos del cliente
-            contratos_cliente = [c for c in contratos if c.cliente_id == cliente.id]
-            contratos_count = len(contratos_cliente)
+        for cliente in clientes:  # No limitamos aquí para permitir ordenamiento completo
+            # Contar contratos activos del cliente
+            contratos_activos = [
+                c for c in contratos 
+                if c.cliente_id == cliente.id and c.estado == 'activo'
+            ]
             
             # Calcular valor total de contratos activos
-            total_value = sum([c.monto_actual for c in contratos_cliente if c.estado == 'activo'])
+            total_value = sum([
+                c.monto_actual 
+                for c in contratos_activos 
+                if hasattr(c, 'monto_actual') and c.monto_actual is not None
+            ])
             
-            clients_data.append({
+            client_data = {
                 'id': cliente.id,
                 'nombre': cliente.nombre,
-                'sector': 'Cliente',  # Categoría por defecto
-                'contratos_count': contratos_count,
-                'total_value': total_value,
-                'activo': cliente.activo
-            })
+                'contracts_count': len(contratos_activos),
+                'total_contracts': len(contratos_activos),  # Para compatibilidad
+                'valor_total': total_value,
+                'activo': getattr(cliente, 'activo', True)
+            }
+            
+            # Añadir campos opcionales si existen
+            if hasattr(cliente, 'razon_social') and cliente.razon_social:
+                client_data['razon_social'] = cliente.razon_social
+            else:
+                client_data['razon_social'] = cliente.nombre
+                
+            if hasattr(cliente, 'fecha_creacion') and cliente.fecha_creacion:
+                # Verificar si es un string o un objeto datetime
+                if hasattr(cliente.fecha_creacion, 'isoformat'):
+                    client_data['fecha_creacion'] = cliente.fecha_creacion.isoformat()
+                else:
+                    # Si es un string, intentar convertirlo a datetime
+                    try:
+                        from datetime import datetime
+                        # Intentar parsear la fecha si es un string
+                        if isinstance(cliente.fecha_creacion, str):
+                            # Asumimos formato YYYY-MM-DD
+                            client_data['fecha_creacion'] = cliente.fecha_creacion
+                        else:
+                            client_data['fecha_creacion'] = None
+                    except (ValueError, AttributeError):
+                        client_data['fecha_creacion'] = None
+            else:
+                client_data['fecha_creacion'] = None
+                
+            clients_data.append(client_data)
+        
+        # Ordenar por fecha de creación (más recientes primero)
+        clients_data.sort(
+            key=lambda x: x['fecha_creacion'] or '1900-01-01', 
+            reverse=True
+        )
+        
+        # Tomar solo los 10 primeros para la respuesta
+        top_clients = clients_data[:10]
         
         return jsonify({
             'success': True,
-            'clients': clients_data
+            'data': {
+                'clientes': top_clients,
+                'estadisticas': {
+                    'total_clientes': len(clientes),
+                    'clientes_activos': len([c for c in clientes if getattr(c, 'activo', True)]),
+                    'total_contratos': len(contratos),
+                    'valor_total': sum(c['valor_total'] for c in clients_data)
+                },
+                'metadata': {
+                    'total': len(top_clients),
+                    'timestamp': datetime.now().isoformat()
+                }
+            }
         })
     except Exception as e:
         return jsonify({

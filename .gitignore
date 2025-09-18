@@ -194,3 +194,7 @@ backups/
 # Upload files
 uploads/
 
+# Windsurf
+.windsurf
+
+

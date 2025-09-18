@@ -1,0 +1,149 @@
+/* ===================================================================
+   FOCUS - Estilos para estados de enfoque
+   Archivo: _focus.css
+   Versión: 1.0.0
+   Fecha: 2025-09-18
+   
+   Estilos para manejar los estados de enfoque de manera accesible.
+   Sigue las pautas WCAG 2.1 para contraste y visibilidad.
+=================================================================== */
+
+/* ===== 1. ESTILOS BASE DE ENFOQUE ===== */
+
+/**
+ * 1. Elimina el outline por defecto en todos los elementos
+ * 2. Asegura que los elementos enfocables tengan un estilo de foco visible
+ */
+*:focus {
+  outline: none; /* 1 */
+}
+
+/**
+ * Estilo de foco visible para teclado
+ * Se muestra solo cuando se navega con teclado (usando :focus-visible)
+ */
+:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.3);
+  border-radius: var(--border-radius-sm);
+  transition: box-shadow var(--transition-duration) var(--transition-timing);
+}
+
+/* ===== 2. ESTILOS ESPECÍFICOS POR ELEMENTO ===== */
+
+/* Botones */
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--color-primary-600);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.3);
+}
+
+/* Enlaces */
+a:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Elementos de formulario */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="textbox"]:focus-visible,
+[contenteditable]:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.2);
+  border-color: var(--color-primary-400);
+}
+
+/* Pestañas y acordeones */
+[role="tab"]:focus-visible,
+[role="menuitem"]:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: -2px;
+  border-radius: var(--border-radius-sm);
+}
+
+/* ===== 3. CLASES UTILITARIAS ===== */
+
+/* Clase para forzar el estado de foco (útil para pruebas) */
+.focus-visible {
+  outline: 2px solid var(--color-primary-500) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.3) !important;
+}
+
+/* Clase para ocultar el foco visual pero mantenerlo accesible */
+.hide-focus:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* ===== 4. ESTADOS DE INTERACCIÓN ===== */
+
+/* Deshabilitar estilos de foco para interacciones con mouse */
+:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Estilo para elementos con foco dentro de un contenedor */
+.focus-within {
+  position: relative;
+}
+
+.focus-within:focus-within {
+  box-shadow: 0 0 0 2px var(--color-primary-300);
+  border-radius: var(--border-radius-md);
+}
+
+/* ===== 5. MODOS DE CONTRASTE ===== */
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+  :focus-visible {
+    outline: 3px solid var(--color-gray-900) !important;
+    outline-offset: 2px;
+    box-shadow: none !important;
+  }
+  
+  button:focus-visible,
+  [role="button"]:focus-visible {
+    outline: 3px solid var(--color-gray-900) !important;
+    outline-offset: 2px;
+  }
+}
+
+/* Reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+  :focus-visible {
+    transition: none;
+  }
+}
+
+/* ===== 6. CLASES PARA ESTADOS DE VALIDACIÓN ===== */
+
+/* Foco válido */
+:focus-visible:valid {
+  outline-color: var(--color-success-500);
+  box-shadow: 0 0 0 4px rgba(var(--color-success-rgb), 0.3);
+}
+
+/* Foco inválido */
+:focus-visible:invalid {
+  outline-color: var(--color-error-500);
+  box-shadow: 0 0 0 4px rgba(var(--color-error-rgb), 0.3);
+}
+
+/* Foco deshabilitado */
+:focus-visible:disabled,
+:focus-visible[aria-disabled="true"] {
+  outline-color: var(--color-gray-400);
+  box-shadow: none;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
