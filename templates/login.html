@@ -10,14 +10,14 @@
 
 </head>
 <body class="login-page">
-    <div class="login-container">
-        <div class="logo-container">
-            <img src="{{ url_for('static', filename='images/pacta_logo.png') }}" alt="PACTA" class="logo-text">
+    <div class="login-container mx-auto my-5 p-sm-5 p-4">
+        <div class="logo-container mb-5">
+            <img src="{{ url_for('static', filename='images/pacta_logo.png') }}" alt="PACTA" class="logo-text img-fluid" style="max-width: 180px;">
         </div>
         
-        <div class="login-header">
-            <h1>Bienvenido</h1>
-            <p>Inicia sesión para acceder al sistema</p>
+        <div class="login-header mb-5 text-center">
+            <h1 class="h2 mb-3">Bienvenido</h1>
+            <p class="lead text-muted">Inicia sesión para acceder al sistema</p>
         </div>
         
         {% with messages = get_flashed_messages() %}
@@ -29,7 +29,7 @@
             {% endif %}
         {% endwith %}
         
-        <form method="POST" action="{{ url_for('auth.login') }}">
+        <form method="POST" action="{{ url_for('auth.login') }}" class="login-form">
             <div class="form-floating">
                 <input type="text" class="form-control" id="username" name="username" placeholder="Usuario" required>
                 <label for="username"><i class="fas fa-user me-2"></i>Usuario</label>
@@ -49,10 +49,10 @@
             </button>
         </form>
         
-        <div class="text-center mt-3">
-            <small class="text-muted">
-                <i class="fas fa-info-circle me-1 info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Si no tienes una cuenta, por favor contacta con un administrador"></i>
-                PACTA - Sistema de Gestión v1.0
+        <div class="text-center mt-4 pt-3 border-top">
+            <small class="text-muted d-inline-flex align-items-center">
+                <i class="fas fa-info-circle me-2 info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Si no tienes una cuenta, por favor contacta con un administrador"></i>
+                <span>PACTA - Sistema de Gestión v1.0</span>
             </small>
         </div>
     </div>

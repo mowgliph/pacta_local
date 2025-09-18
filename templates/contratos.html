@@ -3,12 +3,12 @@
 {% block title %}Contratos - PACTA{% endblock %}
 
 {% block content %}
-    <div class="dashboard-container">
+    <div class="container-fluid">
         <!-- Include Sidebar Component -->
         {% include 'components/partials/sidebar.html' %}
         
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="row g-0">
             <!-- Include Header Component with custom content -->
             {% set page_title = 'Contratos' %}
             {% set page_subtitle = 'Gestión y administración de contratos' %}
@@ -18,7 +18,7 @@
             {% include 'components/partials/content_header.html' %}
             
             <!-- Metrics Cards -->
-            <div class="metrics-grid">
+            <div class="row g-3 mb-4">
                 {% set metric_label = 'Total Contratos' %}
                 {% set metric_value = contratos_stats.total|default(24) %}
                 {% set metric_icon = 'fas fa-file-contract' %}
@@ -45,13 +45,15 @@
             </div>
             
             <!-- Vertical Blocks Layout -->
-            <div class="vertical-blocks">
+            <div class="row g-4">
                 <!-- Contract Tools Block -->
-                <div class="block-section actions-block">
+                <div class="col-12 col-lg-6 mb-4">
+                    <div class="card h-100">
                     <div class="block-header">
                         <h3 class="block-title">Herramientas de los Contratos</h3>
                         <p class="block-subtitle">Herramientas para gestión eficiente de contratos</p>
-                    </div>
+                        </div>
+                </div>
                     <div class="block-content">
                         <div class="contract-actions d-flex flex-wrap gap-3">
                             <button class="btn btn-primary flex-fill d-flex align-items-center gap-2 min-w-200" data-bs-toggle="modal" data-bs-target="#crearContratoModal">
@@ -70,19 +72,24 @@
                                 <i class="fas fa-file-export"></i>
                                 Exportar Reporte
                             </button>
+                            </div>
+                </div>
                         </div>
+                </div>
                     </div>
                 </div>
                 
-                <!-- Advanced Search Block -->
-                <div class="block-section search-block">
+                <!-- Search Block -->
+                <div class="col-12 col-lg-6 mb-4">
+                    <div class="card h-100">
                     <div class="block-header">
                         <h3 class="block-title">
                             <i class="fas fa-search text-success me-2"></i>
                             Búsqueda Avanzada de Contratos
                         </h3>
                         <p class="block-subtitle">Filtrar y encontrar contratos específicos por criterios avanzados</p>
-                    </div>
+                        </div>
+                </div>
                     <div class="block-content">
                         <div class="search-container card card-sm">
                             <div class="card-body">
@@ -91,8 +98,10 @@
                                     <div class="form-search">
                                         <input type="text" id="contractSearchInput" placeholder="Buscar por nombre, número de contrato, descripción..." class="form-control">
                                         <i class="fas fa-search form-search-icon"></i>
+                                        </div>
+                </div>
                                     </div>
-                                </div>
+                </div>
                                 
                                 <!-- Filter Options -->
                                 <div class="filter-options d-flex align-items-center gap-3 mb-3">
@@ -110,8 +119,10 @@
                                             <i class="fas fa-building me-1"></i>
                                             Proveedor
                                         </button>
+                                        </div>
+                </div>
                                     </div>
-                                </div>
+                </div>
                                 
                                 <!-- Search Actions -->
                                 <div class="search-actions d-flex gap-2 justify-content-end">
@@ -123,9 +134,14 @@
                                         <i class="fas fa-search me-1"></i>
                                         Buscar
                                     </button>
+                                    </div>
+                </div>
                                 </div>
+                </div>
                             </div>
+                </div>
                         </div>
+                </div>
                     </div>
                 </div>
                 
@@ -140,14 +156,17 @@
                     {% set data_clients_manage_url = "/clientes" %}
                     {% set component_id = "providers-clients-contratos" %}
                     {% include 'components/partials/providers-clients-block.html' with context %}
+                    </div>
                 </div>
 
                 <!-- Contracts Table Block -->
-                <div class="block-section table-block">
+                <div class="col-12 mb-4">
+                    <div class="card h-100">
                     <div class="block-header">
                         <h3 class="block-title">Lista de Contratos</h3>
                         <p class="block-subtitle">Gestión completa de todos los contratos activos</p>
-                    </div>
+                        </div>
+                </div>
                     <div class="block-content">
                         <!-- Tabla de Contratos -->
                         <div class="table-responsive">
@@ -172,8 +191,10 @@
                                                 <div>
                                                     <div class="fw-semibold">CONT-2025-003</div>
                                                     <small class="text-muted">Servicios de Consultoría</small>
+                                                    </div>
+                </div>
                                                 </div>
-                                            </div>
+                </div>
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
@@ -181,8 +202,10 @@
                                                 <div>
                                                     <div class="fw-semibold">TechCorp S.A.</div>
                                                     <small class="text-muted">Tecnología</small>
+                                                    </div>
+                </div>
                                                 </div>
-                                            </div>
+                </div>
                                         </td>
                                         <td>15 Ene 2025</td>
                                         <td class="text-end"><span class="fw-semibold text-success">$125,000</span></td>
@@ -196,7 +219,8 @@
                                                 <button type="button" class="btn btn-outline-secondary" onclick="editContract('CONT-2025-003')" title="Editar contrato">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                            </div>
+                                                </div>
+                </div>
                                         </td>
                                     </tr>
                                     
@@ -208,8 +232,10 @@
                                                 <div>
                                                     <div class="fw-semibold">CONT-2025-002</div>
                                                     <small class="text-muted">Desarrollo de Software</small>
+                                                    </div>
+                </div>
                                                 </div>
-                                            </div>
+                </div>
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
@@ -217,8 +243,10 @@
                                                 <div>
                                                     <div class="fw-semibold">InnovaSoft Ltd.</div>
                                                     <small class="text-muted">Software</small>
+                                                    </div>
+                </div>
                                                 </div>
-                                            </div>
+                </div>
                                         </td>
                                         <td>10 Ene 2025</td>
                                         <td class="text-end"><span class="fw-semibold text-success">$89,500</span></td>
@@ -232,7 +260,8 @@
                                                 <button type="button" class="btn btn-outline-secondary" onclick="editContract('CONT-2025-002')" title="Editar contrato">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                            </div>
+                                                </div>
+                </div>
                                         </td>
                                     </tr>
                                     
@@ -244,8 +273,10 @@
                                                 <div>
                                                     <div class="fw-semibold">CONT-2025-001</div>
                                                     <small class="text-muted">Mantenimiento de Sistemas</small>
+                                                    </div>
+                </div>
                                                 </div>
-                                            </div>
+                </div>
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
@@ -253,8 +284,10 @@
                                                 <div>
                                                     <div class="fw-semibold">SysTech Solutions</div>
                                                     <small class="text-muted">Soporte TI</small>
+                                                    </div>
+                </div>
                                                 </div>
-                                            </div>
+                </div>
                                         </td>
                                         <td>05 Ene 2025</td>
                                         <td class="text-end"><span class="fw-semibold text-success">$45,000</span></td>
@@ -268,12 +301,14 @@
                                                 <button type="button" class="btn btn-outline-secondary" onclick="editContract('CONT-2025-001')" title="Editar contrato">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                            </div>
+                                                </div>
+                </div>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
+                            </div>
+                </div>
                         
                         <!-- Mensaje cuando no hay contratos -->
                         <div id="noContractsMessage" class="d-none">
@@ -281,17 +316,23 @@
                                 <i class="fas fa-inbox fa-3x mb-3 d-block opacity-50"></i>
                                 <h5>No hay contratos disponibles</h5>
                                 <p class="mb-0">Utiliza el botón "Nuevo Contrato" para comenzar</p>
+                                </div>
+                </div>
                             </div>
+                </div>
                         </div>
+                </div>
                     </div>
                 </div>
 
                 <!-- Recent Activity Block -->
-                <div class="block-section activity-block">
+                <div class="col-12 col-lg-6">
+                    <div class="card h-100">
                     <div class="block-header">
                         <h3 class="block-title">Actividad Reciente</h3>
                         <p class="block-subtitle">Últimas acciones y cambios en contratos</p>
-                    </div>
+                        </div>
+                </div>
                     <div class="block-content">
                         <div class="d-flex flex-column gap-3">
                             <div class="activity-item">
@@ -300,33 +341,44 @@
                                     <div class="activity-message"><strong>Contrato firmado</strong></div>
                                     <div class="activity-message">CONT-2025-003 - Servicios de Consultoría</div>
                                     <div class="activity-time">Hace 2 horas</div>
+                                    </div>
+                </div>
                                 </div>
-                            </div>
+                </div>
                             <div class="activity-item">
                                 <span class="status-dot status-dot-sm status-color-primary"></span>
                                 <div class="activity-content">
                                     <div class="activity-message"><strong>Nuevo contrato creado</strong></div>
                                     <div class="activity-message">CONT-2025-004 - Desarrollo de Aplicación</div>
                                     <div class="activity-time">Hace 4 horas</div>
+                                    </div>
+                </div>
                                 </div>
-                            </div>
+                </div>
                             <div class="activity-item">
                                 <span class="status-dot status-dot-sm status-color-warning"></span>
                                 <div class="activity-content">
                                     <div class="activity-message"><strong>Contrato próximo a vencer</strong></div>
                                     <div class="activity-message">CONT-2024-089 - Mantenimiento de Sistemas</div>
                                     <div class="activity-time">Hace 6 horas</div>
+                                    </div>
+                </div>
                                 </div>
-                            </div>
+                </div>
                             <div class="activity-item">
                                 <span class="status-dot status-dot-sm status-color-purple"></span>
                                 <div class="activity-content">
                                     <div class="activity-message"><strong>Documentos actualizados</strong></div>
                                     <div class="activity-message">CONT-2025-001 - Anexos técnicos</div>
                                     <div class="activity-time">Hace 1 día</div>
+                                    </div>
+                </div>
                                 </div>
+                </div>
                             </div>
+                </div>
                         </div>
+                </div>
                     </div>
                 </div>
             </div>

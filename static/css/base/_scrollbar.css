@@ -1,138 +1,169 @@
 /* ===================================================================
-   Base: Personalización de la Barra de Desplazamiento
+   SCROLLBARS - Estilos personalizados para barras de desplazamiento
    Archivo: _scrollbar.css
-   Descripción: Estilos personalizados para las barras de desplazamiento
    Versión: 1.0.0
-   Última actualización: 2025-09-17
-   Compatibilidad: WebKit (Chrome, Safari, Edge), Firefox
+   Fecha: 2025-09-18
+   
+   Estilos personalizados para las barras de desplazamiento en diferentes navegadores.
+   Utiliza las variables de diseño del sistema para mantener la coherencia.
 =================================================================== */
 
-/**
- * 1. Ancho de la barra de desplazamiento vertical
- * 2. Alto de la barra de desplazamiento horizontal
- * 3. Establece el color de fondo del track (área detrás del thumb)
- * 4. Establece el color del thumb (barra de desplazamiento)
- * 5. Añade bordes redondeados al thumb
- * 6. Transición suave para efectos hover
- * 7. Estilos específicos para Firefox
- */
+/* ===== 1. SCROLLBAR PREDETERMINADA ===== */
 
 /* Estilos base para WebKit (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
-  width: var(--spacing-2); /* 8px */
-  height: var(--spacing-2); /* 8px */
-  background-color: transparent;
+  width: 12px;
+  height: 12px;
 }
 
-/* Track - la pista sobre la que se mueve el thumb */
+/* Track - Fondo de la barra de desplazamiento */
 ::-webkit-scrollbar-track {
-  background-color: var(--scrollbar-track, #f1f5f9);
-  border-radius: var(--radius-md);
-  margin: var(--spacing-1);
+  background: var(--color-gray-100);
+  border-radius: 6px;
 }
 
-/* Thumb - la barra de desplazamiento */
+/* Handle - Barra de desplazamiento */
 ::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb, #cbd5e1);
-  border-radius: var(--radius-md);
+  background: var(--color-gray-300);
+  border-radius: 6px;
   border: 2px solid transparent;
   background-clip: padding-box;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color var(--transition-duration) var(--transition-timing);
 }
 
-/* Thumb al pasar el ratón */
+/* Handle al pasar el ratón */
 ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--scrollbar-thumb-hover, #94a3b8);
+  background: var(--color-gray-400);
 }
 
-/* Thumb activo (al hacer clic) */
+/* Handle activo */
 ::-webkit-scrollbar-thumb:active {
-  background-color: var(--scrollbar-thumb-active, #64748b);
+  background: var(--color-primary-500);
 }
 
-/* Botones de la barra de desplazamiento (flechas) */
-::-webkit-scrollbar-button {
-  display: none; /* Ocultar botones por defecto */
-}
+/* ===== 2. SCROLLBAR PARA ELEMENTOS ESPECÍFICOS ===== */
 
-/* Esquina donde se encuentran las barras */
-::-webkit-scrollbar-corner {
-  background-color: transparent;
-}
-
-/* Estilos para Firefox */
-* {
+/* Scrollbar para contenedores con clase .custom-scroll */
+.custom-scroll {
   scrollbar-width: thin;
-  scrollbar-color: 
-    var(--scrollbar-thumb, #cbd5e1)
-    var(--scrollbar-track, #f1f5f9);
+  scrollbar-color: var(--color-gray-300) var(--color-gray-100);
 }
 
-/* Los colores de scrollbar se gestionan vía variables globales en `base/_variables.css`.
-   Opcionalmente, el tema oscuro puede ajustar estos tokens a nivel de tema. */
+.custom-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
 
-/* Personalización para contenedores específicos */
-.scrollbar-thin {
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-400);
+}
+
+/* Scrollbar para modales y paneles */
+.modal-scroll,
+.panel-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gray-400) var(--color-gray-100);
+}
+
+.modal-scroll::-webkit-scrollbar,
+.panel-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.modal-scroll::-webkit-scrollbar-thumb,
+.panel-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-gray-400);
+  border-radius: 3px;
+}
+
+/* ===== 3. ESTADOS Y VARIANTES ===== */
+
+/* Scrollbar primaria */
+.scroll-primary {
+  scrollbar-color: var(--color-primary-400) var(--color-primary-50);
+}
+
+.scroll-primary::-webkit-scrollbar-thumb {
+  background: var(--color-primary-400);
+}
+
+.scroll-primary::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-500);
+}
+
+/* Scrollbar secundaria */
+.scroll-secondary {
+  scrollbar-color: var(--color-secondary-400) var(--color-secondary-50);
+}
+
+.scroll-secondary::-webkit-scrollbar-thumb {
+  background: var(--color-secondary-400);
+}
+
+.scroll-secondary::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secondary-500);
+}
+
+/* Scrollbar fina (más delgada) */
+.scroll-thin {
   scrollbar-width: thin;
 }
 
-.scrollbar-thin::-webkit-scrollbar {
-  width: var(--spacing-1_5); /* 6px */
-  height: var(--spacing-1_5); /* 6px */
+.scroll-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
 }
 
-/* Contenedor con scroll personalizado */
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: 
-    var(--scrollbar-thumb, #cbd5e1)
-    var(--scrollbar-track, #f1f5f9);
+/* ===== 4. MODOS DE CONTRASTE ===== */
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-gray-700);
+    border: 1px solid var(--color-gray-900);
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--color-gray-100);
+  }
 }
 
-.custom-scrollbar::-webkit-scrollbar {
-  width: var(--spacing-2);
-  height: var(--spacing-2);
+/* Reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+  ::-webkit-scrollbar-thumb {
+    transition: none;
+  }
 }
 
-/* Estilos para navegadores que no soportan scrollbar personalizada */
-@supports not (scrollbar-width: thin) {
-  /* Estilos de respaldo */
-  .custom-scrollbar {
+/* ===== 5. NAVEGADORES FIREFOX ===== */
+@supports (scrollbar-color: auto) {
+  html {
+    scrollbar-color: var(--color-gray-300) var(--color-gray-100);
+    scrollbar-width: auto;
+  }
+  
+  .custom-scroll {
+    scrollbar-color: var(--color-gray-300) var(--color-gray-100);
     scrollbar-width: thin;
   }
   
-  /* Estilos específicos para navegadores antiguos */
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 0.5rem;
-    height: 0.5rem;
+  .modal-scroll,
+  .panel-scroll {
+    scrollbar-color: var(--color-gray-400) var(--color-gray-100);
+    scrollbar-width: thin;
   }
-}
-
-/* Clases de utilidad para colores de scrollbar */
-.scrollbar-primary {
-  --scrollbar-track: var(--color-gray-200);
-  --scrollbar-thumb: var(--color-primary);
-  --scrollbar-thumb-hover: var(--color-primary-dark);
-  --scrollbar-thumb-active: var(--color-primary-darker);
-}
-
-.scrollbar-success {
-  --scrollbar-track: var(--color-success-bg);
-  --scrollbar-thumb: var(--color-success);
-  --scrollbar-thumb-hover: var(--color-success-dark);
-  --scrollbar-thumb-active: var(--color-success-darker);
-}
-
-.scrollbar-warning {
-  --scrollbar-track: var(--color-warning-bg);
-  --scrollbar-thumb: var(--color-warning);
-  --scrollbar-thumb-hover: var(--color-warning-dark);
-  --scrollbar-thumb-active: var(--color-warning-darker);
-}
-
-.scrollbar-danger {
-  --scrollbar-track: var(--color-error-bg);
-  --scrollbar-thumb: var(--color-error);
-  --scrollbar-thumb-hover: var(--color-error-dark);
-  --scrollbar-thumb-active: var(--color-error-darker);
+  
+  .scroll-primary {
+    scrollbar-color: var(--color-primary-400) var(--color-primary-50);
+  }
+  
+  .scroll-secondary {
+    scrollbar-color: var(--color-secondary-400) var(--color-secondary-50);
+  }
 }

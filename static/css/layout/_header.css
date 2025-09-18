@@ -1,0 +1,350 @@
+/* ===================================================================
+   HEADER - Cabecera de la aplicación
+   Archivo: _header.css
+   Versión: 1.0.0
+   Fecha: 2025-09-18
+   
+   Estilos para la cabecera principal de la aplicación PACTA.
+   Incluye estilos para el menú de navegación, logo y elementos interactivos.
+   
+   Basado en las variables de diseño definidas en _variables.css
+=================================================================== */
+
+/* ===== 1. ESTRUCTURA PRINCIPAL ===== */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-index-header, 1000);
+  background-color: var(--header-bg, var(--color-white));
+  box-shadow: var(--shadow-sm);
+  height: var(--header-height, 4rem);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-4);
+  transition: all 0.3s ease;
+}
+
+/* Contenedor interno para el contenido del header */
+.header__container {
+  width: 100%;
+  max-width: var(--breakpoint-xxl);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+}
+
+/* ===== 2. LOGO ===== */
+.header__logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-800);
+  font-size: var(--font-size-lg);
+  transition: color 0.2s ease;
+}
+
+.header__logo:hover {
+  color: var(--color-primary-600);
+}
+
+.header__logo-img {
+  height: 2.5rem;
+  width: auto;
+  margin-right: var(--spacing-2);
+}
+
+/* ===== 3. MENÚ DE NAVEGACIÓN ===== */
+.header__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.header__nav-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: var(--spacing-2);
+}
+
+.header__nav-item {
+  position: relative;
+}
+
+.header__nav-link {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-2) var(--spacing-3);
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--border-radius);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.header__nav-link:hover,
+.header__nav-link:focus {
+  background-color: var(--color-primary-50);
+  color: var(--color-primary-700);
+}
+
+.header__nav-link--active {
+  color: var(--color-primary-700);
+  font-weight: var(--font-weight-semibold);
+  background-color: var(--color-primary-50);
+}
+
+/* ===== 4. BOTÓN DE MENÚ MÓVIL ===== */
+.header__menu-button {
+  display: none; /* Oculto por defecto en pantallas grandes */
+  background: none;
+  border: none;
+  color: var(--color-gray-700);
+  font-size: var(--font-size-xl);
+  cursor: pointer;
+  padding: var(--spacing-2);
+  border-radius: var(--border-radius);
+  transition: background-color 0.2s ease;
+}
+
+.header__menu-button:hover {
+  background-color: var(--color-gray-100);
+}
+
+/* ===== 5. ACCIONES DEL USUARIO ===== */
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-left: auto;
+}
+
+/* ===== 6. MENÚ DESPLEGABLE DE USUARIO ===== */
+.user-menu {
+  position: relative;
+}
+
+.user-menu__button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  background: none;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--border-radius-full);
+  padding: var(--spacing-1) var(--spacing-2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-menu__button:hover {
+  background-color: var(--color-gray-50);
+  border-color: var(--color-gray-300);
+}
+
+.user-menu__avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--color-primary-100);
+  color: var(--color-primary-700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+}
+
+.user-menu__name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-color);
+  margin-right: var(--spacing-1);
+}
+
+.user-menu__dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  width: 16rem;
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-2) 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.5rem);
+  transition: all 0.2s ease;
+  z-index: var(--z-index-dropdown, 100);
+}
+
+.user-menu:hover .user-menu__dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.user-menu__header {
+  padding: 0 var(--spacing-4) var(--spacing-3);
+  border-bottom: 1px solid var(--color-gray-100);
+  margin-bottom: var(--spacing-2);
+}
+
+.user-menu__email {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+  margin-top: var(--spacing-1);
+}
+
+.user-menu__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.user-menu__item {
+  display: block;
+}
+
+.user-menu__link {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-2) var(--spacing-4);
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  transition: all 0.2s ease;
+}
+
+.user-menu__link:hover {
+  background-color: var(--color-gray-50);
+  color: var(--color-primary-700);
+}
+
+.user-menu__icon {
+  margin-right: var(--spacing-3);
+  color: var(--color-gray-500);
+  width: 1.25rem;
+  text-align: center;
+}
+
+/* ===== 7. ESTADOS Y VARIANTES ===== */
+/* Header con fondo oscuro */
+.header--dark {
+  --header-bg: var(--color-gray-900);
+  --text-color: var(--color-white);
+  box-shadow: var(--shadow-md);
+}
+
+.header--dark .header__nav-link {
+  color: var(--color-gray-200);
+}
+
+.header--dark .header__nav-link:hover,
+.header--dark .header__nav-link:focus {
+  background-color: var(--color-gray-800);
+  color: var(--color-white);
+}
+
+.header--dark .header__nav-link--active {
+  color: var(--color-white);
+  background-color: var(--color-primary-700);
+}
+
+/* Header con sombra al hacer scroll */
+.header--scrolled {
+  box-shadow: var(--shadow-md);
+  background-color: var(--color-white);
+  backdrop-filter: blur(8px);
+}
+
+/* ===== 8. MEDIA QUERIES ===== */
+/* Tablets y móviles */
+@media (max-width: 991px) {
+  .header__nav {
+    position: fixed;
+    top: var(--header-height, 4rem);
+    left: 0;
+    right: 0;
+    background-color: var(--color-white);
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--spacing-4);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: var(--z-index-dropdown, 100);
+  }
+
+  .header__nav--open {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .header__nav-list {
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+
+  .header__nav-link {
+    padding: var(--spacing-3) var(--spacing-4);
+    border-radius: var(--border-radius);
+  }
+
+  .header__menu-button {
+    display: block;
+  }
+
+  .header__actions {
+    margin-left: 0;
+    width: 100%;
+    padding-top: var(--spacing-4);
+    border-top: 1px solid var(--color-gray-100);
+  }
+}
+
+/* Moviles pequeños */
+@media (max-width: 575px) {
+  .header {
+    padding: 0 var(--spacing-3);
+  }
+  
+  .header__logo-text {
+    display: none; /* Ocultar texto del logo en móviles muy pequeños */
+  }
+}
+
+/* Modo oscuro para el menú móvil */
+@media (prefers-color-scheme: dark) {
+  .header__nav {
+    background-color: var(--color-gray-900);
+    color: var(--color-gray-100);
+  }
+  
+  .header__nav-link {
+    color: var(--color-gray-200);
+  }
+  
+  .header__nav-link:hover,
+  .header__nav-link:focus {
+    background-color: var(--color-gray-800);
+    color: var(--color-white);
+  }
+  
+  .header__menu-button {
+    color: var(--color-gray-300);
+  }
+  
+  .header__menu-button:hover {
+    background-color: var(--color-gray-800);
+  }
+}

@@ -1,0 +1,226 @@
+/* ===================================================================
+   FOOTER - Pie de página de la aplicación
+   Archivo: _footer.css
+   Versión: 1.0.0
+   Fecha: 2025-09-18
+   
+   Estilos para el pie de página de la aplicación PACTA.
+   Incluye secciones para enlaces, información de contacto y derechos de autor.
+   
+   Basado en las variables de diseño definidas en _variables.css
+=================================================================== */
+
+/* ===== 1. ESTRUCTURA PRINCIPAL ===== */
+.footer {
+  background-color: var(--footer-bg, var(--color-gray-900));
+  color: var(--footer-text, var(--color-gray-300));
+  padding: var(--spacing-8) 0 var(--spacing-6);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+}
+
+.footer a {
+  color: var(--footer-link, var(--color-gray-300));
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer a:hover,
+.footer a:focus {
+  color: var(--footer-link-hover, var(--color-white));
+  text-decoration: underline;
+}
+
+/* Contenedor principal */
+.footer__container {
+  max-width: var(--breakpoint-xxl);
+  margin: 0 auto;
+  padding: 0 var(--spacing-4);
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--spacing-8);
+}
+
+/* ===== 2. LOGO Y DESCRIPCIÓN ===== */
+.footer__brand {
+  grid-column: 1 / -1;
+  max-width: 36rem;
+}
+
+.footer__logo {
+  display: inline-block;
+  margin-bottom: var(--spacing-4);
+}
+
+.footer__logo-img {
+  height: 2.5rem;
+  width: auto;
+}
+
+.footer__description {
+  margin: var(--spacing-3) 0 0;
+  color: var(--footer-text, var(--color-gray-400));
+}
+
+/* ===== 3. ENLACES RÁPIDOS ===== */
+.footer__section {
+  margin-bottom: var(--spacing-6);
+}
+
+.footer__heading {
+  color: var(--footer-heading, var(--color-white));
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  margin: 0 0 var(--spacing-4);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.footer__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer__item {
+  margin-bottom: var(--spacing-2);
+}
+
+/* ===== 4. INFORMACIÓN DE CONTACTO ===== */
+.footer__contact-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-3);
+}
+
+.footer__contact-icon {
+  color: var(--color-primary-400);
+  margin-right: var(--spacing-3);
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+}
+
+/* ===== 5. REDES SOCIALES ===== */
+.footer__social {
+  display: flex;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-4);
+}
+
+.footer__social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: var(--footer-social-bg, var(--color-gray-800));
+  color: var(--footer-social, var(--color-white));
+  transition: all 0.2s ease;
+}
+
+.footer__social-link:hover,
+.footer__social-link:focus {
+  background-color: var(--color-primary-600);
+  color: var(--color-white);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+/* ===== 6. DERECHOS DE AUTOR Y ENLACES LEGALES ===== */
+.footer__bottom {
+  grid-column: 1 / -1;
+  margin-top: var(--spacing-8);
+  padding-top: var(--spacing-6);
+  border-top: 1px solid var(--footer-border, var(--color-gray-800));
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  text-align: center;
+}
+
+.footer__copyright {
+  margin: 0;
+  color: var(--footer-text, var(--color-gray-500));
+}
+
+.footer__legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer__legal-link {
+  color: var(--footer-link, var(--color-gray-400));
+  position: relative;
+}
+
+.footer__legal-link:not(:last-child)::after {
+  content: "•";
+  position: absolute;
+  right: calc(var(--spacing-2) * -1);
+  color: var(--footer-text, var(--color-gray-600));
+}
+
+/* ===== 7. VERSIÓN MÓVIL ===== */
+@media (min-width: 640px) {
+  .footer__container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .footer__bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+  }
+  
+  .footer__legal-links {
+    justify-content: flex-end;
+  }
+}
+
+/* ===== 8. VERSIÓN ESCRITORIO ===== */
+@media (min-width: 1024px) {
+  .footer__container {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-8) var(--spacing-12);
+  }
+  
+  .footer__brand {
+    grid-column: span 2;
+  }
+  
+  .footer__section {
+    margin-bottom: 0;
+  }
+}
+
+/* ===== 9. TEMA CLARO ===== */
+.footer--light {
+  --footer-bg: var(--color-white);
+  --footer-text: var(--color-gray-600);
+  --footer-heading: var(--color-gray-900);
+  --footer-link: var(--color-gray-600);
+  --footer-link-hover: var(--color-primary-700);
+  --footer-border: var(--color-gray-200);
+  --footer-social-bg: var(--color-gray-100);
+  --footer-social: var(--color-gray-700);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ===== 10. VARIANTE PRIMARIA ===== */
+.footer--primary {
+  --footer-bg: var(--color-primary-900);
+  --footer-text: var(--color-primary-100);
+  --footer-heading: var(--color-white);
+  --footer-link: var(--color-primary-100);
+  --footer-link-hover: var(--color-white);
+  --footer-border: var(--color-primary-800);
+  --footer-social-bg: var(--color-gray-800);
+  --footer-social: var(--color-white);
+}

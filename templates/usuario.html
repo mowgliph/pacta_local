@@ -3,12 +3,12 @@
 {% block title %}Perfil de Usuario - PACTA{% endblock %}
 
 {% block content %}
-    <div class="dashboard-container">
+    <div class="container-fluid">
         <!-- Include Sidebar Component -->
         {% include 'components/partials/sidebar.html' %}
         
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="row g-0">
             {% set page_title = "Perfil de Usuario" %}
             {% set page_subtitle = "Gestiona tu información personal y configuraciones" %}
             {% set page_icon = "fas fa-user-circle" %}
@@ -145,7 +145,7 @@
             </div>
             
             <!-- Tarjetas de Métricas -->
-            <div class="metrics-grid">
+            <div class="row g-3 mb-4">
                 {% set metric_label = "Contratos Activos" %}
                 {% set metric_value = estadisticas.contratos_activos or 156 %}
                 {% set metric_icon = "fas fa-file-contract" %}
@@ -180,9 +180,10 @@
             </div>
             
             <!-- Vertical Blocks Layout -->
-            <div class="vertical-blocks">
+            <div class="row g-4">
                 <!-- Quick Actions Block -->
-                <div class="block-section actions-block">
+                <div class="col-12 col-lg-6 mb-4">
+                    <div class="card h-100">
                     <div class="block-header">
                         <h3 class="block-title">Acciones Rápidas</h3>
                         <p class="block-subtitle">Herramientas y funciones principales</p>
@@ -261,7 +262,8 @@
 
                 
                 <!-- Personal Statistics Block -->
-                <div class="block-section activity-block">
+                <div class="col-12 col-lg-6">
+                    <div class="card h-100">
                     <div class="block-header">
                         <h3 class="block-title">Estadísticas Personales</h3>
                         <p class="block-subtitle">Métricas de desempeño individual</p>
@@ -293,6 +295,8 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
                     </div>
                 </div>
             </div>

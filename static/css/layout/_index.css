@@ -1,0 +1,12 @@
+/* ===================================================================
+   PACTA - Layout
+   Archivo: _index.css
+   Descripción: Estilos de estructura y disposición
+   Orden de carga: 4
+=================================================================== */
+
+@import './_grid.css';
+@import './_container.css';
+@import './_header.css';
+@import './_sidebar.css';
+@import './_footer.css';

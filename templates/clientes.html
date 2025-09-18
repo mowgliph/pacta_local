@@ -3,12 +3,12 @@
 {% block title %}Gestión de Clientes{% endblock %}
 
 {% block content %}
-    <div class="dashboard-container">
+    <div class="container-fluid">
         <!-- Include Sidebar Component -->
         {% include 'components/partials/sidebar.html' %}
         
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="row g-0">
             <!-- Content Header -->
             {% set page_title = "Gestión de Clientes" %}
             {% set page_subtitle = "Administra todos los clientes del sistema" %}
@@ -18,7 +18,7 @@
             {% include 'components/partials/content_header.html' %}
     
     <!-- Métricas principales -->
-    <div class="metrics-grid">
+    <div class="row g-3 mb-4">
         <!-- Total Clientes -->
         {% set metric_label = "Total Clientes" %}
         {% set metric_value = estadisticas.total_clientes if estadisticas and estadisticas.total_clientes else "0" %}
@@ -73,18 +73,22 @@
     </div>
 
     <!-- Tabla de Clientes -->
-    <div class="block-section">
-        <div class="block-header">
-            <h3 class="block-title">Clientes del Sistema</h3>
-            <p class="block-subtitle">Lista completa de clientes registrados</p>
+    <div class="card mb-4">
+        <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="h4 mb-1">Clientes del Sistema</h3>
+                <p class="text-muted mb-0">Lista completa de clientes registrados</p>
+            </div>
         </div>
         <div class="block-content" style="padding: 0;">
             <!-- Barra de acciones -->
-            <div class="action-bar" style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
-                <div style="display: flex; gap: 8px;">
-                    <button id="btnAddClient" class="btn-icon-action" title="Añadir Cliente" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #3b82f6; border: none; border-radius: 6px; color: white; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
+            <div class="d-flex justify-content-between align-items-center p-4 bg-light border-bottom">
+                <div class="d-flex gap-2">
+                    <button id="btnAddClient" class="btn btn-primary btn-sm" title="Añadir Cliente">
                         <i class="fas fa-plus"></i>
                     </button>
+                    <button id="btnSearchClient" class="btn btn-secondary btn-sm" title="Buscar Clientes">
                     <button id="btnSearchClient" class="btn-icon-action" title="Buscar Clientes" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #10b981; border: none; border-radius: 6px; color: white; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">
                         <i class="fas fa-search"></i>
                     </button>

@@ -5,12 +5,12 @@
 {% block body_class %}proveedores-page{% endblock %}
 
 {% block content %}
-    <div class="dashboard-container">
+    <div class="container-fluid">
         <!-- Include Sidebar Component -->
         {% include 'components/partials/sidebar.html' %}
         
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="row g-0">
             <!-- Content Header -->
             {% set page_title = "Gestión de Proveedores" %}
             {% set page_subtitle = "Administra todos los proveedores del sistema" %}
@@ -20,7 +20,7 @@
             {% include 'components/partials/content_header.html' %}
 
             <!-- Providers Statistics Cards -->
-            <div class="metrics-grid" style="margin-bottom: 32px;">
+            <div class="row g-3 mb-4">
                 <!-- Total Proveedores -->
                 {% set metric_label = "Total Proveedores" %}
                 {% set metric_value = estadisticas.total_proveedores if estadisticas and estadisticas.total_proveedores else "0" %}
@@ -75,7 +75,8 @@
             </div>
             
             <!-- Tabla de Proveedores -->
-            <div class="block-section">
+            <div class="card mb-4">
+                <div class="card-body">
                 <div class="block-header">
                     <h3 class="block-title">Proveedores del Sistema</h3>
                     <p class="block-subtitle">Lista completa de proveedores registrados</p>
@@ -115,15 +116,16 @@
                             </tbody>
                         </table>
                     </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Personas Responsables Recientes -->
-            <div class="block-section" style="margin-top: 32px;">
-                <div class="recent-personas-column" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                    <div class="column-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f3f4f6;">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
                         <div>
-                            <h4 style="font-size: 18px; font-weight: 600; color: #374151; margin: 0; display: flex; align-items: center;">
+                            <h4 class="h5 mb-0 text-gray-800 d-flex align-items-center">
                                 <i class="fas fa-users" style="color: #8b5cf6; margin-right: 8px;"></i>
                                 Personas Responsables Recientes
                             </h4>
@@ -141,6 +143,7 @@
                             <i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i>
                             Cargando personas responsables...
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>

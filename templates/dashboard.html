@@ -3,17 +3,17 @@
 {% block title %}Dashboard - PACTA{% endblock %}
 
 {% block content %}
-    <div class="dashboard-container">
+    <div class="container-fluid">
         <!-- Include Sidebar Component -->
         {% include 'components/partials/sidebar.html' %}
         
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="row g-0">
             <!-- Include Header Component with custom content -->
             {% include 'components/partials/content_header.html' %}
             
             <!-- Main Metrics Cards -->
-            <div class="metrics-grid">
+            <div class="row g-3 mb-4">
                 {% set metric_label = 'Total Contratos' %}
                 {% set metric_value = estadisticas.total_contratos %}
                 {% set metric_icon = 'fas fa-file-contract' %}
@@ -48,7 +48,7 @@
             </div>
             
             <!-- Secondary Metrics Cards -->
-            <div class="metrics-grid mt-4">
+            <div class="row g-3 mb-4">
                 {% set metric_label = "Uptime del Sistema" %}
                 {% set metric_value = estadisticas.uptime ~ "%" %}
                 {% set metric_icon = "fas fa-server" %}
@@ -83,13 +83,15 @@
             </div>
             
             <!-- Vertical Blocks Layout -->
-            <div class="vertical-blocks">
+            <div class="row g-4">
                 <!-- Quick Actions Block -->
-                <div class="block-section actions-block">
+                <div class="col-12 col-lg-6 mb-4">
+                    <div class="card h-100">
                     <div class="block-header">
                         <h3 class="block-title">Acciones Rápidas</h3>
                         <p class="block-subtitle">Herramientas principales del sistema</p>
-                    </div>
+                        </div>
+                </div>
                     <div class="block-content">
                         <div class="contract-actions d-flex flex-nowrap gap-3">
                             <a href="{{ url_for('contratos.listar') }}" class="btn btn-primary flex-fill d-flex align-items-center gap-2 min-w-150">
@@ -108,7 +110,10 @@
                                 <i class="fas fa-cog"></i>
                                 Configuración
                             </a>
+                            </div>
+                </div>
                         </div>
+                </div>
                     </div>
                 </div>
                 
@@ -117,29 +122,37 @@
                     <div class="block-header">
                         <h3 class="block-title">Resumen del Sistema</h3>
                         <p class="block-subtitle">Distribución y estado general</p>
-                    </div>
+                        </div>
+                </div>
                     <div class="block-content">
                         <div class="charts-grid">
                             <div class="donut-chart">
                                 <canvas id="contractsOverviewChart" width="120" height="120"></canvas>
                                 <div class="donut-value">{{ estadisticas.contratos_activos }}</div>
                                 <div class="donut-label">Contratos Activos</div>
-                            </div>
+                                </div>
+                </div>
                             <div class="donut-chart">
                                 <canvas id="reportsOverviewChart" width="120" height="120"></canvas>
                                 <div class="donut-value">{{ estadisticas.total_reportes }}</div>
                                 <div class="donut-label">Total Reportes</div>
+                                </div>
+                </div>
                             </div>
+                </div>
                         </div>
+                </div>
                     </div>
                 </div>
                 
                 <!-- Recent Contracts Block -->
-                <div class="block-section table-block">
+                <div class="col-12 mb-4">
+                    <div class="card h-100">
                     <div class="block-header">
                         <h3 class="block-title">Contratos Recientes</h3>
                         <p class="block-subtitle">Últimos contratos registrados en el sistema</p>
-                    </div>
+                        </div>
+                </div>
                     <div class="block-content">
                         <!-- Tabla Consistente de Contratos Recientes -->
                         {% set table_headers = [
@@ -198,8 +211,10 @@
                                                 <div>
                                                     <div class="fw-semibold">{{ contrato.id }}</div>
                                                     <small class="text-muted">{{ contrato.tipo|default('Sin tipo') }}</small>
+                                                    </div>
+                </div>
                                                 </div>
-                                            </div>
+                </div>
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
@@ -207,9 +222,11 @@
                                                     <span class="avatar-title rounded-circle bg-soft-primary text-primary">
                                                         {{ contrato.proveedor|first|upper }}
                                                     </span>
-                                                </div>
+                                                    </div>
+                </div>
                                                 <div>{{ contrato.proveedor|default('Sin proveedor') }}</div>
-                                            </div>
+                                                </div>
+                </div>
                                         </td>
                                         <td>{{ contrato.fecha_vencimiento|default('N/A') }}</td>
                                         <td class="text-end">
@@ -233,28 +250,35 @@
                                             <div class="text-muted">
                                                 <i class="fas fa-inbox fa-2x mb-2"></i>
                                                 <p class="mb-0">No hay contratos recientes disponibles</p>
-                                            </div>
+                                                </div>
+                </div>
                                         </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
-                        </div>
+                            </div>
+                </div>
                         
                         <div class="mt-3 text-center">
                             <a href="{{ url_for('contratos.listar') }}" class="btn btn-primary">
                                 <i class="fas fa-list me-1"></i> Ver Todos los Contratos
                             </a>
+                            </div>
+                </div>
                         </div>
+                </div>
                     </div>
                 </div>
                 
                 <!-- System Activity Block -->
-                <div class="block-section activity-block">
+                <div class="col-12 col-lg-6">
+                    <div class="card h-100">
                     <div class="block-header">
                         <h3 class="block-title">Actividad del Sistema</h3>
                         <p class="block-subtitle">Últimas acciones y eventos importantes</p>
-                    </div>
+                        </div>
+                </div>
                     <div class="block-content">
                         <div>
                             <div class="activity-item">
@@ -263,33 +287,44 @@
                                     <div class="activity-message"><strong>Sistema actualizado</strong></div>
                                     <div class="activity-message">Versión 2.1.0 instalada correctamente</div>
                                     <div class="activity-time">Hace 1 hora</div>
+                                    </div>
+                </div>
                                 </div>
-                            </div>
+                </div>
                             <div class="activity-item">
                                 <span class="status-dot status-dot-sm status-color-primary"></span>
                                 <div class="activity-content">
                                     <div class="activity-message"><strong>Nuevo reporte generado</strong></div>
                                     <div class="activity-message">Reporte mensual de contratos completado</div>
                                     <div class="activity-time">Hace 3 horas</div>
+                                    </div>
+                </div>
                                 </div>
-                            </div>
+                </div>
                             <div class="activity-item">
                                 <span class="status-dot status-dot-sm status-color-warning"></span>
                                 <div class="activity-content">
                                     <div class="activity-message"><strong>Backup programado</strong></div>
                                     <div class="activity-message">Copia de seguridad completada exitosamente</div>
                                     <div class="activity-time">Hace 6 horas</div>
+                                    </div>
+                </div>
                                 </div>
-                            </div>
+                </div>
                             <div class="activity-item">
                                 <span class="status-dot status-dot-sm status-color-purple"></span>
                                 <div class="activity-content">
                                     <div class="activity-message"><strong>Usuario conectado</strong></div>
                                     <div class="activity-message">Ana Martínez inició sesión</div>
                                     <div class="activity-time">Hace 8 horas</div>
+                                    </div>
+                </div>
                                 </div>
+                </div>
                             </div>
+                </div>
                         </div>
+                </div>
                     </div>
                 </div>
             </div>

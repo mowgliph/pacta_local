@@ -1,0 +1,274 @@
+/* ===================================================================
+   SIDEBAR - Barra lateral
+   Archivo: _sidebar.css
+   Versión: 1.0.0
+   Fecha: 2025-09-18
+   
+   Sistema de barra lateral desplegable que se integra con:
+   - El sistema de cuadrícula existente
+   - Las variables de diseño definidas en _variables.css
+   - Los breakpoints estándar del proyecto
+=================================================================== */
+
+/* ===== 1. VARIABLES DE LA BARRA LATERAL ===== */
+:root {
+  /* Dimensiones */
+  --sidebar-width: 260px;
+  --sidebar-width-collapsed: 72px;
+  --sidebar-header-height: 64px;
+  --sidebar-footer-height: 64px;
+  
+  /* Colores */
+  --sidebar-bg: var(--color-gray-50);
+  --sidebar-text: var(--color-gray-800);
+  --sidebar-hover-bg: var(--color-gray-100);
+  --sidebar-active-bg: var(--color-primary-50);
+  --sidebar-active-text: var(--color-primary-600);
+  --sidebar-border: var(--color-gray-200);
+  --sidebar-shadow: var(--shadow-sm);
+  
+  /* Transiciones */
+  --sidebar-transition: all 0.3s ease-in-out;
+}
+
+/* ===== 2. ESTRUCTURA BASE ===== */
+
+/* Contenedor principal */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-index-sidebar);
+  width: var(--sidebar-width);
+  height: 100vh;
+  background-color: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  box-shadow: var(--sidebar-shadow);
+  transition: var(--sidebar-transition);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Estado colapsado */
+.sidebar--collapsed {
+  width: var(--sidebar-width-collapsed);
+}
+
+/* Cabecera de la barra lateral */
+.sidebar__header {
+  height: var(--sidebar-header-height);
+  padding: 0 var(--spacing-4);
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--sidebar-border);
+  flex-shrink: 0;
+}
+
+/* Contenido de la barra lateral */
+.sidebar__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-4) 0;
+}
+
+/* Pie de la barra lateral */
+.sidebar__footer {
+  height: var(--sidebar-footer-height);
+  padding: var(--spacing-4);
+  border-top: 1px solid var(--sidebar-border);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ===== 3. MENÚ DE NAVEGACIÓN ===== */
+
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav__item {
+  position: relative;
+}
+
+.sidebar-nav__link {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-3) var(--spacing-4);
+  color: inherit;
+  text-decoration: none;
+  transition: var(--sidebar-transition);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sidebar-nav__link:hover {
+  background-color: var(--sidebar-hover-bg);
+}
+
+.sidebar-nav__link--active {
+  background-color: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
+  font-weight: 500;
+}
+
+.sidebar-nav__icon {
+  margin-right: var(--spacing-3);
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+
+.sidebar-nav__text {
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Estado colapsado */
+.sidebar--collapsed .sidebar-nav__text {
+  opacity: 0;
+  width: 0;
+  white-space: nowrap;
+}
+
+/* ===== 4. SUBMENÚS ===== */
+
+.sidebar-submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.sidebar-submenu--expanded {
+  max-height: 1000px; /* Valor suficientemente alto */
+}
+
+.sidebar-submenu__link {
+  display: block;
+  padding: var(--spacing-2) var(--spacing-4) var(--spacing-2) calc(var(--spacing-4) * 2 + 24px);
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 0.9em;
+  transition: var(--sidebar-transition);
+}
+
+.sidebar-submenu__link:hover,
+.sidebar-submenu__link--active {
+  color: var(--sidebar-active-text);
+  background-color: var(--sidebar-hover-bg);
+}
+
+/* ===== 5. BOTÓN DE COLAPSO ===== */
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: var(--spacing-2);
+  margin-left: auto;
+  border-radius: var(--border-radius-sm);
+  transition: var(--sidebar-transition);
+}
+
+.sidebar-toggle:hover {
+  background-color: var(--sidebar-hover-bg);
+}
+
+/* ===== 6. RESPONSIVE ===== */
+
+/* Tabletas y móviles */
+@media (max-width: 991px) {
+  .sidebar {
+    transform: translateX(-100%);
+    z-index: var(--z-index-sidebar-mobile);
+  }
+  
+  .sidebar--open {
+    transform: translateX(0);
+  }
+  
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: calc(var(--z-index-sidebar-mobile) - 1);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  }
+  
+  .sidebar-overlay--visible {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* Escritorio */
+@media (min-width: 992px) {
+  .sidebar-overlay {
+    display: none;
+  }
+  
+  /* Ajustar el contenido principal cuando la barra lateral está colapsada */
+  .main-content {
+    margin-left: var(--sidebar-width);
+    transition: margin-left 0.3s ease-in-out;
+  }
+  
+  .main-content--collapsed {
+    margin-left: var(--sidebar-width-collapsed);
+  }
+}
+
+/* ===== 7. TEMAS ===== */
+
+/* Tema claro */
+.sidebar--light {
+  --sidebar-bg: var(--color-white);
+  --sidebar-text: var(--color-gray-700);
+  --sidebar-hover-bg: var(--color-gray-100);
+  --sidebar-active-bg: var(--color-primary-50);
+  --sidebar-active-text: var(--color-primary-600);
+  --sidebar-border: var(--color-gray-200);
+}
+
+/* ===== 8. ACCESIBILIDAD ===== */
+
+/* Mejoras para modo de alto contraste */
+@media (prefers-contrast: high) {
+  .sidebar {
+    border-right: 2px solid var(--color-gray-900);
+  }
+  
+  .sidebar-nav__link--active {
+    position: relative;
+  }
+  
+  .sidebar-nav__link--active::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60%;
+    background-color: var(--color-gray-900);
+  }
+}
+
+/* Reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .sidebar-nav__text,
+  .sidebar-submenu {
+    transition: none;
+  }
+}
