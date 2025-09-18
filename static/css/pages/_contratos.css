@@ -1,0 +1,99 @@
+/* ===================================================================
+   PACTA - Página de Contratos
+   Archivo: _contratos.css
+   Descripción: Estilos específicos para gestión de contratos usando variables CSS
+   Dependencias: base/_variables.css
+   Orden de carga: importado por pages/_index.css
+=================================================================== */
+
+/* ===== MÉTRICAS ===== */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--spacing-4);
+}
+
+@media (max-width: var(--breakpoint-xl)) {
+  .metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: var(--breakpoint-lg)) {
+  .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: var(--breakpoint-sm)) {
+  .metrics-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== ACCIONES ===== */
+.min-w-200 { min-width: 200px; }
+
+.contract-actions { gap: var(--spacing-3); }
+
+/* ===== BÚSQUEDA ===== */
+.search-container {
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius);
+}
+
+.form-search { position: relative; }
+
+.form-search .form-control {
+  padding-right: 2.25rem;
+}
+
+.form-search-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-color-lighter);
+}
+
+.filter-options { gap: var(--spacing-3); }
+.filter-buttons { gap: var(--spacing-2); }
+
+.filter-btn {
+  border-radius: var(--border-radius);
+}
+
+.filter-btn.active {
+  background-color: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+  color: var(--color-white);
+}
+
+/* ===== TABLA DE CONTRATOS ===== */
+.contratos-table thead th.sortable { cursor: pointer; }
+.contratos-table .sort-icon {
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  margin-left: 0.25rem;
+  opacity: 0.5;
+}
+
+/* ===== ACTIVITY FEED ===== */
+.activity-item {
+  display: flex;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) 0;
+  border-bottom: var(--border-width) solid var(--border-color);
+}
+
+.activity-item:last-child { border-bottom: 0; }
+
+.status-dot { width: 10px; height: 10px; border-radius: var(--border-radius-full); box-shadow: var(--shadow-inner); margin-top: 6px; }
+.status-dot-sm { width: 8px; height: 8px; }
+.status-color-success { background-color: var(--color-success-500); }
+.status-color-primary { background-color: var(--color-primary-500); }
+.status-color-warning { background-color: var(--color-warning-500); }
+.status-color-purple { background-color: var(--color-primary-800); }
+.status-color-gray { background-color: var(--color-gray-400); }
+.status-color-error { background-color: var(--color-error-500); }
+.status-color-info { background-color: var(--color-info); }
+
+.activity-content { display: flex; flex-direction: column; gap: 2px; }
+.activity-message { color: var(--text-color); }
+.activity-time { color: var(--text-color-lighter); font-size: var(--font-size-sm); }
+
