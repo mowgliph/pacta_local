@@ -12,7 +12,6 @@ css/refactor/
 ├── components/       # Componentes reutilizables
 ├── layout/           # Estructuras de diseño
 ├── pages/            # Estilos específicos de páginas
-├── utilities/        # Clases de ayuda y utilidades
 └── main.css          # Punto de entrada principal
 ```
 
@@ -66,23 +65,7 @@ Estructuras de diseño principales de la aplicación:
 - `_sidebar.css`: Barra lateral
 - `_footer.css`: Pie de página
 
-### 4. Utilidades
-
-Clases de ayuda que pueden aplicarse directamente en el HTML:
-
-- `_spacing.css`: Utilidades de espaciado (márgenes y rellenos)
-- `_display.css`: Utilidades de visualización
-- `_flex-grid.css`: Utilidades para flexbox y grid
-- `_sizing.css`: Utilidades de dimensionamiento
-- `_typography-utils.css`: Utilidades de texto
-- `_borders.css`: Utilidades de bordes
-- `_backgrounds.css`: Utilidades de fondos
-- `_effects.css`: Efectos visuales
-- `_tables.css`: Utilidades para tablas
-- `_interactivity.css`: Utilidades de interacción
-- `_layout-utils.css`: Utilidades de diseño
-
-### 5. Páginas
+### 4. Páginas
 
 Estilos específicos para páginas individuales. Deben usarse con moderación, prefiriendo siempre componentes reutilizables.
 

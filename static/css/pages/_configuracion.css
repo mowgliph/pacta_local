@@ -1,0 +1,274 @@
+/* ===================================================================
+    Configuración Page Styles
+=================================================================== */
+
+/* System Info Cards */
+.system-info-card {
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-md);
+    color: var(--color-white);
+    box-shadow: var(--box-shadow-md);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: var(--transition-ease);
+}
+
+.system-info-card:hover {
+    transform: translateY(-var(--spacing-xxs));
+    box-shadow: var(--box-shadow-lg);
+}
+
+.system-info-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.system-info-card-icon {
+    font-size: var(--font-size-xl);
+    margin-right: var(--spacing-sm);
+    opacity: 0.9;
+}
+
+.system-info-card-title {
+    margin: 0;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+}
+
+.system-info-card-value {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-xs);
+}
+
+.system-info-card-details {
+    font-size: var(--font-size-sm);
+    opacity: 0.9;
+}
+
+.system-info-card-link {
+    display: block;
+    text-decoration: none;
+    transition: var(--transition-ease);
+}
+
+.system-info-card-link:hover {
+    transform: translateY(-var(--spacing-xxs));
+    box-shadow: var(--box-shadow-lg);
+}
+
+.system-info-card-link-text {
+    margin-top: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xxs);
+}
+
+/* Color Variants for System Info Cards */
+.system-info-card.bg-gradient-primary {
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+}
+
+.system-info-card.bg-gradient-success {
+    background: linear-gradient(135deg, var(--color-success-dark) 0%, var(--color-success) 100%);
+}
+
+.system-info-card.bg-gradient-danger {
+    background: linear-gradient(135deg, var(--color-danger-dark) 0%, var(--color-danger) 100%);
+}
+
+.system-info-card.bg-gradient-info {
+    background: linear-gradient(135deg, var(--color-info-dark) 0%, var(--color-info) 100%);
+}
+
+.system-info-card.bg-gradient-purple {
+    background: linear-gradient(135deg, var(--color-purple-dark) 0%, var(--color-purple) 100%);
+}
+
+/* Text color for info card with light background */
+.system-info-card .text-dark-icon {
+    color: var(--color-gray-700);
+}
+
+.system-info-card .text-dark-title {
+    color: var(--color-gray-800);
+}
+
+.system-info-card .text-dark-value {
+    color: var(--color-gray-800);
+}
+
+.system-info-card .text-dark-details {
+    color: var(--color-gray-700);
+}
+
+/* System Health Status */
+.system-health-healthy {
+    color: var(--color-success);
+    font-weight: var(--font-weight-semibold);
+}
+
+.system-health-overloaded {
+    color: var(--color-danger);
+    font-weight: var(--font-weight-semibold);
+}
+
+.system-health-moderate {
+    color: var(--color-warning);
+    font-weight: var(--font-weight-semibold);
+}
+
+.system-health-disconnected {
+    color: var(--color-danger);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* Server Metric Cards */
+.server-metric-card {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    box-shadow: var(--box-shadow-sm);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: var(--transition-ease);
+}
+
+.server-metric-card:hover {
+    transform: translateY(-var(--spacing-xxs));
+    box-shadow: var(--box-shadow-md);
+}
+
+.server-metric-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+}
+
+.server-metric-header i {
+    font-size: var(--font-size-md);
+    margin-right: var(--spacing-xxs);
+}
+
+.server-metric-title {
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+}
+
+.server-metric-value {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-xxs);
+}
+
+.server-metric-details {
+    font-size: var(--font-size-xs);
+    color: var(--color-gray-600);
+}
+
+.updating {
+    opacity: 0.7;
+    transform: scale(1.02);
+    transition: all 0.3s ease-in-out;
+}
+
+/* System Tools Block */
+.system-tools-block .card-body {
+    padding: var(--spacing-md);
+}
+
+.system-tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.system-tool-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-md) var(--spacing-sm);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--border-radius-md);
+    transition: var(--transition-ease);
+    text-decoration: none;
+}
+
+.system-tool-button:hover {
+    transform: translateY(-var(--spacing-xxs));
+    box-shadow: var(--box-shadow-sm);
+}
+
+.system-tool-button i {
+    font-size: var(--font-size-lg);
+}
+
+/* Platform Info Card */
+.platform-info-card {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    box-shadow: var(--box-shadow-sm);
+    transition: var(--transition-ease);
+    height: 100%;
+}
+
+.platform-info-card:hover {
+    transform: translateY(-var(--spacing-xxs));
+    box-shadow: var(--box-shadow-md);
+}
+
+.platform-info-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.platform-info-card-header i {
+    font-size: var(--font-size-lg);
+    color: var(--color-primary);
+    margin-right: var(--spacing-xs);
+}
+
+.platform-info-card-title {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-800);
+    margin: 0;
+}
+
+.platform-info-card-body ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.platform-info-card-body li {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px dashed var(--color-gray-100);
+    font-size: var(--font-size-sm);
+}
+
+.platform-info-card-body li:last-child {
+    border-bottom: none;
+}
+
+.platform-info-card-body strong {
+    color: var(--color-gray-700);
+    font-weight: var(--font-weight-medium);
+}
+
+.platform-info-card-body span {
+    color: var(--color-gray-600);
+}

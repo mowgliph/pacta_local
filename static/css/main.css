@@ -15,16 +15,13 @@
 /* 1. Variables y estilos base */
 @import './base/_index.css';
 
-/* 2. Utilidades y clases de ayuda */
-@import './utilities/_index.css';
-
-/* 3. Componentes reutilizables */
+/* 2. Componentes reutilizables */
 @import './components/_index.css';
 
-/* 4. Estructura de layout */
+/* 3. Estructura de layout */
 @import './layout/_index.css';
 
-/* 5. Estilos específicos de páginas */
+/* 4. Estilos específicos de páginas */
 @import './pages/_index.css';
 
 /* ===== ESTILOS GLOBALES ===== */

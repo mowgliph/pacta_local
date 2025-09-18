@@ -1,25 +1,29 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de Gestión PACTA - Inicio de sesión">
     <title>Iniciar Sesión - PACTA</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
+    
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
+
 <body class="login-page">
-    <div class="login-container mx-auto my-5 p-sm-5 p-4">
-        <div class="logo-container mb-5">
-            <img src="{{ url_for('static', filename='images/pacta_logo.png') }}" alt="PACTA" class="logo-text img-fluid" style="max-width: 180px;">
+    <div class="login-container">
+        <!-- Logo -->
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='images/pacta_logo.png') }}" alt="PACTA" class="logo">
         </div>
         
-        <div class="login-header mb-5 text-center">
-            <h1 class="h2 mb-3">Bienvenido</h1>
-            <p class="lead text-muted">Inicia sesión para acceder al sistema</p>
+        <!-- Encabezado -->
+        <div class="login-header">
+            <h1>Bienvenido</h1>
+            <p>Inicia sesión para acceder al sistema</p>
         </div>
         
+        <!-- Mensajes de error -->
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="alert alert-danger" role="alert">
@@ -29,36 +33,62 @@
             {% endif %}
         {% endwith %}
         
+        <!-- Formulario de inicio de sesión -->
         <form method="POST" action="{{ url_for('auth.login') }}" class="login-form">
+            <!-- Campo de usuario -->
             <div class="form-floating">
-                <input type="text" class="form-control" id="username" name="username" placeholder="Usuario" required>
+                <input type="text" 
+                       class="form-control" 
+                       id="username" 
+                       name="username" 
+                       placeholder="Usuario" 
+                       required 
+                       autocomplete="username"
+                       autofocus>
                 <label for="username"><i class="fas fa-user me-2"></i>Usuario</label>
             </div>
             
+            <!-- Campo de contraseña -->
             <div class="form-floating">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required>
+                <input type="password" 
+                       class="form-control" 
+                       id="password" 
+                       name="password" 
+                       placeholder="Contraseña" 
+                       required
+                       autocomplete="current-password">
                 <label for="password"><i class="fas fa-lock me-2"></i>Contraseña</label>
-                <button class="btn password-toggle" type="button" onclick="togglePassword()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); z-index: 10; background: transparent; border: none; color: #64748b;">
+                <button type="button" 
+                        class="password-toggle" 
+                        onclick="togglePassword()" 
+                        aria-label="Mostrar/ocultar contraseña">
                     <i class="fas fa-eye" id="toggleIcon"></i>
                 </button>
             </div>
             
-            <button type="submit" class="btn btn-primary btn-login">
+            <!-- Botón de inicio de sesión -->
+            <button type="submit" class="btn btn-login">
                 <i class="fas fa-sign-in-alt me-2"></i>
                 Iniciar Sesión
             </button>
         </form>
         
-        <div class="text-center mt-4 pt-3 border-top">
-            <small class="text-muted d-inline-flex align-items-center">
-                <i class="fas fa-info-circle me-2 info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Si no tienes una cuenta, por favor contacta con un administrador"></i>
+        <!-- Pie de página -->
+        <div class="login-footer">
+            <small>
+                <i class="fas fa-info-circle info-icon" 
+                   data-bs-toggle="tooltip" 
+                   data-bs-placement="top" 
+                   title="Si no tienes una cuenta, por favor contacta con un administrador">
+                </i>
                 <span>PACTA - Sistema de Gestión v1.0</span>
             </small>
         </div>
     </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scripts personalizados -->
     <script>
+        // Función para mostrar/ocultar contraseña
         function togglePassword() {
             const passwordField = document.getElementById('password');
             const toggleIcon = document.getElementById('toggleIcon');
@@ -67,28 +97,29 @@
                 passwordField.type = 'text';
                 toggleIcon.classList.remove('fa-eye');
                 toggleIcon.classList.add('fa-eye-slash');
+                toggleIcon.setAttribute('aria-label', 'Ocultar contraseña');
             } else {
                 passwordField.type = 'password';
                 toggleIcon.classList.remove('fa-eye-slash');
                 toggleIcon.classList.add('fa-eye');
+                toggleIcon.setAttribute('aria-label', 'Mostrar contraseña');
             }
         }
         
-        // Auto-focus en el campo de usuario
-        document.getElementById('username').focus();
-        
-        // Manejar Enter en los campos
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const form = document.querySelector('form');
-                form.submit();
-            }
-        });
-        
         // Inicializar tooltips de Bootstrap
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // Agregar clase de carga al formulario al enviar
+            const form = document.querySelector('.login-form');
+            if (form) {
+                form.addEventListener('submit', function() {
+                    document.body.classList.add('loading');
+                });
+            }
         });
     </script>
 </body>

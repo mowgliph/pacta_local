@@ -1,0 +1,60 @@
+/* ===================================================================
+    Configuration Modal Styles
+=================================================================== */
+
+.modal-header {
+    border-bottom: 1px solid var(--color-gray-200);
+    padding: var(--spacing-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-800);
+    margin: 0;
+}
+
+.modal-title i {
+    color: var(--color-primary);
+    margin-right: var(--spacing-xs);
+}
+
+.modal-header small {
+    color: var(--color-gray-500);
+    font-size: var(--font-size-sm);
+}
+
+.modal-body {
+    padding: var(--spacing-lg);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--color-gray-200);
+    padding: var(--spacing-md);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-sm);
+}
+
+/* Form Group Styling */
+.form-label {
+    margin-bottom: var(--spacing-xxs);
+}
+
+/* Section Headers in Modal */
+.modal-body h4.h6 {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-800);
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+}
+
+.modal-body h4.h6 i {
+    margin-right: var(--spacing-xs);
+    color: var(--color-purple);
+}

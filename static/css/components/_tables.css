@@ -1,0 +1,289 @@
+/* ===================================================================
+   PACTA - Componente: Tablas
+   Archivo: _tables.css
+   Descripción: Estilos para tablas de datos
+   Dependencias: base/_variables.css
+=================================================================== */
+
+/* Estilo base para tablas */
+.table {
+  width: 100%;
+  margin-bottom: var(--spacing-5);
+  color: var(--text-color);
+  vertical-align: top;
+  border-color: var(--color-gray-300);
+  border-collapse: collapse;
+}
+
+/* Cabeceras de tabla */
+.table th {
+  padding: var(--spacing-3) var(--spacing-4);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-700);
+  background-color: var(--color-gray-50);
+  border-bottom: calc(var(--border-width) * 2) solid var(--color-gray-200);
+  text-align: left;
+}
+
+/* Celdas de tabla */
+.table td {
+  padding: var(--spacing-3) var(--spacing-4);
+  vertical-align: middle;
+  border-top: var(--border-width) solid var(--color-gray-200);
+}
+
+/* Filas con hover */
+.table-hover tbody tr:hover {
+  background-color: var(--color-gray-50);
+}
+
+/* Tabla con bordes */
+.table-bordered {
+  border: var(--border-width) solid var(--color-gray-300);
+}
+
+.table-bordered th,
+.table-bordered td {
+  border: var(--border-width) solid var(--color-gray-300);
+}
+
+.table-bordered thead th,
+.table-bordered thead td {
+  border-bottom-width: calc(var(--border-width) * 2);
+}
+
+/* Tabla rayada */
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--color-gray-50);
+}
+
+/* Tabla compacta */
+.table-sm th,
+.table-sm td {
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-sm);
+}
+
+/* Tabla responsive */
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Variantes de color para filas */
+.table-primary,
+.table-primary > th,
+.table-primary > td {
+  background-color: rgba(var(--color-primary-rgb), 0.1);
+}
+
+.table-secondary,
+.table-secondary > th,
+.table-secondary > td {
+  background-color: rgba(var(--color-secondary-rgb), 0.1);
+}
+
+.table-success,
+.table-success > th,
+.table-success > td {
+  background-color: rgba(var(--color-success-rgb), 0.1);
+}
+
+.table-danger,
+.table-danger > th,
+.table-danger > td {
+  background-color: rgba(var(--color-danger-rgb), 0.1);
+}
+
+.table-warning,
+.table-warning > th,
+.table-warning > td {
+  background-color: rgba(var(--color-warning-rgb), 0.1);
+}
+
+.table-info,
+.table-info > th,
+.table-info > td {
+  background-color: rgba(var(--color-info-rgb), 0.1);
+}
+
+/* Estilos para tablas oscuras */
+.table-dark {
+  color: var(--color-white);
+  background-color: var(--color-gray-800);
+}
+
+.table-dark th,
+.table-dark td,
+.table-dark thead th {
+  border-color: var(--color-gray-700);
+}
+
+.table-dark.table-bordered {
+  border: 0;
+}
+
+.table-dark.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table-dark.table-hover tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.075);
+}
+
+/* Alineación de texto en celdas */
+.table th.text-center,
+.table td.text-center {
+  text-align: center;
+}
+
+.table th.text-right,
+.table td.text-right {
+  text-align: right;
+}
+
+.table th.text-left,
+.table td.text-left {
+  text-align: left;
+}
+
+/* Tabla con acciones */
+.table-actions {
+  white-space: nowrap;
+  width: 1%;
+}
+
+.table-actions .btn {
+  margin: 0 var(--spacing-1);
+}
+
+/* Tabla con checkboxes */
+.table-checkbox {
+  width: 1%;
+  white-space: nowrap;
+  padding-right: 0 !important;
+}
+
+/* Tabla con avatar */
+.table-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: var(--spacing-2);
+}
+
+/* Tabla con estado */
+.status-badge {
+  display: inline-block;
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: var(--border-radius);
+}
+
+.status-active {
+  color: var(--color-success);
+  background-color: rgba(var(--color-success-rgb), 0.1);
+}
+
+.status-inactive {
+  color: var(--color-gray-600);
+  background-color: var(--color-gray-200);
+}
+
+.status-pending {
+  color: var(--color-warning);
+  background-color: rgba(var(--color-warning-rgb), 0.1);
+}
+
+.status-blocked {
+  color: var(--color-danger);
+  background-color: rgba(var(--color-danger-rgb), 0.1);
+}
+
+/* Tabla con acciones flotantes */
+.table-actions-float {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+tr:hover .table-actions-float {
+  opacity: 1;
+}
+
+/* Tabla con scroll horizontal */
+.table-scroll {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+/* Tabla con encabezado fijo */
+.table-fixed {
+  table-layout: fixed;
+}
+
+/* Tabla con filas seleccionables */
+.table tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.table tbody tr.selected {
+  background-color: rgba(var(--color-primary-rgb), 0.1);
+}
+
+/* Tabla con borde en la cabecera */
+.table-header-border thead th {
+  border-bottom: 2px solid var(--color-primary);
+}
+
+/* Tabla con sombra */
+.table-shadow {
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+/* Tabla con filas alternas */
+.table-alternate tbody tr:nth-child(even) {
+  background-color: var(--color-gray-50);
+}
+
+/* Tabla con borde redondeado */
+.table-rounded {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+/* Tabla con encabezado pegajoso */
+.table-sticky thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--color-white);
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Tabla con encabezado oscuro */
+.table-dark-header thead th {
+  background-color: var(--color-gray-800);
+  color: var(--color-white);
+}
+
+/* Tabla con borde entre filas */
+.table-row-bordered tbody tr {
+  border-bottom: var(--border-width) solid var(--color-gray-200);
+}
+
+.table-row-bordered tbody tr:last-child {
+  border-bottom: none;
+}

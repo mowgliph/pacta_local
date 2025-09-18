@@ -11,17 +11,3 @@
 @import './_forms.css';
 @import './_tables.css';
 @import './_alerts.css';
-@import './_badges.css';
-@import './_dropdowns.css';
-@import './_modals.css';
-@import './_navs.css';
-@import './_toasts.css';
-
-/* Componentes personalizados */
-@import './custom/_header.css';
-@import './custom/_sidebar.css';
-@import './custom/_footer.css';
-@import './custom/_charts.css';
-@import './custom/_user-menu.css';
-@import './custom/_activity-feed.css';
-@import './custom/_contracts.css';

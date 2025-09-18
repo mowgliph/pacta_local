@@ -1,0 +1,167 @@
+/* ===================================================================
+   PACTA - Componente: Botones
+   Archivo: _buttons.css
+   Descripción: Estilos para botones y elementos interactivos
+   Dependencias: base/_variables.css
+=================================================================== */
+
+/* Estilos base para todos los botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-medium);
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  background-color: transparent;
+  border: var(--border-width) solid transparent;
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--border-radius);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  font-size: var(--font-size-base);
+}
+
+/* Tamaños de botones */
+.btn-sm {
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  border-radius: var(--border-radius-sm);
+}
+
+.btn-lg {
+  padding: var(--spacing-3) var(--spacing-5);
+  font-size: var(--font-size-md);
+  border-radius: var(--border-radius-md);
+}
+
+/* Estilos de botón primario */
+.btn-primary {
+  color: var(--color-white);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  box-shadow: 0 0 0 0.25rem rgba(var(--color-primary-rgb), 0.25);
+}
+
+/* Estilos de botón secundario */
+.btn-secondary {
+  color: var(--color-white);
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+
+.btn-secondary:hover, .btn-secondary:focus {
+  background-color: var(--color-secondary-dark);
+  border-color: var(--color-secondary-dark);
+  box-shadow: 0 0 0 0.25rem rgba(var(--color-secondary-rgb), 0.25);
+}
+
+/* Estilos de botón outline */
+.btn-outline-primary {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background-color: transparent;
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:focus {
+  color: var(--color-white);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* Botones de estado */
+.btn-success {
+  color: var(--color-white);
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.btn-success:hover, .btn-success:focus {
+  background-color: var(--color-success-dark);
+  border-color: var(--color-success-dark);
+  box-shadow: 0 0 0 0.25rem rgba(var(--color-success-rgb), 0.25);
+}
+
+.btn-danger {
+  color: var(--color-white);
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.btn-danger:hover, .btn-danger:focus {
+  background-color: var(--color-danger-dark);
+  border-color: var(--color-danger-dark);
+  box-shadow: 0 0 0 0.25rem rgba(var(--color-error-rgb), 0.25);
+}
+
+/* Botones deshabilitados */
+.btn:disabled, .btn.disabled {
+  opacity: 0.65;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+/* Botones con iconos */
+.btn i, .btn svg {
+  margin-right: var(--spacing-2);
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+
+/* Grupo de botones */
+.btn-group {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.btn-group .btn:not(:first-child) {
+  margin-left: calc(-1 * var(--border-width));
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.btn-group .btn:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Botones de bloque (ancho completo) */
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+/* Botones con estado de carga */
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  top: 50%;
+  left: 50%;
+  margin: -0.5em 0 0 -0.5em;
+  border: 2px solid var(--color-white);
+  border-radius: 50%;
+  border-right-color: transparent;
+  animation: btn-loading 0.75s linear infinite;
+}
+
+@keyframes btn-loading {
+  to { transform: rotate(360deg); }
+}

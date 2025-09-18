@@ -93,215 +93,239 @@
                 <!-- Server Performance Block -->
                 <div class="col-12 col-lg-6 mb-4">
                     <div class="card h-100">
-                    <div class="block-header">
-                        <h3 class="block-title">Rendimiento del Servidor</h3>
-                        <p class="block-subtitle">Estadísticas en tiempo real del servidor Pacta</p>
+                        <div class="block-header">
+                            <h3 class="block-title">Rendimiento del Servidor</h3>
+                            <p class="block-subtitle">Estadísticas en tiempo real del servidor Pacta</p>
                         </div>
-                </div>
-                    <div class="block-content">
-                        <!-- Métricas principales del servidor -->
-                        <div class="grid grid-cols-4 gap-4 mb-4">
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center gap-2 mb-2">
-                                        <i class="fas fa-microchip text-primary"></i>
-                                        <span class="fw-semibold">CPU</span>
+                        <div class="block-content">
+                            <!-- Métricas principales del servidor -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-6 col-md-3">
+                                    <div class="server-metric-card">
+                                        <div class="server-metric-header">
+                                            <i class="fas fa-microchip text-primary"></i>
+                                            <span class="server-metric-title">CPU</span>
                                         </div>
-                </div>
-                                    <div class="fs-4 fw-bold">{{ metricas_servidor.cpu.percent or 0 }}%</div>
-                                    <div class="text-muted text-small">{{ metricas_servidor.cpu.count or 0 }} núcleos @ {{ metricas_servidor.cpu.frequency or 0 }} MHz</div>
+                                        <div class="server-metric-value">{{ metricas_servidor.cpu.percent or 0 }}%</div>
+                                        <div class="server-metric-details">{{ metricas_servidor.cpu.count or 0 }} núcleos @ {{ metricas_servidor.cpu.frequency or 0 }} MHz</div>
                                     </div>
-                </div>
                                 </div>
-                </div>
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center gap-2 mb-2">
-                                        <i class="fas fa-memory text-success"></i>
-                                        <span class="fw-semibold">Memoria RAM</span>
+                                <div class="col-6 col-md-3">
+                                    <div class="server-metric-card">
+                                        <div class="server-metric-header">
+                                            <i class="fas fa-memory text-success"></i>
+                                            <span class="server-metric-title">Memoria RAM</span>
                                         </div>
-                </div>
-                                    <div class="fs-4 fw-bold">{{ metricas_servidor.memory.percent or 0 }}%</div>
-                                    <div class="text-muted text-small">{{ metricas_servidor.memory.used_gb or 0 }} GB / {{ metricas_servidor.memory.total_gb or 0 }} GB</div>
+                                        <div class="server-metric-value">{{ metricas_servidor.memory.percent or 0 }}%</div>
+                                        <div class="server-metric-details">{{ metricas_servidor.memory.used_gb or 0 }} GB / {{ metricas_servidor.memory.total_gb or 0 }} GB</div>
                                     </div>
-                </div>
                                 </div>
-                </div>
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center gap-2 mb-2">
-                                        <i class="fas fa-hdd text-warning"></i>
-                                        <span class="fw-semibold">Disco</span>
+                                <div class="col-6 col-md-3">
+                                    <div class="server-metric-card">
+                                        <div class="server-metric-header">
+                                            <i class="fas fa-hdd text-warning"></i>
+                                            <span class="server-metric-title">Disco</span>
                                         </div>
-                </div>
-                                    <div class="fs-4 fw-bold">{{ metricas_servidor.disk.percent or 0 }}%</div>
-                                    <div class="text-muted text-small">{{ metricas_servidor.disk.used_gb or 0 }} GB / {{ metricas_servidor.disk.total_gb or 0 }} GB</div>
+                                        <div class="server-metric-value">{{ metricas_servidor.disk.percent or 0 }}%</div>
+                                        <div class="server-metric-details">{{ metricas_servidor.disk.used_gb or 0 }} GB / {{ metricas_servidor.disk.total_gb or 0 }} GB</div>
                                     </div>
-                </div>
                                 </div>
-                </div>
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center gap-2 mb-2">
-                                        <i class="fas fa-network-wired text-purple"></i>
-                                        <span class="fw-semibold">Red</span>
+                                <div class="col-6 col-md-3">
+                                    <div class="server-metric-card">
+                                        <div class="server-metric-header">
+                                            <i class="fas fa-network-wired text-purple"></i>
+                                            <span class="server-metric-title">Red</span>
                                         </div>
-                </div>
-                                    <div class="fw-bold">↑{{ metricas_servidor.network.bytes_sent_mb or 0 }} MB</div>
-                                    <div class="text-muted text-small">↓{{ metricas_servidor.network.bytes_recv_mb or 0 }} MB recibidos</div>
+                                        <div class="server-metric-value">↑{{ metricas_servidor.network.bytes_sent_mb or 0 }} MB</div>
+                                        <div class="server-metric-details">↓{{ metricas_servidor.network.bytes_recv_mb or 0 }} MB recibidos</div>
                                     </div>
-                </div>
                                 </div>
-                </div>
                             </div>
-                </div>
-                        
-                        <!-- Información del sistema -->
-                        <div class="card card-sm">
-                            <div class="card-body">
-                                <h4 class="h6 mb-3">Información del Sistema</h4>
-                                <div class="grid grid-cols-4 gap-3 text-small">
-                                    <div>
-                                        <span class="text-muted">Sistema Operativo:</span>
-                                        <span class="ms-1 fw-semibold">{{ metricas_servidor.system.platform or 'N/A' }}</span>
+                            
+                            <!-- Información del sistema -->
+                            <div class="card card-sm">
+                                <div class="card-body">
+                                    <h4 class="h6 mb-3">Información del Sistema</h4>
+                                    <div class="row g-3 text-small">
+                                        <div class="col-6">
+                                            <span class="text-muted">Sistema Operativo:</span>
+                                            <span class="ms-1 fw-semibold">{{ metricas_servidor.system.platform or 'N/A' }}</span>
                                         </div>
-                </div>
-                                    <div>
-                                        <span class="text-muted">Arquitectura:</span>
-                                        <span class="ms-1 fw-semibold">{{ metricas_servidor.system.architecture or 'N/A' }}</span>
+                                        <div class="col-6">
+                                            <span class="text-muted">Arquitectura:</span>
+                                            <span class="ms-1 fw-semibold">{{ metricas_servidor.system.architecture or 'N/A' }}</span>
                                         </div>
-                </div>
-                                    <div>
-                                        <span class="text-muted">Tiempo Activo:</span>
-                                        <span class="ms-1 fw-semibold">{{ metricas_servidor.system.uptime_hours or 0 }} horas</span>
+                                        <div class="col-6">
+                                            <span class="text-muted">Tiempo Activo:</span>
+                                            <span class="ms-1 fw-semibold">{{ metricas_servidor.system.uptime_hours or 0 }} horas</span>
                                         </div>
-                </div>
-                                    <div>
-                                        <span class="text-muted">Procesos:</span>
-                                        <span class="ms-1 fw-semibold">{{ metricas_servidor.system.process_count or 0 }}</span>
+                                        <div class="col-6">
+                                            <span class="text-muted">Procesos:</span>
+                                            <span class="ms-1 fw-semibold">{{ metricas_servidor.system.process_count or 0 }}</span>
                                         </div>
-                </div>
-                                    <div>
-                                        <span class="text-muted">Último Reinicio:</span>
-                                        <span class="ms-1 fw-semibold">{{ metricas_servidor.system.boot_time or 'N/A' }}</span>
+                                        <div class="col-6">
+                                            <span class="text-muted">Último Reinicio:</span>
+                                            <span class="ms-1 fw-semibold">{{ metricas_servidor.system.boot_time or 'N/A' }}</span>
                                         </div>
-                </div>
                                     </div>
-                </div>
                                 </div>
-                </div>
                             </div>
-                </div>
                         </div>
-                </div>
                     </div>
                 </div>
                 
-
-
-                
-                <!-- System Info Block -->
-                <div class="col-12">
-                    <div class="card">
-                    <div class="block-header">
-                        <h3 class="block-title">Información del Sistema</h3>
-                        <p class="block-subtitle">Detalles técnicos y estado general de PACTA</p>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="system-info-card bg-gradient-primary text-white h-100">
+                        <div class="system-info-card-header">
+                            <i class="fas fa-server system-info-card-icon"></i>
+                            <h4 class="system-info-card-title">Plataforma</h4>
                         </div>
-                </div>
-                    <div class="block-content">
-                        <!-- System Info Cards Grid -->
-                        <div class="row g-4">
-                            
-                            <!-- Platform Info Card -->
-                            <div class="col-12 col-md-6 col-lg-3">
-                                <div class="card bg-gradient-primary text-white h-100">
-                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
-                                    <i class="fas fa-server" style="font-size: 24px; margin-right: 12px; opacity: 0.9;"></i>
-                                    <h4 style="margin: 0; font-size: 16px; font-weight: 600;">Plataforma</h4>
-                                    </div>
-                </div>
-                                <div style="font-size: 24px; font-weight: 700; margin-bottom: 8px;" id="platform-name">{{ metricas_servidor.system.platform or 'Cargando...' }}</div>
-                                <div style="font-size: 14px; opacity: 0.9;">
-                                    <div>Arquitectura: <span id="platform-arch">{{ metricas_servidor.system.architecture or 'N/A' }}</span></div>
-                                    <div>Procesador: <span id="platform-processor">{{ metricas_servidor.system.processor[:30] + '...' if metricas_servidor.system.processor and metricas_servidor.system.processor|length > 30 else metricas_servidor.system.processor or 'N/A' }}</span></div>
-                                    </div>
-                </div>
-                                </div>
+                        <div class="system-info-card-value" id="platform-name">{{ metricas_servidor.system.platform or 'Cargando...' }}</div>
+                        <div class="system-info-card-details">
+                            <div>Arquitectura: <span id="platform-arch">{{ metricas_servidor.system.architecture or 'N/A' }}</span></div>
+                            <div>Procesador: <span id="platform-processor">{{ metricas_servidor.system.processor[:30] + '...' if metricas_servidor.system.processor and metricas_servidor.system.processor|length > 30 else metricas_servidor.system.processor or 'N/A' }}</span></div>
+                        </div>
+                    </div>
                 </div>
 
-                            <!-- Application Status Card -->
-                            <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); border-radius: 12px; padding: 20px; color: white; box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);">
-                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
-                                    <i class="fas fa-rocket" style="font-size: 24px; margin-right: 12px; opacity: 0.9;"></i>
-                                    <h4 style="margin: 0; font-size: 16px; font-weight: 600;">Estado PACTA</h4>
-                                    </div>
-                </div>
-                                <div style="font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #ffffff;" id="app-status">Operativo</div>
-                                <div style="font-size: 14px; opacity: 0.9;">
-                                    <div>Versión: <span id="app-version">v2.1.0</span></div>
-                                    <div>Procesos: <span id="process-count">{{ metricas_servidor.system.process_count or 'N/A' }}</span></div>
-                                    </div>
-                </div>
-                                </div>
-                </div>
-
-                            <!-- Database Status Card -->
-                            <div style="background: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%); border-radius: 12px; padding: 20px; color: white; box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);">
-                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
-                                    <i class="fas fa-database" style="font-size: 24px; margin-right: 12px; opacity: 0.9;"></i>
-                                    <h4 style="margin: 0; font-size: 16px; font-weight: 600;">Base de Datos</h4>
-                                    </div>
-                </div>
-                                <div style="font-size: 24px; font-weight: 700; margin-bottom: 8px;" id="db-status">Conectada</div>
-                                <div style="font-size: 14px; opacity: 0.9;">
-                                    <div>Tipo: <span id="db-type">SQLite</span></div>
-                                    <div>Último Backup: <span id="last-backup">{{ estadisticas.ultimo_backup or 'N/A' }}</span></div>
-                                    </div>
-                </div>
-                                </div>
+                <!-- Application Status Card -->
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="system-info-card bg-gradient-success text-white h-100">
+                        <div class="system-info-card-header">
+                            <i class="fas fa-rocket system-info-card-icon"></i>
+                            <h4 class="system-info-card-title">Estado PACTA</h4>
+                        </div>
+                        <div class="system-info-card-value" id="app-status">Operativo</div>
+                        <div class="system-info-card-details">
+                            <div>Versión: <span id="app-version">v2.1.0</span></div>
+                            <div>Procesos: <span id="process-count">{{ metricas_servidor.system.process_count or 'N/A' }}</span></div>
+                        </div>
+                    </div>
                 </div>
 
-                            <!-- System Uptime Card -->
-                            <div class="col-12 col-md-6 col-lg-3">
-                                <div class="card bg-gradient-info text-dark h-100">
-                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
-                                    <i class="fas fa-clock" style="font-size: 24px; margin-right: 12px; color: #4a5568;"></i>
-                                    <h4 style="margin: 0; font-size: 16px; font-weight: 600; color: #2d3748;">Tiempo Activo</h4>
-                                    </div>
-                </div>
-                                <div style="font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #2d3748;" id="system-uptime">{{ '%.1f'|format(metricas_servidor.system.uptime_hours or 0) }}h</div>
-                                <div style="font-size: 14px; color: #4a5568;">
-                                    <div>Inicio: <span id="boot-time">{{ metricas_servidor.system.boot_time or 'N/A' }}</span></div>
-                                    <div>Estado: <span id="system-health" style="color: #38a169; font-weight: 600;">Saludable</span></div>
-                                    </div>
-                </div>
-                                </div>
+                <!-- Database Status Card -->
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="system-info-card bg-gradient-danger text-white h-100">
+                        <div class="system-info-card-header">
+                            <i class="fas fa-database system-info-card-icon"></i>
+                            <h4 class="system-info-card-title">Base de Datos</h4>
+                        </div>
+                        <div class="system-info-card-value" id="db-status">Conectada</div>
+                        <div class="system-info-card-details">
+                            <div>Tipo: <span id="db-type">SQLite</span></div>
+                            <div>Último Backup: <span id="last-backup">{{ estadisticas.ultimo_backup or 'N/A' }}</span></div>
+                        </div>
+                    </div>
                 </div>
 
-                            <!-- Version History Card -->
-                            <a href="{{ url_for('changelog.changelog') }}" style="display: block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 20px; color: white; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease;">
-                                <div style="display: flex; align-items: center; margin-bottom: 12px;">
-                                    <i class="fas fa-code-branch" style="font-size: 24px; margin-right: 12px; opacity: 0.9;"></i>
-                                    <h4 style="margin: 0; font-size: 16px; font-weight: 600;">Historial de Versiones</h4>
-                                    </div>
+                <!-- System Uptime Card -->
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="system-info-card bg-gradient-info text-dark h-100">
+                        <div class="system-info-card-header">
+                            <i class="fas fa-clock system-info-card-icon text-dark-icon"></i>
+                            <h4 class="system-info-card-title text-dark-title">Tiempo Activo</h4>
+                        </div>
+                        <div class="system-info-card-value text-dark-value" id="system-uptime">{{ '%.1f'|format(metricas_servidor.system.uptime_hours or 0) }}h</div>
+                        <div class="system-info-card-details text-dark-details">
+                            <div>Inicio: <span id="boot-time">{{ metricas_servidor.system.boot_time or 'N/A' }}</span></div>
+                            <div>Estado: <span id="system-health" class="system-health-healthy">Saludable</span></div>
+                        </div>
+                    </div>
                 </div>
-                                <div style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">v2.1.0</div>
-                                <div style="font-size: 14px; opacity: 0.9;">
-                                    <div>Commits: <span>Ver changelog completo</span></div>
-                                    <div style="margin-top: 8px; display: flex; align-items: center; gap: 4px;">
-                                        <i class="fas fa-external-link-alt" style="font-size: 12px;"></i>
-                                        <span>Hacer clic para ver detalles</span>
-                                        </div>
+
+                <!-- Version History Card -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="system-info-card bg-gradient-purple">
+                        <div class="system-info-card-header">
+                            <i class="fas fa-history system-info-card-icon"></i>
+                            <h5 class="system-info-card-title">Historial de Versiones</h5>
+                        </div>
+                        <div class="system-info-card-value">v{{ system_info.version }}</div>
+                        <p class="system-info-card-details">Última actualización: {{ system_info.last_update }}</p>
+                        <a href="#" class="system-info-card-link" data-bs-toggle="modal" data-bs-target="#versionHistoryModal">
+                            <span class="system-info-card-link-text">Ver detalles <i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    </div>
                 </div>
-                                    </div>
                 </div>
-                            </a>
+                <!-- Bloque de Herramientas del Sistema -->
+                <div class="col-12 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Herramientas del Sistema</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="system-tools-grid">
+                                <a href="#" class="system-tool-button btn-primary">
+                                    <i class="fas fa-sync-alt"></i>
+                                    <span>Reiniciar Servicios</span>
+                                </a>
+                                <a href="#" class="system-tool-button btn-info">
+                                    <i class="fas fa-cogs"></i>
+                                    <span>Configuración Avanzada</span>
+                                </a>
+                                <a href="#" class="system-tool-button btn-warning">
+                                    <i class="fas fa-database"></i>
+                                    <span>Optimizar Base de Datos</span>
+                                </a>
+                                <a href="#" class="system-tool-button btn-danger">
+                                    <i class="fas fa-power-off"></i>
+                                    <span>Apagar Sistema</span>
+                                </a>
                             </div>
-                </div>
-
-
                         </div>
+                    </div>
                 </div>
+                <!-- Bloque de Rendimiento del Servidor -->
+                <div class="col-12 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Rendimiento del Servidor</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="server-metric-card">
+                                        <div class="server-metric-header">
+                                            <i class="fas fa-microchip"></i>
+                                            <h6 class="server-metric-title">Uso de CPU</h6>
+                                        </div>
+                                        <div class="server-metric-value">{{ server_performance.cpu_usage }}%</div>
+                                        <p class="server-metric-details">Carga promedio: {{ server_performance.cpu_load_avg }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="server-metric-card">
+                                        <div class="server-metric-header">
+                                            <i class="fas fa-memory"></i>
+                                            <h6 class="server-metric-title">Uso de RAM</h6>
+                                        </div>
+                                        <div class="server-metric-value">{{ server_performance.ram_usage }}%</div>
+                                        <p class="server-metric-details">Total: {{ server_performance.ram_total }}GB</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="server-metric-card">
+                                        <div class="server-metric-header">
+                                            <i class="fas fa-hdd"></i>
+                                            <h6 class="server-metric-title">Uso de Disco</h6>
+                                        </div>
+                                        <div class="server-metric-value">{{ server_performance.disk_usage }}%</div>
+                                        <p class="server-metric-details">Libre: {{ server_performance.disk_free }}GB</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="server-metric-card">
+                                        <div class="server-metric-header">
+                                            <i class="fas fa-network-wired"></i>
+                                            <h6 class="server-metric-title">Red</h6>
+                                        </div>
+                                        <div class="server-metric-value">{{ server_performance.network_traffic }}</div>
+                                        <p class="server-metric-details">Latencia: {{ server_performance.network_latency }}ms</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -383,34 +407,29 @@
             const systemHealth = document.getElementById('system-health');
             const appStatus = document.getElementById('app-status');
             const dbStatus = document.getElementById('db-status');
+
+            let appStatusText = 'Desconocido';
+            let systemHealthClass = '';
+
+            if (metrics.application_status === 'running') {
+                appStatusText = 'En Funcionamiento';
+                systemHealthClass = 'system-health-healthy';
+            } else if (metrics.application_status === 'degraded') {
+                appStatusText = 'Rendimiento Degradado';
+                systemHealthClass = 'system-health-moderate';
+            } else if (metrics.application_status === 'stopped') {
+                appStatusText = 'Detenida';
+                systemHealthClass = 'system-health-overloaded';
+            }
+
+            if (systemHealth) {
+                systemHealth.textContent = appStatusText;
+                systemHealth.classList.remove('system-health-healthy', 'system-health-moderate', 'system-health-overloaded', 'system-health-disconnected');
+                systemHealth.classList.add(systemHealthClass);
+            }
             
-            if (metrics && metrics.cpu && metrics.memory) {
-                // Determine system health based on CPU and memory usage
-                const cpuUsage = metrics.cpu.percent || 0;
-                const memoryUsage = metrics.memory.percent || 0;
-                
-                let healthStatus = 'Saludable';
-                let healthColor = '#38a169';
-                let appStatusText = 'Operativo';
-                
-                if (cpuUsage > 80 || memoryUsage > 85) {
-                    healthStatus = 'Sobrecargado';
-                    healthColor = '#e53e3e';
-                    appStatusText = 'Bajo Carga';
-                } else if (cpuUsage > 60 || memoryUsage > 70) {
-                    healthStatus = 'Moderado';
-                    healthColor = '#f59e0b';
-                    appStatusText = 'Estable';
-                }
-                
-                if (systemHealth) {
-                    systemHealth.textContent = healthStatus;
-                    systemHealth.style.color = healthColor;
-                }
-                
-                if (appStatus) {
-                    appStatus.textContent = appStatusText;
-                }
+            if (appStatus) {
+                appStatus.textContent = appStatusText;
             }
             
             // Update database status (assume connected if we got metrics)
@@ -420,14 +439,11 @@
         }
 
         function updateConnectionStatus(isConnected) {
-            const systemHealth = document.getElementById('system-health');
-            const appStatus = document.getElementById('app-status');
-            const dbStatus = document.getElementById('db-status');
-            
             if (!isConnected) {
                 if (systemHealth) {
                     systemHealth.textContent = 'Sin Conexión';
-                    systemHealth.style.color = '#e53e3e';
+                    systemHealth.classList.remove('system-health-healthy', 'system-health-moderate', 'system-health-overloaded');
+                    systemHealth.classList.add('system-health-disconnected');
                 }
                 if (appStatus) {
                     appStatus.textContent = 'Desconectado';
@@ -442,7 +458,6 @@
         function addUpdateIndicator() {
             const indicators = document.querySelectorAll('[id$="-status"], [id$="-uptime"], [id$="-count"]');
             indicators.forEach(indicator => {
-                indicator.style.transition = 'all 0.3s ease';
                 indicator.classList.add('updating');
                 setTimeout(() => {
                     indicator.classList.remove('updating');
