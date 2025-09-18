@@ -20,7 +20,7 @@
             {% include 'components/partials/content_header.html' %}
             
             <!-- Backup Status Cards -->
-            <div class="row g-3 mb-4">
+            <div class="backup-metrics-grid">
                 <!-- Total de Backups Card -->
                 {% set metric_label = "Total de Backups" %}
                 {% set metric_value = "-" %}
@@ -62,25 +62,23 @@
                     <p class="block-subtitle">Acciones rápidas para gestionar tus respaldos</p>
                 </div>
                 <div class="block-content">
-                        <div class="p-4">
-                            <div class="d-flex flex-wrap gap-3">
-                                <button class="btn btn-success flex-fill d-flex align-items-center gap-2 min-w-200" onclick="createBackup()">
-                                    <i class="fas fa-plus-circle"></i>
-                                    Crear Backup
-                                </button>
-                                <button class="btn btn-warning flex-fill d-flex align-items-center gap-2 min-w-200" onclick="showRestoreOptions()">
-                                    <i class="fas fa-undo-alt"></i>
-                                    Restaurar Sistema
-                                </button>
-                            <button class="btn btn-primary flex-fill d-flex align-items-center gap-2 min-w-200" onclick="showDownloadOptions()">
-                                    <i class="fas fa-download"></i>
-                                    Descargar Backup
-                                </button>
-                            <button class="btn btn-danger flex-fill d-flex align-items-center gap-2 min-w-200" onclick="cleanupOldBackups()" id="cleanupToolBtn">
-                                    <i class="fas fa-broom"></i>
-                                    Limpiar Backups Antiguos
-                                </button>
-                        </div>
+                    <div class="backup-tools-grid">
+                        <button class="backup-tool-button success" onclick="createBackup()">
+                            <i class="fas fa-plus-circle"></i>
+                            Crear Backup
+                        </button>
+                        <button class="backup-tool-button warning" onclick="showRestoreOptions()">
+                            <i class="fas fa-undo-alt"></i>
+                            Restaurar Sistema
+                        </button>
+                        <button class="backup-tool-button primary" onclick="showDownloadOptions()">
+                            <i class="fas fa-download"></i>
+                            Descargar Backup
+                        </button>
+                        <button class="backup-tool-button danger" onclick="cleanupOldBackups()" id="cleanupToolBtn">
+                            <i class="fas fa-broom"></i>
+                            Limpiar Backups Antiguos
+                        </button>
                     </div>
                 </div>
             </div>
@@ -96,30 +94,28 @@
                 </div>
                 <div class="mt-4">
                     <!-- Action Bar -->
-                    <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded mb-3">
-                        <div style="display: flex; gap: 8px;">
-                            <button onclick="showCreateBackupModal()" class="btn-icon-action" title="Crear Backup" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #3b82f6; border: none; border-radius: 6px; color: white; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
+                    <div class="backup-actions-bar">
+                        <div class="backup-actions-left">
+                            <button onclick="showCreateBackupModal()" class="backup-icon-action primary" title="Crear Backup">
                                 <i class="fas fa-plus"></i>
                             </button>
-                            <button onclick="refreshBackupList()" class="btn-icon-action" title="Actualizar lista" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #10b981; border: none; border-radius: 6px; color: white; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">
+                            <button onclick="refreshBackupList()" class="backup-icon-action success" title="Actualizar lista">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                         </div>
                     </div>
                     
                     <!-- Loading Spinner -->
-                    <div class="d-flex justify-content-center p-3 bg-light rounded mb-3" id="loadingSpinner">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Cargando...</span>
-                        </div>
-                        <p class="mt-2 text-muted">Cargando backups...</p>
+                    <div class="backup-loading" id="loadingSpinner">
+                        <div class="backup-loading-spinner"></div>
+                        <p class="backup-loading-text">Cargando backups...</p>
                     </div>
 
                     <!-- Empty State -->
-                    <div class="empty-state text-center py-5" id="emptyState" style="display: none;">
-                        <i class="fas fa-archive fa-3x text-muted mb-3"></i>
-                        <h4 class="text-muted mb-3">No hay backups disponibles</h4>
-                        <p class="text-muted mb-4">Crea tu primer backup para comenzar a proteger tus datos.</p>
+                    <div class="backup-empty-state" id="emptyState" style="display: none;">
+                        <i class="fas fa-archive"></i>
+                        <h4>No hay backups disponibles</h4>
+                        <p>Crea tu primer backup para comenzar a proteger tus datos.</p>
                         <button class="btn btn-primary" onclick="showCreateBackupModal()">
                             <i class="fas fa-plus"></i>
                             Crear Primer Backup
