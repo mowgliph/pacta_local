@@ -78,16 +78,15 @@
                 
                 <!-- Search Block -->
                 <div class="col-12 col-lg-6 mb-4">
-                    <div class="card h-100">
-                    <div class="block-header">
-                        <h3 class="block-title">
-                            <i class="fas fa-search text-success me-2"></i>
-                            Búsqueda Avanzada de Contratos
-                        </h3>
-                        <p class="block-subtitle">Filtrar y encontrar contratos específicos por criterios avanzados</p>
+                    <div class="card h-100 block-section">
+                        <div class="block-header">
+                            <h3 class="block-title">
+                                <i class="fas fa-search text-success me-2"></i>
+                                Búsqueda Avanzada de Contratos
+                            </h3>
+                            <p class="block-subtitle">Filtrar y encontrar contratos específicos por criterios avanzados</p>
                         </div>
-                </div>
-                    <div class="block-content">
+                        <div class="block-content">
                         <div class="search-container card card-sm">
                             <div class="card-body">
                                 <!-- Search Input -->
@@ -96,9 +95,9 @@
                                         <input type="text" id="contractSearchInput" placeholder="Buscar por nombre, número de contrato, descripción..." class="form-control">
                                         <i class="fas fa-search form-search-icon"></i>
                                         </div>
-                </div>
                                     </div>
-                </div>
+                                </div>
+                            </div>
                                 
                                 <!-- Filter Options -->
                                 <div class="filter-options d-flex align-items-center gap-3 mb-3">
@@ -117,9 +116,8 @@
                                             Proveedor
                                         </button>
                                         </div>
-                </div>
                                     </div>
-                </div>
+                                </div>
                                 
                                 <!-- Search Actions -->
                                 <div class="search-actions d-flex gap-2 justify-content-end">
@@ -131,14 +129,9 @@
                                         <i class="fas fa-search me-1"></i>
                                         Buscar
                                     </button>
-                                    </div>
-                </div>
                                 </div>
-                </div>
                             </div>
-                </div>
                         </div>
-                </div>
                     </div>
                 </div>
                 
@@ -152,19 +145,19 @@
                     {% set data_providers_manage_url = "/proveedores" %}
                     {% set data_clients_manage_url = "/clientes" %}
                     {% set component_id = "providers-clients-contratos" %}
-                    {% include 'components/partials/providers-clients-block.html' with context %}
+                    <div class="card h-100 block-section">
+                        {% include 'components/partials/providers-clients-block.html' with context %}
                     </div>
                 </div>
 
                 <!-- Contracts Table Block -->
                 <div class="col-12 mb-4">
                     <div class="card h-100 block-section">
-                    <div class="block-header">
-                        <h3 class="block-title">Lista de Contratos</h3>
-                        <p class="block-subtitle">Gestión completa de todos los contratos activos</p>
+                        <div class="block-header">
+                            <h3 class="block-title">Lista de Contratos</h3>
+                            <p class="block-subtitle">Gestión completa de todos los contratos activos</p>
                         </div>
-                </div>
-                    <div class="block-content">
+                        <div class="block-content">
                         <!-- Tabla de Contratos -->
                         <div class="table-responsive">
                             <table class="table table-hover table-striped contratos-table">
@@ -188,10 +181,7 @@
                                                 <div>
                                                     <div class="fw-semibold">CONT-2025-003</div>
                                                     <small class="text-muted">Servicios de Consultoría</small>
-                                                    </div>
-                </div>
-                                                </div>
-                </div>
+                                            </div>
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
@@ -199,10 +189,7 @@
                                                 <div>
                                                     <div class="fw-semibold">TechCorp S.A.</div>
                                                     <small class="text-muted">Tecnología</small>
-                                                    </div>
-                </div>
-                                                </div>
-                </div>
+                                            </div>
                                         </td>
                                         <td>15 Ene 2025</td>
                                         <td class="text-end"><span class="fw-semibold text-success">$125,000</span></td>
@@ -229,10 +216,7 @@
                                                 <div>
                                                     <div class="fw-semibold">CONT-2025-002</div>
                                                     <small class="text-muted">Desarrollo de Software</small>
-                                                    </div>
-                </div>
-                                                </div>
-                </div>
+                                            </div>
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
@@ -305,7 +289,6 @@
                                 </tbody>
                             </table>
                             </div>
-                </div>
                         
                         <!-- Mensaje cuando no hay contratos -->
                         <div id="noContractsMessage" class="d-none">
@@ -313,25 +296,21 @@
                                 <i class="fas fa-inbox fa-3x mb-3 d-block opacity-50"></i>
                                 <h5>No hay contratos disponibles</h5>
                                 <p class="mb-0">Utiliza el botón "Nuevo Contrato" para comenzar</p>
-                                </div>
-                </div>
                             </div>
-                </div>
                         </div>
-                </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Recent Activity Block -->
                 <div class="col-12 col-lg-6">
                     <div class="card h-100 block-section">
-                    <div class="block-header">
-                        <h3 class="block-title">Actividad Reciente</h3>
-                        <p class="block-subtitle">Últimas acciones y cambios en contratos</p>
+                        <div class="block-header">
+                            <h3 class="block-title">Actividad Reciente</h3>
+                            <p class="block-subtitle">Últimas acciones y cambios en contratos</p>
                         </div>
-                </div>
-                    <div class="block-content">
-                        <div class="d-flex flex-column gap-3">
+                        <div class="block-content">
+                            <div class="d-flex flex-column" style="gap: var(--spacing-3);">
                             <div class="activity-item">
                                 <span class="status-dot status-dot-sm status-color-success"></span>
                                 <div class="activity-content">
@@ -339,9 +318,7 @@
                                     <div class="activity-message">CONT-2025-003 - Servicios de Consultoría</div>
                                     <div class="activity-time">Hace 2 horas</div>
                                     </div>
-                </div>
                                 </div>
-                </div>
                             <div class="activity-item">
                                 <span class="status-dot status-dot-sm status-color-primary"></span>
                                 <div class="activity-content">
@@ -349,9 +326,7 @@
                                     <div class="activity-message">CONT-2025-004 - Desarrollo de Aplicación</div>
                                     <div class="activity-time">Hace 4 horas</div>
                                     </div>
-                </div>
                                 </div>
-                </div>
                             <div class="activity-item">
                                 <span class="status-dot status-dot-sm status-color-warning"></span>
                                 <div class="activity-content">
@@ -359,9 +334,7 @@
                                     <div class="activity-message">CONT-2024-089 - Mantenimiento de Sistemas</div>
                                     <div class="activity-time">Hace 6 horas</div>
                                     </div>
-                </div>
                                 </div>
-                </div>
                             <div class="activity-item">
                                 <span class="status-dot status-dot-sm status-color-purple"></span>
                                 <div class="activity-content">
@@ -369,13 +342,9 @@
                                     <div class="activity-message">CONT-2025-001 - Anexos técnicos</div>
                                     <div class="activity-time">Hace 1 día</div>
                                     </div>
-                </div>
                                 </div>
-                </div>
                             </div>
-                </div>
                         </div>
-                </div>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,75 @@
 /* ===================================================================
    PACTA - Página de Contratos
    Archivo: _contratos.css
+   Descripción: Estilos específicos para la gestión de contratos usando variables CSS
+   Dependencias: base/_variables.css, components, utilities
+   Orden de carga: importado por pages/_index.css
+=================================================================== */
+
+/* ===== BUSCADOR DE CONTRATOS ===== */
+.search-container {
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.form-search {
+  position: relative;
+}
+
+.form-search .form-control {
+  padding-right: 2.25rem;
+}
+
+.form-search-icon {
+  position: absolute;
+  right: var(--spacing-3);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-color-lighter);
+}
+
+.filter-options {
+  padding-top: var(--spacing-2);
+}
+
+.filter-btn.active {
+  background-color: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+  color: var(--color-white);
+}
+
+/* ===== TABLA DE CONTRATOS ===== */
+.contratos-table thead th {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-color-light);
+}
+
+.contratos-table tbody td {
+  vertical-align: middle;
+}
+
+.sort-icon {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 4px;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid var(--color-gray-400);
+}
+
+/* ===== ESTADOS Y UTILIDADES ===== */
+.status-color-success { background-color: var(--color-success-500); }
+.status-color-primary { background-color: var(--color-primary-500); }
+.status-color-warning { background-color: var(--color-warning-500); }
+.status-color-purple { background-color: var(--color-primary-800); }
+.status-color-error { background-color: var(--color-danger); }
+.status-color-gray { background-color: var(--color-gray-400); }
+
+/* ===================================================================
+   PACTA - Página de Contratos
+   Archivo: _contratos.css
    Descripción: Estilos específicos para gestión de contratos usando variables CSS
    Dependencias: base/_variables.css
    Orden de carga: importado por pages/_index.css

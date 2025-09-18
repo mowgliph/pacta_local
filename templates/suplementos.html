@@ -18,7 +18,7 @@
             {% include 'components/partials/content_header.html' %}
             
             <!-- Metrics Cards -->
-            <div class="row g-3 mb-4">
+            <div class="metrics-grid mb-4">
                 {% set metric_label = "Total Suplementos" %}
                 {% set metric_value = estadisticas.total_suplementos or 24 %}
                 {% set metric_icon = "fas fa-file-plus" %}
@@ -56,14 +56,13 @@
             <div class="row g-4">
                 <!-- Quick Actions Block -->
                 <div class="col-12 col-lg-6 mb-4">
-                    <div class="card h-100">
-                    <div class="block-header">
-                        <h3 class="block-title">Acciones Rápidas</h3>
-                        <p class="block-subtitle">Herramientas para gestión eficiente de suplementos</p>
+                    <div class="card h-100 block-section">
+                        <div class="block-header">
+                            <h3 class="block-title">Acciones Rápidas</h3>
+                            <p class="block-subtitle">Herramientas para gestión eficiente de suplementos</p>
                         </div>
-                </div>
-                    <div class="block-content">
-                        <div class="contract-actions d-flex flex-wrap gap-3">
+                        <div class="block-content">
+                            <div class="contract-actions d-flex flex-wrap gap-3">
                             <button class="btn btn-primary flex-fill d-flex align-items-center gap-2 min-w-200">
                                 <i class="fas fa-plus"></i>
                                 Nuevo Suplemento
@@ -81,40 +80,40 @@
                                 Exportar Reporte
                             </button>
                             </div>
-                </div>
                         </div>
-                </div>
                     </div>
                 </div>
                 
                 <!-- Supplement Status Distribution Block -->
-                <div class="block-section charts-block">
-                    <div class="block-header">
-                        <h3 class="block-title">Distribución de Suplementos</h3>
-                        <p class="block-subtitle">Análisis visual del estado y tipo de modificaciones</p>
+                <div class="col-12 col-lg-6">
+                    <div class="card h-100 block-section charts-block">
+                        <div class="block-header">
+                            <h3 class="block-title">Distribución de Suplementos</h3>
+                            <p class="block-subtitle">Análisis visual del estado y tipo de modificaciones</p>
                         </div>
-                </div>
-                    <div class="block-content">
-                        <div class="charts-grid">
-                            <div class="donut-chart">
-                                <canvas id="statusChart" width="120" height="120"></canvas>
-                                <div class="donut-value">75%</div>
-                                <div class="donut-label">Suplementos Aprobados</div>
+                        <div class="block-content">
+                            <div class="charts-grid">
+                                <div class="donut-chart">
+                                    <canvas id="statusChart" width="120" height="120"></canvas>
+                                    <div class="donut-value">75%</div>
+                                    <div class="donut-label">Suplementos Aprobados</div>
                                 </div>
-                </div>
-                            <div class="donut-chart">
-                                <canvas id="typeChart" width="120" height="120"></canvas>
-                                <div class="donut-value">$485K</div>
-                                <div class="donut-label">Valor Total</div>
+                                <div class="donut-chart">
+                                    <canvas id="typeChart" width="120" height="120"></canvas>
+                                    <div class="donut-value">$485K</div>
+                                    <div class="donut-label">Valor Total</div>
                                 </div>
-                </div>
                             </div>
-                    <div class="block-header">
-                        <h3 class="block-title">Lista de Suplementos</h3>
-                        <p class="block-subtitle">Gestión completa de todos los suplementos contractuales</p>
                         </div>
+                    </div>
                 </div>
-                    <div class="block-content">
+                <div class="col-12">
+                    <div class="card h-100 block-section">
+                        <div class="block-header">
+                            <h3 class="block-title">Lista de Suplementos</h3>
+                            <p class="block-subtitle">Gestión completa de todos los suplementos contractuales</p>
+                        </div>
+                        <div class="block-content">
                         <!-- Tabla Consistente de Suplementos -->
                         {% set table_headers = [
                             {'title': 'Suplemento', 'sortable': true, 'class': 'text-start'},
@@ -166,64 +165,52 @@
                         
                         {% include 'components/partials/consistent_table.html' %}
                         </div>
-                </div>
                     </div>
                 </div>
                 
                 <!-- Recent Activity Block -->
                 <div class="col-12 col-lg-6">
-                    <div class="card h-100">
-                    <div class="block-header">
-                        <h3 class="block-title">Actividad Reciente</h3>
-                        <p class="block-subtitle">Últimas acciones y cambios en suplementos</p>
+                    <div class="card h-100 block-section">
+                        <div class="block-header">
+                            <h3 class="block-title">Actividad Reciente</h3>
+                            <p class="block-subtitle">Últimas acciones y cambios en suplementos</p>
                         </div>
-                </div>
-                    <div class="block-content">
-                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div class="block-content">
+                            <div class="d-flex flex-column" style="gap: var(--spacing-3);">
                             <div class="activity-item">
-                                <div class="activity-dot" style="background: #10b981;"></div>
+                                <span class="status-dot status-dot-sm status-color-success"></span>
                                 <div class="activity-content">
                                     <div class="activity-title">Suplemento aprobado</div>
                                     <div class="activity-subtitle">SUP-2025-003 - Ampliación de monto</div>
                                     <div class="activity-time">Hace 1 hora</div>
                                     </div>
-                </div>
                                 </div>
-                </div>
                             <div class="activity-item">
-                                <div class="activity-dot" style="background: #3b82f6;"></div>
+                                <span class="status-dot status-dot-sm status-color-primary"></span>
                                 <div class="activity-content">
                                     <div class="activity-title">Nuevo suplemento creado</div>
                                     <div class="activity-subtitle">SUP-2025-004 - Extensión de plazo</div>
                                     <div class="activity-time">Hace 3 horas</div>
                                     </div>
-                </div>
                                 </div>
-                </div>
                             <div class="activity-item">
-                                <div class="activity-dot" style="background: #f59e0b;"></div>
+                                <span class="status-dot status-dot-sm status-color-warning"></span>
                                 <div class="activity-content">
                                     <div class="activity-title">Suplemento en revisión</div>
                                     <div class="activity-subtitle">SUP-2025-002 - Modificación de alcance</div>
                                     <div class="activity-time">Hace 5 horas</div>
                                     </div>
-                </div>
                                 </div>
-                </div>
                             <div class="activity-item">
-                                <div class="activity-dot" style="background: #8b5cf6;"></div>
+                                <span class="status-dot status-dot-sm status-color-purple"></span>
                                 <div class="activity-content">
                                     <div class="activity-title">Documentos actualizados</div>
                                     <div class="activity-subtitle">SUP-2025-001 - Anexos técnicos</div>
                                     <div class="activity-time">Hace 1 día</div>
                                     </div>
-                </div>
                                 </div>
-                </div>
                             </div>
-                </div>
                         </div>
-                </div>
                     </div>
                 </div>
             </div>
