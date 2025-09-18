@@ -11,9 +11,15 @@
 @import './_dashboard.css';
 @import './_login.css';
 @import './_usuarios.css';
+@import './_usuarios_lista.css';
+@import './_contratos.css';
+@import './_proveedores.css';
+@import './_clientes.css';
 @import './_reportes.css';
 @import './_suplementos.css';
+@import './_personas.css';
 @import './_backup.css';
+@import './_backup_lista.css';
 @import './_changelog.css';
 @import './_configuracion.css';
 @import './_notifications_modal.css';
