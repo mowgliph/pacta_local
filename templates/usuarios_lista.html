@@ -3,7 +3,7 @@
 {% block title %}Lista de Usuarios - PACTA{% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
+    <div class="container-fluid users-page">
         <!-- Include Sidebar Component -->
         {% include 'components/partials/sidebar.html' %}
         
@@ -68,33 +68,33 @@
             </div>
             
             <!-- Información de selección -->
-            <div id="selectionInfo" class="mt-3" style="display: none;">
-                <div class="alert alert-info" style="margin: 0; padding: 12px; border-radius: 8px; background: #e0f2fe; border: 1px solid #81d4fa; color: #01579b;">
+            <div id="selectionInfo" class="mt-3 selection-info">
+                <div class="selection-info__alert">
                     <i class="fas fa-info-circle"></i>
-                    <span id="selectionCount">0</span> usuario(s) seleccionado(s)
-                    <button class="btn btn-sm btn-outline-primary ms-2" onclick="clearSelection()" style="padding: 2px 8px; font-size: 12px;">
+                    <span id="selectionCount" class="selection-info__count">0</span> usuario(s) seleccionado(s)
+                    <button class="btn btn-sm btn-outline-primary ms-2 selection-info__clear" onclick="clearSelection()">
                         Limpiar selección
                     </button>
                 </div>
             </div>
             
             <!-- Tabla de Usuarios -->
-            <div class="card mb-4">
+            <div class="users-card mb-4">
                 <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="users-card__header">
                     <div>
-                        <h3 class="h4 mb-1">Usuarios del Sistema</h3>
-                        <p class="text-muted mb-0">Lista completa de usuarios registrados</p>
+                        <h3 class="users-card__title h4">Usuarios del Sistema</h3>
+                        <p class="users-card__subtitle">Lista completa de usuarios registrados</p>
                     </div>
                 </div>
                 <div class="mt-3">
                     <!-- Tabla de Usuarios -->
                     <div class="table-responsive">
-                        <table class="table table-hover table-striped">
+                        <table class="table table-hover table-striped users-table">
                             <thead>
                                 <tr>
                                     <th scope="col" style="width: 50px;">
-                                        <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" style="transform: scale(1.2);">
+                                        <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" class="checkbox-lg">
                                     </th>
                                     <th scope="col" class="sortable">Usuario <span class="sort-icon"></span></th>
                                     <th scope="col" class="sortable">Email <span class="sort-icon"></span></th>
@@ -110,42 +110,40 @@
                                         {% set avatar_colors = ['#dc3545', '#0ea5e9', '#f59e0b', '#10b981', '#8b5cf6', '#f97316'] %}
                                         {% set avatar_color = avatar_colors[loop.index0 % avatar_colors|length] %}
                                         <tr>
-                                            <td style="text-align: center;">
-                                                <input type="checkbox" class="user-checkbox" value="{{ usuario.id }}" onchange="updateSelection()" style="transform: scale(1.2);">
+                                            <td class="text-center">
+                                                <input type="checkbox" class="user-checkbox checkbox-lg" value="{{ usuario.id }}" onchange="updateSelection()">
                                             </td>
                                             <td>
-                                                <div style="display: flex; align-items: center; gap: 12px;">
-                                                    <div class="avatar-sm" style="width: 40px; height: 40px; background: {{ avatar_color }}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                                                <div class="d-flex align-items-center" style="gap: 12px;">
+                                                    <div class="avatar-sm" style="background: {{ avatar_color }};">
                                                         <i class="fas fa-user"></i>
                                                     </div>
                                                     <div>
-                                                        <div style="font-weight: 600; color: #374151;">{{ usuario.nombre or 'N/A' }}</div>
-                                                        <div style="font-size: 12px; color: #6b7280;">{{ usuario.cargo or 'Sin cargo' }}</div>
+                                                        <div class="user-name">{{ usuario.nombre or 'N/A' }}</div>
+                                                        <div class="user-subtitle">{{ usuario.cargo or 'Sin cargo' }}</div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>{{ usuario.email or 'N/A' }}</td>
                                             <td>
                                                 {% if usuario.rol == 'admin' %}
-                                                    <span class="badge" style="background: #dc3545; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Administrador</span>
+                                                    <span class="role-badge role-badge--admin">Administrador</span>
                                                 {% elif usuario.rol == 'user' %}
-                                                    <span class="badge" style="background: #3b82f6; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Usuario Regular</span>
+                                                    <span class="role-badge role-badge--user">Usuario Regular</span>
                                                 {% elif usuario.rol == 'guest' %}
-                                                    <span class="badge" style="background: #f59e0b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Invitado</span>
+                                                    <span class="role-badge role-badge--guest">Invitado</span>
                                                 {% else %}
-                                                    <span class="badge" style="background: {{ '#dc3545' if usuario.es_admin else '#3b82f6' }}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
-                                                        {{ 'Administrador' if usuario.es_admin else 'Usuario' }}
-                                                    </span>
+                                                    <span class="role-badge role-badge--user">{{ 'Administrador' if usuario.es_admin else 'Usuario' }}</span>
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                <span class="status-badge {{ 'active' if usuario.activo else 'inactive' }}" style="background: {{ '#d1fae5' if usuario.activo else '#fef3c7' }}; color: {{ '#065f46' if usuario.activo else '#92400e' }}; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">
+                                                <span class="status-badge {{ 'active' if usuario.activo else 'inactive' }}">
                                                     {{ 'Activo' if usuario.activo else 'Inactivo' }}
                                                 </span>
                                             </td>
                                             <td>{{ usuario.ultimo_acceso.strftime('%d/%m/%Y %H:%M') if usuario.ultimo_acceso else 'Nunca' }}</td>
                                             <td>
-                                                <div style="display: flex; gap: 4px;">
+                                                <div class="d-flex" style="gap: 4px;">
                                                     <button class="btn-icon-small" title="Ver detalles" onclick="viewUser({{ usuario.id }});">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
@@ -174,7 +172,7 @@
                         </table>
                     </div>
                     <!-- Botón Añadir Nuevo Usuario -->
-                    <div class="d-flex justify-content-center mt-4">
+                    <div class="users-cta">
                         <button class="btn btn-primary" onclick="window.openNewUserModal()">
                             <i class="fas fa-user-plus me-2"></i>
                             Añadir Nuevo Usuario

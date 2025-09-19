@@ -1,62 +1,64 @@
 <!-- Sidebar Component -->
 <div class="sidebar">
     <!-- Sidebar Header -->
-    <div class="sidebar-header">
-        <a href="{{ url_for('main.index') }}" class="logo" style="text-decoration: none; color: inherit; cursor: pointer;">
+    <div class="sidebar__header">
+        <a href="{{ url_for('main.index') }}" class="logo">
             <img src="{{ url_for('static', filename='images/pacta_logo.png') }}" alt="PACTA" class="logo-image">
         </a>
+        <button class="sidebar-toggle" aria-label="Alternar navegación" title="Menú">
+            <i class="fas fa-bars"></i>
+        </button>
     </div>
 
-    <!-- Sidebar Navigation -->
-    <nav class="sidebar-nav">
-        <ul class="nav-list">
-            <li class="nav-item active">
-                <a href="{{ url_for('main.dashboard') }}" class="nav-link">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
+    <!-- Sidebar Content -->
+    <div class="sidebar__content">
+        <ul class="sidebar-nav">
+            <li class="sidebar-nav__item">
+                <a href="{{ url_for('main.dashboard') }}" class="sidebar-nav__link sidebar-nav__link--active">
+                    <i class="fas fa-tachometer-alt sidebar-nav__icon"></i>
+                    <span class="sidebar-nav__text">Dashboard</span>
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a href="{{ url_for('contratos.listar') }}" class="nav-link">
-                    <i class="fas fa-file-contract"></i>
-                    <span>Contratos</span>
+            <li class="sidebar-nav__item">
+                <a href="{{ url_for('contratos.listar') }}" class="sidebar-nav__link">
+                    <i class="fas fa-file-contract sidebar-nav__icon"></i>
+                    <span class="sidebar-nav__text">Contratos</span>
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a href="{{ url_for('main.suplementos') }}" class="nav-link">
-                    <i class="fas fa-file-signature"></i>
-                    <span>Suplementos</span>
+            <li class="sidebar-nav__item">
+                <a href="{{ url_for('main.suplementos') }}" class="sidebar-nav__link">
+                    <i class="fas fa-file-signature sidebar-nav__icon"></i>
+                    <span class="sidebar-nav__text">Suplementos</span>
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a href="{{ url_for('main.reportes') }}" class="nav-link">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Reportes</span>
+            <li class="sidebar-nav__item">
+                <a href="{{ url_for('main.reportes') }}" class="sidebar-nav__link">
+                    <i class="fas fa-chart-bar sidebar-nav__icon"></i>
+                    <span class="sidebar-nav__text">Reportes</span>
                 </a>
             </li>
             
-            <li class="nav-item">
-                <a href="{{ url_for('users.usuario') }}" class="nav-link">
-                    <i class="fas fa-user"></i>
-                    <span>Mi Perfil</span>
+            <li class="sidebar-nav__item">
+                <a href="{{ url_for('users.usuario') }}" class="sidebar-nav__link">
+                    <i class="fas fa-user sidebar-nav__icon"></i>
+                    <span class="sidebar-nav__text">Mi Perfil</span>
                 </a>
             </li>
             
-            <li class="nav-item">
-                <a href="{{ url_for('main.configuracion') }}" class="nav-link">
-                    <i class="fas fa-cog"></i>
-                    <span>Configuración</span>
+            <li class="sidebar-nav__item">
+                <a href="{{ url_for('main.configuracion') }}" class="sidebar-nav__link">
+                    <i class="fas fa-cog sidebar-nav__icon"></i>
+                    <span class="sidebar-nav__text">Configuración</span>
                 </a>
             </li>
-
         </ul>
-    </nav>
+    </div>
 
     <!-- Sidebar Footer -->
-    <div class="sidebar-footer">
+    <div class="sidebar__footer">
         <div class="user-profile">
             <div class="user-avatar avatar-generated">
                 {% set nombre_parts = (usuario.nombre or 'Usuario').split() %}
@@ -80,6 +82,9 @@
         </div>
     </div>
 </div>
+
+<!-- Overlay para móviles -->
+<div class="sidebar-overlay"></div>
 
 <!-- Las funciones del sidebar se cargan desde sidebar_functions.js -->
 <script src="{{ url_for('static', filename='js/sidebar_functions.js') }}"></script>
