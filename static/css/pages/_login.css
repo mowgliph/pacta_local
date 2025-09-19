@@ -78,6 +78,7 @@
   border: var(--border-width) solid var(--color-gray-300);
   border-radius: var(--border-radius);
   transition: all 0.2s ease-in-out;
+  background-clip: padding-box;
 }
 
 .login-form .form-control:focus {
@@ -89,6 +90,7 @@
   padding: 1rem 3rem 1rem 1rem;
   color: var(--color-gray-500);
   transition: all 0.2s ease-in-out;
+  pointer-events: none;
 }
 
 .login-form .form-floating > .form-control:focus ~ label,
@@ -100,6 +102,7 @@
   padding: 0 0.5rem;
   left: 0.5rem;
   z-index: 2;
+  box-shadow: 4px 0 0 var(--color-white), -4px 0 0 var(--color-white);
 }
 
 /* Iconos de los campos */
@@ -127,6 +130,20 @@
 .password-toggle:hover {
   color: var(--color-primary);
   background: transparent;
+}
+
+/* Ocultar placeholder en navegadores para evitar parpadeos */
+.login-form .form-control::placeholder {
+  color: transparent;
+}
+.login-form .form-control::-ms-input-placeholder { /* Edge */
+  color: transparent;
+}
+.login-form .form-control::-webkit-input-placeholder { /* Chrome/Safari */
+  color: transparent;
+}
+.login-form .form-control:-ms-input-placeholder { /* IE 10-11 */
+  color: transparent;
 }
 
 /* Botón de inicio de sesión */
@@ -257,6 +274,12 @@
   .login-form .form-floating > label {
     color: var(--color-gray-400);
     background-color: var(--color-gray-700);
+  }
+
+  .login-form .form-floating > .form-control:focus ~ label,
+  .login-form .form-floating > .form-control:not(:placeholder-shown) ~ label,
+  .login-form .form-floating > .form-control-plaintext ~ label {
+    box-shadow: 4px 0 0 var(--color-gray-700), -4px 0 0 var(--color-gray-700);
   }
   
   .login-footer small {
