@@ -1,0 +1,723 @@
+/* ===================================================================
+   PACTA - Página de Gestión de Backups
+   Archivo: _backup.css
+   Descripción: Estilos específicos para la gestión de backups del sistema
+   Dependencias: base/_variables.css, components & utilities
+   Orden de carga: importado por pages/_index.css
+   
+   Contenido:
+   1. Grid de métricas de backup
+   2. Herramientas de backup
+   3. Tabla de backups y elementos sortables
+   4. Barra de acciones
+   5. Estados de carga y vacíos
+   6. Badges de tipo y estado
+   7. Botones de acción
+   8. Modales de backup
+   9. Barras de progreso
+   10. Responsividad
+   11. Utilidades específicas
+   12. Animaciones
+=================================================================== */
+
+/* ===== GRID DE MÉTRICAS - BACKUP ===== */
+.backup-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+}
+
+@media (max-width: var(--breakpoint-lg)) {
+  .backup-metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: var(--breakpoint-sm)) {
+  .backup-metrics-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== HERRAMIENTAS DE BACKUP ===== */
+.backup-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--spacing-3);
+  padding: var(--spacing-4);
+}
+
+@media (max-width: var(--breakpoint-lg)) {
+  .backup-tools-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: var(--breakpoint-sm)) {
+  .backup-tools-grid { grid-template-columns: 1fr; }
+}
+
+.backup-tool-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-4);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  background: var(--color-white);
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  transition: var(--transition);
+  cursor: pointer;
+  min-height: 60px;
+  box-shadow: var(--shadow-sm);
+}
+
+.backup-tool-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+}
+
+.backup-tool-button.success {
+  border-color: var(--color-success-200);
+  color: var(--color-success-700);
+}
+
+.backup-tool-button.success:hover {
+  background: var(--color-success-50);
+  border-color: var(--color-success-300);
+  color: var(--color-success-800);
+}
+
+.backup-tool-button.warning {
+  border-color: var(--color-warning-200);
+  color: var(--color-warning-700);
+}
+
+.backup-tool-button.warning:hover {
+  background: var(--color-warning-50);
+  border-color: var(--color-warning-300);
+  color: var(--color-warning-800);
+}
+
+.backup-tool-button.primary {
+  border-color: var(--color-primary-200);
+  color: var(--color-primary-700);
+}
+
+.backup-tool-button.primary:hover {
+  background: var(--color-primary-50);
+  border-color: var(--color-primary-300);
+  color: var(--color-primary-800);
+}
+
+.backup-tool-button.danger {
+  border-color: var(--color-error-200);
+  color: var(--color-error-700);
+}
+
+.backup-tool-button.danger:hover {
+  background: var(--color-error-50);
+  border-color: var(--color-error-300);
+  color: var(--color-error-800);
+}
+
+.backup-tool-button i {
+  font-size: var(--font-size-lg);
+}
+
+/* ===== TABLA DE BACKUPS ===== */
+.backup-table {
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.backup-table thead {
+  background: var(--color-gray-50);
+}
+
+.backup-table th {
+  padding: var(--spacing-4);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  color: var(--text-color);
+  border-bottom: var(--border-width) solid var(--border-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.backup-table td {
+  padding: var(--spacing-4);
+  font-size: var(--font-size-base);
+  color: var(--text-color);
+  border-bottom: var(--border-width) solid var(--color-gray-100);
+  vertical-align: middle;
+}
+
+.backup-table tbody tr {
+  transition: var(--transition);
+}
+
+.backup-table tbody tr:hover {
+  background-color: var(--color-primary-50);
+}
+
+.backup-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ===== ELEMENTOS SORTABLES ===== */
+.backup-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  transition: var(--transition);
+}
+
+.backup-table th.sortable:hover {
+  background-color: var(--color-gray-100);
+  color: var(--color-primary-600);
+}
+
+.backup-table th.sortable .sort-icon {
+  margin-left: var(--spacing-2);
+  font-size: 0.75rem;
+  opacity: 0.5;
+  transition: var(--transition);
+}
+
+.backup-table th.sortable.sort-asc .sort-icon::before {
+  content: "↑";
+  opacity: 1;
+  color: var(--color-primary-600);
+}
+
+.backup-table th.sortable.sort-desc .sort-icon::before {
+  content: "↓";
+  opacity: 1;
+  color: var(--color-primary-600);
+}
+
+.backup-table th.sortable:not(.sort-asc):not(.sort-desc) .sort-icon::before {
+  content: "↕";
+}
+
+/* ===== BARRA DE ACCIONES DE BACKUP ===== */
+.backup-actions-bar {
+  background: var(--color-gray-50);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-3);
+}
+
+.backup-actions-left {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.backup-icon-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--border-radius);
+  color: var(--color-white);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: var(--font-size-sm);
+}
+
+.backup-icon-action.primary {
+  background: var(--color-primary-500);
+}
+
+.backup-icon-action.primary:hover {
+  background: var(--color-primary-600);
+  transform: translateY(-1px);
+}
+
+.backup-icon-action.success {
+  background: var(--color-success-500);
+}
+
+.backup-icon-action.success:hover {
+  background: var(--color-success-600);
+  transform: translateY(-1px);
+}
+
+/* ===== INFORMACIÓN DEL BACKUP ===== */
+.backup-info-cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.backup-name {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-color);
+  margin-bottom: 2px;
+}
+
+.backup-date {
+  font-size: var(--font-size-sm);
+  color: var(--text-color-light);
+}
+
+.backup-description {
+  font-size: var(--font-size-sm);
+  color: var(--text-color-lighter);
+  font-style: italic;
+}
+
+/* ===== BADGES DE TIPO DE BACKUP ===== */
+.backup-type-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--border-radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.backup-type-badge i {
+  margin-right: var(--spacing-1);
+  font-size: 0.875em;
+}
+
+.backup-type-badge.automatic {
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+  border: var(--border-width) solid var(--color-primary-200);
+}
+
+.backup-type-badge.manual {
+  background: var(--color-success-100);
+  color: var(--color-success-700);
+  border: var(--border-width) solid var(--color-success-200);
+}
+
+.backup-type-badge.imported {
+  background: var(--color-warning-100);
+  color: var(--color-warning-700);
+  border: var(--border-width) solid var(--color-warning-200);
+}
+
+/* ===== INFORMACIÓN DE TAMAÑO ===== */
+.backup-size-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.backup-size {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-color);
+}
+
+.backup-size-detail {
+  font-size: var(--font-size-sm);
+  color: var(--text-color-light);
+}
+
+/* ===== BOTONES DE ACCIÓN DE BACKUP ===== */
+.backup-actions {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.backup-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.backup-action-btn.download {
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+}
+
+.backup-action-btn.download:hover {
+  background: var(--color-primary-200);
+  color: var(--color-primary-800);
+}
+
+.backup-action-btn.restore {
+  background: var(--color-warning-100);
+  color: var(--color-warning-700);
+}
+
+.backup-action-btn.restore:hover {
+  background: var(--color-warning-200);
+  color: var(--color-warning-800);
+}
+
+.backup-action-btn.delete {
+  background: var(--color-error-100);
+  color: var(--color-error-700);
+}
+
+.backup-action-btn.delete:hover {
+  background: var(--color-error-200);
+  color: var(--color-error-800);
+}
+
+/* ===== ESTADOS DE CARGA Y VACÍOS ===== */
+.backup-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-8);
+  background: var(--color-gray-50);
+  border-radius: var(--border-radius-lg);
+  margin-bottom: var(--spacing-3);
+}
+
+.backup-loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--color-gray-200);
+  border-top-color: var(--color-primary-500);
+  border-radius: var(--border-radius-full);
+  animation: spin var(--animation-duration) linear infinite;
+  margin-bottom: var(--spacing-3);
+}
+
+.backup-loading-text {
+  color: var(--text-color-light);
+  margin: 0;
+}
+
+.backup-empty-state {
+  text-align: center;
+  padding: var(--spacing-12) var(--spacing-6);
+  color: var(--text-color-light);
+  background: var(--color-gray-50);
+  border-radius: var(--border-radius-lg);
+}
+
+.backup-empty-state i {
+  font-size: 3rem;
+  color: var(--color-gray-300);
+  margin-bottom: var(--spacing-4);
+}
+
+.backup-empty-state h4 {
+  color: var(--text-color);
+  margin-bottom: var(--spacing-2);
+  font-weight: var(--font-weight-medium);
+}
+
+.backup-empty-state p {
+  margin-bottom: var(--spacing-4);
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ===== MODALES DE BACKUP ===== */
+.backup-modal .modal-header {
+  background: var(--color-primary-50);
+  border-bottom: var(--border-width) solid var(--color-primary-200);
+}
+
+.backup-modal .modal-title {
+  color: var(--color-primary-700);
+  font-weight: var(--font-weight-semibold);
+}
+
+.backup-modal .modal-title i {
+  color: var(--color-primary-600);
+}
+
+.backup-modal .form-label {
+  font-weight: var(--font-weight-medium);
+  color: var(--text-color);
+  margin-bottom: var(--spacing-2);
+}
+
+.backup-modal .form-control {
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-3);
+  font-size: var(--font-size-base);
+  transition: var(--transition);
+}
+
+.backup-modal .form-control:focus {
+  outline: none;
+  border-color: var(--color-primary-400);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+}
+
+.backup-modal .form-text {
+  color: var(--text-color-light);
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-1);
+}
+
+.backup-modal .alert {
+  border-radius: var(--border-radius);
+  padding: var(--spacing-3) var(--spacing-4);
+  border: var(--border-width) solid;
+}
+
+.backup-modal .alert-info {
+  background: var(--color-primary-50);
+  border-color: var(--color-primary-200);
+  color: var(--color-primary-800);
+}
+
+.backup-modal .alert-warning {
+  background: var(--color-warning-50);
+  border-color: var(--color-warning-200);
+  color: var(--color-warning-800);
+}
+
+/* ===== CONFIGURACIÓN AUTO BACKUP ===== */
+.auto-backup-config .form-check-input:checked {
+  background-color: var(--color-success-500);
+  border-color: var(--color-success-500);
+}
+
+.auto-backup-config .form-check-label {
+  color: var(--text-color);
+  font-weight: var(--font-weight-normal);
+}
+
+/* ===== BARRA DE PROGRESO ===== */
+.backup-progress {
+  background: var(--color-gray-200);
+  border-radius: var(--border-radius-full);
+  overflow: hidden;
+  height: 8px;
+  margin-bottom: var(--spacing-3);
+}
+
+.backup-progress-bar {
+  background: linear-gradient(90deg, var(--color-primary-400), var(--color-primary-600));
+  height: 100%;
+  border-radius: var(--border-radius-full);
+  transition: width 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.backup-progress-bar.animated::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.backup-progress-text {
+  text-align: center;
+  color: var(--text-color);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+/* ===== INFORMACIÓN DE BACKUP DETALLADA ===== */
+.backup-info-detailed {
+  background: var(--color-gray-50);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-3);
+  margin: var(--spacing-3) 0;
+}
+
+.backup-info-detailed .backup-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-2) 0;
+  border-bottom: var(--border-width) solid var(--color-gray-200);
+}
+
+.backup-info-detailed .backup-info-row:last-child {
+  border-bottom: none;
+}
+
+.backup-info-detailed .backup-info-label {
+  font-weight: var(--font-weight-medium);
+  color: var(--text-color);
+}
+
+.backup-info-detailed .backup-info-value {
+  color: var(--text-color-light);
+  font-family: var(--font-family-mono);
+}
+
+/* ===== RESPONSIVIDAD ===== */
+@media (max-width: var(--breakpoint-md)) {
+  .backup-actions-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-3);
+  }
+  
+  .backup-actions-left {
+    justify-content: center;
+  }
+  
+  .backup-table {
+    font-size: var(--font-size-sm);
+  }
+  
+  .backup-table th,
+  .backup-table td {
+    padding: var(--spacing-3);
+  }
+  
+  /* Ocultar columnas menos importantes en móvil */
+  .backup-table th:nth-child(3), /* Tamaño */
+  .backup-table td:nth-child(3) {
+    display: none;
+  }
+}
+
+@media (max-width: var(--breakpoint-sm)) {
+  .backup-table th:nth-child(2), /* Tipo */
+  .backup-table td:nth-child(2) {
+    display: none;
+  }
+  
+  .backup-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .backup-action-btn {
+    width: 100%;
+    height: 40px;
+    border-radius: var(--border-radius);
+  }
+}
+
+/* ===== UTILIDADES ESPECÍFICAS ===== */
+.text-backup-primary {
+  color: var(--color-primary-600) !important;
+}
+
+.bg-backup-light {
+  background-color: var(--color-primary-50) !important;
+}
+
+.border-backup {
+  border-color: var(--color-primary-200) !important;
+}
+
+/* ===== ANIMACIONES ===== */
+.backup-fade-in {
+  animation: fadeIn var(--animation-duration) var(--animation-timing);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== TOOLTIPS ESPECÍFICOS DE BACKUP ===== */
+.backup-tooltip {
+  position: relative;
+}
+
+.backup-tooltip:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-gray-900);
+  color: var(--color-white);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+  z-index: var(--z-index-tooltip);
+  margin-bottom: var(--spacing-2);
+  opacity: 0;
+  animation: tooltipFadeIn 0.2s ease-out forwards;
+}
+
+@keyframes tooltipFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ===== ESTADOS DE SISTEMA ===== */
+.system-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--border-radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.system-status-badge.healthy {
+  background: var(--color-success-100);
+  color: var(--color-success-700);
+  border: var(--border-width) solid var(--color-success-200);
+}
+
+.system-status-badge.warning {
+  background: var(--color-warning-100);
+  color: var(--color-warning-700);
+  border: var(--border-width) solid var(--color-warning-200);
+}
+
+.system-status-badge.error {
+  background: var(--color-error-100);
+  color: var(--color-error-700);
+  border: var(--border-width) solid var(--color-error-200);
+}
+
+.system-status-badge i {
+  margin-right: var(--spacing-1);
+  font-size: 0.875em;
+}

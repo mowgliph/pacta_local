@@ -18,7 +18,7 @@
             {% include 'components/partials/content_header.html' %}
 
             <!-- Personas Statistics Cards -->
-            <div class="row g-3 mb-4">
+            <div class="personas-metrics-grid">
                 <!-- Total Personas -->
                 {% set metric_label = "Total Personas" %}
                 {% set metric_value = estadisticas.total_personas if estadisticas and estadisticas.total_personas else "0" %}
@@ -81,8 +81,8 @@
                 </div>
                 <div class="mt-4">
                     <!-- Barra de acciones -->
-                    <div class="d-flex justify-content-between align-items-center p-4 bg-light border-bottom">
-                        <div class="d-flex gap-2">
+                    <div class="personas-actions-bar">
+                        <div class="personas-actions-left">
                             <button id="btnAddPersona" class="btn btn-primary" title="Añadir Persona Responsable">
                                 <i class="fas fa-plus me-2"></i>
                                 Añadir Persona Responsable
@@ -92,8 +92,11 @@
                                 Buscar Personas
                             </button>
                         </div>
-                        <div id="searchContainer" class="d-none d-md-block">
-                            <input type="text" id="searchInput" placeholder="Buscar personas..." class="form-control">
+                        <div class="personas-actions-right">
+                            <div class="personas-search-container">
+                                <i class="fas fa-search personas-search-icon"></i>
+                                <input type="text" id="searchInput" placeholder="Buscar personas..." class="form-control personas-search-input">
+                            </div>
                         </div>
                     </div>
                     
@@ -122,7 +125,7 @@
             </div>
             
             <!-- Separador -->
-            <div style="margin: 32px 0;"></div>
+            <div class="block-section"></div>
             
             <!-- Gestión de Proveedores y Clientes -->
             {% set providers_api_url = "/api/providers-summary" %}

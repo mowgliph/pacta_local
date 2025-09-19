@@ -18,7 +18,7 @@
             {% include 'components/partials/content_header.html' %}
     
     <!-- Métricas principales -->
-    <div class="row g-3 mb-4">
+    <div class="clientes-metrics-grid">
         <!-- Total Clientes -->
         {% set metric_label = "Total Clientes" %}
         {% set metric_value = estadisticas.total_clientes if estadisticas and estadisticas.total_clientes else "0" %}
@@ -83,18 +83,20 @@
         </div>
         <div class="block-content" style="padding: 0;">
             <!-- Barra de acciones -->
-            <div class="d-flex justify-content-between align-items-center p-4 bg-light border-bottom">
-                <div class="d-flex gap-2">
+            <div class="clientes-actions-bar">
+                <div class="clientes-actions-left">
                     <button id="btnAddClient" class="btn btn-primary btn-sm" title="Añadir Cliente">
                         <i class="fas fa-plus"></i>
                     </button>
-                    <button id="btnSearchClient" class="btn btn-secondary btn-sm" title="Buscar Clientes">
-                    <button id="btnSearchClient" class="btn-icon-action" title="Buscar Clientes" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #10b981; border: none; border-radius: 6px; color: white; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">
+                    <button id="btnSearchClient" class="btn-icon-action success" title="Buscar Clientes">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
-                <div id="searchContainer" style="display: none; flex: 1; max-width: 300px; margin-left: 16px;">
-                    <input type="text" id="searchInput" placeholder="Buscar clientes..." style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                <div class="clientes-actions-right">
+                    <div id="searchContainer" class="clientes-search-container" style="display: none;">
+                        <i class="fas fa-search clientes-search-icon"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar clientes..." class="form-control clientes-search-input">
+                    </div>
                 </div>
             </div>
             
@@ -121,26 +123,26 @@
     </div>
 
     <!-- Personas Responsables Recientes -->
-    <div class="block-section" style="margin-top: 32px;">
-        <div class="recent-personas-column" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-            <div class="column-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f3f4f6;">
-                <div>
-                    <h4 style="font-size: 18px; font-weight: 600; color: #374151; margin: 0; display: flex; align-items: center;">
-                        <i class="fas fa-users" style="color: #8b5cf6; margin-right: 8px;"></i>
-                        Personas Responsables Recientes
-                    </h4>
-                    <p style="font-size: 14px; color: #6b7280; margin: 4px 0 0 0;">Últimas 5 personas asignadas a clientes</p>
-                </div>
-                <a class="btn btn-primary btn-sm d-flex align-items-center gap-2" href="/personas">
-                    <i class="fas fa-cog"></i>
-                    Gestionar Personas
-                </a>
+    <div class="personas-responsables-section">
+        <div class="personas-responsables-header">
+            <div>
+                <h4 class="personas-responsables-title">
+                    <i class="fas fa-users"></i>
+                    Personas Responsables Recientes
+                </h4>
+                <p class="personas-responsables-subtitle">Últimas 5 personas asignadas a clientes</p>
             </div>
-            
-            <div class="personas-list" id="personasRecientesContainer" style="display: flex; flex-direction: column; gap: 16px;">
+            <a class="btn btn-primary btn-sm d-flex align-items-center gap-2" href="/personas">
+                <i class="fas fa-cog"></i>
+                Gestionar Personas
+            </a>
+        </div>
+        
+        <div class="personas-responsables-content">
+            <div class="personas-list" id="personasRecientesContainer">
                 <!-- Los datos se cargarán dinámicamente -->
-                <div class="loading-message" style="text-align: center; padding: 40px; color: #6b7280;">
-                    <i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i>
+                <div class="loading-message">
+                    <i class="fas fa-spinner fa-spin"></i>
                     Cargando personas responsables...
                 </div>
             </div>
