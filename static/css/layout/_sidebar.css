@@ -226,6 +226,18 @@
   .main-content--collapsed {
     margin-left: var(--sidebar-width-collapsed);
   }
+
+  /* Ajuste automático para estructuras basadas en Bootstrap
+     Cuando la barra lateral fija es hermana del contenedor de filas principal */
+  .container-fluid .sidebar ~ .row {
+    margin-left: var(--sidebar-width);
+    transition: margin-left 0.3s ease-in-out;
+  }
+
+  /* Cuando la barra lateral está colapsada, reducir margen del contenido */
+  .container-fluid .sidebar.sidebar--collapsed ~ .row {
+    margin-left: var(--sidebar-width-collapsed);
+  }
 }
 
 /* ===== 7. TEMAS ===== */
