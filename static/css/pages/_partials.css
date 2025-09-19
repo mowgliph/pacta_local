@@ -5,65 +5,7 @@
    Nota: Mantener estos estilos ligeros y apoyarse en variables y utilidades existentes
 =================================================================== */
 
-/* Sidebar */
-.sidebar {
-  background: var(--sidebar-bg);
-  width: var(--sidebar-width);
-  min-height: 100vh;
-  border-right: var(--border-width) solid var(--border-color);
-}
-
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: var(--header-height);
-  padding: var(--spacing-4);
-}
-
-.sidebar .logo-image {
-  max-height: calc(var(--header-height) - var(--spacing-4));
-}
-
-.sidebar-nav .nav-list {
-  list-style: none;
-  margin: 0;
-  padding: var(--spacing-2);
-}
-
-.sidebar-nav .nav-item {
-  margin-bottom: var(--spacing-1);
-}
-
-.sidebar-nav .nav-link {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-3);
-  padding: var(--spacing-3) var(--spacing-4);
-  border-radius: var(--border-radius);
-  color: var(--text-color);
-  text-decoration: none;
-  transition: var(--transition);
-}
-
-.sidebar-nav .nav-item.active .nav-link,
-.sidebar-nav .nav-link:hover {
-  background: var(--color-primary-50);
-  color: var(--color-primary-700);
-}
-
-.sidebar-footer {
-  margin-top: auto;
-  padding: var(--spacing-4);
-  border-top: var(--border-width) solid var(--border-color);
-}
-
-.user-profile {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-3);
-}
-
+/* Avatares de usuario (sidebar y menús) */
 .user-avatar,
 .user-avatar-small,
 .avatar-generated {
@@ -77,6 +19,12 @@
   color: var(--color-primary-800);
   font-weight: var(--font-weight-semibold);
   box-shadow: var(--shadow-inner);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
 }
 
 .user-info .user-name {
