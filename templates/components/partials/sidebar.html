@@ -5,6 +5,9 @@
         <a href="{{ url_for('main.index') }}" class="logo">
             <img src="{{ url_for('static', filename='images/pacta_logo.png') }}" alt="PACTA" class="logo-image">
         </a>
+        <button class="sidebar-toggle" aria-label="Alternar navegación" title="Menú">
+            <i class="fas fa-bars"></i>
+        </button>
     </div>
 
     <!-- Sidebar Content -->
@@ -79,6 +82,9 @@
         </div>
     </div>
 </div>
+
+<!-- Overlay para móviles -->
+<div class="sidebar-overlay"></div>
 
 <!-- Las funciones del sidebar se cargan desde sidebar_functions.js -->
 <script src="{{ url_for('static', filename='js/sidebar_functions.js') }}"></script>

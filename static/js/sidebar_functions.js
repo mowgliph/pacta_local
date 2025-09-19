@@ -1,73 +1,69 @@
 // Funciones para el manejo del sidebar
 
-// Función para manejar la navegación activa en el sidebar
+// Función para manejar la navegación activa en el sidebar (BEM)
 function initializeSidebarNavigation() {
-    const navItems = document.querySelectorAll('.nav-item');
+    const navLinks = document.querySelectorAll('.sidebar-nav__link');
     const currentPath = window.location.pathname;
-    
-    // Remover clase active de todos los elementos
-    navItems.forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    // Añadir clase active al elemento correspondiente basado en la URL actual
-    navItems.forEach(item => {
-        const link = item.querySelector('.nav-link');
-        if (link) {
-            const href = link.getAttribute('href');
-            
-            // Verificar si la URL actual coincide con el href del enlace
-            if (currentPath === href || 
-                (currentPath === '/' && href.includes('dashboard')) ||
-                (currentPath.includes('contratos') && href.includes('contratos')) ||
-                (currentPath.includes('suplementos') && href.includes('suplementos')) ||
-                (currentPath.includes('reportes') && href.includes('reportes')) ||
-                (currentPath.includes('usuario') && href.includes('usuario')) ||
-                (currentPath.includes('configuracion') && href.includes('configuracion'))) {
-                item.classList.add('active');
-            }
+
+    navLinks.forEach(link => {
+        link.classList.remove('sidebar-nav__link--active');
+        const href = link.getAttribute('href') || '';
+        if (
+            currentPath === href ||
+            (currentPath === '/' && href.includes('dashboard')) ||
+            (currentPath.includes('contratos') && href.includes('contratos')) ||
+            (currentPath.includes('suplementos') && href.includes('suplementos')) ||
+            (currentPath.includes('reportes') && href.includes('reportes')) ||
+            (currentPath.includes('usuario') && href.includes('usuario')) ||
+            (currentPath.includes('configuracion') && href.includes('configuracion'))
+        ) {
+            link.classList.add('sidebar-nav__link--active');
         }
     });
-    
-    // Añadir event listeners para clicks en los enlaces
-    navItems.forEach(item => {
-        const link = item.querySelector('.nav-link');
-        if (link) {
-            link.addEventListener('click', function(e) {
-                // Remover active de todos los elementos
-                navItems.forEach(navItem => {
-                    navItem.classList.remove('active');
-                });
-                
-                // Añadir active al elemento clickeado
-                item.classList.add('active');
-            });
-        }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            navLinks.forEach(l => l.classList.remove('sidebar-nav__link--active'));
+            this.classList.add('sidebar-nav__link--active');
+        });
     });
 }
 
-// Función para colapsar/expandir sidebar en móviles
+// Toggle sidebar en móviles (abre/cierra)
 function toggleSidebar() {
     const sidebar = document.querySelector('.sidebar');
-    if (sidebar) {
-        sidebar.classList.toggle('collapsed');
-    }
+    const overlay = document.querySelector('.sidebar-overlay');
+    if (!sidebar || !overlay) return;
+
+    const isOpen = sidebar.classList.toggle('sidebar--open');
+    overlay.classList.toggle('sidebar-overlay--visible', isOpen);
 }
 
-// Función para cerrar sidebar en móviles al hacer click fuera
+// Cerrar sidebar al click fuera o sobre overlay
 function closeSidebarOnOutsideClick(event) {
     const sidebar = document.querySelector('.sidebar');
-    const sidebarToggle = document.querySelector('.sidebar-toggle');
-    
-    if (sidebar && !sidebar.contains(event.target) && !sidebarToggle?.contains(event.target)) {
-        sidebar.classList.remove('show');
+    const overlay = document.querySelector('.sidebar-overlay');
+    const toggleBtn = document.querySelector('.sidebar-toggle');
+    if (!sidebar || !overlay) return;
+
+    const clickedOutside = !sidebar.contains(event.target) && !toggleBtn?.contains(event.target);
+    const clickedOverlay = overlay.contains(event.target);
+
+    if (sidebar.classList.contains('sidebar--open') && (clickedOutside || clickedOverlay)) {
+        sidebar.classList.remove('sidebar--open');
+        overlay.classList.remove('sidebar-overlay--visible');
     }
 }
 
 // Inicializar funciones del sidebar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
     initializeSidebarNavigation();
-    
-    // Añadir listener para clicks fuera del sidebar
+
+    const toggleBtn = document.querySelector('.sidebar-toggle');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', toggleSidebar);
+    }
+
+    // Añadir listener para clicks fuera del sidebar y sobre overlay
     document.addEventListener('click', closeSidebarOnOutsideClick);
 });

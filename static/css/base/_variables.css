@@ -225,6 +225,8 @@
   --z-index-tooltip: 1070;
   --z-index-toast: 1080;
   --z-index-notification: 1090;
+  --z-index-sidebar: 1055;
+  --z-index-sidebar-mobile: 2000;
 
   /* ===== 9. LAYOUT ===== */
   --header-height: 4rem;         /* 64px */
