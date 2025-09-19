@@ -1,0 +1,84 @@
+<div class="modal fade" id="detalleSuplementoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-alt me-2"></i>Detalles del Suplemento
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5 class="fw-bold mb-3">Información General</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <span class="text-muted">Número:</span>
+                                <span class="fw-medium ms-2" id="detalle_numero">-</span>
+                            </li>
+                            <li class="mb-2">
+                                <span class="text-muted">Contrato:</span>
+                                <span class="fw-medium ms-2" id="detalle_contrato">-</span>
+                            </li>
+                            <li class="mb-2">
+                                <span class="text-muted">Tipo de Modificación:</span>
+                                <span class="fw-medium ms-2" id="detalle_tipo">-</span>
+                            </li>
+                            <li class="mb-2">
+                                <span class="text-muted">Estado:</span>
+                                <span class="ms-2" id="detalle_estado">-</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="fw-bold mb-3">Detalles Financieros</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <span class="text-muted">Monto de Modificación:</span>
+                                <span class="fw-medium ms-2" id="detalle_monto">-</span>
+                            </li>
+                            <li class="mb-2">
+                                <span class="text-muted">Fecha de Modificación:</span>
+                                <span class="fw-medium ms-2" id="detalle_fecha">-</span>
+                            </li>
+                            <li class="mb-2">
+                                <span class="text-muted">Creado por:</span>
+                                <span class="fw-medium ms-2" id="detalle_creado_por">-</span>
+                            </li>
+                            <li class="mb-2">
+                                <span class="text-muted">Fecha de Creación:</span>
+                                <span class="fw-medium ms-2" id="detalle_fecha_creacion">-</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <h5 class="fw-bold mb-2">Descripción</h5>
+                    <div class="card bg-light">
+                        <div class="card-body" id="detalle_descripcion">
+                            Sin descripción disponible.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info mb-0">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <div>
+                            <strong>Nota:</strong> Para realizar cambios en este suplemento, utilice la opción de edición.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Cerrar
+                </button>
+                <button type="button" class="btn btn-primary" id="btnEditarSuplemento">
+                    <i class="fas fa-edit me-1"></i> Editar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+<div class="modal fade" id="crearSuplementoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus-circle me-2"></i>Nuevo Suplemento
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formCrearSuplemento" action="{{ url_for('suplementos.crear') }}" method="POST">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="contrato_id" class="form-label">Contrato</label>
+                            <select class="form-select" id="contrato_id" name="contrato_id" required>
+                                <option value="" selected disabled>Seleccione un contrato</option>
+                                {% for contrato in contratos %}
+                                <option value="{{ contrato.id }}">
+                                    {{ contrato.numero_contrato }} - {{ contrato.titulo }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tipo_modificacion" class="form-label">Tipo de Modificación</label>
+                            <select class="form-select" id="tipo_modificacion" name="tipo_modificacion" required>
+                                <option value="" selected disabled>Seleccione un tipo</option>
+                                <option value="Ampliación de Monto">Ampliación de Monto</option>
+                                <option value="Extensión de Plazo">Extensión de Plazo</option>
+                                <option value="Modificación de Alcance">Modificación de Alcance</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="monto_modificacion" class="form-label">Monto de Modificación</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" step="0.01" class="form-control" id="monto_modificacion" 
+                                       name="monto_modificacion" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="fecha_modificacion" class="form-label">Fecha de Modificación</label>
+                            <input type="date" class="form-control" id="fecha_modificacion" 
+                                   name="fecha_modificacion" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

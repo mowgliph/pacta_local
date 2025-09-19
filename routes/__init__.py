@@ -10,6 +10,7 @@ from .backup_routes import backup_bp
 from .document_routes import document_bp
 from .providers import providers_bp
 from .clients import clients_bp
+from .suplementos import suplementos_bp
 
 def register_blueprints(app):
     """Registra todos los blueprints de la aplicación"""
@@ -26,3 +27,4 @@ def register_blueprints(app):
     app.register_blueprint(backup_bp)
     app.register_blueprint(document_bp)
     app.register_blueprint(clients_bp)
+    app.register_blueprint(suplementos_bp)

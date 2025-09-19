@@ -161,28 +161,11 @@
         });
     </script>
     
-    <!-- Funciones del sidebar cargadas desde archivo modular -->
-    <script src="{{ url_for('static', filename='js/sidebar_functions.js') }}"></script>
-    
-    <!-- Componente de Modal de Confirmación Reutilizable -->
-    <script src="{{ url_for('static', filename='js/confirm_modal.js') }}"></script>
-    
     <!-- Sistema unificado de toasts -->
     {% include 'components/partials/toast_container.html' %}
     
-    <!-- Script de inicialización de datos de ejemplo -->
-    <script src="{{ url_for('static', filename='js/init_sample_data.js') }}"></script>
-    
-    <!-- Inicializar datos de ejemplo si es necesario -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Solo mostrar el modal de inicialización en el dashboard principal
-            if (window.location.pathname === '/' || window.location.pathname === '/dashboard') {
-                const sampleDataInit = new SampleDataInitializer();
-                sampleDataInit.checkAndInitialize();
-            }
-        });
-    </script>
+    <!-- Punto de entrada principal de JavaScript -->
+    <script type="module" src="{{ url_for('static', filename='js/index.js') }}"></script>
     
     {% block extra_js %}{% endblock %}
 </body>

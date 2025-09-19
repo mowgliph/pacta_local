@@ -217,10 +217,18 @@
         </div>
     </div>
 
-
+    <!-- Incluir modales de suplementos -->
+    {% include 'components/modals/suplementos/suplemento_crear.html' %}
+    {% include 'components/modals/suplementos/suplemento_editar.html' %}
+    {% include 'components/modals/suplementos/suplemento_detalle.html' %}
+    {% include 'components/modals/suplementos/suplemento_eliminar.html' %}
     
     <!-- Chart.js for charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    {% block extra_js %}
+    <script src="{{ url_for('static', filename='js/suplementos.js') }}"></script>
+    {% endblock %}
     <script>
         // Responsive chart configuration
         function getChartSize() {

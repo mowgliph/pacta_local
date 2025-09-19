@@ -14,25 +14,9 @@ app.config['SECRET_KEY'] = 'tu-clave-secreta-aqui'
 # Registrar blueprints
 register_blueprints(app)
 
-# Registrar blueprint de API para inicialización de datos
-from routes.init_data_api import init_data_api
-app.register_blueprint(init_data_api)
-
-def init_db():
-    """Inicializa la base de datos y crea el usuario administrador"""
-    # Inicializar la base de datos explícitamente
-    db_manager.init_database()
-    
-    # Crear usuario administrador automáticamente
-    from services.init_data_service import InitDataService
-    init_service = InitDataService()
-    init_service.crear_usuario_admin_obligatorio()
-    
-    print("Base de datos inicializada correctamente.")
-
-# Inicializar la base de datos al arrancar la aplicación
+# Inicialización de la base de datos
 with app.app_context():
-    init_db()
+    db_manager.init_database()
 
 if __name__ == '__main__':
     # Inicializar el scheduler de backups

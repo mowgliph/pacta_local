@@ -165,39 +165,67 @@ def obtener_todos_suplementos():
 
 def obtener_estadisticas_suplementos():
     """Obtiene estadísticas de suplementos"""
-    suplementos = Suplemento.get_all()
-    
-    total_suplementos = len(suplementos)
-    suplementos_aprobados = len([s for s in suplementos if s.estado == 'aprobado'])
-    suplementos_pendientes = len([s for s in suplementos if s.estado == 'pendiente'])
-    suplementos_rechazados = len([s for s in suplementos if s.estado == 'rechazado'])
-    
-    # Calcular porcentajes
-    porcentaje_aprobados = round((suplementos_aprobados / total_suplementos * 100) if total_suplementos > 0 else 0, 1)
-    porcentaje_pendientes = round((suplementos_pendientes / total_suplementos * 100) if total_suplementos > 0 else 0, 1)
-    
-    # Calcular valor total de modificaciones
-    valor_total_modificaciones = sum([s.monto_modificacion for s in suplementos if s.estado == 'aprobado'])
-    
-    # Estadísticas por tipo de modificación
-    ampliacion_monto = len([s for s in suplementos if 'monto' in s.tipo_modificacion.lower()])
-    extension_plazo = len([s for s in suplementos if 'plazo' in s.tipo_modificacion.lower()])
-    modificacion_alcance = len([s for s in suplementos if 'alcance' in s.tipo_modificacion.lower()])
-    otros_tipos = total_suplementos - ampliacion_monto - extension_plazo - modificacion_alcance
-    
-    return {
-        'total_suplementos': total_suplementos,
-        'suplementos_aprobados': suplementos_aprobados,
-        'suplementos_pendientes': suplementos_pendientes,
-        'suplementos_rechazados': suplementos_rechazados,
-        'porcentaje_aprobados': porcentaje_aprobados,
-        'porcentaje_pendientes': porcentaje_pendientes,
-        'valor_total_modificaciones': valor_total_modificaciones,
-        'ampliacion_monto': ampliacion_monto,
-        'extension_plazo': extension_plazo,
-        'modificacion_alcance': modificacion_alcance,
-        'otros_tipos': otros_tipos
-    }
+    try:
+        suplementos = Suplemento.get_all()
+        
+        total_suplementos = len(suplementos)
+        suplementos_aprobados = len([s for s in suplementos if s and hasattr(s, 'estado') and s.estado == 'aprobado'])
+        suplementos_pendientes = len([s for s in suplementos if s and hasattr(s, 'estado') and s.estado == 'pendiente'])
+        suplementos_rechazados = len([s for s in suplementos if s and hasattr(s, 'estado') and s.estado == 'rechazado'])
+        
+        # Calcular porcentajes
+        porcentaje_aprobados = round((suplementos_aprobados / total_suplementos * 100) if total_suplementos > 0 else 0, 1)
+        porcentaje_pendientes = round((suplementos_pendientes / total_suplementos * 100) if total_suplementos > 0 else 0, 1)
+        
+        # Calcular valor total de modificaciones
+        valor_total_modificaciones = sum([s.monto_modificacion for s in suplementos 
+                                        if s and hasattr(s, 'estado') and hasattr(s, 'monto_modificacion') 
+                                        and s.estado == 'aprobado' and s.monto_modificacion is not None] or [0])
+        
+        # Estadísticas por tipo de modificación
+        ampliacion_monto = len([s for s in suplementos 
+                              if s and hasattr(s, 'tipo_modificacion') and s.tipo_modificacion 
+                              and 'monto' in str(s.tipo_modificacion).lower()])
+        
+        extension_plazo = len([s for s in suplementos 
+                             if s and hasattr(s, 'tipo_modificacion') and s.tipo_modificacion 
+                             and 'plazo' in str(s.tipo_modificacion).lower()])
+        
+        modificacion_alcance = len([s for s in suplementos 
+                                  if s and hasattr(s, 'tipo_modificacion') and s.tipo_modificacion 
+                                  and 'alcance' in str(s.tipo_modificacion).lower()])
+        
+        otros_tipos = total_suplementos - ampliacion_monto - extension_plazo - modificacion_alcance
+        
+        return {
+            'total_suplementos': total_suplementos,
+            'suplementos_aprobados': suplementos_aprobados,
+            'suplementos_pendientes': suplementos_pendientes,
+            'suplementos_rechazados': suplementos_rechazados,
+            'porcentaje_aprobados': porcentaje_aprobados,
+            'porcentaje_pendientes': porcentaje_pendientes,
+            'valor_total_modificaciones': valor_total_modificaciones,
+            'ampliacion_monto': ampliacion_monto,
+            'extension_plazo': extension_plazo,
+            'modificacion_alcance': modificacion_alcance,
+            'otros_tipos': otros_tipos
+        }
+    except Exception as e:
+        print(f"Error al obtener estadísticas de suplementos: {str(e)}")
+        # Retornar valores por defecto en caso de error
+        return {
+            'total_suplementos': 0,
+            'suplementos_aprobados': 0,
+            'suplementos_pendientes': 0,
+            'suplementos_rechazados': 0,
+            'porcentaje_aprobados': 0,
+            'porcentaje_pendientes': 0,
+            'valor_total_modificaciones': 0,
+            'ampliacion_monto': 0,
+            'extension_plazo': 0,
+            'modificacion_alcance': 0,
+            'otros_tipos': 0
+        }
 
 @main_bp.route('/suplementos')
 @login_required
